@@ -165,7 +165,7 @@ public class MyStructureTools {
 
 	/**
 	 * Set to all MyAtom the parent reference to MyMonomer
-	 * @param myMonomerCloned
+	 * @param myMonomer
 	 */
 	public static void setAtomParentReference(MyMonomerIfc myMonomer) {
 		for (int i=0; i<myMonomer.getMyAtoms().length; i++){
@@ -225,7 +225,7 @@ public class MyStructureTools {
 	/**
 	 * Clean up the bonds to MyAtom not in the given MyChain.
 	 * Needed to not get null in V3000 file
-	 * @param myStructure
+	 * @param myChain
 	 * 
 	 */
 	public static void removeBondsToNonExistingAtoms(MyChainIfc myChain) {
