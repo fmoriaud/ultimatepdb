@@ -1,8 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
+package structure;
 
 import parameters.AlgoParameters;
-import structure.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestTools {
 

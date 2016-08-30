@@ -1,6 +1,7 @@
+package structure;
+
 import org.junit.Before;
 import org.junit.Test;
-import structure.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

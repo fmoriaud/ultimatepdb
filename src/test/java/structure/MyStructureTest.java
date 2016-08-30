@@ -1,6 +1,7 @@
+package structure;
+
 import org.junit.Test;
 import parameters.AlgoParameters;
-import structure.*;
 
 import static org.junit.Assert.assertTrue;
 

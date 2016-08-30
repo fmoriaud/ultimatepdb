@@ -1,5 +1,5 @@
-import io.ExceptionInIOPackage;
-import io.IOTools;
+package io;
+
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;

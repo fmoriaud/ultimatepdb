@@ -1,15 +1,15 @@
-import org.junit.Test;
+package structure;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import parameters.AlgoParameters;
-import structure.*;
 import org.biojava.nbio.structure.GroupType;
+import org.junit.Test;
+import parameters.AlgoParameters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Fabrice on 29/08/16.
