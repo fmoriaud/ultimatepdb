@@ -1,9 +1,9 @@
 package io;
 
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
+import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+import org.biojava.nbio.structure.secstruc.SecStrucType;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -63,5 +63,41 @@ public class IOToolsTest {
         assertTrue(listGroupsNucleotide.size() == 10);
         listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
         assertTrue(listGroupsHetatm.size() == 32);
+    }
+
+
+    @Ignore
+    @Test
+    public void testMmcifCheckSecStructure() {
+
+        URL url = IOToolsTest.class.getClassLoader().getResource("1di9.cif");
+
+        Path path = null;
+        try {
+            path = Paths.get(url.toURI());
+        } catch (URISyntaxException e1) {
+            assertTrue(false);
+        }
+        Structure cifStructure = null;
+        try {
+            cifStructure = IOTools.readMMCIFFile(path);
+        } catch (ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        Chain chain = cifStructure.getChain(0);
+        List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);
+        assertTrue(listGroupsAmino.size() == 348);
+
+        for (Group currentGroup: listGroupsAmino){
+
+            AminoAcid aa = (AminoAcid)currentGroup;
+
+            SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
+            if (readsecStruc != null){
+                SecStrucType secType = readsecStruc.getType();
+                assertTrue(secType != null);
+            }
+        }
     }
 }
