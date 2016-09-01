@@ -40,7 +40,7 @@ public class MyJmolTest {
     @Test
     public void testOpenJmol() {
 
-        URL url = IOToolsTest.class.getClassLoader().getResource("1di9.cif,gz");
+        URL url = IOToolsTest.class.getClassLoader().getResource("1di9.cif.gz");
 
         Path path = null;
         try {

@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.StructureException;
+import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.mmcif.MMcifParser;
 import org.biojava.nbio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -33,6 +35,44 @@ public class IOTools {
 
 	private static EnumMyReaderBiojava lastEnumMyReaderBiojava;
 	private static MyReaderBiojava myReaderBiojava;
+
+
+	/**
+	 * Read a MMcif file using BioJava Atomcache which is basically a pdb divided mmcif directory. Tested with cif.gz
+	 * @param pdbId is the PDB 4 letter code
+	 * @return Structure which is a BioJava object to storing the Structure
+	 * @throws ExceptionInIOPackage
+	 */
+	public static Structure readMMCIFFileWithAtomCache(String pdbId, AlgoParameters algoParameters) throws ExceptionInIOPackage{
+
+		MMcifParser parser = new SimpleMMcifParser();
+		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(false);
+		params.setParseSecStruc(true);
+
+
+		consumer.setFileParsingParameters(params);
+		parser.addMMcifConsumer(consumer);
+
+		AtomCache cache = new AtomCache();
+		cache.setPath(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+		cache.setFileParsingParams(params);
+
+
+		//The loaded Structure contains the SS assigned
+		Structure cifStructure = null;
+		try {
+			cifStructure = cache.getStructure(pdbId);
+		} catch (IOException | StructureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return cifStructure;
+	}
+
 
 	/**
 	 * Read a MMcif file. Tested with cif.gz

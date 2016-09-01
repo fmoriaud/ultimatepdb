@@ -21,20 +21,26 @@ public class CommandLineTools {
 
 	public static AlgoParameters analyzeArgs(String[] args, EnumMyReaderBiojava enumMyReaderBiojava) throws CommandLineException, ParsingConfigFileException{
 
-		// Load parameters 
-		AlgoParameters algoParameters = new AlgoParameters();
-
 		if (args.length != 1){
 			String message = "There can be only one args for this command line: the path to the ultimateParam file";
 			CommandLineException exception = new CommandLineException(message);
 			throw exception;
 		}
+		String pathToUltimateXmlFile = args[0];
+		return generateModifiedAlgoParameters(pathToUltimateXmlFile, enumMyReaderBiojava);
+	}
 
-		AlgoParameters modifiedAlgoParameters = readParameterFile(args[0], algoParameters, enumMyReaderBiojava);
+
+
+	public static AlgoParameters generateModifiedAlgoParameters(String pathToUltimateXmlFile, EnumMyReaderBiojava enumMyReaderBiojava) throws ParsingConfigFileException{
+
+		// Load parameters
+		AlgoParameters algoParameters = new AlgoParameters();
+
+		AlgoParameters modifiedAlgoParameters = readParameterFile(pathToUltimateXmlFile, algoParameters, enumMyReaderBiojava);
 
 		return modifiedAlgoParameters;
 	}
-
 
 
 	private static String returnContent(String tag, Element rootElement) throws ParsingConfigFileException{

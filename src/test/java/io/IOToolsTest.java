@@ -5,7 +5,12 @@ import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.junit.Ignore;
 import org.junit.Test;
+import parameters.AlgoParameters;
+import protocols.CommandLineTools;
+import protocols.ParsingConfigFileException;
+import structure.EnumMyReaderBiojava;
 
+import java.awt.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -64,4 +69,34 @@ public class IOToolsTest {
         listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
         assertTrue(listGroupsHetatm.size() == 32);
     }
+
+    @Test
+    public void bondCreationDNARNAhybrid() {
+
+        URL url = IOToolsTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = null;
+        try {
+            algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ParsingConfigFileException e){
+            assertTrue(false);
+        }
+        Structure cifStructure = null;
+        try {
+            cifStructure = IOTools.readMMCIFFileWithAtomCache("394d", algoParameters);
+        } catch (ExceptionInIOPackage e) {
+            assertTrue(false);
+
+        }
+
+        for (Chain chain: cifStructure.getChains()){
+            List<Group> groups = chain.getAtomGroups(GroupType.NUCLEOTIDE);
+            for (Group group: groups){
+                for (Atom atom: group.getAtoms()){
+                    List<Bond> bonds = atom.getBonds();
+                    System.out.println(bonds);
+                }
+            }
+        }
+    }
+
 }

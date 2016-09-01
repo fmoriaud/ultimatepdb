@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 public class BioJavaStructureTest {
 
 
+    @Ignore
     @Test
     public void testMmcifCheckSecondaryStructureFromFile() {
 
