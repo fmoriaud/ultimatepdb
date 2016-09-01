@@ -76,6 +76,9 @@ public class AdapterBioJavaStructure {
 	public static char[] convertSecType(SecStrucType secType) {
 
 		char[] secStruc = "".toCharArray();
+		if (secType == null){
+			return secStruc;
+		}
 		if (secType.isBetaStrand()){
 			secStruc = "S".toCharArray();
 		}
@@ -288,7 +291,10 @@ public class AdapterBioJavaStructure {
 			if (currentGroup instanceof AminoAcid){
 				AminoAcid aa = (AminoAcid)currentGroup;
 				SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
-				SecStrucType secType = readsecStruc.getType();
+				SecStrucType secType = null;
+				if (readsecStruc != null) {
+					secType = readsecStruc.getType();
+				}
 				secStruc = convertSecType(secType);
 			}
 
