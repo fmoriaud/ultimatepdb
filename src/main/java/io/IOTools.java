@@ -47,7 +47,8 @@ public class IOTools {
 
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(false);
-		params.setParseSecStruc(false);
+		params.setParseSecStruc(true);
+
 
 		consumer.setFileParsingParameters(params);
 		parser.addMMcifConsumer(consumer);
