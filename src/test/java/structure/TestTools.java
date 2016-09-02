@@ -1,11 +1,31 @@
 package structure;
 
+import io.IOToolsTest;
 import parameters.AlgoParameters;
+import protocols.CommandLineTools;
+import protocols.ParsingConfigFileException;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 public class TestTools {
+
+	public static AlgoParameters getAlgoParameters(){
+
+		URL url = IOToolsTest.class.getClassLoader().getResource("ultimate.xml");
+		AlgoParameters algoParameters = new AlgoParameters();
+		try {
+			algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+		} catch (ParsingConfigFileException e){
+			assertTrue(false);
+		}
+		return algoParameters;
+	}
+
+
 
 	public static MyAtomIfc buildValidMyAtomCarbonAlpha(int originalAtomId) throws ExceptionInMyStructurePackage {
 

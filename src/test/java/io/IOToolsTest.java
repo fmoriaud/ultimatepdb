@@ -9,6 +9,7 @@ import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import structure.EnumMyReaderBiojava;
+import structure.TestTools;
 
 import java.awt.*;
 import java.net.URISyntaxException;
@@ -73,13 +74,7 @@ public class IOToolsTest {
     @Test
     public void bondCreationDNARNAhybrid() {
 
-        URL url = IOToolsTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = null;
-        try {
-            algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ParsingConfigFileException e){
-            assertTrue(false);
-        }
+        AlgoParameters algoParameters = TestTools.getAlgoParameters();
         Structure cifStructure = null;
         try {
             cifStructure = IOTools.readMMCIFFileWithAtomCache("394d", algoParameters);

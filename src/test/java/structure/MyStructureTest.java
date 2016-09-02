@@ -1,5 +1,6 @@
 package structure;
 
+import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
 
@@ -10,6 +11,16 @@ import static org.junit.Assert.assertTrue;
  */
 public class MyStructureTest {
 
+    private  AlgoParameters algoParameters;
+
+
+    @Before
+    public void prepare(){
+        algoParameters = TestTools.getAlgoParameters();
+    }
+
+
+
     @Test
     public void MyStructureConstructorWithOnlyOneMonomer() {
 
@@ -19,16 +30,16 @@ public class MyStructureTest {
         } catch (ExceptionInMyStructurePackage e1) {
         }
 
-        AlgoParameters algoParameter = new AlgoParameters();
+
         try {
-            MyStructure myStructureOK = new MyStructure(monomer, algoParameter);
+            MyStructure myStructureOK = new MyStructure(monomer, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(false);
         }
 
-        algoParameter = null;
+        algoParameters = null;
         try {
-            MyStructure MyStructureNotOK = new MyStructure(monomer, algoParameter);
+            MyStructure MyStructureNotOK = new MyStructure(monomer, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
         }

@@ -1,6 +1,7 @@
 package structure;
 
 import org.biojava.nbio.structure.GroupType;
+import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
 
@@ -15,6 +16,15 @@ import static org.junit.Assert.assertTrue;
  * Created by Fabrice on 29/08/16.
  */
 public class MyStructureToolsTest {
+
+    private  AlgoParameters algoParameters;
+
+
+    @Before
+    public void prepare(){
+        algoParameters = TestTools.getAlgoParameters();
+    }
+
 
 
     @Test
@@ -204,7 +214,7 @@ public class MyStructureToolsTest {
         }
 
         // needed as it is the distance used in MyStructure
-        AlgoParameters algoParameters = new AlgoParameters();
+
         float minDistanceToBeneighbor = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
         for (int i=1; i<10; i++){
 
