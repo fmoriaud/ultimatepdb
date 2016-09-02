@@ -2,11 +2,10 @@ package structure;
 
 import io.ExceptionInIOPackage;
 import io.IOTools;
-import io.IOToolsTest;
+import io.ContentOfReadMmCifFileReadFromResourcesTest;
 import org.biojava.nbio.structure.*;
 import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -22,12 +21,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class BioJavaStructureTest {
 
-
-    @Ignore
     @Test
     public void testMmcifCheckSecondaryStructureFromFile() {
 
-        URL url = IOToolsTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("1di9.cif.gz");
 
         Path path = null;
         try {
@@ -55,6 +52,4 @@ public class BioJavaStructureTest {
             SecStrucType secType = readsecStruc.getType();
         }
     }
-
-
 }

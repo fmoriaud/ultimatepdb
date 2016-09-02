@@ -1,17 +1,10 @@
 package io;
 
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.secstruc.SecStrucInfo;
-import org.biojava.nbio.structure.secstruc.SecStrucType;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.CommandLineTools;
-import protocols.ParsingConfigFileException;
-import structure.EnumMyReaderBiojava;
 import structure.TestTools;
 
-import java.awt.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -20,17 +13,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Fabrice on 29/08/16.
  */
-public class IOToolsTest {
+public class ContentOfReadMmCifFileReadFromResourcesTest {
 
     @Test
     public void testReadMMCIFFileFromFullPathDNARNAhybrid() {
 
-        URL url = IOToolsTest.class.getClassLoader().getResource("394d.cif.gz");
+        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("394d.cif.gz");
 
         Path path = null;
         try {
@@ -71,6 +65,47 @@ public class IOToolsTest {
         assertTrue(listGroupsHetatm.size() == 32);
     }
 
+
+    @Test
+    public void testReadMMCIFFileFromFullPathProtein() {
+
+        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("1di9.cif.gz");
+
+        Path path = null;
+        try {
+            path = Paths.get(url.toURI());
+        } catch (URISyntaxException e1) {
+            assertTrue(false);
+        }
+        Structure cifStructure = null;
+        try {
+            cifStructure = IOTools.readMMCIFFile(path);
+        } catch (ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        int count = cifStructure.getChains().size();
+        assertTrue(count == 1);
+
+        Chain chain = cifStructure.getChain(0);
+        List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);
+        assertTrue(listGroupsAmino.size() == 348);
+        List<Group> listGroupsNucleotide = chain.getAtomGroups(GroupType.NUCLEOTIDE);
+        assertTrue(listGroupsNucleotide.size() == 0);
+        List<Group> listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
+        assertTrue(listGroupsHetatm.size() == 62);
+
+        Group expectedLigandMSQ = listGroupsHetatm.get(0);
+        assertEquals(expectedLigandMSQ.getPDBName(), "MSQ");
+        List<String> expectedSequenceBegining = new ArrayList<>(Arrays.asList("GLU", "ARG", "PRO", "THR", "PHE", "TYR", "ARG"));
+        List<Group> groups = listGroupsAmino.subList(0,7);
+        for (int i = 0; i< expectedSequenceBegining.size(); i++){
+            String name = listGroupsAmino.get(i).getPDBName();
+            assertTrue(name.equals(expectedSequenceBegining.get(i)));
+        }
+    }
+
+
+
     @Test
     public void bondCreationDNARNAhybrid() {
 
@@ -88,10 +123,11 @@ public class IOToolsTest {
             for (Group group: groups){
                 for (Atom atom: group.getAtoms()){
                     List<Bond> bonds = atom.getBonds();
-                    System.out.println(bonds);
+                    for (Bond bond: bonds){
+                        assertTrue(bond != null);
+                    }
                 }
             }
         }
     }
-
 }

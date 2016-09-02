@@ -1,6 +1,6 @@
 package structure;
 
-import io.IOToolsTest;
+import io.ContentOfReadMmCifFileReadFromResourcesTest;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -15,7 +15,7 @@ public class TestTools {
 
 	public static AlgoParameters getAlgoParameters(){
 
-		URL url = IOToolsTest.class.getClassLoader().getResource("ultimate.xml");
+		URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("ultimate.xml");
 		AlgoParameters algoParameters = new AlgoParameters();
 		try {
 			algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
