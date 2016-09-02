@@ -1,6 +1,7 @@
 package structure;
 
 import org.junit.Test;
+import tools.TestTools;
 
 import static org.junit.Assert.assertTrue;
 

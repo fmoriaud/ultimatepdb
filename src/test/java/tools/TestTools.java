@@ -1,17 +1,45 @@
-package structure;
+package tools;
 
 import io.ContentOfReadMmCifFileReadFromResourcesTest;
+import io.ExceptionInIOPackage;
+import io.IOTools;
+import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
+import structure.*;
 
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
 public class TestTools {
+
+	public static Structure readMmcifFileFromResources(String fileName){
+
+		URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource(fileName);
+
+		Path path = null;
+		try {
+			path = Paths.get(url.toURI());
+		} catch (URISyntaxException e1) {
+			assertTrue(false);
+		}
+		Structure cifStructure = null;
+		try {
+			cifStructure = IOTools.readMMCIFFile(path);
+		} catch (ExceptionInIOPackage e) {
+			assertTrue(false);
+		}
+		return cifStructure;
+	}
+
+
 
 	public static AlgoParameters getAlgoParameters(){
 

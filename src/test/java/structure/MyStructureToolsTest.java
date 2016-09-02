@@ -4,6 +4,7 @@ import org.biojava.nbio.structure.GroupType;
 import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import tools.TestTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;

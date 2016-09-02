@@ -3,7 +3,7 @@ package io;
 import org.biojava.nbio.structure.*;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import structure.TestTools;
+import tools.TestTools;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -22,22 +22,10 @@ import static org.junit.Assert.assertTrue;
 public class ContentOfReadMmCifFileReadFromResourcesTest {
 
     @Test
-    public void testReadMMCIFFileFromFullPathDNARNAhybrid() {
+    public void testDNARNAhybridFromResources() {
 
-        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("394d.cif.gz");
+        Structure cifStructure = TestTools.readMmcifFileFromResources("394d.cif.gz");
 
-        Path path = null;
-        try {
-            path = Paths.get(url.toURI());
-        } catch (URISyntaxException e1) {
-            assertTrue(false);
-        }
-        Structure cifStructure = null;
-        try {
-            cifStructure = IOTools.readMMCIFFile(path);
-        } catch (ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
         int count = cifStructure.getChains().size();
         assertTrue(count == 2);
 
@@ -67,22 +55,9 @@ public class ContentOfReadMmCifFileReadFromResourcesTest {
 
 
     @Test
-    public void testReadMMCIFFileFromFullPathProtein() {
+    public void testProteinFromResources() {
 
-        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("1di9.cif.gz");
-
-        Path path = null;
-        try {
-            path = Paths.get(url.toURI());
-        } catch (URISyntaxException e1) {
-            assertTrue(false);
-        }
-        Structure cifStructure = null;
-        try {
-            cifStructure = IOTools.readMMCIFFile(path);
-        } catch (ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Structure cifStructure = TestTools.readMmcifFileFromResources("1di9.cif.gz");
         int count = cifStructure.getChains().size();
         assertTrue(count == 1);
 
@@ -107,19 +82,32 @@ public class ContentOfReadMmCifFileReadFromResourcesTest {
 
 
     @Test
-    public void bondCreationDNARNAhybrid() {
+    public void bondCreationDNARNAhybridFromResources() {
 
-        AlgoParameters algoParameters = TestTools.getAlgoParameters();
-        Structure cifStructure = null;
-        try {
-            cifStructure = IOTools.readMMCIFFileWithAtomCache("394d", algoParameters);
-        } catch (ExceptionInIOPackage e) {
-            assertTrue(false);
-
-        }
+        Structure cifStructure = TestTools.readMmcifFileFromResources("394d.cif.gz");
 
         for (Chain chain: cifStructure.getChains()){
             List<Group> groups = chain.getAtomGroups(GroupType.NUCLEOTIDE);
+            for (Group group: groups){
+                for (Atom atom: group.getAtoms()){
+                    List<Bond> bonds = atom.getBonds();
+                    for (Bond bond: bonds){
+                        assertTrue(bond != null);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    @Test
+    public void bondCreationProteinFromResources() {
+
+        Structure cifStructure = TestTools.readMmcifFileFromResources("1di9.cif.gz");
+
+        for (Chain chain: cifStructure.getChains()){
+            List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
             for (Group group: groups){
                 for (Atom atom: group.getAtoms()){
                     List<Bond> bonds = atom.getBonds();
