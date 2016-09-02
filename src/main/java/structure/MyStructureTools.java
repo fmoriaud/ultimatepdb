@@ -14,7 +14,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.ResidueNumber;
 import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+//import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
@@ -613,12 +613,12 @@ public class MyStructureTools {
 		for (Chain chain: structure.getChains()){
 
 			// collect sec struc info from input chain
-			Map<ResidueNumber, SecStrucInfo> mapResIdAndSecStruc = new HashMap<>();
-			for (Group amino: chain.getAtomGroups(GroupType.AMINOACID)){
-				AminoAcid aa = (AminoAcid) amino;
-				SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
-				mapResIdAndSecStruc.put(amino.getResidueNumber(), readsecStruc);
-			}
+			//Map<ResidueNumber, SecStrucInfo> mapResIdAndSecStruc = new HashMap<>();
+			//for (Group amino: chain.getAtomGroups(GroupType.AMINOACID)){
+			//	AminoAcid aa = (AminoAcid) amino;
+			//	SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
+			//	mapResIdAndSecStruc.put(amino.getResidueNumber(), readsecStruc);
+			//}
 
 			// put this chain info to outputchain
 			List<Chain> outputChains = structureToReturn.getChains();
@@ -626,14 +626,14 @@ public class MyStructureTools {
 				if (outputChain.getChainID().equals(chain.getChainID())){
 					for (Group amino: outputChain.getAtomGroups(GroupType.AMINOACID)){
 						int newAAId = amino.getResidueNumber().getSeqNum();
-						for (Entry<ResidueNumber, SecStrucInfo> entry: mapResIdAndSecStruc.entrySet()){
-							if (entry.getKey().getSeqNum().equals(newAAId)){
-								AminoAcid aa = (AminoAcid) amino;
+						//for (Entry<ResidueNumber, SecStrucInfo> entry: mapResIdAndSecStruc.entrySet()){
+						//	if (entry.getKey().getSeqNum().equals(newAAId)){
+						//		AminoAcid aa = (AminoAcid) amino;
 								//String type = AdapterBioJavaStructure.convertSecType(entry.getValue());
 
-								aa.setProperty(Group.SEC_STRUC, mapResIdAndSecStruc.get(newAAId));
-							}
-						}
+						//		aa.setProperty(Group.SEC_STRUC, mapResIdAndSecStruc.get(newAAId));
+						//	}
+						//}
 					}
 				}
 			}
