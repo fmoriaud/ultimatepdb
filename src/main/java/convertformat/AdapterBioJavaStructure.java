@@ -18,7 +18,7 @@ import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.StructureException;
-import org.biojava.nbio.structure.secstruc.SecStrucInfo;
+//import org.biojava.nbio.structure.secstruc.SecStrucType.SecStrucInfo;
 import org.biojava.nbio.structure.secstruc.SecStrucType;
 
 import math.AddToMap;
@@ -79,12 +79,13 @@ public class AdapterBioJavaStructure {
 		if (secType == null){
 			return secStruc;
 		}
-		if (secType.isBetaStrand()){
-			secStruc = "S".toCharArray();
-		}
-		if (secType.isHelixType()){
-			secStruc = "H".toCharArray();
-		}
+		System.out.println(secType.name());
+		//if (secType.name().isBetaStrand()){
+		//	secStruc = "S".toCharArray();
+		//}
+		//if (secType.isHelixType()){
+		//	secStruc = "H".toCharArray();
+		//}
 		return secStruc;
 	}
 
@@ -287,17 +288,19 @@ public class AdapterBioJavaStructure {
 				insertionLetter = currentGroup.getResidueNumber().getInsCode().toString().toCharArray()[0];
 			}
 
-			char[] secStruc = new char[1];
-			if (currentGroup instanceof AminoAcid){
-				AminoAcid aa = (AminoAcid)currentGroup;
-				SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
-				SecStrucType secType = null;
-				if (readsecStruc != null) {
-					secType = readsecStruc.getType();
-				}
-				secStruc = convertSecType(secType);
-			}
+			//char[] secStruc = new char[1];
+			//if (currentGroup instanceof AminoAcid){
+			//	AminoAcid aa = (AminoAcid)currentGroup;
+			//	SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
+			//	SecStrucType secType = null;
+			//	if (readsecStruc != null) {
+			//		secType = readsecStruc.getType();
+			//	}
+			//	secStruc = convertSecType(secType);
+			//}
+			AminoAcid aa = (AminoAcid)currentGroup;
 
+			char[] secStruc = "".toCharArray();
 			MyMonomerType monomerType = MyStructureTools.convertType(currentGroup.getType());
 			MyMonomerIfc myMonomer;
 			try {
