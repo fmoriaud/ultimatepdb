@@ -6,7 +6,6 @@ import java.util.logging.FileHandler;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
-import io.IOTools;
 import parameters.AlgoParameters;
 import protocols.CommandLineException;
 import protocols.CommandLineTools;
@@ -44,7 +43,7 @@ public class TestShapeCompare {
 		fh.setFormatter(new OptimizerFormater());  
 		ControllerLoger.logger.addHandler(fh);
 
-		MyStructureIfc query = IOTools.getMyStructures(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters, enumMyReaderBiojava, StructureReaderMode.ReadyForShapeComputation);
+		MyStructureIfc query = null; // IOTools.getMyStructures(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters, enumMyReaderBiojava, StructureReaderMode.ReadyForShapeComputation);
 		System.out.println(query.getFourLetterCode());
 
 		System.out.println("Structure read successfully");

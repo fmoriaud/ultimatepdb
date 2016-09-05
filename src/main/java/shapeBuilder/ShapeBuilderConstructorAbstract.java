@@ -1,6 +1,5 @@
 package shapeBuilder;
 
-import io.IOTools;
 import parameters.AlgoParameters;
 import structure.EnumMyReaderBiojava;
 import structure.ExceptionInMyStructurePackage;
@@ -34,12 +33,9 @@ public class ShapeBuilderConstructorAbstract {
 	//-------------------------------------------------------------
 	protected MyStructureIfc getMyStructure(char[] fourLetterCode) throws ShapeBuildingException {
 		MyStructureIfc myStructureGlobalBrut = null;
-		try {
-			myStructureGlobalBrut = IOTools.getMyStructures(fourLetterCode, algoParameters, enumMyReaderBiojava, StructureReaderMode.ReadyForShapeComputation);
-		} catch (ReadingStructurefileException | ExceptionInMyStructurePackage e1) {
-			ShapeBuildingException shapeBuildingException = new ShapeBuildingException(e1.getMessage());
-			throw shapeBuildingException;
-		}
+
+			myStructureGlobalBrut = null; // IOTools.getMyStructures(fourLetterCode, algoParameters, enumMyReaderBiojava, StructureReaderMode.ReadyForShapeComputation);
+
 		System.out.println("Structure read successfully : " + String.valueOf(myStructureGlobalBrut.getFourLetterCode()));
 		return myStructureGlobalBrut;
 	}

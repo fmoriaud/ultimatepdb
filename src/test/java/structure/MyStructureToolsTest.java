@@ -1,10 +1,12 @@
 package structure;
 
-import org.biojava.nbio.structure.GroupType;
+import org.biojava.bio.structure.GroupType;
 import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import tools.TestTools;
+import structure.*;
+
+import structure.TestTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;

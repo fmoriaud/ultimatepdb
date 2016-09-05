@@ -1,13 +1,10 @@
-package tools;
+package structure;
 
-import io.ContentOfReadMmCifFileReadFromResourcesTest;
-import io.ExceptionInIOPackage;
-import io.IOTools;
-import org.biojava.nbio.structure.Structure;
+import io.BiojavaReaderTest;
+import org.biojava.bio.structure.Structure;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import structure.*;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,9 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 public class TestTools {
 
+
 	public static Structure readMmcifFileFromResources(String fileName){
 
-		URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource(fileName);
+		URL url = BiojavaReaderTest.class.getClassLoader().getResource(fileName);
 
 		Path path = null;
 		try {
@@ -31,11 +29,9 @@ public class TestTools {
 			assertTrue(false);
 		}
 		Structure cifStructure = null;
-		try {
-			cifStructure = IOTools.readMMCIFFile(path);
-		} catch (ExceptionInIOPackage e) {
-			assertTrue(false);
-		}
+
+			cifStructure = null; // IOTools.readMMCIFFile(path);
+
 		return cifStructure;
 	}
 
@@ -43,7 +39,7 @@ public class TestTools {
 
 	public static AlgoParameters getAlgoParameters(){
 
-		URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("ultimate.xml");
+		URL url = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
 		AlgoParameters algoParameters = new AlgoParameters();
 		try {
 			algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPOutputStream;
 
-import org.biojava.nbio.structure.Element;
+import org.biojava.bio.structure.Element;
 
 import hits.HitTools;
 import hits.StrikingPropertyToElement;

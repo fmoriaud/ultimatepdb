@@ -1,6 +1,6 @@
 package hits;
 
-import org.biojava.nbio.structure.Element;
+import org.biojava.bio.structure.Element;
 
 import pointWithProperties.StrikingProperties;
 

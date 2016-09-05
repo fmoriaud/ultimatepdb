@@ -3,7 +3,7 @@ package structure;
 import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import tools.TestTools;
+
 
 import static org.junit.Assert.assertTrue;
 

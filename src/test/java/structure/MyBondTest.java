@@ -1,6 +1,10 @@
-package structure;
+package java.structure;
 
 import org.junit.Test;
+import structure.ExceptionInMyStructurePackage;
+import structure.MyAtom;
+import structure.MyBond;
+import structure.MyBondIfc;
 
 import static org.junit.Assert.assertTrue;
 

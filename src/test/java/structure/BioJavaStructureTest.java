@@ -1,11 +1,8 @@
 package structure;
 
-import io.ExceptionInIOPackage;
-import io.IOTools;
-import io.ContentOfReadMmCifFileReadFromResourcesTest;
-import org.biojava.nbio.structure.*;
+import io.BiojavaReaderTest;
+import org.biojava.bio.structure.*;
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
-import org.biojava.nbio.structure.secstruc.SecStrucType;
 import org.junit.Test;
 
 import java.net.URISyntaxException;
@@ -24,7 +21,7 @@ public class BioJavaStructureTest {
     @Test
     public void testMmcifCheckSecondaryStructureFromFile() {
 
-        URL url = ContentOfReadMmCifFileReadFromResourcesTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
 
         Path path = null;
         try {
@@ -33,11 +30,9 @@ public class BioJavaStructureTest {
             assertTrue(false);
         }
         Structure cifStructure = null;
-        try {
-            cifStructure = IOTools.readMMCIFFile(path);
-        } catch (ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+
+            cifStructure = null ; //IOTools.readMMCIFFile(path);
+
 
         Chain chain = cifStructure.getChain(0);
         List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);

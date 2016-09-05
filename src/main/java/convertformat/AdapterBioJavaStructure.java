@@ -9,17 +9,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Bond;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Element;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
-import org.biojava.nbio.structure.StructureException;
+import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Bond;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Element;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 //import org.biojava.nbio.structure.secstruc.SecStrucType.SecStrucInfo;
-import org.biojava.nbio.structure.secstruc.SecStrucType;
+import org.biojava.bio.structure.secstruc.SecStrucType;
 
 import math.AddToMap;
 import math.ToolsMath;
@@ -252,7 +252,11 @@ public class AdapterBioJavaStructure {
 			//System.out.println(countOfAtoms + " read atom");
 			for (int k=0; k<countOfAtoms; k++){
 
-				atom = currentGroup.getAtom(k);
+				try {
+					atom = currentGroup.getAtom(k);
+				} catch (StructureException e){
+					continue;
+				}
 				// TODO Figure out if it is nice to skip H as I also delete them when I build the MyStructure
 				// I would say I should skip the one from exp files as not reliable
 				if (atom.getElement().equals(Element.H)){
@@ -298,7 +302,11 @@ public class AdapterBioJavaStructure {
 			//	}
 			//	secStruc = convertSecType(secType);
 			//}
-			AminoAcid aa = (AminoAcid)currentGroup;
+			if (currentGroup instanceof AminoAcid){
+				AminoAcid aa = (AminoAcid)currentGroup;
+				Map<String, Object> properties = aa.getProperties();
+				System.out.println("No properties so no secstruc found in " + aa.getPDBName());
+			}
 
 			char[] secStruc = "".toCharArray();
 			MyMonomerType monomerType = MyStructureTools.convertType(currentGroup.getType());

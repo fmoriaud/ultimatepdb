@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.biojava.nbio.structure.AminoAcid;
-import org.biojava.nbio.structure.Atom;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.ResidueNumber;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 import math.ToolsMath;
@@ -24,22 +24,25 @@ import pointWithProperties.PointsTools;
 import shapeCompare.ResultsFromEvaluateCost;
 import structure.EnumResidues.HetatmResidues;
 
+import static org.biojava.bio.structure.GroupType.AMINOACID;
+import static org.biojava.bio.structure.GroupType.NUCLEOTIDE;
+
 public class MyStructureTools {
 
 	/**
-	 * 
+	 *
 	 * @param type BioJava Residue type
 	 * @return MyMonomerType
 	 */
-	public static MyMonomerType convertType(GroupType type) {
+	public static MyMonomerType convertType(String type) {
 
 		MyMonomerType myMonomerType = null;
 		switch (type){
-		case AMINOACID: myMonomerType = MyMonomerType.AMINOACID;
+		case GroupType.AMINOACID: myMonomerType = MyMonomerType.AMINOACID;
 		break;
-		case NUCLEOTIDE: myMonomerType = MyMonomerType.NUCLEOTIDE;
+		case GroupType.NUCLEOTIDE: myMonomerType = MyMonomerType.NUCLEOTIDE;
 		break;
-		case HETATM: myMonomerType = MyMonomerType.HETATM;
+		case GroupType.HETATM: myMonomerType = MyMonomerType.HETATM;
 		break;
 		}
 		return myMonomerType;
