@@ -31,12 +31,11 @@ public class MyMonomer implements MyMonomerIfc{
 	 * @param myAtoms
 	 * @param threeLetterCode: as found in PDB files
 	 * @param residueID
-	 * @param type: same as from org.biojava.bio.structure.Group type: amino, hetatm or nucleotide
+	 * @param myMonomerType: same as from org.biojava.bio.structure.Group type: amino, hetatm or nucleotide
 	 * @param insertionLetter
-	 * @param secStruc
 	 * @throws ExceptionInMyStructurePackage 
 	 */
-	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, char insertionLetter, char[] secStruc) throws ExceptionInMyStructurePackage{
+	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, char insertionLetter) throws ExceptionInMyStructurePackage{
 		this.myAtoms = myAtoms;
 		this.threeLetterCode = threeLetterCode;
 		this.residueID = residueID;
@@ -259,10 +258,4 @@ public class MyMonomer implements MyMonomerIfc{
 		this.parent = parent;
 	}
 
-
-
-	@Override
-	public char[] getSecStruc() {
-		return secStruc;
-	}
 }

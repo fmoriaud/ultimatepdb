@@ -292,15 +292,6 @@ public class AdapterBioJavaStructure {
 				insertionLetter = currentGroup.getResidueNumber().getInsCode().toString().toCharArray()[0];
 			}
 
-			//char[] secStruc = new char[1];
-			//if (currentGroup instanceof AminoAcid){
-			//	AminoAcid aa = (AminoAcid)currentGroup;
-			//	SecStrucInfo readsecStruc = (SecStrucInfo) aa.getProperty(Group.SEC_STRUC);
-			//	SecStrucType secType = null;
-			//	if (readsecStruc != null) {
-			//		secType = readsecStruc.getType();
-			//	}
-			//	secStruc = convertSecType(secType);
 			//}
 			if (currentGroup instanceof AminoAcid){
 				AminoAcid aa = (AminoAcid)currentGroup;
@@ -312,7 +303,7 @@ public class AdapterBioJavaStructure {
 			MyMonomerType monomerType = MyStructureTools.convertType(currentGroup.getType());
 			MyMonomerIfc myMonomer;
 			try {
-				myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, insertionLetter, secStruc);
+				myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, insertionLetter);
 			} catch (ExceptionInMyStructurePackage e) {
 				continue;
 			}

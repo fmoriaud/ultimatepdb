@@ -14,7 +14,6 @@ public interface MyMonomerIfc {
 	MyChainIfc getParent();
 	void setParent(MyChainIfc parent);
 	MyAtomIfc getMyAtomFromMyAtomName(char[] atomName);
-	char[] getSecStruc();
 	MyAtomIfc getAtomById(int atomId);
 	void addAtom(MyAtomIfc atom);
 	void setMyAtoms(MyAtomIfc[] myAtoms);

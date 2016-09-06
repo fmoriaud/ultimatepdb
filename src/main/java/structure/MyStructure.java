@@ -79,12 +79,13 @@ public class MyStructure implements MyStructureIfc{
 	}
 
 
-
 	/**
-	 * Factory method for convenience building when only chains with a given MyMonomerType
+	 *  Factory method for convenience building when only chains with a given MyMonomerType
 	 * @param mychains
-	 * @param aminoacid
-	 * @throws ExceptionInMyStructurePackage 
+	 * @param myMonomerType
+	 * @param algoParameters
+	 * @return
+	 * @throws ExceptionInMyStructurePackage
 	 */
 	public static MyStructure getMyStructure(MyChainIfc[] mychains, MyMonomerType myMonomerType, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage {
 
@@ -669,7 +670,7 @@ public class MyStructure implements MyStructureIfc{
 				continue;
 			}
 		}
-		MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.getInsertionLetter(), monomer.getSecStruc());
+		MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.getInsertionLetter());
 
 		MyStructureTools.setAtomParentReference(myMonomerCloned);
 
@@ -750,7 +751,7 @@ public class MyStructure implements MyStructureIfc{
 		MyAtomIfc[] atoms = listAtoms.toArray(new MyAtomIfc[listAtoms.size()]);
 
 		MyMonomer[] monomers = new MyMonomer[1];
-		monomers[0] = new MyMonomer(atoms, "XXX".toCharArray(), 0, MyMonomerType.AMINOACID, insertionLetter, null);
+		monomers[0] = new MyMonomer(atoms, "XXX".toCharArray(), 0, MyMonomerType.AMINOACID, insertionLetter);
 
 		// As the only one monomer is built I can add bonds
 		Map<MyAtomIfc, List<MyBondIfc>> mapBonds = new HashMap<>();

@@ -37,7 +37,7 @@ public class Tools {
         URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
         Structure structure = null;
-        BiojavaReaderIfc reader = new BiojavaReaderUsingPDBFolder(algoParameters);
+        BiojavaReaderIfc reader = new BiojavaReaderUsingChemcompFolder(algoParameters);
         structure = reader.read(path);
         return structure;
     }

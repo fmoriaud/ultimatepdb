@@ -15,11 +15,11 @@ import java.nio.file.Paths;
 /**
  * Created by Fabrice on 05/09/16.
  */
-public class BiojavaReaderUsingPDBFolder implements BiojavaReaderIfc {
+public class BiojavaReaderUsingChemcompFolder implements BiojavaReaderIfc {
 
     private AlgoParameters algoParameters;
 
-    public BiojavaReaderUsingPDBFolder(AlgoParameters algoParameters) {
+    public BiojavaReaderUsingChemcompFolder(AlgoParameters algoParameters) {
         this.algoParameters = algoParameters;
     }
 
@@ -42,7 +42,7 @@ public class BiojavaReaderUsingPDBFolder implements BiojavaReaderIfc {
         mMCIFileReader.setPath(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         FileParsingParameters params = new FileParsingParameters();
         params.setAlignSeqRes(false);
-        params.setParseSecStruc(false);
+        params.setParseSecStruc(true);
         params.setLoadChemCompInfo(true);
         params.setCreateAtomBonds(true);
 

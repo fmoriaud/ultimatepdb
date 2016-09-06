@@ -38,11 +38,10 @@ public class MyChainTest {
         char[] threeLetterCode = "ASP".toCharArray();
         int residueID = 1;
         char insertionLetter = 0;
-        char[] secStruc = null;
 
         try {
-            monomer1 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter, secStruc);
-            monomer2 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter, secStruc);
+            monomer1 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter);
+            monomer2 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter);
         } catch (ExceptionInMyStructurePackage e) {
         }
     }

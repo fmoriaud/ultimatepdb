@@ -117,9 +117,8 @@ public class TestTools {
 
 		char[] threeLetterCode = "ASP".toCharArray();
 		char insertionLetter = 0;
-		char[] secStruc = null;
 
-		MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueId, MyMonomerType.AMINOACID, insertionLetter, secStruc);
+		MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueId, MyMonomerType.AMINOACID, insertionLetter);
 
 		return monomer;
 	}

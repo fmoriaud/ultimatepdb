@@ -20,8 +20,6 @@ public class ShapeContainerTools {
 
 	public static List<String> makeContentPDBFilePeptide(AlgoParameters algoParameters, MyChainIfc peptide){
 		List<String> contentPDBFilePeptide = new ArrayList<>();
-		List<String> secondaryStructureLines = generateSecStrucLines(peptide);
-		contentPDBFilePeptide.addAll(secondaryStructureLines);
 
 		for (MyMonomerIfc monomer: peptide.getMyMonomers()){
 			contentPDBFilePeptide.addAll(generateLinesFromMyMonomer(monomer, algoParameters, peptide.getChainId()));
@@ -37,8 +35,6 @@ public class ShapeContainerTools {
 		MyChainIfc peptideRotated = HitTools.returnCloneRotatedPeptide(peptide, result, algoParameters);
 
 		List<String> contentPDBFilePeptide = new ArrayList<>();
-		List<String> secondaryStructureLines = generateSecStrucLines(peptide);
-		contentPDBFilePeptide.addAll(secondaryStructureLines);
 
 		for (MyMonomerIfc monomer: peptideRotated.getMyMonomers()){
 			contentPDBFilePeptide.addAll(generateLinesFromMyMonomer(monomer, algoParameters, peptide.getChainId()));
@@ -215,71 +211,6 @@ public class ShapeContainerTools {
 			listLines.add(lastToFinishTER);
 		}
 		return listLines;
-	}
-
-
-
-	private static List<String> generateSecStrucLines(MyChainIfc inputChain){
-
-		List<Integer> helixIndices = new ArrayList<>();
-		List<Integer> strandIndices = new ArrayList<>();
-		List<Integer> turnIndices = new ArrayList<>();
-
-		for (MyMonomerIfc monomer: inputChain.getMyMonomers()){
-
-			char[] secStruct = monomer.getSecStruc();
-
-			if (Arrays.equals(secStruct, "H".toCharArray())){
-				helixIndices.add(monomer.getResidueID());
-
-			}else{
-				if (Arrays.equals(secStruct, "S".toCharArray())){
-					strandIndices.add(monomer.getResidueID());
-				}else{
-					if (Arrays.equals(secStruct, "T".toCharArray())){
-						turnIndices.add(monomer.getResidueID());
-					}
-				}
-			}
-		}
-
-		List<List<Integer>> listsStartEndHelices = buildListStartEnd(helixIndices);
-		List<List<Integer>> listsStartEndStrand = buildListStartEnd(strandIndices);
-		List<List<Integer>> listsStartEndTurn = buildListStartEnd(turnIndices);
-
-		List<String> secondaryStructureLines = new ArrayList<>();
-
-
-		int countHelices = 1;
-		for (List<Integer> startEndHelices: listsStartEndHelices){
-
-			String generatedLine = generateHelixLine(startEndHelices, countHelices, inputChain);
-			secondaryStructureLines.add("HELIX " + generatedLine);
-			countHelices += 1;
-		}
-
-		int countStrand = 1;
-		for (List<Integer> startEndStrand: listsStartEndStrand){
-
-			String generatedLine = generateSheetLine(startEndStrand, countStrand, inputChain);
-			secondaryStructureLines.add("SHEET " + generatedLine);
-			countStrand += 1;
-		}
-		//STRAND   2   2 TRP A   94  ILE A   96  1                                  3
-		//HELIX   11  11 ALA C   37  LYS C   39  5                                   3    
-		//SHEET    1   A 5 SER A  50  ILE A  55  0 
-
-		//		int countTurn = 1;
-		//		for (List<Integer> startEndTurn: listsStartEndTurn){
-		//
-		//			String generatedLine = generateLine(startEndTurn, countTurn, inputChain);
-		//			secondaryStructureLines.add("TURN  " + generatedLine);
-		//			countStrand += 1;
-		//		}
-		//secondaryStructureLines.add("HELIX    1   9 ASP B   55  LEU B   60  1");
-
-
-		return secondaryStructureLines;
 	}
 
 
