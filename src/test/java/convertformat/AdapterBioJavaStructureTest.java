@@ -49,6 +49,8 @@ public class AdapterBioJavaStructureTest {
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
             assertTrue(false);
         }
+
+        // check content
         MyChainIfc[] myChains = mystructure.getAllChains();
         int count = myChains.length;
         assertTrue(count == 2);
@@ -69,6 +71,18 @@ public class AdapterBioJavaStructureTest {
         for (int i=0; i< expectedSequence.size(); i++){
             MyMonomerIfc currentMyMonomerIfc = aminoMyChains[0].getMyMonomers()[i];
             assertArrayEquals(currentMyMonomerIfc.getThreeLetterCode(), expectedSequence.get(i).toCharArray());
+        }
+
+        // check bonds
+
+        for (MyChainIfc chain: mystructure.getAllChains()){
+            MyMonomerIfc[] monomers = chain.getMyMonomers();
+            for (MyMonomerIfc monomer: monomers){
+                for (MyAtomIfc atom: monomer.getMyAtoms()){
+                    assertTrue(atom.getBonds() != null);
+                    assertTrue(atom.getBonds().length != 0);
+                }
+            }
         }
     }
 
