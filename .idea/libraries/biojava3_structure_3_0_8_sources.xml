@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="biojava3-structure-3.0.8-sources">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/src/lib/biojava3-structure-3.0.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
