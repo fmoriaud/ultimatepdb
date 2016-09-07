@@ -18,7 +18,17 @@
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-core</artifactId>
-            <version>1.5.10</version>
+            <version>1.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-extra</artifactId>
+            <version>1.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-io</artifactId>
+            <version>1.5.13</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>

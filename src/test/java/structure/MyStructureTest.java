@@ -2,10 +2,13 @@ package structure;
 
 import convertformat.AdapterBioJavaStructure;
 import io.BiojavaReaderTest;
+import io.CdkTools;
 import io.Tools;
+import io.WriteTextFile;
 import org.biojava.bio.structure.Structure;
 import org.junit.Before;
 import org.junit.Test;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -149,8 +152,43 @@ public class MyStructureTest {
 
         String myStructureV3000 = myStructure.toV3000();
 
-        String[] lines = myStructureV3000.split("/r");
-        System.out.println();
+        // write to a temp text file
+        // TODO use java code to find default folder
+        String path = "//Users//Fabrice//Documents//v300test.mol";
+        WriteTextFile.writeTextFile(myStructureV3000, path);
+
+        // read it with cdk and check atom and bond count
+
+        IAtomContainer mol = CdkTools.readV3000molFile(path);
+        int atomCount = getAtomCount(myStructure);
+        int bondCount = getBondCount(myStructure);
+        assertTrue(mol.getAtomCount() == atomCount);
+        assertTrue(mol.getBondCount()*2 == bondCount);
     }
 
+
+    private int getAtomCount(MyStructureIfc myStructure){
+
+        int atomCount = 0;
+        for (MyChainIfc chain: myStructure.getAllChains()){
+            for (MyMonomerIfc monomer: chain.getMyMonomers()){
+                atomCount += monomer.getMyAtoms().length;
+            }
+        }
+        return atomCount;
+    }
+
+
+    private int getBondCount(MyStructureIfc myStructure){
+
+        int bondCount = 0;
+        for (MyChainIfc chain: myStructure.getAllChains()){
+            for (MyMonomerIfc monomer: chain.getMyMonomers()){
+                for (MyAtomIfc atom: monomer.getMyAtoms()) {
+                    bondCount += atom.getBonds().length;
+                }
+            }
+        }
+        return bondCount;
+    }
 }
