@@ -33,9 +33,9 @@ public class MyJmolTest {
 
 
     @Test
-    public void testOpenJmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public void testOpenStringInlineV3000Jmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("3nir.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
 
         URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");

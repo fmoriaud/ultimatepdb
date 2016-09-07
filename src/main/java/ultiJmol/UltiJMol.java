@@ -85,8 +85,9 @@ public class UltiJMol {
 		JmolViewer viewer;
 		JmolAdapter adapter;
 		JmolPanel() {
+
 			adapter = new SmarterJmolAdapter();
-			viewer = JmolViewer.allocateViewer(this, adapter);
+			viewer = JmolViewer.allocateViewer(this, adapter);//JmolViewer.allocateViewer(this, adapter);
 
 		}
 
@@ -103,9 +104,10 @@ public class UltiJMol {
 		final Rectangle rectClip = new Rectangle();
 
 		public void paint(Graphics g) {
-			getSize(currentSize);
-			g.getClipBounds(rectClip);
-			viewer.renderScreenImage(g, currentSize, rectClip);
+
+			this.setSize(this.currentSize);
+			this.viewer.renderScreenImage(g, this.currentSize.width, this.currentSize.height);
+			//viewer.renderScreenImage(g, viewer.getWidth(), viewer.getHeight());
 		}
 	}
 }

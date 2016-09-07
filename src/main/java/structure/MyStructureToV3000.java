@@ -8,7 +8,7 @@ public class MyStructureToV3000 {
 	//-------------------------------------------------------------
 	// Constants
 	//-------------------------------------------------------------
-	private String newline = System.getProperty("line.separator");
+	private String newline = "\r"; //System.getProperty("line.separator");
 
 	private MyStructureIfc myStructure;
 	private Map<MyAtomIfc, Integer> mapMyAtomToRenumbered;
