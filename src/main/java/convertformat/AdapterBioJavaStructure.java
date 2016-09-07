@@ -292,14 +292,6 @@ public class AdapterBioJavaStructure {
 				insertionLetter = currentGroup.getResidueNumber().getInsCode().toString().toCharArray()[0];
 			}
 
-			//}
-			if (currentGroup instanceof AminoAcid){
-				AminoAcid aa = (AminoAcid)currentGroup;
-				Map<String, Object> properties = aa.getProperties();
-				System.out.println("No properties so no secstruc found in " + aa.getPDBName());
-			}
-
-			char[] secStruc = "".toCharArray();
 			MyMonomerType monomerType = MyStructureTools.convertType(currentGroup.getType());
 			MyMonomerIfc myMonomer;
 			try {
