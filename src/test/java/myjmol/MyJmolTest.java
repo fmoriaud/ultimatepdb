@@ -2,14 +2,19 @@ package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
 import io.BiojavaReaderTest;
+import io.Tools;
 import org.biojava.bio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import protocols.CommandLineTools;
+import protocols.ParsingConfigFileException;
+import structure.EnumMyReaderBiojava;
 import structure.ExceptionInMyStructurePackage;
 import structure.MyStructureIfc;
 import structure.ReadingStructurefileException;
 import ultiJmol.UltiJMol;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -28,35 +33,20 @@ public class MyJmolTest {
 
 
     @Test
-    public void testOpenJmol() {
+    public void testOpenJmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
 
-        Path path = null;
-        try {
-            path = Paths.get(url.toURI());
-        } catch (URISyntaxException e1) {
-            assertTrue(false);
-        }
-        Structure cifStructure = null;
+        URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
 
-            cifStructure = null ; // IOTools.readMMCIFFile(path);
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
 
-
-        AlgoParameters algoParameters = new AlgoParameters();
-        AdapterBioJavaStructure adapter = new AdapterBioJavaStructure(algoParameters);
-
-        MyStructureIfc myStructure = null;
-        try {
-            myStructure = adapter.convertStructureToMyStructure(cifStructure, algoParameters);
-        } catch (ReadingStructurefileException e) {
-            e.printStackTrace();
-        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-            exceptionInMyStructurePackage.printStackTrace();
-        }
         UltiJMol ultiJmol = new UltiJMol();
-
-        ultiJmol.jmolviewerForUlti.openStringInline(myStructure.toV3000());
+        String myStructureV3000 = myStructure.toV3000();
+        ultiJmol.jmolviewerForUlti.openStringInline(myStructureV3000);
 
         System.out.println();
 

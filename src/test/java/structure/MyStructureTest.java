@@ -1,9 +1,20 @@
 package structure;
 
+import convertformat.AdapterBioJavaStructure;
+import io.BiojavaReaderTest;
+import io.Tools;
+import org.biojava.bio.structure.Structure;
 import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import protocols.CommandLineTools;
+import protocols.ParsingConfigFileException;
+import ultiJmol.UltiJMol;
 
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -123,4 +134,23 @@ public class MyStructureTest {
 
     // MyStructure integrity is not safe, one can modify everything inside without checking if it is valid
     // and without updating the neighbors... Don't know what to do.
+
+    @Test
+    public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage{
+
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+
+        URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        String myStructureV3000 = myStructure.toV3000();
+
+        String[] lines = myStructureV3000.split("/r");
+        System.out.println();
+    }
+
 }

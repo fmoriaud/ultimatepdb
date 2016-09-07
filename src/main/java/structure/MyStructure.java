@@ -397,7 +397,10 @@ public class MyStructure implements MyStructureIfc{
 	}
 
 
-
+	/**
+	 * Convert this MyStructure to a V3000 molecular format file
+	 * @return V3000 file as a String
+	 */
 	@Override
 	public String toV3000() {
 
