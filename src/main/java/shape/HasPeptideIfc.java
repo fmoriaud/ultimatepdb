@@ -1,6 +1,6 @@
 package shape;
 
-import structure.MyChainIfc;
+import mystructure.MyChainIfc;
 
 public interface HasPeptideIfc {
 

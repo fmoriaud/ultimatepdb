@@ -14,12 +14,12 @@ import pointWithProperties.PointWithProperties;
 import pointWithProperties.PointWithPropertiesIfc;
 import pointWithProperties.StrikingProperties;
 import pointWithProperties.StrikingPropertiesTools;
-import structure.AtomProperties;
-import structure.HBondDefinedWithAtoms;
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.AtomProperties;
+import mystructure.HBondDefinedWithAtoms;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 
 public class ComputeShapePointsMultiThread extends RecursiveTask<List<PointWithPropertiesIfc>>{

@@ -2,15 +2,12 @@ package convertformat;
 
 import io.BiojavaReaderTest;
 import io.Tools;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
+import mystructure.*;
 import org.biojava.bio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import structure.*;
 
 import java.io.IOException;
 import java.net.URL;

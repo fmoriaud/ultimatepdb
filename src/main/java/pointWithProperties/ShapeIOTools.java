@@ -3,13 +3,13 @@ package pointWithProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtom;
-import structure.MyAtomIfc;
-import structure.MyBondIfc;
-import structure.MyMonomer;
-import structure.MyMonomerIfc;
-import structure.MyMonomerType;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtom;
+import mystructure.MyAtomIfc;
+import mystructure.MyBondIfc;
+import mystructure.MyMonomer;
+import mystructure.MyMonomerIfc;
+import mystructure.MyMonomerType;
 
 
 

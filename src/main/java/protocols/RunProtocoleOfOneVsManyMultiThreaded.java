@@ -10,7 +10,7 @@ import math.ProcrustesAnalysisIfc;
 import multithread.ProtocolOneVsManyMultiThreaded;
 import parameters.AlgoParameters;
 import shapeCompare.ProcrustesAnalysis;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 import ultiJmol.UltiJMol;
 
 public class RunProtocoleOfOneVsManyMultiThreaded {

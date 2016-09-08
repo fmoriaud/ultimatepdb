@@ -3,8 +3,8 @@ package shapeBuilder;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
-import structure.EnumMyReaderBiojava;
-import structure.MyStructureIfc;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyStructureIfc;
 
 public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstract implements ShapeBuilderConstructorIfc{
 	//-------------------------------------------------------------

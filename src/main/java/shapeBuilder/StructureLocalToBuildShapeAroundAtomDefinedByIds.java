@@ -6,12 +6,12 @@ import java.util.Set;
 
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtomIfc;
-import structure.MyChain;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtomIfc;
+import mystructure.MyChain;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class StructureLocalToBuildShapeAroundAtomDefinedByIds implements StructureLocalToBuildShapeIfc{
 	//-------------------------------------------------------------

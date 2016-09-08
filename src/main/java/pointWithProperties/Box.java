@@ -3,7 +3,7 @@ package pointWithProperties;
 import java.util.Map;
 
 import parameters.AlgoParameters;
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 public class Box {
 	//------------------------

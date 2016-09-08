@@ -8,7 +8,7 @@ import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointWithPropertiesIfc;
 import shapeCompare.ResultsFromEvaluateCost;
 import shapeReduction.TriangleInteger;
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 public interface ShapeContainerIfc {
 

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import structure.MyChain;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.MyChain;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 
 public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildShapeIfc{

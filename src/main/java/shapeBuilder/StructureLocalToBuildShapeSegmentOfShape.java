@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 import parameters.AlgoParameters;
-import structure.MyChain;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.MyChain;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 
 public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalToBuildShapeIfc{
 	//-------------------------------------------------------------

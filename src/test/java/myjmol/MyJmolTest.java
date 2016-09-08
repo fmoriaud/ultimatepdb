@@ -8,17 +8,14 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import structure.EnumMyReaderBiojava;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyStructureIfc;
-import structure.ReadingStructurefileException;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
 import ultiJmol.UltiJMol;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,9 +1,9 @@
 package math;
 
-import structure.BigHetatmResidues;
-import structure.MyAtomIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureTools;
+import mystructure.BigHetatmResidues;
+import mystructure.MyAtomIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureTools;
 
 public class ToolsMathAppliedToObjects {
 	// -------------------------------------------------------------------

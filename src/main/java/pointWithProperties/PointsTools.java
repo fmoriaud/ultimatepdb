@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
 
 public class PointsTools {
 

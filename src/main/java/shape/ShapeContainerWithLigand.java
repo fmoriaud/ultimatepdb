@@ -7,9 +7,9 @@ import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
 import shapeCompare.ResultsFromEvaluateCost;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 
 public class ShapeContainerWithLigand extends ShapeContainer implements ShapeContainerIfc{
 	//------------------------

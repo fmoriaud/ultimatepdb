@@ -7,13 +7,13 @@ import java.util.Map;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
-import structure.AtomProperties;
-import structure.HBondDefinedWithAtoms;
-import structure.MyAtomIfc;
-import structure.MyBondIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.AtomProperties;
+import mystructure.HBondDefinedWithAtoms;
+import mystructure.MyAtomIfc;
+import mystructure.MyBondIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class ComputePropertiesPocket implements ComputePropertiesIfc {
 	//------------------------

@@ -4,15 +4,12 @@ import java.util.List;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
-import structure.AtomProperties;
-import structure.EnumMyReaderBiojava;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
-import structure.ReadingStructurefileException;
-import structure.StructureReaderMode;
+import mystructure.AtomProperties;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class ShapeBuildingTools {
 

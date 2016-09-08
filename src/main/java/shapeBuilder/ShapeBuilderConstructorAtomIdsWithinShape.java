@@ -6,8 +6,8 @@ import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import shape.ShapeContainerAtomIdsWithinShapeWithPeptide;
 import shape.ShapeContainerIfc;
-import structure.EnumMyReaderBiojava;
-import structure.MyStructureIfc;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyStructureIfc;
 
 public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConstructorAbstract implements ShapeBuilderConstructorIfc{
 	//-------------------------------------------------------------

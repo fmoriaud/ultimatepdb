@@ -15,7 +15,7 @@ import parameters.TargetDefinedByHetAtm;
 import parameters.TargetDefinedBySegmentOfChainBasedOnSegmentLength;
 import parameters.TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
 import parameters.TargetDefinedByWholeChain;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 
 public class CommandLineTools {
 

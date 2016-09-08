@@ -3,8 +3,8 @@ package shapeBuilder;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
-import structure.EnumMyReaderBiojava;
-import structure.MyStructureIfc;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyStructureIfc;
 
 public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstructorAbstract implements ShapeBuilderConstructorIfc{
 	//-------------------------------------------------------------

@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +24,11 @@ import pointWithProperties.ShapeIOTools;
 import pointWithProperties.StrikingProperties;
 import shapeCompare.ResultsFromEvaluateCost;
 import shapeReduction.TriangleInteger;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyChain;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyChain;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 
 public class ShapeContainer implements ShapeContainerIfc{ // in case it is used it is ready to be

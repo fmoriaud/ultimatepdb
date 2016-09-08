@@ -1,6 +1,6 @@
 package shapeBuilder;
 
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 public interface StructureLocalToBuildShapeIfc {
 

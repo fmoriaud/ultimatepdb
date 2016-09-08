@@ -2,10 +2,10 @@ package ultiJmol;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtomIfc;
-import structure.MyStructure;
-import structure.MyStructureIfc;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtomIfc;
+import mystructure.MyStructure;
+import mystructure.MyStructureIfc;
 
 public class ComputeRmsd {
 	//------------------------

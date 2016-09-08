@@ -8,8 +8,8 @@ import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
 import shapeCompare.ResultsFromEvaluateCost;
-import structure.MyChainIfc;
-import structure.MyStructureIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyStructureIfc;
 
 public class ShapeContainerAtomIdsWithinShapeWithPeptide extends ShapeContainerAtomIdsWithinShape implements HasPeptideIfc{
 	//------------------------

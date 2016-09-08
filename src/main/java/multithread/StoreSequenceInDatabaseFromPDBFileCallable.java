@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import database.SequenceTools;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingTools;
-import structure.EnumMyReaderBiojava;
-import structure.MyChainIfc;
-import structure.MyStructureIfc;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyChainIfc;
+import mystructure.MyStructureIfc;
 
 public class StoreSequenceInDatabaseFromPDBFileCallable implements Runnable{
 	//------------------------

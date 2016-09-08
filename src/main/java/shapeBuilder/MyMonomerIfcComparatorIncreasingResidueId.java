@@ -2,7 +2,7 @@ package shapeBuilder;
 
 import java.util.Comparator;
 
-import structure.MyMonomerIfc;
+import mystructure.MyMonomerIfc;
 
 public class MyMonomerIfcComparatorIncreasingResidueId implements Comparator<MyMonomerIfc>{
 

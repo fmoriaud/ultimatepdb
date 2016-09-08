@@ -21,13 +21,13 @@ import pointWithProperties.PointWithProperties;
 import pointWithProperties.PointWithPropertiesIfc;
 import shapeCompare.PairingTools;
 import shapeCompare.ResultsFromEvaluateCost;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructure;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructure;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 
 public class HitTools {
 

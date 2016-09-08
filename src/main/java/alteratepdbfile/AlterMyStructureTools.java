@@ -17,17 +17,17 @@ import math.ToolsMath;
 import scorePairing.ScorePairingWithStaticMethods;
 import shapeCompare.PairingTools;
 import shapeCompare.ProcrustesAnalysis;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtom;
-import structure.MyAtomIfc;
-import structure.MyBond;
-import structure.MyBondIfc;
-import structure.MyChainIfc;
-import structure.MyMonomer;
-import structure.MyMonomerIfc;
-import structure.MyMonomerType;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtom;
+import mystructure.MyAtomIfc;
+import mystructure.MyBond;
+import mystructure.MyBondIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomer;
+import mystructure.MyMonomerIfc;
+import mystructure.MyMonomerType;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 
 public class AlterMyStructureTools {
 

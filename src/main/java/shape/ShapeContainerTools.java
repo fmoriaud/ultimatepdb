@@ -9,12 +9,12 @@ import java.util.List;
 import hits.HitTools;
 import parameters.AlgoParameters;
 import shapeCompare.ResultsFromEvaluateCost;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtomIfc;
-import structure.MyBondIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureTools;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtomIfc;
+import mystructure.MyBondIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureTools;
 
 public class ShapeContainerTools {
 

@@ -1,6 +1,6 @@
 package ultiJmol;
 
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 public class ResultsUltiJMolMinimizeSideChain {
 

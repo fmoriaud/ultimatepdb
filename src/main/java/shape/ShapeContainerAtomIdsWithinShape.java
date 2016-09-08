@@ -6,7 +6,7 @@ import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 public class ShapeContainerAtomIdsWithinShape extends ShapeContainer implements ShapeContainerIfc{
 	//------------------------

@@ -15,11 +15,10 @@ import protocols.ParsingConfigFileException;
 import shape.ShapeContainer;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
-import structure.EnumMyReaderBiojava;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyStructureIfc;
-import structure.ReadingStructurefileException;
-import structure.StructureReaderMode;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
 
 public class TestShapeBuilder {
 

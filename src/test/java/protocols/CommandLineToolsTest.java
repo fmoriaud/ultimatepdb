@@ -3,7 +3,7 @@ package protocols;
 import io.BiojavaReaderTest;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 
 import java.net.URL;
 

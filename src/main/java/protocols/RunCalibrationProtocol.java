@@ -11,7 +11,7 @@ import math.ProcrustesAnalysisIfc;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
 import shapeCompare.ProcrustesAnalysis;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 import ultiJmol.UltiJMol;
 
 public class RunCalibrationProtocol {

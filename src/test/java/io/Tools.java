@@ -4,7 +4,7 @@ import org.biojava.bio.structure.Structure;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

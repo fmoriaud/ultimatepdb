@@ -10,10 +10,10 @@ import pointWithProperties.LennardJonesTools;
 import pointWithProperties.LennardJonesTools.LennarJonesGromacs;
 import pointWithProperties.PointIfc;
 import pointWithProperties.PointsWithLennardJones;
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class ComputeLennardJonesMultiThread extends RecursiveTask<List<PointIfc>>{
 

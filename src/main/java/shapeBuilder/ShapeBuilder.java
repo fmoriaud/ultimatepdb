@@ -30,16 +30,16 @@ import shape.ShapeContainerWithPeptide;
 import shapeReduction.GenerateTriangles;
 import shapeReduction.ShapeReductorV4;
 import shapeReduction.TriangleInteger;
-import structure.AtomProperties.AtomHAcceptorDescriptors;
-import structure.AtomProperties.AtomHDonnorDescriptors;
-import structure.HBondDefinedWithAtoms;
-import structure.MyAtomIfc;
-import structure.MyBondIfc;
-import structure.MyChain;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.AtomProperties.AtomHAcceptorDescriptors;
+import mystructure.AtomProperties.AtomHDonnorDescriptors;
+import mystructure.HBondDefinedWithAtoms;
+import mystructure.MyAtomIfc;
+import mystructure.MyBondIfc;
+import mystructure.MyChain;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 import ultiJmol.UltiJMolTools;
 
 public class ShapeBuilder {

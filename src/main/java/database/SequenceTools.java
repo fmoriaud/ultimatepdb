@@ -3,8 +3,8 @@ package database;
 import java.util.ArrayList;
 import java.util.List;
 
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
 
 public class SequenceTools {
 

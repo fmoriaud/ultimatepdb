@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import structure.ExceptionInMyStructurePackage;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class StructureLocalTools {
 

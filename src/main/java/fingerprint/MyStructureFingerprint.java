@@ -21,9 +21,9 @@ import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
 import shapeReduction.PhiThetaInterval;
 import shapeReduction.ToolsShapeReductor;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class MyStructureFingerprint {
 	// -------------------------------------------------------------------

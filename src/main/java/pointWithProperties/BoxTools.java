@@ -5,11 +5,11 @@ import java.util.Map;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
-import structure.AtomProperties;
-import structure.MyAtomIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructureIfc;
+import mystructure.AtomProperties;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 
 public class BoxTools {
 

@@ -1,11 +1,8 @@
 package shapeBuilder;
 
 import parameters.AlgoParameters;
-import structure.EnumMyReaderBiojava;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyStructureIfc;
-import structure.ReadingStructurefileException;
-import structure.StructureReaderMode;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyStructureIfc;
 
 public class ShapeBuilderConstructorAbstract {
 	//-------------------------------------------------------------

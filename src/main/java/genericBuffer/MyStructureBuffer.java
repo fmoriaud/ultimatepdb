@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.math3.util.Pair;
 
-import structure.MyStructureIfc;
+import mystructure.MyStructureIfc;
 
 
 public class MyStructureBuffer {

@@ -1,6 +1,6 @@
 package pointWithProperties;
 
-import structure.EnumResidues;
+import mystructure.EnumResidues;
 
 public class LennardJonesTools {
 

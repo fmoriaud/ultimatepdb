@@ -2,20 +2,13 @@ package io;
 
 import org.biojava.bio.structure.*;
 import org.junit.Test;
-import parameters.AlgoParameters;
-import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import structure.EnumMyReaderBiojava;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

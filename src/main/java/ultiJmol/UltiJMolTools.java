@@ -10,20 +10,19 @@ import java.util.Map.Entry;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.AddToMap;
 import org.jmol.api.MinimizerInterface;
-import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
-import structure.ExceptionInMyStructurePackage;
-import structure.MyAtom;
-import structure.MyAtomIfc;
-import structure.MyBond;
-import structure.MyBondIfc;
-import structure.MyChainIfc;
-import structure.MyMonomerIfc;
-import structure.MyStructure;
-import structure.MyStructureConstants;
-import structure.MyStructureIfc;
-import structure.MyStructureTools;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyAtom;
+import mystructure.MyAtomIfc;
+import mystructure.MyBond;
+import mystructure.MyBondIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructure;
+import mystructure.MyStructureConstants;
+import mystructure.MyStructureIfc;
+import mystructure.MyStructureTools;
 
 public class UltiJMolTools {
 	public static MyStructureIfc protonateStructure(String inputStructureV3000, AlgoParameters algoParameters) throws ShapeBuildingException{

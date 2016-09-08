@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import multithread.StoreSequenceInDatabaseFromPDBFileCallable;
 import parameters.AlgoParameters;
-import structure.EnumMyReaderBiojava;
+import mystructure.EnumMyReaderBiojava;
 
 public class UpdateSequenceDatabaseMultithreaded {
 	//-------------------------------------------------------------

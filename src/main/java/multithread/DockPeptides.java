@@ -23,9 +23,9 @@ import shapeBuilder.ShapeBuilderConstructorSegmentOfChain;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
 import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
-import structure.EnumMyReaderBiojava;
-import structure.MyChainIfc;
-import structure.MyStructureIfc;
+import mystructure.EnumMyReaderBiojava;
+import mystructure.MyChainIfc;
+import mystructure.MyStructureIfc;
 
 public class DockPeptides {
 	//------------------------
