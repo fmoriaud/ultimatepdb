@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.AddToMap;
+import org.jmol.api.MinimizerInterface;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
@@ -766,7 +767,7 @@ public class UltiJMolTools {
 		int maxIteration = 20;
 		int countIteration = 0;
 
-		Minimizer minimizer = ultiJMol.viewerForUlti.getMinimizer(true);
+		MinimizerInterface minimizer = ultiJMol.viewerForUlti.getMinimizer(true);
 
 		while( minimizer == null || minimizer.getMinimizationEnergy() == null){
 			try {

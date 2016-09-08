@@ -46,10 +46,10 @@ public class MyJmolTest {
 
         UltiJMol ultiJmol = new UltiJMol();
         String myStructureV3000 = myStructure.toV3000();
+        System.out.println(myStructureV3000);
         ultiJmol.jmolviewerForUlti.openStringInline(myStructureV3000);
-
-        System.out.println();
-
-
+        String readV3000 = ultiJmol.viewerForUlti.getModelExtract("*", true, false, "V3000");
+        assertTrue(readV3000.contains("M  V30 1 N      3.26500    -14.10700     16.87700 0"));
+        ultiJmol.jmolviewerForUlti.dispose();
     }
 }
