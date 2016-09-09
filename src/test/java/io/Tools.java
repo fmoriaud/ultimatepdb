@@ -1,6 +1,7 @@
 package io;
 
 import org.biojava.bio.structure.Structure;
+import org.junit.rules.TemporaryFolder;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -27,18 +28,28 @@ public class Tools {
      * @throws ParsingConfigFileException
      * @throws IOException
      */
-    public static Structure getStructure(URL url) throws ParsingConfigFileException, IOException {
+    public static Structure getStructure(URL url, String pathToTempPDBFolder) throws ParsingConfigFileException, IOException {
         Path path = null;
         try {
             path = Paths.get(url.toURI());
         } catch (URISyntaxException e1) {
             assertTrue(false);
         }
-        URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToTempPDBFolder);
         Structure structure = null;
         BiojavaReaderIfc reader = new BiojavaReaderUsingChemcompFolder(algoParameters);
         structure = reader.read(path);
         return structure;
+    }
+
+
+    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders(String pathToTempPDBFolder) throws ParsingConfigFileException, IOException{
+
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToTempPDBFolder);
+        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(pathToTempPDBFolder);
+        return algoParameters;
     }
 }

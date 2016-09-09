@@ -1,9 +1,14 @@
 package io;
 
 import org.biojava.bio.structure.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import protocols.ParsingConfigFileException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +23,22 @@ import static org.junit.Assert.assertTrue;
  */
 public class BiojavaReaderTest {
 
+    private String pathToPDBFolder;
+
+    @Rule
+    public TemporaryFolder testPDBFolder = new TemporaryFolder();
+
+    @Before
+    public void createPath(){
+
+        try{
+            File file = testPDBFolder.newFile("empty");
+            pathToPDBFolder = file.getParentFile().getAbsolutePath();
+        } catch (IOException e){
+
+        }
+    }
+
 
     @Test
     public void testReadFromResourcesProtein() throws ParsingConfigFileException {
@@ -25,7 +46,7 @@ public class BiojavaReaderTest {
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -57,7 +78,7 @@ public class BiojavaReaderTest {
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("394d.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -96,7 +117,7 @@ public class BiojavaReaderTest {
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -120,7 +141,7 @@ public class BiojavaReaderTest {
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("394d.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
         } catch (IOException e) {
             assertTrue(false);
         }

@@ -4,7 +4,10 @@ import convertformat.AdapterBioJavaStructure;
 import io.BiojavaReaderTest;
 import io.Tools;
 import org.biojava.bio.structure.Structure;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -14,6 +17,7 @@ import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import ultiJmol.UltiJMol;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -28,15 +32,29 @@ public class MyJmolTest {
     // method to be tested
 // ultiJmol.viewerForUlti.areHydrogenAdded()
 
+    private String pathToPDBFolder;
+
+    @Rule
+    public TemporaryFolder testPDBFolder = new TemporaryFolder();
+
+    @Before
+    public void createPath(){
+
+        try{
+            File file = testPDBFolder.newFile("empty");
+            pathToPDBFolder = file.getParentFile().getAbsolutePath();
+        } catch (IOException e){
+
+        }
+    }
 
     @Test
     public void testOpenStringInlineV3000Jmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
 
-        URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToPDBFolder);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);

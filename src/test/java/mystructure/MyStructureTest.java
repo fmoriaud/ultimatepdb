@@ -7,12 +7,15 @@ import io.Tools;
 import io.WriteTextFile;
 import org.biojava.bio.structure.Structure;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -23,18 +26,24 @@ import static org.junit.Assert.assertTrue;
  */
 public class MyStructureTest {
 
-    private  AlgoParameters algoParameters;
+    private String pathToPDBFolder;
 
+    @Rule
+    public TemporaryFolder testPDBFolder = new TemporaryFolder();
 
     @Before
-    public void prepare(){
-        algoParameters = TestTools.getAlgoParameters();
+    public void createPath(){
+
+        try{
+            File file = testPDBFolder.newFile("empty");
+            pathToPDBFolder = file.getParentFile().getAbsolutePath();
+        } catch (IOException e){
+
+        }
     }
 
-
-
     @Test
-    public void MyStructureConstructorWithOnlyOneMonomer() {
+    public void MyStructureConstructorWithOnlyOneMonomer() throws ParsingConfigFileException, IOException{
 
         MyMonomerIfc monomer = null;
         try {
@@ -42,7 +51,7 @@ public class MyStructureTest {
         } catch (ExceptionInMyStructurePackage e1) {
         }
 
-
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToPDBFolder);
         try {
             MyStructure myStructureOK = new MyStructure(monomer, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
@@ -139,10 +148,10 @@ public class MyStructureTest {
     public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage{
 
         URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
 
         URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(urlUltimate.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToPDBFolder);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
@@ -151,12 +160,12 @@ public class MyStructureTest {
 
         // write to a temp text file
         // TODO use java code to find default folder
-        String path = "//Users//Fabrice//Documents//v300test.mol";
-        WriteTextFile.writeTextFile(myStructureV3000, path);
+        String pathTOWriteV3000Molfile = pathToPDBFolder + "//v300test.mol";
+        WriteTextFile.writeTextFile(myStructureV3000, pathTOWriteV3000Molfile);
 
         // read it with cdk and check atom and bond count
 
-        IAtomContainer mol = CdkTools.readV3000molFile(path);
+        IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
         int atomCount = getAtomCount(myStructure);
         int bondCount = getBondCount(myStructure);
         assertTrue(mol.getAtomCount() == atomCount);
