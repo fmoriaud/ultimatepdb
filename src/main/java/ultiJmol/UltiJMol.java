@@ -103,9 +103,10 @@ public class UltiJMol {
         final Rectangle rectClip = new Rectangle();
 
         public void paint(Graphics g) {
-            getSize(currentSize);
-            g.getClipBounds(rectClip);
-            viewer.renderScreenImage(g, currentSize, rectClip);
+            //getSize(currentSize);
+            //g.getClipBounds(rectClip);
+            viewer.renderScreenImage(g, getWidth(), getHeight());
+            //viewer.renderScreenImage(g, currentSize, rectClip);
         }
     }
 }
