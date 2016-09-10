@@ -1,6 +1,6 @@
 package io;
 
-import org.biojava.bio.structure.Structure;
+import org.biojava.nbio.structure.Structure;
 import org.junit.rules.TemporaryFolder;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;

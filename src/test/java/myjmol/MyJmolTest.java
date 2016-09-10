@@ -3,7 +3,7 @@ package myjmol;
 import convertformat.AdapterBioJavaStructure;
 import io.BiojavaReaderTest;
 import io.Tools;
-import org.biojava.bio.structure.Structure;
+import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

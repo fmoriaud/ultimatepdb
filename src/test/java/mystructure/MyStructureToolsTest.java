@@ -1,10 +1,13 @@
 package mystructure;
 
-import org.biojava.bio.structure.GroupType;
+import io.Tools;
+import org.biojava.nbio.structure.GroupType;
 import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import protocols.ParsingConfigFileException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,16 +19,6 @@ import static org.junit.Assert.assertTrue;
  * Created by Fabrice on 29/08/16.
  */
 public class MyStructureToolsTest {
-
-    private  AlgoParameters algoParameters;
-
-
-    @Before
-    public void prepare(){
-        algoParameters = TestTools.getAlgoParameters();
-    }
-
-
 
     @Test
     public void testConversion() throws Exception {
@@ -204,7 +197,9 @@ public class MyStructureToolsTest {
 
 
     @Test
-    public void testStorageComputeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(){
+    public void testStorageComputeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testFolder);
 
         MyStructureIfc myStructure = null;
         try {

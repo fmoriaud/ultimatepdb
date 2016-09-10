@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.Structure;
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
 import math.ToolsMath;
+import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
@@ -26,15 +22,15 @@ public class MyStructureTools {
 	 * @param type BioJava Residue type
 	 * @return MyMonomerType
 	 */
-	public static MyMonomerType convertType(String type) {
+	public static MyMonomerType convertType(GroupType type) {
 
 		MyMonomerType myMonomerType = null;
 		switch (type){
-		case GroupType.AMINOACID: myMonomerType = MyMonomerType.AMINOACID;
+		case AMINOACID: myMonomerType = MyMonomerType.AMINOACID;
 		break;
-		case GroupType.NUCLEOTIDE: myMonomerType = MyMonomerType.NUCLEOTIDE;
+		case NUCLEOTIDE: myMonomerType = MyMonomerType.NUCLEOTIDE;
 		break;
-		case GroupType.HETATM: myMonomerType = MyMonomerType.HETATM;
+		case HETATM: myMonomerType = MyMonomerType.HETATM;
 		break;
 		}
 		return myMonomerType;

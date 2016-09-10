@@ -1,7 +1,7 @@
 package hits;
 
-import org.biojava.bio.structure.Element;
 
+import org.biojava.nbio.structure.Element;
 import pointWithProperties.StrikingProperties;
 
 public enum StrikingPropertyToElement {

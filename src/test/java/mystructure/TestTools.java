@@ -1,7 +1,7 @@
 package mystructure;
 
 import io.BiojavaReaderTest;
-import org.biojava.bio.structure.Structure;
+import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -17,6 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 public class TestTools {
 
+	/**
+	 * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
+	 */
+	public static final String testFolder = "//Users//Fabrice//Documents//test";
 
 	public static Structure readMmcifFileFromResources(String fileName){
 
@@ -33,20 +37,6 @@ public class TestTools {
 			cifStructure = null; // IOTools.readMMCIFFile(path);
 
 		return cifStructure;
-	}
-
-
-
-	public static AlgoParameters getAlgoParameters(){
-
-		URL url = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
-		AlgoParameters algoParameters = new AlgoParameters();
-		try {
-			algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-		} catch (ParsingConfigFileException e){
-			assertTrue(false);
-		}
-		return algoParameters;
 	}
 
 

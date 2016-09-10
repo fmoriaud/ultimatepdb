@@ -1,9 +1,9 @@
 package io;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.io.FileParsingParameters;
+import org.biojava.nbio.structure.io.MMCIFFileReader;
+import org.biojava.nbio.structure.io.mmcif.DownloadChemCompProvider;
 import parameters.AlgoParameters;
 
 import java.io.IOException;
@@ -23,27 +23,26 @@ public class BiojavaReaderUsingChemcompFolder implements BiojavaReaderIfc {
         this.algoParameters = algoParameters;
     }
 
+    public static DownloadChemCompProvider downloadChemCompProvider = null;
 
     @Override
     public Structure read(Path path) throws IOException {
-        // It is static but used anyway
-        DownloadChemCompProvider.setPath(algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-        DownloadChemCompProvider c = new DownloadChemCompProvider();
-        c.setDownloadAll(true);
-        //check if directory empty
-        try {
-            if (isDirEmpty(Paths.get(algoParameters.getPATH_TO_CHEMCOMP_FOLDER()))) {
-                c.checkDoFirstInstall();
-            }
-        } catch (IOException e) {
+
+        // done only once
+        if (downloadChemCompProvider == null){
+            downloadChemCompProvider = new DownloadChemCompProvider(algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            // don't know if needed
+            downloadChemCompProvider.setDownloadAll(true);
+            //downloadChemCompProvider.checkDoFirstInstall();
         }
+
         MMCIFFileReader mMCIFileReader = new MMCIFFileReader();
-        mMCIFileReader.setPdbDirectorySplit(true);
+       // mMCIFileReader.setPdbDirectorySplit(true);
         mMCIFileReader.setPath(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         FileParsingParameters params = new FileParsingParameters();
         params.setAlignSeqRes(false);
         params.setParseSecStruc(true);
-        params.setLoadChemCompInfo(true);
+        //params.setLoadChemCompInfo(true);
         params.setCreateAtomBonds(true);
 
         mMCIFileReader.setFileParsingParameters(params);
@@ -52,7 +51,6 @@ public class BiojavaReaderUsingChemcompFolder implements BiojavaReaderIfc {
 
         return structure;
     }
-
 
 
     private static boolean isDirEmpty(final Path directory) throws IOException {

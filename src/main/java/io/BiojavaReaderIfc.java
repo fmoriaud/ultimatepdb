@@ -1,6 +1,7 @@
 package io;
 
-import org.biojava.bio.structure.Structure;
+
+import org.biojava.nbio.structure.Structure;
 
 import java.io.IOException;
 import java.nio.file.Path;
