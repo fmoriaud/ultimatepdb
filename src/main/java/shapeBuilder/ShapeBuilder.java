@@ -40,7 +40,7 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import mystructure.MyStructureTools;
-import ultiJmol.UltiJMolTools;
+import ultiJmol1462.UltiJMolTools;
 
 public class ShapeBuilder {
 	//-------------------------------------------------------------

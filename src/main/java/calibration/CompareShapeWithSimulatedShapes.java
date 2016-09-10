@@ -31,9 +31,9 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import mystructure.MyStructureTools;
-import ultiJmol.ResultsUltiJMolMinimizeSideChain;
-import ultiJmol.ResultsUltiJMolMinimizedHitLigandOnTarget;
-import ultiJmol.UltiJMolTools;
+import ultiJmol1462.ResultsUltiJMolMinimizeSideChain;
+import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
+import ultiJmol1462.UltiJMolTools;
 
 
 public class CompareShapeWithSimulatedShapes {

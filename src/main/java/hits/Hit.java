@@ -7,7 +7,7 @@ import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
 import shapeCompare.ResultsFromEvaluateCost;
-import ultiJmol.ResultsUltiJMolMinimizedHitLigandOnTarget;
+import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
 
 public class Hit {

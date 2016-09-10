@@ -30,8 +30,8 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructure;
 import mystructure.MyStructureIfc;
-import ultiJmol.ResultsUltiJMolMinimizedHitLigandOnTarget;
-import ultiJmol.UltiJMolTools;
+import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
+import ultiJmol1462.UltiJMolTools;
 
 
 public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
@@ -39,7 +39,6 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 	/**
 	 * build List of Path to each and every pdb file
 	 *
-	 * @param define from which root folder the files are searched recursively algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER()
 	 */
 	public static List<Path> makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder(AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava) {
 		List<Path> listOfInputPDBFiles = null ;

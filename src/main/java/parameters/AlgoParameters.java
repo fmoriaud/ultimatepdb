@@ -6,11 +6,11 @@ import java.util.List;
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
 import math.ProcrustesAnalysisIfc;
-import ultiJmol.UltiJMol;
+import ultiJmol1462.UltiJmol1462;
 
 public class AlgoParameters {
 
-	public GenericBuffer<UltiJMol> ultiJMolBuffer;
+	public GenericBuffer<UltiJmol1462> ultiJMolBuffer;
 	public GenericBuffer<ProcrustesAnalysisIfc> procrustesAnalysisBuffer;
 	public MyStructureBuffer myStructureBuffer;
 	public List<Path> listOfPDBFiles;

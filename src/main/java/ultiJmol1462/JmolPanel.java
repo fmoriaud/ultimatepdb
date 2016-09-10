@@ -27,7 +27,6 @@ package ultiJmol1462;
 
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
-import org.jmol.api.JmolStatusListener;
 import org.jmol.api.JmolViewer;
 import org.jmol.util.Logger;
 
@@ -39,15 +38,14 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 
-public class JmolPanel
-extends JPrintPanel
+public class JmolPanel extends JPrintPanel
 implements ActionListener
 {
 	private static final long serialVersionUID = -3661941083797644242L;
 
 	private JmolViewer viewer;
 	private JmolAdapter adapter;
-	JmolStatusListener statusListener;
+	MyJmolStatusListener statusListener;
 	final Dimension currentSize = new Dimension();
 	final Rectangle rectClip = new Rectangle();
 
@@ -91,7 +89,7 @@ implements ActionListener
 		return adapter;
 	}
 
-	public JmolStatusListener getStatusListener(){
+	public MyJmolStatusListener getStatusListener(){
 		return statusListener;
 	}
 	public void executeCmd(String rasmolScript) {

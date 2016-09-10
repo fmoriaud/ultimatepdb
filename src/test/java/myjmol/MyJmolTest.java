@@ -15,7 +15,7 @@ import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import ultiJmol.UltiJMol;
+import ultiJmol1462.UltiJmol1462;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class MyJmolTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
 
-        UltiJMol ultiJmol = new UltiJMol();
+        UltiJmol1462 ultiJmol = new UltiJmol1462();
         String myStructureV3000 = myStructure.toV3000();
         try {
             Thread.sleep(4 * 1000);
@@ -71,13 +71,13 @@ public class MyJmolTest {
         assertTrue(myStructureV3000.contains("M  V30 2863 1 2798 2797"));
         assertTrue(myStructureV3000.contains("M  END"));
 
-        ultiJmol.jmolviewerForUlti.openStringInline(myStructureV3000);
+        ultiJmol.openStringInline(myStructureV3000);
         try {
             Thread.sleep(4 * 1000);
         } catch (InterruptedException e) {
 
         }
-        String readV3000 = ultiJmol.viewerForUlti.getModelExtract("*", true, false, "V3000");
+        String readV3000 = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
         assertTrue(readV3000.contains("M  V30 COUNTS 2798 2863 0 0 0"));
         assertTrue(readV3000.contains("M  V30 1 N     19.12000     41.85000     25.99200 0"));
         assertTrue(myStructureV3000.contains("M  V30 2863 1 2798 2797"));
@@ -88,13 +88,13 @@ public class MyJmolTest {
         } catch (InterruptedException e) {
 
         }
-        ultiJmol.jmolviewerForUlti.evalString("zap");
+        ultiJmol.evalString("zap");
         try {
             Thread.sleep(4 * 1000);
         } catch (InterruptedException e) {
 
         }
         // that throws an excepion. Don't know how to fix it
-        ultiJmol.jmolviewerForUlti.dispose();
+        ultiJmol.frame.dispose();
     }
 }
