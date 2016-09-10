@@ -11,11 +11,9 @@ import java.util.Set;
 import math.AddToMap;
 import math.ToolsMath;
 import org.biojava.nbio.structure.*;
-import org.biojava.nbio.structure.secstruc.SecStrucType;
 import parameters.AlgoParameters;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
-import mystructure.LPeptideLinkingResidues;
 import mystructure.MyAtom;
 import mystructure.MyAtomIfc;
 import mystructure.MyBond;
@@ -139,10 +137,8 @@ public class AdapterBioJavaStructure {
         }
 
         MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), algoParameters);
-
         myStructure.setFourLetterCode(fourLetterCode);
 
-        integratePolymericResiduesFromHetAtmToAmino(myStructure);
         int countOfBonds = defineBonds(myStructure, structure);
 
         if (countOfBonds > 0) {
@@ -417,70 +413,6 @@ public class AdapterBioJavaStructure {
         }
     }
 
-
-    private void integratePolymericResiduesFromHetAtmToAmino(MyStructureIfc myStructure) {
-
-        // detect of gaps before an existing residue
-        Map<String, Set<Integer>> mapChainAndResidueIDBeforeAGap = findGapsInAminoChains(myStructure);
-
-        for (MyChainIfc chainHetatm : myStructure.getAllHetatmchains()) {
-            for (MyMonomerIfc candidateMonomerForInsertion : chainHetatm.getMyMonomers()) {
-
-                boolean tryToInsertIt = isThatMonomerDefinedAsPolymeric(candidateMonomerForInsertion);
-                if (tryToInsertIt == true) {
-                    tryToInsertMonomer(myStructure, mapChainAndResidueIDBeforeAGap, candidateMonomerForInsertion, chainHetatm);
-                }
-            }
-        }
-    }
-
-
-    private static boolean isThatMonomerDefinedAsPolymeric(MyMonomerIfc monomer) {
-        for (LPeptideLinkingResidues polymericResidue : LPeptideLinkingResidues.values()) {
-
-            if (String.valueOf(monomer.getThreeLetterCode()).equals(polymericResidue.getThreeLetterCode())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    private void tryToInsertMonomer(MyStructureIfc myStructure, Map<String, Set<Integer>> mapChainAndResidueIDBeforeAGap, MyMonomerIfc candidateMonomerForInsertion, MyChainIfc chainHetatm) {
-
-        int residueIdOfMonomerToInsert = candidateMonomerForInsertion.getResidueID();
-        boolean insertIt = isThatMonomerChainIdAndResidueIdFitsInAGapOfAnAminoChain(myStructure, mapChainAndResidueIDBeforeAGap, candidateMonomerForInsertion);
-
-        MyChainIfc chain = myStructure.getAminoMyChain(candidateMonomerForInsertion.getParent().getChainId());
-
-        if (chain == null) { // For some PDB where some chains are not typical amino chains there could be a problem
-            return;
-        }
-        int lastResId = chain.getMyMonomerByRank(chain.getMyMonomers().length - 1).getResidueID();
-        if (insertIt == false && residueIdOfMonomerToInsert > lastResId) {
-            insertIt = true;
-        }
-
-
-        if (insertIt == true) {
-            tempMyMonomerList.clear();
-            tempMyMonomerList.addAll(Arrays.asList(chain.getMyMonomers()));
-            MyMonomerIfc monomerJustBefore = findMonomerJustBefore(residueIdOfMonomerToInsert, chain);
-            int indexOfMonomer = tempMyMonomerList.indexOf(monomerJustBefore);
-            System.out.println("Inserted Monomer from " + String.valueOf(candidateMonomerForInsertion.getParent().getChainId()) + "   " + Arrays.toString(candidateMonomerForInsertion.getThreeLetterCode()) + candidateMonomerForInsertion.getResidueID());
-
-            tempMyMonomerList.add(indexOfMonomer + 1, candidateMonomerForInsertion);
-
-            MyMonomerIfc[] myMonomers = tempMyMonomerList.toArray(new MyMonomerIfc[tempMyMonomerList.size()]);
-            MyChainIfc chainWithMonomerInserted = new MyChain(myMonomers, chain.getChainId());
-            updateMyMonomerParentReference(chainWithMonomerInserted);
-            myStructure.setAminoChain(chainWithMonomerInserted.getChainId(), chainWithMonomerInserted);
-
-            // remove it from former chain
-            chainHetatm.removeMyMonomer(candidateMonomerForInsertion);
-
-        }
-    }
 
 
     private static void updateMyMonomerParentReference(MyChainIfc myChain) {

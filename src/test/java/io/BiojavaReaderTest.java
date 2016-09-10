@@ -96,6 +96,44 @@ public class BiojavaReaderTest {
     }
 
 
+
+    @Test
+    public void testReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
+
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("2hhf.cif.gz");
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        int count = mmcifStructure.getChains().size();
+        assertTrue(count == 2);
+
+        Chain chain = mmcifStructure.getChain(0);
+        List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);
+        assertTrue(listGroupsAmino.size() == 348);
+        List<Group> listGroupsNucleotide = chain.getAtomGroups(GroupType.NUCLEOTIDE);
+        assertTrue(listGroupsNucleotide.size() == 0);
+        List<Group> listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
+        assertTrue(listGroupsHetatm.size() == 98);
+
+        List<String> expectedSequence = new ArrayList<>(Arrays.asList("DC", "DC", "DG", "DG", "C", "G", "DC", "DC", "DG", "DG"));
+        List<Group> groups = chain.getAtomGroups((GroupType.AMINOACID));
+        for (int i = 0; i < groups.size(); i++) {
+            String name = groups.get(i).getPDBName();
+            AminoAcid aa = (AminoAcid)  groups.get(i);
+            int residueNumer = aa.getResidueNumber().getSeqNum();
+            if (residueNumer == 108){
+                assertTrue(name.equals("OCS"));
+            }
+        }
+        // Not very surprising as OCS 108 is well integrated in the mmcif file as a residue with ATOM
+    }
+
+
+
     @Test
     public void testBondsReadFromResourcesProtein() throws ParsingConfigFileException {
 
@@ -111,6 +149,7 @@ public class BiojavaReaderTest {
             for (Group group : groups) {
                 for (Atom atom : group.getAtoms()) {
                     List<Bond> bonds = atom.getBonds();
+                    assertTrue(bonds != null);
                     for (Bond bond : bonds) {
                         assertTrue(bond != null);
                     }
@@ -135,8 +174,47 @@ public class BiojavaReaderTest {
             for (Group group : groups) {
                 for (Atom atom : group.getAtoms()) {
                     List<Bond> bonds = atom.getBonds();
+                    assertTrue(bonds != null);
                     for (Bond bond : bonds) {
                         assertTrue(bond != null);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * It is expected in Biojava 4.2 that L-Peptide Linking residue are well integrated as regular Amino Acids
+     * At least when reading from mmcif files. It is not tested for PDB files.
+     * @throws ParsingConfigFileException
+     */
+    @Test
+    public void testBondsReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
+
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("2hhf.cif.gz");
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+        for (Chain chain : mmcifStructure.getChains()) {
+            List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
+            for (Group group : groups) {
+                String name = group.getPDBName();
+                AminoAcid aa = (AminoAcid)  group;
+                int residueNumer = aa.getResidueNumber().getSeqNum();
+                if (residueNumer == 108){
+                    assertTrue(name.equals("OCS"));
+                    for (Atom atom : group.getAtoms()) {
+                        List<Bond> bonds = atom.getBonds();
+                        assertTrue(bonds != null);
+                        for (Bond bond : bonds) {
+                            assertTrue(bond != null);
+                            if (atom.getName().equals("N")){
+                                assertTrue(atom.getBonds().size() == 2); // N so it should be bonded to CA and to C of neighboring residue
+                            }
+                        }
                     }
                 }
             }

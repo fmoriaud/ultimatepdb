@@ -119,7 +119,7 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureProteinWithPolymericResidueAsHetatm() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("3u4w.cif.gz");
+        URL url = BiojavaReaderTest.class.getClassLoader().getResource("2hhf.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testFolder);
@@ -142,29 +142,34 @@ public class AdapterBioJavaStructureTest {
         MyChainIfc[] nucleosidesMyChains = mystructure.getAllNucleosidechains();
         assertTrue(nucleosidesMyChains.length == 0);
         MyChainIfc[] heteroMyChains = mystructure.getAllHetatmchains();
-        assertTrue(heteroMyChains.length == 1);
+        assertTrue(heteroMyChains.length == 2);
 
-        assertTrue(aminoMyChains[0].getMyMonomers().length == 348);
+        // Yhat is how it is, don't know if it makes sense that the number is different in Structure ...
+        assertTrue(aminoMyChains[0].getMyMonomers().length == 347);
+        assertTrue(aminoMyChains[1].getMyMonomers().length == 365);
         assertTrue(heteroMyChains[0].getMyMonomers().length == 1);
-
-        MyMonomerIfc expectedLigandMSQ = heteroMyChains[0].getMyMonomers()[0];
-        assertArrayEquals(expectedLigandMSQ.getThreeLetterCode(), "MSQ".toCharArray());
-        List<String> expectedSequence = new ArrayList<>(Arrays.asList("GLU", "ARG", "PRO", "THR", "PHE", "TYR", "ARG"));
-        for (int i = 0; i < expectedSequence.size(); i++) {
-            MyMonomerIfc currentMyMonomerIfc = aminoMyChains[0].getMyMonomers()[i];
-            assertArrayEquals(currentMyMonomerIfc.getThreeLetterCode(), expectedSequence.get(i).toCharArray());
-        }
+        assertTrue(heteroMyChains[1].getMyMonomers().length == 2);
 
         // check bonds
 
+        boolean foundLlinkingReside = false;
         for (MyChainIfc chain : mystructure.getAllChains()) {
             MyMonomerIfc[] monomers = chain.getMyMonomers();
             for (MyMonomerIfc monomer : monomers) {
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    assertTrue(atom.getBonds() != null);
-                    assertTrue(atom.getBonds().length != 0);
+                if (monomer.getResidueID() == 108){
+                    assertTrue(Arrays.equals(monomer.getThreeLetterCode(), "OCS".toCharArray()));
+                    foundLlinkingReside = true;
+                    for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                        assertTrue(atom.getBonds() != null);
+                        assertTrue(atom.getBonds().length != 0);
+
+                        if (Arrays.equals(atom.getAtomName(), "N".toCharArray())){
+                            assertTrue(atom.getBonds().length == 2); // N so it should be bonded to CA and to C of neighboring residue
+                        }
+                    }
                 }
             }
         }
+        assertTrue(foundLlinkingReside);
     }
 }
