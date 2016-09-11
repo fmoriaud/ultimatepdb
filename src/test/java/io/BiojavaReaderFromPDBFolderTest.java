@@ -1,6 +1,5 @@
 package io;
 
-import mystructure.TestTools;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import protocols.ParsingConfigFileException;
@@ -26,7 +25,7 @@ public class BiojavaReaderFromPDBFolderTest {
 
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFrom(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }

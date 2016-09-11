@@ -6,7 +6,7 @@ package ultiJmol1462;
 public class RunIt {
 
     public static void main(String [] args) {
-        UltiJmol1462 myJmol = new UltiJmol1462();
+        MyJmol1462 myJmol = new MyJmol1462();
 
 
     }

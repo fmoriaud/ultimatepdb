@@ -19,8 +19,8 @@ public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstra
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorHetAtm(char[] fourLetterCode, char[] hetatmLigandThreeLetterCode, int occurenceId, AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava) {
-		super(algoParameters, enumMyReaderBiojava);
+	public ShapeBuilderConstructorHetAtm(char[] fourLetterCode, char[] hetatmLigandThreeLetterCode, int occurenceId, AlgoParameters algoParameters) {
+		super(algoParameters);
 		this.fourLetterCode = fourLetterCode;
 		this.hetatmLigandThreeLetterCode = hetatmLigandThreeLetterCode;
 		this.occurenceId = occurenceId;

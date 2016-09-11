@@ -20,7 +20,7 @@ import mystructure.MyStructureConstants;
 import mystructure.MyStructureIfc;
 import mystructure.MyStructureTools;
 
-public class UltiJMolTools {
+public class MyJmolTools {
 	public static MyStructureIfc protonateStructure(String inputStructureV3000, AlgoParameters algoParameters) throws ShapeBuildingException{
 
 		MyStructureIfc inputStructure = null;
@@ -36,7 +36,13 @@ public class UltiJMolTools {
 	}
 
 
-
+	/**
+	 * Protonate a MyStructure using Jmol. Hydrogens are added and xyz position are set according to Jmol UUF forcefield.
+	 * @param inputStructure
+	 * @param algoParameters is needed to get a Jmol instance
+	 * @return
+	 * @throws ShapeBuildingException
+	 */
 	public static MyStructureIfc protonateStructure(MyStructureIfc inputStructure, AlgoParameters algoParameters) throws ShapeBuildingException{
 
 		MyStructureIfc protonatedStructure = null;
@@ -44,7 +50,7 @@ public class UltiJMolTools {
 			protonatedStructure = protonateStructureUsingJMolUFF(inputStructure, algoParameters);
 		} catch (ExceptionInScoringUsingBioJavaJMolGUI e) {
 			String message = "protonateStructureUsingJMolUFFandStoreBonds failed in Shape Building " + String.valueOf(inputStructure.getFourLetterCode());
-			ShapeBuildingException shapeBuildingException= new ShapeBuildingException(message);
+			ShapeBuildingException shapeBuildingException = new ShapeBuildingException(message);
 			throw shapeBuildingException;
 		}
 
@@ -67,11 +73,11 @@ public class UltiJMolTools {
 		MyChainIfc chain = clonedMyStructure.getAminoMyChain(chainid);
 		MyMonomerIfc monomerToModify = chain.getMyMonomerFromResidueId(residueID);
 
-		UltiJmol1462 ultiJMol = null;
+		MyJmol1462 ultiJMol = null;
 
 		try {
 			ultiJMol = algoParameters.ultiJMolBuffer.get();
-			float energyTargetBefore = UltiJMolTools.loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(clonedMyStructure, ultiJMol, algoParameters);
+			float energyTargetBefore = MyJmolTools.loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(clonedMyStructure, ultiJMol, algoParameters);
 			System.out.println("EnergyTargetBefore = " + energyTargetBefore);
 
 			// make V3000 and identify atomIds to minimize based on coords
@@ -79,7 +85,7 @@ public class UltiJMolTools {
 			List<MyAtomIfc> atomsToMinimize = new ArrayList<>();
 			atomsToMinimize.addAll(Arrays.asList(monomerToModify.getMyAtoms()));
 
-			List<Integer> atomids = UltiJMolTools.findAtomIds(structureProtonatedV3000, atomsToMinimize, algoParameters);
+			List<Integer> atomids = MyJmolTools.findAtomIds(structureProtonatedV3000, atomsToMinimize, algoParameters);
 
 			// should always work as continuous but unsure
 
@@ -127,12 +133,12 @@ public class UltiJMolTools {
 			String sidechainMinizedWithCutBond = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
 
 			// but has a cut bond, not good for evaluating forcefield energy ...
-			MyStructureIfc sidechainMinizedReprotonated = UltiJMolTools.protonateStructure(sidechainMinizedWithCutBond, algoParameters);
+			MyStructureIfc sidechainMinizedReprotonated = MyJmolTools.protonateStructure(sidechainMinizedWithCutBond, algoParameters);
 
 
 			ultiJMol.jmolPanel.evalString("zap");
-			float energyMinimizedSideChainStrained =  UltiJMolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), true);
-			float energyMinimizedFullyMinimized =  UltiJMolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), false);
+			float energyMinimizedSideChainStrained =  MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), true);
+			float energyMinimizedFullyMinimized =  MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), false);
 			Thread.sleep(1000L);
 			System.out.println("E sideChainStrained = " + energyMinimizedSideChainStrained);
 			System.out.println("E sideChain Relaxed = " + energyMinimizedFullyMinimized);
@@ -162,7 +168,7 @@ public class UltiJMolTools {
 			System.out.println("Exception in  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
 			try {
-				algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
+				algoParameters.ultiJMolBuffer.put(new MyJmol1462());
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -209,7 +215,7 @@ public class UltiJMolTools {
 			MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
 		ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
-		UltiJmol1462 ultiJMol = null;
+		MyJmol1462 ultiJMol = null;
 
 		try {
 			ultiJMol = algoParameters.ultiJMolBuffer.get();
@@ -274,7 +280,7 @@ public class UltiJMolTools {
 			System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
 			try {
-				algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
+				algoParameters.ultiJMolBuffer.put(new MyJmol1462());
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -302,7 +308,7 @@ public class UltiJMolTools {
 
 
 
-	public static Float getEnergyBiojavaJmolNewCode(UltiJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI{
+	public static Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI{
 
 		Float energy = waitMinimizationEnergyAvailable(2, ultiJMol);
 		if (energy == null){
@@ -329,7 +335,7 @@ public class UltiJMolTools {
 			e2.printStackTrace();
 		}
 
-		UltiJmol1462 ultiJMol = null;
+		MyJmol1462 ultiJMol = null;
 		String readV3000;
 		try{
 			ultiJMol = algoParameters.ultiJMolBuffer.get();
@@ -344,7 +350,7 @@ public class UltiJMolTools {
 			System.out.println("Exception in protonation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
 			try {
-				algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
+				algoParameters.ultiJMolBuffer.put(new MyJmol1462());
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -383,7 +389,7 @@ public class UltiJMolTools {
 
 
 
-	private static void addHydrogensInJMolUsingUFF(UltiJmol1462 ultiJmol, MyStructureIfc myStructure, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
+	private static void addHydrogensInJMolUsingUFF(MyJmol1462 ultiJmol, MyStructureIfc myStructure, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
 		try{
 			ultiJmol.jmolPanel.openStringInline(myStructure.toV3000());
@@ -626,7 +632,7 @@ public class UltiJMolTools {
 
 
 
-	public static Float loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(MyStructureIfc myStructure, UltiJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
+	public static Float loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
 
 		ultiJmol.jmolPanel.evalString("zap");
 		String myStructureV3000 = myStructure.toV3000();
@@ -636,7 +642,7 @@ public class UltiJMolTools {
 
 
 
-	private static Float loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(MyStructureIfc myStructure, UltiJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
+	private static Float loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
 
 		ultiJmol.jmolPanel.evalString("zap");
 		String myStructureV3000 = myStructure.toV3000();
@@ -646,7 +652,7 @@ public class UltiJMolTools {
 
 
 
-	public static Float loadV3000FileInBiojavaMinimizeAllComputeEnergyUFF(String myStructureV3000, UltiJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
+	public static Float loadV3000FileInBiojavaMinimizeAllComputeEnergyUFF(String myStructureV3000, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException{
 
 		ultiJmol.jmolPanel.evalString("zap");
 		return computeEnergyForInPutV3000(ultiJmol, algoParameters, myStructureV3000, false);
@@ -654,8 +660,8 @@ public class UltiJMolTools {
 
 
 
-	public static Float computeEnergyForInPutV3000(UltiJmol1462 ultiJMol, AlgoParameters algoParameters,
-			String myStructureV3000, boolean onlyHydrogen) throws InterruptedException,
+	public static Float computeEnergyForInPutV3000(MyJmol1462 ultiJMol, AlgoParameters algoParameters,
+												   String myStructureV3000, boolean onlyHydrogen) throws InterruptedException,
 	ExceptionInScoringUsingBioJavaJMolGUI {
 		Float energy;
 		Thread.sleep(1000L);
@@ -734,7 +740,7 @@ public class UltiJMolTools {
 
 
 
-	private static int mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters, UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI{
+	private static int mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI{
 
 		MyStructureIfc myStructureFile1 = null;
 		try {
@@ -772,7 +778,7 @@ public class UltiJMolTools {
 
 
 
-	private static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+	private static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
 		int maxIteration = 20;
 		int countIteration = 0;

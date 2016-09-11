@@ -23,10 +23,10 @@ public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstruct
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorSegmentOfChain(MyStructureIfc myStructureGlobalBrut, char[] fourLetterCode, char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava){
-		super(algoParameters, enumMyReaderBiojava);
+	public ShapeBuilderConstructorSegmentOfChain(MyStructureIfc myStructure, char[] fourLetterCode, char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters){
+		super(algoParameters);
 
-		this.myStructureGlobalBrut = myStructureGlobalBrut;
+		this.myStructureGlobalBrut = myStructure;
 		this.fourLetterCode = fourLetterCode;
 		this.chainId = chainId;
 		this.startingRankId = startingRankId;

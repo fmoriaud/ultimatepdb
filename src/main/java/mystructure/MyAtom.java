@@ -26,7 +26,7 @@ public class MyAtom implements MyAtomIfc{
 	 * @param element is the atom symbol, e.g. C for carbon
 	 * @param coords is the 3d coordinates of this atom. If null then origin is used (0,0,0)
 	 * @param atomName is an atom name, must be the one from PDB file or defined in
-	 * UltiJMolTools TODO move the naming in myStructure package
+	 * MyJmolTools TODO move the naming in myStructure package
 	 * if not available for Hydrogen, according to 
 	 * @param originalAtomId is usually from PDB file if available or any as they are not used
 	 * @throws ExceptionInMyStructurePackage if element is not defined in myStructure.AtomGaussianDescriptors

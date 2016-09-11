@@ -24,10 +24,10 @@ import static org.junit.Assert.assertTrue;
 public class MyStructureTest {
 
     @Rule
-    public TemporaryFolder folder= new TemporaryFolder();
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
-    public void MyStructureConstructorWithOnlyOneMonomer() throws ParsingConfigFileException, IOException{
+    public void MyStructureConstructorWithOnlyOneMonomer() throws ParsingConfigFileException, IOException {
 
         MyMonomerIfc monomer = null;
         try {
@@ -35,7 +35,7 @@ public class MyStructureTest {
         } catch (ExceptionInMyStructurePackage e1) {
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(Tools.testChemcompFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         try {
             MyStructure myStructureOK = new MyStructure(monomer, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
@@ -92,7 +92,6 @@ public class MyStructureTest {
     }
 
 
-
     //TODO  should test that each and every atom has monomer parent: as it is mandatory for the monomer by bond
     // so needed to put this test at the end of each MyStructure constructor
 
@@ -103,7 +102,7 @@ public class MyStructureTest {
 
 
     @Test
-    public void testParentConstruction(){
+    public void testParentConstruction() {
 
         MyStructureIfc myStructure = null;
         try {
@@ -112,11 +111,11 @@ public class MyStructureTest {
             assertTrue(false);
         }
 
-        for (MyChainIfc chainOriginal: myStructure.getAllChains()){
-            for (MyMonomerIfc monomer: chainOriginal.getMyMonomers()){
+        for (MyChainIfc chainOriginal : myStructure.getAllChains()) {
+            for (MyMonomerIfc monomer : chainOriginal.getMyMonomers()) {
                 assertTrue(monomer.getParent() == chainOriginal);
 
-                for (MyAtomIfc atom: monomer.getMyAtoms()){
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
                     assertTrue(atom.getParent() == monomer);
                 }
             }
@@ -124,18 +123,16 @@ public class MyStructureTest {
     }
 
 
-
     // MyStructure integrity is not safe, one can modify everything inside without checking if it is valid
     // and without updating the neighbors... Don't know what to do.
 
     @Test
-    public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage{
+    public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, Tools.testChemcompFolder);
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(Tools.testChemcompFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
@@ -153,15 +150,15 @@ public class MyStructureTest {
         int atomCount = getAtomCount(myStructure);
         int bondCount = getBondCount(myStructure);
         assertTrue(mol.getAtomCount() == atomCount);
-        assertTrue(mol.getBondCount()*2 == bondCount);
+        assertTrue(mol.getBondCount() * 2 == bondCount);
     }
 
 
-    private int getAtomCount(MyStructureIfc myStructure){
+    private int getAtomCount(MyStructureIfc myStructure) {
 
         int atomCount = 0;
-        for (MyChainIfc chain: myStructure.getAllChains()){
-            for (MyMonomerIfc monomer: chain.getMyMonomers()){
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                 atomCount += monomer.getMyAtoms().length;
             }
         }
@@ -169,12 +166,12 @@ public class MyStructureTest {
     }
 
 
-    private int getBondCount(MyStructureIfc myStructure){
+    private int getBondCount(MyStructureIfc myStructure) {
 
         int bondCount = 0;
-        for (MyChainIfc chain: myStructure.getAllChains()){
-            for (MyMonomerIfc monomer: chain.getMyMonomers()){
-                for (MyAtomIfc atom: monomer.getMyAtoms()) {
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
                     bondCount += atom.getBonds().length;
                 }
             }

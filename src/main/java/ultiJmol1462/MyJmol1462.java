@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Fabrice.Moriaud on 08.09.2016.
  */
-public class UltiJmol1462 {
+public class MyJmol1462 {
 
     public static final String viewer       = "org.jmol.api.JmolSimpleViewer";
     public static final String adapter      = "org.jmol.api.JmolAdapter";
@@ -23,7 +23,7 @@ public class UltiJmol1462 {
     public JFrame frame ;
 
 
-    public UltiJmol1462(){
+    public MyJmol1462(){
 
         frame = new JFrame();
 

@@ -210,7 +210,7 @@ public class DockPeptides {
 					}
 
 					if (foundGoodOne == true){ // only one good one is enough to allow the comparison as it could be a good one
-						ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrutTarget, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters, enumMyReaderBiojava);
+						ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrutTarget, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters);
 						CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
 						try{
 							executorService.execute(compare);

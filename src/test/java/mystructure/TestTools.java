@@ -15,25 +15,6 @@ import static org.junit.Assert.assertTrue;
 
 public class TestTools {
 
-	public static Structure readMmcifFileFromResources(String fileName){
-
-		URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource(fileName);
-
-		Path path = null;
-		try {
-			path = Paths.get(url.toURI());
-		} catch (URISyntaxException e1) {
-			assertTrue(false);
-		}
-		Structure cifStructure = null;
-
-			cifStructure = null; // IOTools.readMMCIFFile(path);
-
-		return cifStructure;
-	}
-
-
-
 	public static MyAtomIfc buildValidMyAtomCarbonAlpha(int originalAtomId) throws ExceptionInMyStructurePackage {
 
 		char[] element = "C".toCharArray();

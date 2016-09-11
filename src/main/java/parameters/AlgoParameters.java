@@ -1,16 +1,15 @@
 package parameters;
 
-import java.nio.file.Path;
 import java.util.List;
 
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
 import math.ProcrustesAnalysisIfc;
-import ultiJmol1462.UltiJmol1462;
+import ultiJmol1462.MyJmol1462;
 
 public class AlgoParameters {
 
-	public GenericBuffer<UltiJmol1462> ultiJMolBuffer;
+	public GenericBuffer<MyJmol1462> ultiJMolBuffer;
 	public GenericBuffer<ProcrustesAnalysisIfc> procrustesAnalysisBuffer;
 	public MyStructureBuffer myStructureBuffer;
 	

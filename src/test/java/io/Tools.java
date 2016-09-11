@@ -1,5 +1,7 @@
 package io;
 
+import genericBuffer.GenericBuffer;
+import mystructure.MyStructureIfc;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
@@ -8,6 +10,7 @@ import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import mystructure.EnumMyReaderBiojava;
+import ultiJmol1462.MyJmol1462;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,7 +51,7 @@ public class Tools {
         } catch (URISyntaxException e1) {
             assertTrue(false);
         }
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToTempPDBFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         Structure structure = null;
         BiojavaReaderIfc reader = new BiojavaReader();
         structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
@@ -56,13 +59,24 @@ public class Tools {
     }
 
 
-    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders(String pathToTempPDBFolder) throws ParsingConfigFileException, IOException {
+    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders() throws ParsingConfigFileException, IOException {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
 
-        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToTempPDBFolder);
-        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(pathToTempPDBFolder);
+        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
+        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(testChemcompFolder);
+
+        // add a ultiJmol which is needed in the ShapeBuilder
+        algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        MyJmol1462 ultiJMol = new MyJmol1462();
+        try {
+            algoParameters.ultiJMolBuffer.put(ultiJMol);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         return algoParameters;
     }
 

@@ -14,7 +14,7 @@ import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import ultiJmol1462.UltiJmol1462;
+import ultiJmol1462.MyJmol1462;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,12 +37,12 @@ public class MyJmolTest {
     public TemporaryFolder testPDBFolder = new TemporaryFolder();
 
     @Before
-    public void createPath(){
+    public void createPath() {
 
-        try{
+        try {
             File file = testPDBFolder.newFile("empty");
             pathToPDBFolder = file.getParentFile().getAbsolutePath();
-        } catch (IOException e){
+        } catch (IOException e) {
 
         }
     }
@@ -53,12 +53,12 @@ public class MyJmolTest {
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToPDBFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
 
-        UltiJmol1462 ultiJmol = new UltiJmol1462();
+        MyJmol1462 ultiJmol = new MyJmol1462();
         String myStructureV3000 = myStructure.toV3000();
         try {
             Thread.sleep(4 * 1000);

@@ -65,7 +65,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Structure readFrom(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException {
+    public Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException {
 
         // done only once
         if (indexPDBFileInFolder == null) {

@@ -13,7 +13,7 @@ public class Minimize {
 	private boolean receptorFixedLigandOptimizedConvergenceReached;
 
 
-	private UltiJmol1462 ultiJMol;
+	private MyJmol1462 ultiJMol;
 	private String selectCommandOfWhatToFix;
 	private AlgoParameters algoParameters;
 
@@ -23,7 +23,7 @@ public class Minimize {
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public Minimize(UltiJmol1462 ultiJMol, String selectCommandOfWhatToFix, AlgoParameters algoParameters){
+	public Minimize(MyJmol1462 ultiJMol, String selectCommandOfWhatToFix, AlgoParameters algoParameters){
 		this.ultiJMol = ultiJMol;
 		this.selectCommandOfWhatToFix = selectCommandOfWhatToFix;
 		this.algoParameters = algoParameters;
@@ -47,7 +47,7 @@ public class Minimize {
 		boolean goAhead = true;
 
 		Thread.sleep(2000L);
-		receptorFixedLigandOptimizedEStart = UltiJMolTools.getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
+		receptorFixedLigandOptimizedEStart = MyJmolTools.getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
 
 		while (countIteration <= maxIteration && goAhead == true){
 
@@ -55,7 +55,7 @@ public class Minimize {
 
 			//double currentEnergy = WritingTempFilesToDiskAsACommunicationWithJMol.getEnergyBiojavaJmol(StaticObjects.ultiJMol, algoParameters);
 
-			Float currentEnergy = UltiJMolTools.getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
+			Float currentEnergy = MyJmolTools.getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
 			if (currentEnergy == null){
 				System.out.println();
 			}

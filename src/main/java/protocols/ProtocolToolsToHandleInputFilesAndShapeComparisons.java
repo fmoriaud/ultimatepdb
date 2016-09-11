@@ -1,7 +1,5 @@
 package protocols;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -11,7 +9,6 @@ import org.apache.commons.math3.linear.RealVector;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
-import io.FileListingVisitor;
 import math.ToolsMath;
 import parameters.AlgoParameters;
 import shape.HasPeptideIfc;
@@ -22,7 +19,6 @@ import shapeBuilder.ShapeBuildingException;
 import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeFull;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
-import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyAtomIfc;
 import mystructure.MyChain;
@@ -30,8 +26,8 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructure;
 import mystructure.MyStructureIfc;
+import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
-import ultiJmol1462.UltiJMolTools;
 
 
 public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
@@ -168,16 +164,16 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 						MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
 
 
-						MyStructureIfc preparedPeptide = UltiJMolTools.protonateStructure(myStructurePeptide, algoParameters); // c'est ca qui deconne a mettre trop d'hydrogene
+						MyStructureIfc preparedPeptide = MyJmolTools.protonateStructure(myStructurePeptide, algoParameters); // c'est ca qui deconne a mettre trop d'hydrogene
 
 						MyStructureIfc clonedRotatedPeptide = preparedPeptide.cloneWithSameObjectsRotatedCoords(currentBestHit.getResultsFromEvaluateCost());
 
 						MyStructureIfc structureQueryComputeshape = queryShape.getMyStructureUsedToComputeShape();
 
 						MyStructureIfc clonedMyStructure = structureQueryComputeshape.cloneWithSameObjects();
-						MyStructureIfc preparedQuery = UltiJMolTools.protonateStructure(clonedMyStructure, algoParameters);
+						MyStructureIfc preparedQuery = MyJmolTools.protonateStructure(clonedMyStructure, algoParameters);
 
-						hitScore = UltiJMolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
+						hitScore = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
 						if (hitScore != null){
 							System.out.println("Estart = " + hitScore.getReceptorFixedLigandOptimizedEStart());

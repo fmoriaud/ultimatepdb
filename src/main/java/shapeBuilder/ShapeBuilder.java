@@ -40,7 +40,7 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import mystructure.MyStructureTools;
-import ultiJmol1462.UltiJMolTools;
+import ultiJmol1462.MyJmolTools;
 
 public class ShapeBuilder {
 	//-------------------------------------------------------------
@@ -76,7 +76,7 @@ public class ShapeBuilder {
 		MyStructureIfc myStructureLocal = structureLocalToBuildShapeWholeChain.getMyStructureLocal();
 		MyChainIfc ligand = structureLocalToBuildShapeWholeChain.getLigand();
 
-		MyStructureIfc myStructureLocalProtonated = UltiJMolTools.protonateStructure(myStructureLocal, algoParameters);
+		MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
 		// debug
 		//String structureToV3000 = myStructureLocal.toV3000();
 		//String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -99,7 +99,7 @@ public class ShapeBuilder {
 		MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
 		MyChainIfc ligand = structureLocalToBuildShapeSegmentOfShape.getLigand();
 
-		MyStructureIfc myStructureLocalProtonated = UltiJMolTools.protonateStructure(myStructureLocal, algoParameters);
+		MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
 		// debug
 		//String structureToV3000 = myStructureLocal.toV3000();
 		//String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -123,7 +123,7 @@ public class ShapeBuilder {
 		MyChainIfc ligand = structureLocalToBuildShapeHetAtm.getLigand();
 		MyMonomerIfc hetAtomsGroup = structureLocalToBuildShapeHetAtm.getHetAtomsGroup();
 
-		MyStructureIfc myStructureLocalProtonated = UltiJMolTools.protonateStructure(myStructureLocal, algoParameters);
+		MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
 		// debug
 		//String structureToV3000 = myStructureLocal.toV3000();
 		//String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -148,7 +148,7 @@ public class ShapeBuilder {
 		StructureLocalToBuildShapeAroundAtomDefinedByIds structureLocalToBuildShapeAroundAtomDefinedByIds = new StructureLocalToBuildShapeAroundAtomDefinedByIds(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
 		structureLocalToBuildShapeAroundAtomDefinedByIds.compute();
 		MyStructureIfc myStructureLocal = structureLocalToBuildShapeAroundAtomDefinedByIds.getMyStructureLocal();
-		MyStructureIfc myStructureLocalProtonated = UltiJMolTools.protonateStructure(myStructureLocal, algoParameters);
+		MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
 		Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
 
 		

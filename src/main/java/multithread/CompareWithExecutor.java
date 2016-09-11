@@ -31,41 +31,39 @@ import mystructure.EnumMyReaderBiojava;
 import mystructure.MyStructureIfc;
 
 
-public class CompareWithExecutor{
-	//------------------------
-	// Class variables
-	//------------------------
+public class CompareWithExecutor {
+    //------------------------
+    // Class variables
+    //------------------------
 
-	private List<TargetsIfc> targetsDefiners;
+    private List<TargetsIfc> targetsDefiners;
 
-	private AlgoParameters algoParameters;
-	private EnumMyReaderBiojava enumMyReaderBiojava;
-	private ShapeContainerIfc queryShape;
+    private AlgoParameters algoParameters;
+    private EnumMyReaderBiojava enumMyReaderBiojava;
+    private ShapeContainerIfc queryShape;
 
-	private Connection connexion;
+    private Connection connexion;
 
-	// -------------------------------------------------------------------
-	// Constructor
-	// -------------------------------------------------------------------
-	public CompareWithExecutor(ShapeContainerIfc queryShape, List<TargetsIfc> targetsDefiners,
-			AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava){
+    // -------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------
+    public CompareWithExecutor(ShapeContainerIfc queryShape, List<TargetsIfc> targetsDefiners,
+                               AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava) {
 
-		this.queryShape = queryShape;
-		this.targetsDefiners = targetsDefiners;
-		this.algoParameters = algoParameters;
-		this.enumMyReaderBiojava = enumMyReaderBiojava;
-		connexion = DatabaseTools.getConnection();
-	}
-
-
+        this.queryShape = queryShape;
+        this.targetsDefiners = targetsDefiners;
+        this.algoParameters = algoParameters;
+        this.enumMyReaderBiojava = enumMyReaderBiojava;
+        connexion = DatabaseTools.getConnection();
+    }
 
 
-	// -------------------------------------------------------------------
-	// Public methods
-	// -------------------------------------------------------------------
-	public void run() {
+    // -------------------------------------------------------------------
+    // Public methods
+    // -------------------------------------------------------------------
+    public void run() {
 
-		// try to do here a comparison based on neighboring residues and return false
+        // try to do here a comparison based on neighboring residues and return false
 //		queryShape.getMyStructureUsedToComputeShape();
 //		MyStructureFingerprint myStructureFingerprint = new MyStructureFingerprint(queryShape.getMyStructureUsedToComputeShape(), algoParameters);
 //
@@ -76,60 +74,60 @@ public class CompareWithExecutor{
 //
 //		System.out.println(histogramD2OccupiedSolidAngleQuery);
 
-		int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+        int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
 
 
-		//final ExecutorService executorService = Executors.newFixedThreadPool(consumersCount);
-		final ExecutorService executorService = getExecutorServiceForComparisons(consumersCount);
-		int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
+        //final ExecutorService executorService = Executors.newFixedThreadPool(consumersCount);
+        final ExecutorService executorService = getExecutorServiceForComparisons(consumersCount);
+        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
 
-		SmartTargetFileLineParser smartTargetFileLineParser = new SmartTargetFileLineParser(algoParameters, enumMyReaderBiojava);
+        SmartTargetFileLineParser smartTargetFileLineParser = new SmartTargetFileLineParser(algoParameters, enumMyReaderBiojava);
 
-		// not needed as I use the Callable object now
-		//FindSequenceInDatabase findSequenceInDatabase = new FindSequenceInDatabase(algoParameters, enumMyReaderBiojava);
+        // not needed as I use the Callable object now
+        //FindSequenceInDatabase findSequenceInDatabase = new FindSequenceInDatabase(algoParameters, enumMyReaderBiojava);
 
-		for (TargetsIfc targetDefiner: targetsDefiners){
+        for (TargetsIfc targetDefiner : targetsDefiners) {
 
-			String fileName = targetDefiner.getFileName();
+            String fileName = targetDefiner.getFileName();
 
-			if (targetDefiner instanceof TargetDefinedByHetAtm){
+            if (targetDefiner instanceof TargetDefinedByHetAtm) {
 
-				TargetDefinedByHetAtm targetDefinedByHetAtm = (TargetDefinedByHetAtm) targetDefiner;
-				float minMW = targetDefinedByHetAtm.getMinMW();
-				float maxMW = targetDefinedByHetAtm.getMaxMW();
+                TargetDefinedByHetAtm targetDefinedByHetAtm = (TargetDefinedByHetAtm) targetDefiner;
+                float minMW = targetDefinedByHetAtm.getMinMW();
+                float maxMW = targetDefinedByHetAtm.getMaxMW();
 
-				try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-					String line = br.readLine();
+                try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                    String line = br.readLine();
 
-					while (line != null) {
-						boolean success = smartTargetFileLineParser.parseLineHetAtm(line);
-						if (success == false){
-							line = br.readLine();
-							continue;
-						}
+                    while (line != null) {
+                        boolean success = smartTargetFileLineParser.parseLineHetAtm(line);
+                        if (success == false) {
+                            line = br.readLine();
+                            continue;
+                        }
 
-						float mw = smartTargetFileLineParser.getMw();
-						String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
-						String threeLetterCode = smartTargetFileLineParser.getThreeLettercode();
-						String chainIdFromDB = smartTargetFileLineParser.getChainName();
-						
-						String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
-						if (sequenceInDb == null){
-							line = br.readLine();
-							continue;
-						}
+                        float mw = smartTargetFileLineParser.getMw();
+                        String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
+                        String threeLetterCode = smartTargetFileLineParser.getThreeLettercode();
+                        String chainIdFromDB = smartTargetFileLineParser.getChainName();
 
-						int occurenceId = 1;
-						if (mw >= minMW && mw <= maxMW){
+                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        if (sequenceInDb == null) {
+                            line = br.readLine();
+                            continue;
+                        }
 
-							MyStructureIfc myStructureGlobalBrut;
-							try {
-								myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
-							} catch (ShapeBuildingException e2) {
-								line = br.readLine();
-								continue;
-							}
+                        int occurenceId = 1;
+                        if (mw >= minMW && mw <= maxMW) {
+
+                            MyStructureIfc myStructureGlobalBrut;
+                            try {
+                                myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
+                            } catch (ShapeBuildingException e2) {
+                                line = br.readLine();
+                                continue;
+                            }
 
 //							StructureLocalToBuildShapeHetAtm structureLocalToBuildShapeHetAtm = new StructureLocalToBuildShapeHetAtm(myStructureGlobalBrut, threeLetterCode.toCharArray(), occurenceId);
 //							try {
@@ -145,66 +143,67 @@ public class CompareWithExecutor{
 //								continue;
 //							}
 
-							ShapeBuilderConstructorHetAtm shapeBuilder = new ShapeBuilderConstructorHetAtm(fourLetterCode.toCharArray(), threeLetterCode.toCharArray(), occurenceId, algoParameters, enumMyReaderBiojava);
-							CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
-							try{
-								executorService.execute(compare);
-							}catch (RejectedExecutionException e){
+                            ShapeBuilderConstructorHetAtm shapeBuilder = new ShapeBuilderConstructorHetAtm(fourLetterCode.toCharArray(), threeLetterCode.toCharArray(), occurenceId, algoParameters);
+                            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                            try {
+                                executorService.execute(compare);
+                            } catch (RejectedExecutionException e) {
 
-								try {
-									Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-									continue;
-								} catch (InterruptedException e1) {
-									e1.printStackTrace();
-								}
-							}
-						}
-						line = br.readLine();
-					}
-				}catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+                                try {
+                                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                                    continue;
+                                } catch (InterruptedException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
+                        line = br.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-			if (targetDefiner instanceof TargetDefinedBySegmentOfChainBasedOnSegmentLength){
+            if (targetDefiner instanceof TargetDefinedBySegmentOfChainBasedOnSegmentLength) {
 
-				TargetDefinedBySegmentOfChainBasedOnSegmentLength targetDefinedBySegmentOfChainBasedOnSegmentLength = (TargetDefinedBySegmentOfChainBasedOnSegmentLength) targetDefiner;
-				int minLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getMinLength();
-				int maxLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getMaxLength();
-				int segmentLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getSegmentLength();
+                TargetDefinedBySegmentOfChainBasedOnSegmentLength targetDefinedBySegmentOfChainBasedOnSegmentLength = (TargetDefinedBySegmentOfChainBasedOnSegmentLength) targetDefiner;
+                int minLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getMinLength();
+                int maxLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getMaxLength();
+                int segmentLength = targetDefinedBySegmentOfChainBasedOnSegmentLength.getSegmentLength();
 
-				try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-					String line = br.readLine();
+                try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                    String line = br.readLine();
 
-					A: while (line != null) {
-						boolean success = smartTargetFileLineParser.parseLineChain(line);
-						if (success == false){
-							line = br.readLine();
-							continue;
-						}
+                    A:
+                    while (line != null) {
+                        boolean success = smartTargetFileLineParser.parseLineChain(line);
+                        if (success == false) {
+                            line = br.readLine();
+                            continue;
+                        }
 
-						String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
-						String chainIdFromDB = smartTargetFileLineParser.getChainName();
-						int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
+                        String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
+                        String chainIdFromDB = smartTargetFileLineParser.getChainName();
+                        int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
 
-						String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
-						if (sequenceInDb == null){
-							line = br.readLine();
-							continue;
-						}
-						//String sequenceFromDB = findSequenceInDatabase.getSequenceFromDB();
-						int sequenceLengthInDB = sequenceInDb.length() / 3;
-						if (sequenceLengthInDB >= minLength && sequenceLengthInDB <= maxLength){
+                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        if (sequenceInDb == null) {
+                            line = br.readLine();
+                            continue;
+                        }
+                        //String sequenceFromDB = findSequenceInDatabase.getSequenceFromDB();
+                        int sequenceLengthInDB = sequenceInDb.length() / 3;
+                        if (sequenceLengthInDB >= minLength && sequenceLengthInDB <= maxLength) {
 
-							MyStructureIfc myStructureGlobalBrut;
-							try {
-								myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
-							} catch (ShapeBuildingException e2) {
-								//System.out.println();
-								continue A;
-							}
+                            MyStructureIfc myStructureGlobalBrut;
+                            try {
+                                myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
+                            } catch (ShapeBuildingException e2) {
+                                //System.out.println();
+                                continue A;
+                            }
 
-							for ( int i=0 ; i < sequenceLengthInDB - segmentLength ; i++ ) {
+                            for (int i = 0; i < sequenceLengthInDB - segmentLength; i++) {
 
 //								StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrut, algoParameters, chainIdFromDB.toCharArray(), i, segmentLength);
 //								try {
@@ -219,36 +218,36 @@ public class CompareWithExecutor{
 //									continue;
 //								}
 
-								// TODO clean code of four letter code as now I input the structure itself
-								ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), i, segmentLength, algoParameters, enumMyReaderBiojava);
-								CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                                // TODO clean code of four letter code as now I input the structure itself
+                                ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), i, segmentLength, algoParameters);
+                                CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
 
-								try{
-									executorService.execute(compare);
-								}catch (RejectedExecutionException e){
+                                try {
+                                    executorService.execute(compare);
+                                } catch (RejectedExecutionException e) {
 
-									try {
-										Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-										i--;
-									} catch (InterruptedException e1) {
-										e1.printStackTrace();
-									}
-								}
-							}
-						}
-						line = br.readLine();
-					}
-				}catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+                                    try {
+                                        Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                                        i--;
+                                    } catch (InterruptedException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        line = br.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-			if (targetDefiner instanceof TargetDefinedBySegmentOfChainBasedOnSequenceMotif){
-				TargetDefinedBySegmentOfChainBasedOnSequenceMotif targetDefinedBySegmentOfChainBasedOnSequenceMotif = (TargetDefinedBySegmentOfChainBasedOnSequenceMotif) targetDefiner;
+            if (targetDefiner instanceof TargetDefinedBySegmentOfChainBasedOnSequenceMotif) {
+                TargetDefinedBySegmentOfChainBasedOnSequenceMotif targetDefinedBySegmentOfChainBasedOnSequenceMotif = (TargetDefinedBySegmentOfChainBasedOnSequenceMotif) targetDefiner;
 
-				DockPeptides dockPeptides = new DockPeptides(targetDefinedBySegmentOfChainBasedOnSequenceMotif, algoParameters, enumMyReaderBiojava, queryShape, executorService);
-				dockPeptides.dock();
-			}
+                DockPeptides dockPeptides = new DockPeptides(targetDefinedBySegmentOfChainBasedOnSequenceMotif, algoParameters, enumMyReaderBiojava, queryShape, executorService);
+                dockPeptides.dock();
+            }
 
 //			if (targetDefiner instanceof TargetDefinedBySegmentOfChainBasedOnSequenceMotif){
 //
@@ -336,43 +335,43 @@ public class CompareWithExecutor{
 //			}
 
 
-			if (targetDefiner instanceof TargetDefinedByWholeChain){
+            if (targetDefiner instanceof TargetDefinedByWholeChain) {
 
-				TargetDefinedByWholeChain targetDefinedByWholeChain = (TargetDefinedByWholeChain) targetDefiner;
+                TargetDefinedByWholeChain targetDefinedByWholeChain = (TargetDefinedByWholeChain) targetDefiner;
 
-				int minLength = targetDefinedByWholeChain.getMinLength();
-				int maxLength = targetDefinedByWholeChain.getMaxLength();
+                int minLength = targetDefinedByWholeChain.getMinLength();
+                int maxLength = targetDefinedByWholeChain.getMaxLength();
 
-				try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-					String line = br.readLine();
+                try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                    String line = br.readLine();
 
-					while (line != null) {
-						boolean success = smartTargetFileLineParser.parseLineChain(line);
-						if (success == false){
-							line = br.readLine();
-							continue;
-						}
+                    while (line != null) {
+                        boolean success = smartTargetFileLineParser.parseLineChain(line);
+                        if (success == false) {
+                            line = br.readLine();
+                            continue;
+                        }
 
-						String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
-						String chainIdFromDB = smartTargetFileLineParser.getChainName();
-						int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
+                        String fourLetterCode = smartTargetFileLineParser.getFourLettercode();
+                        String chainIdFromDB = smartTargetFileLineParser.getChainName();
+                        int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
 
-						String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
-						if (sequenceInDb == null){
-							line = br.readLine();
-							continue;
-						}
+                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        if (sequenceInDb == null) {
+                            line = br.readLine();
+                            continue;
+                        }
 
-						int sequenceLengthInDB = sequenceInDb.length() / 3;
-						if (sequenceLengthInDB >= minLength && sequenceLengthInDB <= maxLength){
+                        int sequenceLengthInDB = sequenceInDb.length() / 3;
+                        if (sequenceLengthInDB >= minLength && sequenceLengthInDB <= maxLength) {
 
-							MyStructureIfc myStructureGlobalBrut;
-							try {
-								myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
-							} catch (ShapeBuildingException e2) {
-								line = br.readLine();
-								continue;
-							}
+                            MyStructureIfc myStructureGlobalBrut;
+                            try {
+                                myStructureGlobalBrut = ShapeBuildingTools.getMyStructure(fourLetterCode.toCharArray(), algoParameters, enumMyReaderBiojava);
+                            } catch (ShapeBuildingException e2) {
+                                line = br.readLine();
+                                continue;
+                            }
 //							StructureLocalToBuildShapeWholeChain structureLocalToBuildShapeWholeChain = new StructureLocalToBuildShapeWholeChain(myStructureGlobalBrut, chainIdFromDB.toCharArray());
 //							try {
 //								structureLocalToBuildShapeWholeChain.compute();
@@ -387,39 +386,40 @@ public class CompareWithExecutor{
 //								continue;
 //							}
 
-							ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), algoParameters, enumMyReaderBiojava);
-							CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
-							try{
-								executorService.execute(compare);
-							}catch (RejectedExecutionException e){
 
-								try {
-									Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-									continue;
-								} catch (InterruptedException e1) {
-									e1.printStackTrace();
-								}
-							}
-						}
-						line = br.readLine();
-					}
-				}catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+                            // Might not work anymore as I use a different constructor, before was relaoding
+                            ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(myStructureGlobalBrut, chainIdFromDB.toCharArray(), algoParameters);
+                            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                            try {
+                                executorService.execute(compare);
+                            } catch (RejectedExecutionException e) {
 
-		while(true){
-			try {
-				Thread.sleep(100000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		//executorService.shutdown();
-	}
+                                try {
+                                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                                    continue;
+                                } catch (InterruptedException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
+                        line = br.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
+        while (true) {
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        //executorService.shutdown();
+    }
 
 
 //	private boolean isComparisonWorthAccordingToSolidAngleSimilarity(StructureLocalToBuildShapeIfc structureLocalToBuildShape, double percentageOccupiedQuery, List<Integer> histogramD2OccupiedSolidAngleQuery){
@@ -458,27 +458,25 @@ public class CompareWithExecutor{
 //	}
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    private ExecutorService getExecutorServiceForComparisons(int consumersCount) {
+        int corePoolSize = 0; // no need to keep idle ones
+        long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
+        // could happen when searching database for a potetial hit, that could last as long
+        // as the time to search the whole system
+        int maxCountRunnableInBoundQueue = 10000; // 10000;
 
+        ExecutorService threadPoolExecutor =
+                new ThreadPoolExecutor(
+                        corePoolSize,
+                        consumersCount,
+                        keepAliveTime,
+                        TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<Runnable>(maxCountRunnableInBoundQueue)
+                );
 
-	// -------------------------------------------------------------------
-	// Implementation
-	// -------------------------------------------------------------------
-	private ExecutorService getExecutorServiceForComparisons(int consumersCount){
-		int  corePoolSize  =    0; // no need to keep idle ones
-		long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
-		// could happen when searching database for a potetial hit, that could last as long
-		// as the time to search the whole system
-		int maxCountRunnableInBoundQueue = 10000; // 10000;
-
-		ExecutorService threadPoolExecutor =
-				new ThreadPoolExecutor(
-						corePoolSize,
-						consumersCount,
-						keepAliveTime,
-						TimeUnit.MILLISECONDS,
-						new LinkedBlockingQueue<Runnable>(maxCountRunnableInBoundQueue)
-						);
-
-		return threadPoolExecutor;
-	}
+        return threadPoolExecutor;
+    }
 }

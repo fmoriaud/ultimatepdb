@@ -61,20 +61,21 @@ public class ProtocolOneVsManyMultiThreaded implements ProtocolIfc{
 		String queryType = algoParameters.getQUERY_TYPE();
 		ShapeBuilderConstructorIfc queryConstructor = null;
 		switch (queryType) {
-		case "WHOLE_CHAIN":  
-			queryConstructor = new ShapeBuilderConstructorWholeChain(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters, enumMyReaderBiojava);
+		case "WHOLE_CHAIN":
+			// Warning might not work anymore as I have put myStructureGlobalBrut instead of old constructore that rebuilt it
+			queryConstructor = new ShapeBuilderConstructorWholeChain(myStructureGlobalBrut, algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters);
 			;
 			break;
 		case "SEGMENT_OF_CHAIN":  
-			queryConstructor = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters.getSTARTING_RANK_ID(), algoParameters.getPEPTIDE_LENGTH(), algoParameters, enumMyReaderBiojava);
+			queryConstructor = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters.getSTARTING_RANK_ID(), algoParameters.getPEPTIDE_LENGTH(), algoParameters);
 			;
 			break;
 		case "HETATM":
-			queryConstructor = new ShapeBuilderConstructorHetAtm(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_PDB_THREE_LETTER_CODE().toCharArray(), algoParameters.getOCCURENCE_ID(), algoParameters, enumMyReaderBiojava);
+			queryConstructor = new ShapeBuilderConstructorHetAtm(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_PDB_THREE_LETTER_CODE().toCharArray(), algoParameters.getOCCURENCE_ID(), algoParameters);
 			;
 			break;
 		case "ATOMIDS_WITHIN_SHAPE":
-			queryConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), algoParameters.getRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(), algoParameters, enumMyReaderBiojava, algoParameters.getCHAIN_TO_IGNORE());
+			queryConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), algoParameters.getRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(), algoParameters, algoParameters.getCHAIN_TO_IGNORE());
 			;
 			break;
 		}

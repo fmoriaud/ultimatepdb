@@ -26,8 +26,8 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 	// Constructor
 	//-------------------------------------------------------------
 	public ShapeBuilderConstructorAtomIdsWithinShape(char[] fourLetterCode, List<QueryAtomDefinedByIds> listAtomDefinedByIds, double radiusForQueryAtomsDefinedByIds, 
-			AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava, List<String> chainToIgnore){
-		super(algoParameters, enumMyReaderBiojava);
+			AlgoParameters algoParameters, List<String> chainToIgnore){
+		super(algoParameters);
 		this.fourLetterCode = fourLetterCode;
 		this.listAtomDefinedByIds = listAtomDefinedByIds;
 		this.radiusForQueryAtomsDefinedByIds = radiusForQueryAtomsDefinedByIds;
@@ -37,8 +37,8 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 
 
 	public ShapeBuilderConstructorAtomIdsWithinShape(MyStructureIfc myStructureGlobalBrut, List<QueryAtomDefinedByIds> listAtomDefinedByIds, double radiusForQueryAtomsDefinedByIds, 
-			AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava, List<String> chainToIgnore){
-		super(algoParameters, enumMyReaderBiojava);
+			AlgoParameters algoParameters, List<String> chainToIgnore){
+		super(algoParameters);
 		this.myStructureGlobalBrut = myStructureGlobalBrut;
 		this.fourLetterCode = myStructureGlobalBrut.getFourLetterCode();
 		this.listAtomDefinedByIds = listAtomDefinedByIds;

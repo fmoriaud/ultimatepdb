@@ -95,7 +95,7 @@ public class HitTools {
 //		MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
 //
 //
-//		MyStructureIfc preparedPeptide = UltiJMolTools.protonateStructure(myStructurePeptide, algoParameters); // c'est ca qui deconne a mettre trop d'hydrogene
+//		MyStructureIfc preparedPeptide = MyJmolTools.protonateStructure(myStructurePeptide, algoParameters); // c'est ca qui deconne a mettre trop d'hydrogene
 //
 //		MyStructureIfc clonedRotated = preparedPeptide.cloneWithSameObjectsRotatedCoords(hit.getResultsFromEvaluateCost());
 //
@@ -108,7 +108,7 @@ public class HitTools {
 //		//			throw exception;
 //		//		}
 //
-//		HitScore hitScore = UltiJMolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotated, myStructureForJMol);
+//		HitScore hitScore = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotated, myStructureForJMol);
 //
 //		if (hitScore != null){
 //			System.out.println("Estart = " + hitScore.getReceptorFixedLigandOptimizedEStart());

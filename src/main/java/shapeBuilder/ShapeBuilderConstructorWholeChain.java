@@ -11,7 +11,6 @@ public class ShapeBuilderConstructorWholeChain extends ShapeBuilderConstructorAb
 	// Class variables
 	//-------------------------------------------------------------
 	private char[] chainId; // and so on that is what is needed to indicate what to build
-	private char[] fourLetterCode;
 	private MyStructureIfc myStructure;
 
 
@@ -19,21 +18,10 @@ public class ShapeBuilderConstructorWholeChain extends ShapeBuilderConstructorAb
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorWholeChain(char[] fourLetterCode, char[] chainId, AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava){
+	public ShapeBuilderConstructorWholeChain(MyStructureIfc myStructure, char[] chainId, AlgoParameters algoParameters){
 
-		super(algoParameters, enumMyReaderBiojava);
+		super(algoParameters);
 		this.chainId = chainId;
-		this.fourLetterCode = fourLetterCode;
-		this.myStructure = null;
-	}
-
-
-
-	public ShapeBuilderConstructorWholeChain(MyStructureIfc myStructure, char[] chainId, AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava){
-
-		super(algoParameters, enumMyReaderBiojava);
-		this.chainId = chainId;
-		this.fourLetterCode = null;
 		this.myStructure = myStructure;
 	}
 
@@ -46,7 +34,7 @@ public class ShapeBuilderConstructorWholeChain extends ShapeBuilderConstructorAb
 	public String toString(){
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.valueOf(fourLetterCode) + " ");
+		sb.append(String.valueOf(myStructure.getFourLetterCode()) + " ");
 		sb.append(String.valueOf(chainId) + " ");
 		return sb.toString();
 	}
@@ -56,14 +44,7 @@ public class ShapeBuilderConstructorWholeChain extends ShapeBuilderConstructorAb
 	@Override
 	public ShapeContainerIfc getShapeContainer() throws ShapeBuildingException {
 
-		MyStructureIfc myStructureGlobalBrut = null;
-		if (myStructure == null){
-			myStructureGlobalBrut = getMyStructure(fourLetterCode);
-		}else{
-			myStructureGlobalBrut = myStructure;
-		}
-
-		ShapeBuilder shapeBuilder = new ShapeBuilder(myStructureGlobalBrut, algoParameters);
+		ShapeBuilder shapeBuilder = new ShapeBuilder(myStructure, algoParameters);
 		ShapeContainerWithPeptide shapeContainerPeptide = shapeBuilder.getShapeAroundAChain(chainId);
 		return shapeContainerPeptide;
 	}

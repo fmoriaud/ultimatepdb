@@ -31,9 +31,9 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import mystructure.MyStructureTools;
+import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizeSideChain;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
-import ultiJmol1462.UltiJMolTools;
 
 
 public class CompareShapeWithSimulatedShapes {
@@ -153,8 +153,8 @@ public class CompareShapeWithSimulatedShapes {
 
 				// what about minimizing sidechain
 				// need to protonate but weird as it was done in chani preparatino TODO clean that
-				MyStructureIfc protonatedStructure = UltiJMolTools.protonateStructure(clonedStructure, algoParameters);
-				ResultsUltiJMolMinimizeSideChain resultsUltiJMolMinimizeSideChain = UltiJMolTools.minimizeSideChainOfAProtonatedMyStructure(algoParameters, protonatedStructure, monomerToMutateChainId, monomerToMutateResidueId, monomerToMutateThreeLetterCode);
+				MyStructureIfc protonatedStructure = MyJmolTools.protonateStructure(clonedStructure, algoParameters);
+				ResultsUltiJMolMinimizeSideChain resultsUltiJMolMinimizeSideChain = MyJmolTools.minimizeSideChainOfAProtonatedMyStructure(algoParameters, protonatedStructure, monomerToMutateChainId, monomerToMutateResidueId, monomerToMutateThreeLetterCode);
 				// only to be used as a filter to go ahead or not, if too strained then skip it
 				System.out.println("strainedEnergySideChainAfterMinimization = " + resultsUltiJMolMinimizeSideChain.getStrainedEnergySideChainAfterMinimization());
 				float strainedEnergy = resultsUltiJMolMinimizeSideChain.getStrainedEnergySideChainAfterMinimization();
@@ -203,7 +203,7 @@ public class CompareShapeWithSimulatedShapes {
 
 		List<String> chainToIgnore = new ArrayList<>();
 		chainToIgnore.add("C");
-		ShapeBuilderConstructorAtomIdsWithinShape targetConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructure, listQueryAtom, 8.0, algoParameters, enumMyReaderBiojava, chainToIgnore);
+		ShapeBuilderConstructorAtomIdsWithinShape targetConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructure, listQueryAtom, 8.0, algoParameters, chainToIgnore);
 		ShapeContainerIfc targetShape = targetConstructor.getShapeContainer();
 		return targetShape;
 	}

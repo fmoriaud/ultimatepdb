@@ -1,7 +1,6 @@
 package shapeBuilder;
 
 import parameters.AlgoParameters;
-import mystructure.EnumMyReaderBiojava;
 import mystructure.MyStructureIfc;
 
 public class ShapeBuilderConstructorAbstract {
@@ -9,7 +8,6 @@ public class ShapeBuilderConstructorAbstract {
 	// Class variables
 	//-------------------------------------------------------------
 	protected AlgoParameters algoParameters;
-	protected EnumMyReaderBiojava enumMyReaderBiojava;
 
 
 
@@ -17,9 +15,8 @@ public class ShapeBuilderConstructorAbstract {
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorAbstract(AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava){
+	public ShapeBuilderConstructorAbstract(AlgoParameters algoParameters){
 		this.algoParameters = algoParameters;
-		this.enumMyReaderBiojava = enumMyReaderBiojava;
 	}
 
 
