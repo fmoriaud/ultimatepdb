@@ -34,7 +34,7 @@ public class ShapeBuilderConstructorWholeChainTest {
     public void testShapeBuilderConstructorWholeChain() throws IOException, ParsingConfigFileException {
 
         char[] chainId = "C".toCharArray();
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
         Structure mmcifStructure = null;

@@ -59,14 +59,9 @@ public class Tools {
     }
 
 
-    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders() throws ParsingConfigFileException, IOException {
+    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-
-        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
-        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(testChemcompFolder);
-
+        AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
         // add a ultiJmol which is needed in the ShapeBuilder
         algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
         MyJmol1462 ultiJMol = new MyJmol1462();
@@ -79,6 +74,20 @@ public class Tools {
 
         return algoParameters;
     }
+
+
+
+    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders() throws ParsingConfigFileException, IOException {
+
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
+        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(testChemcompFolder);
+
+        return algoParameters;
+    }
+
 
 
     public static boolean isGood1di9(Structure mmcifStructure) {
