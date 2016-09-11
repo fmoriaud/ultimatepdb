@@ -124,6 +124,7 @@ public class BiojavaReaderFromPathToMmcifFileTest {
         } catch (IOException e) {
             assertTrue(false);
         }
+        boolean atLeastOneBond = false;
         for (Chain chain : mmcifStructure.getChains()) {
             List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
             for (Group group : groups) {
@@ -131,11 +132,13 @@ public class BiojavaReaderFromPathToMmcifFileTest {
                     List<Bond> bonds = atom.getBonds();
                     assertTrue(bonds != null);
                     for (Bond bond : bonds) {
+                        atLeastOneBond = true;
                         assertTrue(bond != null);
                     }
                 }
             }
         }
+        assertTrue(atLeastOneBond);
     }
 
 
@@ -149,6 +152,7 @@ public class BiojavaReaderFromPathToMmcifFileTest {
         } catch (IOException e) {
             assertTrue(false);
         }
+        boolean atLeastOneBond = false;
         for (Chain chain : mmcifStructure.getChains()) {
             List<Group> groups = chain.getAtomGroups(GroupType.NUCLEOTIDE);
             for (Group group : groups) {
@@ -156,11 +160,14 @@ public class BiojavaReaderFromPathToMmcifFileTest {
                     List<Bond> bonds = atom.getBonds();
                     assertTrue(bonds != null);
                     for (Bond bond : bonds) {
+                        atLeastOneBond = true;
                         assertTrue(bond != null);
+
                     }
                 }
             }
         }
+        assertTrue(atLeastOneBond);
     }
 
     /**

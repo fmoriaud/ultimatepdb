@@ -136,10 +136,23 @@ public class AdapterBioJavaStructure {
             }
         }
 
+        // define bonds before building MyStructure otherwise the call for building neighbors by Bond won't work
+        int countOfBonds = 0;
+        for (MyChainIfc myChain: aminoChains){
+            int count = defineBonds(myChain);
+            countOfBonds += count;
+        }
+        for (MyChainIfc myChain: hetatmChains){
+            int count = defineBonds(myChain);
+            countOfBonds += count;
+        }
+        for (MyChainIfc myChain: nucleotidesChains){
+            int count = defineBonds(myChain);
+            countOfBonds += count;
+        }
+
         MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), algoParameters);
         myStructure.setFourLetterCode(fourLetterCode);
-
-        int countOfBonds = defineBonds(myStructure, structure);
 
         if (countOfBonds > 0) {
             addHydrogens();
@@ -268,16 +281,6 @@ public class AdapterBioJavaStructure {
         return myChain;
     }
 
-
-    private int defineBonds(MyStructureIfc myStructure, Structure structure) {
-
-        int countOfBond = 0;
-        for (MyChainIfc myChain : myStructure.getAllChains()) {
-            int count = defineBonds(myChain);
-            countOfBond += count;
-        }
-        return countOfBond;
-    }
 
 
     private int defineBonds(MyChainIfc myChain) {

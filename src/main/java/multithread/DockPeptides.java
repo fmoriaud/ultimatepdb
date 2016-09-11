@@ -154,8 +154,8 @@ public class DockPeptides {
 					Integer matchingRankId = listRankIdsFromId0.get(i);
 
 					StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = 
-							new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrutTarget, algoParameters, 
-									chainIdFromDB.toCharArray(), matchingRankId, peptideLength);
+							new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrutTarget,
+									chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters);
 					try {
 						structureLocalToBuildShapeSegmentOfShape.compute();
 					} catch (ShapeBuildingException e2) {
@@ -210,7 +210,7 @@ public class DockPeptides {
 					}
 
 					if (foundGoodOne == true){ // only one good one is enough to allow the comparison as it could be a good one
-						ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrutTarget, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters);
+						ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrutTarget, chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters);
 						CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
 						try{
 							executorService.execute(compare);

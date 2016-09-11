@@ -33,8 +33,8 @@ public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalT
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public StructureLocalToBuildShapeSegmentOfShape(MyStructureIfc myStructureGlobalBrut, AlgoParameters algoParameters,
-			char[] chainId, int startingRankId, int peptideLength){
+	public StructureLocalToBuildShapeSegmentOfShape(MyStructureIfc myStructureGlobalBrut,
+			char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters){
 
 		this.myStructureGlobalBrut = myStructureGlobalBrut;
 		this.algoParameters = algoParameters;

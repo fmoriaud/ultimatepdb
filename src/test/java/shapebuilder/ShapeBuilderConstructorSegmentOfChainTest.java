@@ -1,35 +1,30 @@
 package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReader;
 import io.BiojavaReaderFromPathToMmcifFileTest;
-import io.BiojavaReaderIfc;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorWholeChain;
+import shapeBuilder.ShapeBuilderConstructorSegmentOfChain;
 import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildShapeIfc;
 
 import java.io.IOException;
 import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * Created by Fabrice on 11/09/16.
  */
-public class ShapeBuilderConstructorWholeChainTest {
+public class ShapeBuilderConstructorSegmentOfChainTest {
 
     @Test
     public void testShapeBuilderConstructorWholeChain() throws IOException, ParsingConfigFileException {
@@ -52,7 +47,9 @@ public class ShapeBuilderConstructorWholeChainTest {
             assertTrue(false);
         }
 
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(mystructure, chainId, algoParameters);
+        int startingRankId = 3;
+        int peptideLength = 4;
+        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(mystructure, chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shape = null;
         try {
             shape = shapeBuilder.getShapeContainer();
@@ -60,7 +57,7 @@ public class ShapeBuilderConstructorWholeChainTest {
             assertTrue(false);
         }
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 656);
-        assertTrue(shape.getMiniShape().size() == 61);
+        assertTrue(shape.getShape().getSize() == 432);
+        assertTrue(shape.getMiniShape().size() == 44);
     }
 }

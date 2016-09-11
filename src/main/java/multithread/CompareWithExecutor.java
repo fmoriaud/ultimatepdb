@@ -219,7 +219,7 @@ public class CompareWithExecutor {
 //								}
 
                                 // TODO clean code of four letter code as now I input the structure itself
-                                ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, fourLetterCode.toCharArray(), chainIdFromDB.toCharArray(), i, segmentLength, algoParameters);
+                                ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, chainIdFromDB.toCharArray(), i, segmentLength, algoParameters);
                                 CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
 
                                 try {

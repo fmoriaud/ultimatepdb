@@ -67,7 +67,7 @@ public class ProtocolOneVsManyMultiThreaded implements ProtocolIfc{
 			;
 			break;
 		case "SEGMENT_OF_CHAIN":  
-			queryConstructor = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters.getSTARTING_RANK_ID(), algoParameters.getPEPTIDE_LENGTH(), algoParameters);
+			queryConstructor = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, algoParameters.getQUERY_CHAIN_ID().toCharArray(), algoParameters.getSTARTING_RANK_ID(), algoParameters.getPEPTIDE_LENGTH(), algoParameters);
 			;
 			break;
 		case "HETATM":

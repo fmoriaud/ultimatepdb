@@ -2,10 +2,7 @@ package io;
 
 import genericBuffer.GenericBuffer;
 import mystructure.MyStructureIfc;
-import org.biojava.nbio.structure.Chain;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
-import org.biojava.nbio.structure.Structure;
+import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
@@ -96,16 +93,16 @@ public class Tools {
             return false;
         }
 
-        Chain chain = mmcifStructure.getChain(0);
-        List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);
+        Chain chain0 = mmcifStructure.getChain(0);
+        List<Group> listGroupsAmino = chain0.getAtomGroups(GroupType.AMINOACID);
         if (listGroupsAmino.size() != 348) {
             return false;
         }
-        List<Group> listGroupsNucleotide = chain.getAtomGroups(GroupType.NUCLEOTIDE);
+        List<Group> listGroupsNucleotide = chain0.getAtomGroups(GroupType.NUCLEOTIDE);
         if (listGroupsNucleotide.size() != 0) {
             return false;
         }
-        List<Group> listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
+        List<Group> listGroupsHetatm = chain0.getAtomGroups(GroupType.HETATM);
         if (listGroupsHetatm.size() != 62) {
             return false;
         }
@@ -116,13 +113,28 @@ public class Tools {
         }
 
         List<String> expectedSequenceBegining = new ArrayList<>(Arrays.asList("GLU", "ARG", "PRO", "THR", "PHE", "TYR", "ARG"));
-        List<Group> groups = listGroupsAmino.subList(0, 7);
         for (int i = 0; i < expectedSequenceBegining.size(); i++) {
             String name = listGroupsAmino.get(i).getPDBName();
             if (!name.equals(expectedSequenceBegining.get(i))) {
                 return false;
             }
         }
+
+        boolean atLeastOneBond = false;
+        for (Chain chain : mmcifStructure.getChains()) {
+            List<Group> groups = chain.getAtomGroups(GroupType.AMINOACID);
+            for (Group group : groups) {
+                for (Atom atom : group.getAtoms()) {
+                    List<Bond> bonds = atom.getBonds();
+                    assertTrue(bonds != null);
+                    for (Bond bond : bonds) {
+                        atLeastOneBond = true;
+                        assertTrue(bond != null);
+                    }
+                }
+            }
+        }
+        assertTrue(atLeastOneBond);
         return true;
     }
 }

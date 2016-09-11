@@ -18,6 +18,13 @@ public class ShapeBuilderConstructorWholeChain extends ShapeBuilderConstructorAb
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
+
+	/**
+	 * Builder for a shape defined by the environment of a chain of input myStructure
+	 * @param myStructure
+	 * @param chainId
+	 * @param algoParameters
+	 */
 	public ShapeBuilderConstructorWholeChain(MyStructureIfc myStructure, char[] chainId, AlgoParameters algoParameters){
 
 		super(algoParameters);

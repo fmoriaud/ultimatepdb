@@ -94,7 +94,7 @@ public class ShapeBuilder {
 
 	public ShapeContainerWithPeptide getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException { // part chain query
 
-		StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrut, algoParameters, chainId, startingRankId, peptideLength);
+		StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrut, chainId, startingRankId, peptideLength, algoParameters);
 		structureLocalToBuildShapeSegmentOfShape.compute();
 		MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
 		MyChainIfc ligand = structureLocalToBuildShapeSegmentOfShape.getLigand();

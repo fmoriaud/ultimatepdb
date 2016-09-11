@@ -165,7 +165,7 @@ public class MyStructureFingerprint {
 					
 					// I need to schrink myStructure to the env of this subpeptide
 					StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = 
-							new StructureLocalToBuildShapeSegmentOfShape(myStructure, algoParameters, peptide.getChainId(), startId, splittedSequenceLength);
+							new StructureLocalToBuildShapeSegmentOfShape(myStructure, peptide.getChainId(), startId, splittedSequenceLength, algoParameters);
 					try {
 						structureLocalToBuildShapeSegmentOfShape.compute();
 					} catch (ShapeBuildingException e) {

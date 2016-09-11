@@ -12,7 +12,6 @@ public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstruct
 	//-------------------------------------------------------------
 	private MyStructureIfc myStructureGlobalBrut;
 
-	private char[] fourLetterCode;
 	private char[] chainId;
 	private int startingRankId;
 	private int peptideLength;
@@ -23,11 +22,19 @@ public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstruct
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorSegmentOfChain(MyStructureIfc myStructure, char[] fourLetterCode, char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters){
+
+	/**
+	 * Builder for a shape defined by the environment of a segment of a chain of input myStructure
+	 * @param myStructure
+	 * @param chainId
+	 * @param startingRankId is the rank id in chain (not the residue id). It starts from 0.
+	 * @param peptideLength is the final length of the segment of chain
+	 * @param algoParameters
+	 */
+	public ShapeBuilderConstructorSegmentOfChain(MyStructureIfc myStructure, char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters){
 		super(algoParameters);
 
 		this.myStructureGlobalBrut = myStructure;
-		this.fourLetterCode = fourLetterCode;
 		this.chainId = chainId;
 		this.startingRankId = startingRankId;
 		this.peptideLength = peptideLength;
@@ -43,7 +50,7 @@ public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstruct
 	public String toString(){
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.valueOf(fourLetterCode) + " ");
+		sb.append(String.valueOf(myStructureGlobalBrut.getFourLetterCode()) + " ");
 		sb.append(String.valueOf(chainId) + " ");
 		sb.append(startingRankId);
 		return sb.toString();
@@ -66,7 +73,7 @@ public class ShapeBuilderConstructorSegmentOfChain extends ShapeBuilderConstruct
 	// Getters and Setters
 	//-------------------------------------------------------------
 	public char[] getFourLetterCode() {
-		return fourLetterCode;
+		return myStructureGlobalBrut.getFourLetterCode();
 	}
 
 	public char[] getChainId() {
