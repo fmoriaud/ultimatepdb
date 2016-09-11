@@ -2,7 +2,6 @@ package mystructure;
 
 import io.Tools;
 import org.biojava.nbio.structure.GroupType;
-import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -199,7 +198,7 @@ public class MyStructureToolsTest {
     @Test
     public void testStorageComputeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom() throws IOException, ParsingConfigFileException {
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testChemcompFolder);
 
         MyStructureIfc myStructure = null;
         try {

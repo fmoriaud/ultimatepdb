@@ -1,21 +1,18 @@
 package mystructure;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderTest;
+import io.BiojavaReaderFromPathToMmcifFileTest;
 import io.CdkTools;
 import io.Tools;
 import io.WriteTextFile;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
-import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -38,7 +35,7 @@ public class MyStructureTest {
         } catch (ExceptionInMyStructurePackage e1) {
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testChemcompFolder);
         try {
             MyStructure myStructureOK = new MyStructure(monomer, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
@@ -134,11 +131,11 @@ public class MyStructureTest {
     @Test
     public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage{
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
 
-        URL urlUltimate = BiojavaReaderTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testFolder);
+        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testChemcompFolder);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);

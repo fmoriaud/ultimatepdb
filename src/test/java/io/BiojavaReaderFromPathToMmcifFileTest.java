@@ -2,15 +2,9 @@ package io;
 
 import mystructure.TestTools;
 import org.biojava.nbio.structure.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import protocols.ParsingConfigFileException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,49 +15,35 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * Created by Fabrice on 11/09/16.
+ */
+
+/**
  * Created by Fabrice on 05/09/16.
  */
-public class BiojavaReaderTest {
+public class BiojavaReaderFromPathToMmcifFileTest {
 
     @Test
     public void testReadFromResourcesProtein() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
-        int count = mmcifStructure.getChains().size();
-        assertTrue(count == 1);
-
-        Chain chain = mmcifStructure.getChain(0);
-        List<Group> listGroupsAmino = chain.getAtomGroups(GroupType.AMINOACID);
-        assertTrue(listGroupsAmino.size() == 348);
-        List<Group> listGroupsNucleotide = chain.getAtomGroups(GroupType.NUCLEOTIDE);
-        assertTrue(listGroupsNucleotide.size() == 0);
-        List<Group> listGroupsHetatm = chain.getAtomGroups(GroupType.HETATM);
-        assertTrue(listGroupsHetatm.size() == 62);
-
-        Group expectedLigandMSQ = listGroupsHetatm.get(0);
-        assertEquals(expectedLigandMSQ.getPDBName(), "MSQ");
-        List<String> expectedSequenceBegining = new ArrayList<>(Arrays.asList("GLU", "ARG", "PRO", "THR", "PHE", "TYR", "ARG"));
-        List<Group> groups = listGroupsAmino.subList(0, 7);
-        for (int i = 0; i < expectedSequenceBegining.size(); i++) {
-            String name = listGroupsAmino.get(i).getPDBName();
-            assertTrue(name.equals(expectedSequenceBegining.get(i)));
-        }
+        assertTrue(Tools.isGood1di9(mmcifStructure));
     }
 
 
     @Test
     public void testReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("394d.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -100,10 +80,10 @@ public class BiojavaReaderTest {
     @Test
     public void testReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("2hhf.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2hhf.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -137,10 +117,10 @@ public class BiojavaReaderTest {
     @Test
     public void testBondsReadFromResourcesProtein() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -162,10 +142,10 @@ public class BiojavaReaderTest {
     @Test
     public void testBondsReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("394d.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
@@ -191,10 +171,10 @@ public class BiojavaReaderTest {
     @Test
     public void testBondsReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("2hhf.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2hhf.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, TestTools.testFolder);
+            mmcifStructure = Tools.getStructure(url, TestTools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }

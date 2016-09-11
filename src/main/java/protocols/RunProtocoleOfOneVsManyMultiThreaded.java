@@ -22,7 +22,6 @@ public class RunProtocoleOfOneVsManyMultiThreaded {
 		algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.myStructureBuffer = new MyStructureBuffer(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
-		algoParameters.listOfPDBFiles = ProtocolToolsToHandleInputFilesAndShapeComparisons.makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder(algoParameters, enumMyReaderBiojava);
 
 		for (int i=0; i<algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++){
 			ProcrustesAnalysisIfc procrustesAnalysis = new ProcrustesAnalysis(algoParameters);

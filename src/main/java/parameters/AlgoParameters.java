@@ -13,7 +13,6 @@ public class AlgoParameters {
 	public GenericBuffer<UltiJmol1462> ultiJMolBuffer;
 	public GenericBuffer<ProcrustesAnalysisIfc> procrustesAnalysisBuffer;
 	public MyStructureBuffer myStructureBuffer;
-	public List<Path> listOfPDBFiles;
 	
 	
 	// ****************************

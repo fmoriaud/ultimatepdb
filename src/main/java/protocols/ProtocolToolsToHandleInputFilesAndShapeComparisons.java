@@ -36,28 +36,6 @@ import ultiJmol1462.UltiJMolTools;
 
 public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 
-	/**
-	 * build List of Path to each and every pdb file
-	 *
-	 */
-	public static List<Path> makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder(AlgoParameters algoParameters, EnumMyReaderBiojava enumMyReaderBiojava) {
-		List<Path> listOfInputPDBFiles = null ;
-		// List all files with path from the folder D://PDB//remediated//pdb//
-		try {
-			if (enumMyReaderBiojava == EnumMyReaderBiojava.BioJava_MMCIFF){
-				FileListingVisitor fileListingVisitor = new FileListingVisitor(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
-				listOfInputPDBFiles = fileListingVisitor.getListOfFilesToReturn();
-			}
-
-		} catch (IOException e) {
-			System.out.println("FAILURE: in makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder");
-			//e.printStackTrace();
-		}
-		return listOfInputPDBFiles;
-	}
-
-
-
 	/** compare a query shape to target shape builder
 	 * it is a convenience method calling the method to compare a query shape to a target shape
 	 * it is returning a data structure objectcalled Hit

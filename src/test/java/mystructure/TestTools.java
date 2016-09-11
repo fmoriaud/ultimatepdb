@@ -1,10 +1,8 @@
 package mystructure;
 
-import io.BiojavaReaderTest;
+import io.BiojavaReaderFromPathToMmcifFileTest;
 import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
-import protocols.CommandLineTools;
-import protocols.ParsingConfigFileException;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,11 +18,12 @@ public class TestTools {
 	/**
 	 * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
 	 */
-	public static final String testFolder = "//Users//Fabrice//Documents//test";
+	public static final String testChemcompFolder = "//Users//Fabrice//Documents//test";
+	public static final String testPDBFolder = "//Users//Fabrice//Documents//test//pdb";
 
 	public static Structure readMmcifFileFromResources(String fileName){
 
-		URL url = BiojavaReaderTest.class.getClassLoader().getResource(fileName);
+		URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource(fileName);
 
 		Path path = null;
 		try {

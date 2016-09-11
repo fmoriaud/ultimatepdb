@@ -1,7 +1,7 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderTest;
+import io.BiojavaReaderFromPathToMmcifFileTest;
 import io.Tools;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
@@ -9,7 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import parameters.AlgoParameters;
-import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
@@ -51,7 +50,7 @@ public class MyJmolTest {
     @Test
     public void testOpenStringInlineV3000Jmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderTest.class.getClassLoader().getResource("1di9.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, pathToPDBFolder);
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(pathToPDBFolder);
