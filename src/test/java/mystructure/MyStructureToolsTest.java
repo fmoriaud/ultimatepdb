@@ -198,7 +198,7 @@ public class MyStructureToolsTest {
     @Test
     public void testStorageComputeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom() throws IOException, ParsingConfigFileException {
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(TestTools.testChemcompFolder);
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders(Tools.testChemcompFolder);
 
         MyStructureIfc myStructure = null;
         try {

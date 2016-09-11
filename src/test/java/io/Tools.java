@@ -26,6 +26,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class Tools {
 
+    /**
+     * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
+     */
+    public static final String testChemcompFolder = "//Users//Fabrice//Documents//test";
+    public static final String testPDBFolder = "//Users//Fabrice//Documents//test//pdb";
+
 
     /**
      * Tested method to get a PDB file from path

@@ -26,7 +26,7 @@ public class BiojavaReaderFromPDBFolderTest {
 
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFrom(fourLetterCode, TestTools.testPDBFolder, TestTools.testChemcompFolder);
+            mmcifStructure = reader.readFrom(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }

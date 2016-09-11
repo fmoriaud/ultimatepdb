@@ -15,12 +15,6 @@ import static org.junit.Assert.assertTrue;
 
 public class TestTools {
 
-	/**
-	 * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
-	 */
-	public static final String testChemcompFolder = "//Users//Fabrice//Documents//test";
-	public static final String testPDBFolder = "//Users//Fabrice//Documents//test//pdb";
-
 	public static Structure readMmcifFileFromResources(String fileName){
 
 		URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource(fileName);
