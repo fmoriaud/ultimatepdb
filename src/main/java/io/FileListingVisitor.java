@@ -52,12 +52,10 @@ public class FileListingVisitor {
     private class ProcessFile extends SimpleFileVisitor<Path> {
         @Override
         public FileVisitResult visitFile(Path aFile, BasicFileAttributes aAttrs) throws IOException {
-            System.out.println("Processing file:" + aFile);
 
             String fourLetterCode = makeFourLetterCodeFromFileNameForMmcifGzFiles(aFile.getFileName().toString());
             if (fourLetterCode != null) {
                 AddToMap.addElementToAMapOfList(indexFiles, fourLetterCode, aFile);
-                System.out.println("ok file:" + aFile);
             }
 
             return FileVisitResult.CONTINUE;
