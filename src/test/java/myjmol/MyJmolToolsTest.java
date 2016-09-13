@@ -25,7 +25,7 @@ public class MyJmolToolsTest {
     public void testProtonateStructure() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2n0u.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, Tools.testChemcompFolder);
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
 
         URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();

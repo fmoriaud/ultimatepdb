@@ -132,7 +132,7 @@ public class TestTools {
 		mychains[1] = myChainB;
 
 		AlgoParameters algoParameters = new AlgoParameters();
-		MyStructureIfc myStructure = MyStructure.getMyStructure(mychains, myMonomerType, algoParameters);
+		MyStructureIfc myStructure = MyStructure.getMyStructure(mychains, myMonomerType, ExpTechniquesEnum.UNDEFINED, algoParameters);
 
 		// set parent atom
 		MyStructureTools.setAtomParentReference(myMonomerA1);

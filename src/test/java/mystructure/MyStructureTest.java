@@ -70,14 +70,14 @@ public class MyStructureTest {
 
         AlgoParameters algoParameters = new AlgoParameters();
         try {
-            MyStructureIfc myStructure1 = new MyStructure(anyChainArray, anyChainArray, anyChainArray, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(anyChainArray, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(false);
         }
 
         // one null MyChain[] throws an exception
         try {
-            MyStructureIfc myStructure1 = new MyStructure(null, anyChainArray, anyChainArray, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(null, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
         }
@@ -85,7 +85,7 @@ public class MyStructureTest {
         // All empty chains throw exception
         MyChainIfc[] emptyChainArray = new MyChainIfc[0];
         try {
-            MyStructureIfc myStructure1 = new MyStructure(emptyChainArray, emptyChainArray, emptyChainArray, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(emptyChainArray, emptyChainArray, emptyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
         }
@@ -130,7 +130,7 @@ public class MyStructureTest {
     public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url, Tools.testChemcompFolder);
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 

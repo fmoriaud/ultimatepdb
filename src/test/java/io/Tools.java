@@ -41,7 +41,7 @@ public class Tools {
      * @throws ParsingConfigFileException
      * @throws IOException
      */
-    public static Structure getStructure(URL url, String pathToTempPDBFolder) throws ParsingConfigFileException, IOException {
+    public static Structure getStructure(URL url) throws ParsingConfigFileException, IOException {
         Path path = null;
         try {
             path = Paths.get(url.toURI());

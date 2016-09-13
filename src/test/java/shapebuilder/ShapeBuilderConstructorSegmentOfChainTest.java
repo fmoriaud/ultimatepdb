@@ -35,7 +35,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url, Tools.testChemcompFolder);
+            mmcifStructure = Tools.getStructure(url);
         } catch (IOException e) {
             assertTrue(false);
         }
