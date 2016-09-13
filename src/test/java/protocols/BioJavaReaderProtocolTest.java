@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class BioJavaReaderProtocolTest {
 
     @Test
-    public void readFile2ThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
+    public void readFileNeutronDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5e5j.cif.gz");
         Structure mmcifStructure = null;
@@ -32,6 +32,24 @@ public class BioJavaReaderProtocolTest {
         } catch (IOException e) {
             assertTrue(false);
         }
-       assertTrue(mmcifStructure == null);
+        assertTrue(mmcifStructure == null);
     }
+
+    @Test
+    public void readFileProteinFiberDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
+
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2zwh.cif.gz");
+        Structure mmcifStructure = null;
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        try {
+            BioJavaReaderProtocol reader = new BioJavaReaderProtocol();
+            mmcifStructure = reader.read(Paths.get(url.getPath().toString()), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+        assertTrue(mmcifStructure == null);
+    }
+
+
+
 }

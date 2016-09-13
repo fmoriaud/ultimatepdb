@@ -69,7 +69,6 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     }
 
 
-    @Ignore
     @Test
     public void testReadFromResourcesProteinElectronCrystallography() throws ParsingConfigFileException {
 
@@ -83,37 +82,6 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.ELECTRON_CRYSTALLOGRAPHY));
-    }
-
-
-    @Ignore
-    @Test
-    public void testReadFromResourcesProteinNeutronCrystallography() throws ParsingConfigFileException {
-
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5e5j.cif.gz"); //5d97
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = Tools.getStructure(url);
-        } catch (IOException e) {
-            assertTrue(false);
-        }
-        Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
-        assertTrue(expTechniques.size() == 1);
-        assertTrue(expTechniques.contains(ExperimentalTechnique.NEUTRON_DIFFRACTION));
-    }
-
-    @Ignore
-    @Test
-    public void testReadFromResourcesProteinFiberDiffraction() throws ParsingConfigFileException {
-
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2zwh.cif.gz");
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = Tools.getStructure(url);
-        } catch (IOException e) {
-            assertTrue(false);
-        }
-        System.out.println();
     }
 
 
@@ -149,9 +117,9 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         assertTrue(expTechniques.contains(ExperimentalTechnique.POWDER_DIFFRACTION));
     }
 
-    @Ignore
+
     @Test
-    public void testReadFromResourcesHybrid() throws ParsingConfigFileException {
+    public void testReadFromResourcesHybridn() throws ParsingConfigFileException {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5ebj.cif.gz");
         Structure mmcifStructure = null;
@@ -160,7 +128,8 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         } catch (IOException e) {
             assertTrue(false);
         }
-        System.out.println();
+        Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
+        assertTrue(expTechniques.size() == 1);
+        assertTrue(expTechniques.contains(ExperimentalTechnique.POWDER_DIFFRACTION));
     }
-
 }
