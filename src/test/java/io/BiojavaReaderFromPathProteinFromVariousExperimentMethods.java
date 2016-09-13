@@ -116,20 +116,4 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.POWDER_DIFFRACTION));
     }
-
-
-    @Test
-    public void testReadFromResourcesHybridn() throws ParsingConfigFileException {
-
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5ebj.cif.gz");
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = Tools.getStructure(url);
-        } catch (IOException e) {
-            assertTrue(false);
-        }
-        Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
-        assertTrue(expTechniques.size() == 1);
-        assertTrue(expTechniques.contains(ExperimentalTechnique.POWDER_DIFFRACTION));
-    }
 }

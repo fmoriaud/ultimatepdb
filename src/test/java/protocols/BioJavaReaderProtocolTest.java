@@ -50,6 +50,19 @@ public class BioJavaReaderProtocolTest {
         assertTrue(mmcifStructure == null);
     }
 
+    @Test
+    public void readFileHybridThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5ebj.cif.gz");
+        Structure mmcifStructure = null;
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        try {
+            BioJavaReaderProtocol reader = new BioJavaReaderProtocol();
+            mmcifStructure = reader.read(Paths.get(url.getPath().toString()), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+        assertTrue(mmcifStructure == null);
+    }
 
 }
