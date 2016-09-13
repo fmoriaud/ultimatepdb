@@ -10,23 +10,9 @@ import java.util.Set;
 
 import math.AddToMap;
 import math.ToolsMath;
+import mystructure.*;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
-import mystructure.EnumMyReaderBiojava;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyAtom;
-import mystructure.MyAtomIfc;
-import mystructure.MyBond;
-import mystructure.MyBondIfc;
-import mystructure.MyChain;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomer;
-import mystructure.MyMonomerIfc;
-import mystructure.MyMonomerType;
-import mystructure.MyStructure;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
-import mystructure.ReadingStructurefileException;
 
 public class AdapterBioJavaStructure {
     private EnumMyReaderBiojava enumMyReaderBiojava;
@@ -138,20 +124,22 @@ public class AdapterBioJavaStructure {
 
         // define bonds before building MyStructure otherwise the call for building neighbors by Bond won't work
         int countOfBonds = 0;
-        for (MyChainIfc myChain: aminoChains){
+        for (MyChainIfc myChain : aminoChains) {
             int count = defineBonds(myChain);
             countOfBonds += count;
         }
-        for (MyChainIfc myChain: hetatmChains){
+        for (MyChainIfc myChain : hetatmChains) {
             int count = defineBonds(myChain);
             countOfBonds += count;
         }
-        for (MyChainIfc myChain: nucleotidesChains){
+        for (MyChainIfc myChain : nucleotidesChains) {
             int count = defineBonds(myChain);
             countOfBonds += count;
         }
 
-        MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), algoParameters);
+        Set<ExperimentalTechnique> expTechniqueBiojava = structure.getPDBHeader().getExperimentalTechniques();
+        ExpTechniquesEnum expTechniqueUltimate = convertExpTechniques(expTechniqueBiojava);
+        MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), expTechniqueUltimate, algoParameters);
         myStructure.setFourLetterCode(fourLetterCode);
 
         if (countOfBonds > 0) {
@@ -170,6 +158,39 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private ExpTechniquesEnum convertExpTechniques(Set<ExperimentalTechnique> expTechniqueBiojava) {
+
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.XRAY_DIFFRACTION)) {
+            return ExpTechniquesEnum.XRAY_DIFFRACTION;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.SOLUTION_NMR)) {
+            return ExpTechniquesEnum.SOLUTION_NMR;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.SOLID_STATE_NMR)) {
+            return ExpTechniquesEnum.SOLID_STATE_NMR;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.ELECTRON_MICROSCOPY)) {
+            return ExpTechniquesEnum.ELECTRON_MICROSCOPY;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.ELECTRON_CRYSTALLOGRAPHY)) {
+            return ExpTechniquesEnum.ELECTRON_CRYSTALLOGRAPHY;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.FIBER_DIFFRACTION)) {
+            return ExpTechniquesEnum.FIBER_DIFFRACTION;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.NEUTRON_DIFFRACTION)) {
+            return ExpTechniquesEnum.NEUTRON_DIFFRACTION;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.POWDER_DIFFRACTION)) {
+            return ExpTechniquesEnum.POWDER_DIFFRACTION;
+        }
+        if (expTechniqueBiojava.contains(ExperimentalTechnique.SOLUTION_SCATTERING)) {
+            return ExpTechniquesEnum.SOLUTION_SCATTERING;
+        }
+        return ExpTechniquesEnum.UNDEFINED;
+    }
+
+
     private void cleanListOfGroup(List<Group> listGroups) {
 
         // check alternate location in structure there is in 2FA1 GLN A 197
@@ -280,7 +301,6 @@ public class AdapterBioJavaStructure {
 
         return myChain;
     }
-
 
 
     private int defineBonds(MyChainIfc myChain) {
@@ -415,7 +435,6 @@ public class AdapterBioJavaStructure {
             monomer.setParent(myChain);
         }
     }
-
 
 
     private static void updateMyMonomerParentReference(MyChainIfc myChain) {
