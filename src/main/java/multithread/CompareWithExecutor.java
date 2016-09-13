@@ -143,7 +143,7 @@ public class CompareWithExecutor {
 //								continue;
 //							}
 
-                            ShapeBuilderConstructorHetAtm shapeBuilder = new ShapeBuilderConstructorHetAtm(fourLetterCode.toCharArray(), threeLetterCode.toCharArray(), occurenceId, algoParameters);
+                            ShapeBuilderConstructorHetAtm shapeBuilder = new ShapeBuilderConstructorHetAtm(myStructureGlobalBrut, threeLetterCode.toCharArray(), occurenceId, algoParameters);
                             CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
                             try {
                                 executorService.execute(compare);

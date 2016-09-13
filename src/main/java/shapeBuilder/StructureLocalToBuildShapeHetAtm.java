@@ -51,7 +51,7 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
 			ShapeBuildingException exception = new ShapeBuildingException(message);
 			throw exception;
 		}
-		MyChainIfc ligand = new MyChain(hetAtomsGroup, hetAtomsGroup.getParent().getChainId());
+		ligand = new MyChain(hetAtomsGroup, hetAtomsGroup.getParent().getChainId());
 
 		// Would be nice to refactor but I dont know how
 		List<MyMonomerIfc> tipMyMonomersToRemove = new ArrayList<>();

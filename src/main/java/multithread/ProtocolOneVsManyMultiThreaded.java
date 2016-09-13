@@ -71,7 +71,7 @@ public class ProtocolOneVsManyMultiThreaded implements ProtocolIfc{
 			;
 			break;
 		case "HETATM":
-			queryConstructor = new ShapeBuilderConstructorHetAtm(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_PDB_THREE_LETTER_CODE().toCharArray(), algoParameters.getOCCURENCE_ID(), algoParameters);
+			queryConstructor = new ShapeBuilderConstructorHetAtm(myStructureGlobalBrut, algoParameters.getQUERY_PDB_THREE_LETTER_CODE().toCharArray(), algoParameters.getOCCURENCE_ID(), algoParameters);
 			;
 			break;
 		case "ATOMIDS_WITHIN_SHAPE":

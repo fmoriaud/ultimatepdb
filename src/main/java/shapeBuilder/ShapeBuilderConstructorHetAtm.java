@@ -10,7 +10,7 @@ public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstra
 	//-------------------------------------------------------------
 	// Class variables
 	//-------------------------------------------------------------
-	private char[] fourLetterCode;
+	private MyStructureIfc myStructure;
 	private char[] hetatmLigandThreeLetterCode;
 	private int occurenceId;
 
@@ -19,9 +19,9 @@ public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstra
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorHetAtm(char[] fourLetterCode, char[] hetatmLigandThreeLetterCode, int occurenceId, AlgoParameters algoParameters) {
+	public ShapeBuilderConstructorHetAtm(MyStructureIfc myStructure, char[] hetatmLigandThreeLetterCode, int occurenceId, AlgoParameters algoParameters) {
 		super(algoParameters);
-		this.fourLetterCode = fourLetterCode;
+		this.myStructure = myStructure;
 		this.hetatmLigandThreeLetterCode = hetatmLigandThreeLetterCode;
 		this.occurenceId = occurenceId;
 	}
@@ -36,7 +36,7 @@ public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstra
 	public String toString(){
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.valueOf(fourLetterCode) + " ");
+		sb.append(String.valueOf(myStructure.getFourLetterCode()) + " ");
 		sb.append(String.valueOf(hetatmLigandThreeLetterCode) + " ");
 		sb.append(occurenceId);
 		return sb.toString();
@@ -46,10 +46,8 @@ public class ShapeBuilderConstructorHetAtm extends ShapeBuilderConstructorAbstra
 
 	@Override
 	public ShapeContainerIfc getShapeContainer() throws ShapeBuildingException {
-		
-		MyStructureIfc myStructureGlobalBrut = getMyStructure(fourLetterCode);
-		
-		ShapeBuilder shapeBuilder = new ShapeBuilder(myStructureGlobalBrut, algoParameters);
+
+		ShapeBuilder shapeBuilder = new ShapeBuilder(myStructure, algoParameters);
 		ShapeContainerWithLigand shapeContainerWithLigand = shapeBuilder.getShapeAroundAHetAtomLigand(hetatmLigandThreeLetterCode, occurenceId);
 		return shapeContainerWithLigand;
 	}
