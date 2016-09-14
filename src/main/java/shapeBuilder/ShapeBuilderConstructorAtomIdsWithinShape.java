@@ -15,7 +15,6 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 	//-------------------------------------------------------------
 	private char[] fourLetterCode;
 	private List<QueryAtomDefinedByIds> listAtomDefinedByIds;
-	private double radiusForQueryAtomsDefinedByIds;
 	private List<String> chainToIgnore;
 	private MyStructureIfc myStructureGlobalBrut;
 
@@ -25,24 +24,12 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
-	public ShapeBuilderConstructorAtomIdsWithinShape(char[] fourLetterCode, List<QueryAtomDefinedByIds> listAtomDefinedByIds, double radiusForQueryAtomsDefinedByIds, 
-			AlgoParameters algoParameters, List<String> chainToIgnore){
-		super(algoParameters);
-		this.fourLetterCode = fourLetterCode;
-		this.listAtomDefinedByIds = listAtomDefinedByIds;
-		this.radiusForQueryAtomsDefinedByIds = radiusForQueryAtomsDefinedByIds;
-		this.chainToIgnore = chainToIgnore;
-	}
-
-
-
-	public ShapeBuilderConstructorAtomIdsWithinShape(MyStructureIfc myStructureGlobalBrut, List<QueryAtomDefinedByIds> listAtomDefinedByIds, double radiusForQueryAtomsDefinedByIds, 
-			AlgoParameters algoParameters, List<String> chainToIgnore){
+	public ShapeBuilderConstructorAtomIdsWithinShape(MyStructureIfc myStructureGlobalBrut, List<QueryAtomDefinedByIds> listAtomDefinedByIds,
+			List<String> chainToIgnore, AlgoParameters algoParameters){
 		super(algoParameters);
 		this.myStructureGlobalBrut = myStructureGlobalBrut;
 		this.fourLetterCode = myStructureGlobalBrut.getFourLetterCode();
 		this.listAtomDefinedByIds = listAtomDefinedByIds;
-		this.radiusForQueryAtomsDefinedByIds = radiusForQueryAtomsDefinedByIds;
 		this.chainToIgnore = chainToIgnore;
 	}
 
@@ -55,11 +42,9 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 
 		StringBuffer sb = new StringBuffer();
 		sb.append(String.valueOf(fourLetterCode) + " ");
-		sb.append(radiusForQueryAtomsDefinedByIds + " Angstr�ms ");
 		for (QueryAtomDefinedByIds atomDefinedByIds: listAtomDefinedByIds){
 			sb.append(atomDefinedByIds.toString());
 		}
-		sb.append(" | " + radiusForQueryAtomsDefinedByIds + " Angstr�ms ");
 		return "";
 	}
 
@@ -73,7 +58,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 		}
 
 		ShapeBuilder shapeBuilder = new ShapeBuilder(myStructureGlobalBrut, algoParameters);
-		ShapeContainerAtomIdsWithinShapeWithPeptide shapeContainerAtomIdsWithinShape = shapeBuilder.getShapeAroundAtomDefinedByIds(listAtomDefinedByIds, radiusForQueryAtomsDefinedByIds, chainToIgnore);
+		ShapeContainerAtomIdsWithinShapeWithPeptide shapeContainerAtomIdsWithinShape = shapeBuilder.getShapeAroundAtomDefinedByIds(listAtomDefinedByIds, chainToIgnore);
 		return shapeContainerAtomIdsWithinShape;
 	}
 }

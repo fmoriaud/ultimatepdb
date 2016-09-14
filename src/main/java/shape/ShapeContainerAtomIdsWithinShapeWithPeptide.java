@@ -23,13 +23,13 @@ public class ShapeContainerAtomIdsWithinShapeWithPeptide extends ShapeContainerA
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------	
-	public ShapeContainerAtomIdsWithinShapeWithPeptide(List<QueryAtomDefinedByIds> listAtomDefinedByIds, double radiusForQueryAtomsDefinedByIds,
+	public ShapeContainerAtomIdsWithinShapeWithPeptide(List<QueryAtomDefinedByIds> listAtomDefinedByIds,
 			CollectionOfPointsWithPropertiesIfc shape,
 			List<PointIfc> listPointDefininingLigandUsedToComputeShape,
 			MyStructureIfc myStructureUsedToComputeShape,
 			AlgoParameters algoParameters) {
 
-		super(listAtomDefinedByIds, radiusForQueryAtomsDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
+		super(listAtomDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
 	}
 
 

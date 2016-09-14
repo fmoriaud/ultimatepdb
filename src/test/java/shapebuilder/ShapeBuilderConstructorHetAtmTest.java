@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class ShapeBuilderConstructorHetAtmTest {
 
     @Test
-    public void testShapeBuilderConstructorWholeChain() throws IOException, ParsingConfigFileException {
+    public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 

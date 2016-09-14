@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class ShapeBuilderConstructorSegmentOfChainTest {
 
     @Test
-    public void testShapeBuilderConstructorWholeChain() throws IOException, ParsingConfigFileException {
+    public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();

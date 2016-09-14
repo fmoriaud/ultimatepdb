@@ -21,7 +21,6 @@ public class RunCalibrationProtocol {
 		EnumMyReaderBiojava enumMyReaderBiojava = EnumMyReaderBiojava.BioJava_MMCIFF;
 
 		AlgoParameters algoParameters = CommandLineTools.analyzeArgs(args, enumMyReaderBiojava);
-		algoParameters.setRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(7.0);
 		algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.myStructureBuffer = new MyStructureBuffer(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);

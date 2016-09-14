@@ -1,43 +1,41 @@
 package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReader;
 import io.BiojavaReaderFromPathToMmcifFileTest;
-import io.BiojavaReaderIfc;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import parameters.QueryAtomDefinedByIds;
 import protocols.ParsingConfigFileException;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuilderConstructorAtomIdsWithinShape;
+import shapeBuilder.ShapeBuilderConstructorHetAtm;
 import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorWholeChain;
 import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildShapeIfc;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-
 /**
- * Created by Fabrice on 11/09/16.
+ * Created by Fabrice on 14/09/16.
  */
-public class ShapeBuilderConstructorWholeChainTest {
+public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
 
     @Test
     public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         Structure mmcifStructure = null;
         try {
             mmcifStructure = Tools.getStructure(url);
@@ -52,15 +50,26 @@ public class ShapeBuilderConstructorWholeChainTest {
             assertTrue(false);
         }
 
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(mystructure, chainId, algoParameters);
+        List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
+        String fourLetterCode = "1di9" ;
+        String chainQuery = "A";
+        int residueId = 168;
+        String atomName = "OD2";
+        float radiusForQueryAtomsDefinedByIds = 8;
+        QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
+        listAtomDefinedByIds.add(queryAtomDefinedByIds);
+
+        List<String> chainToIgnore = new ArrayList<>();
+        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorAtomIdsWithinShape(mystructure, listAtomDefinedByIds, chainToIgnore, algoParameters);
         ShapeContainerIfc shape = null;
         try {
             shape = shapeBuilder.getShapeContainer();
-        } catch (ShapeBuildingException e) {
+        } catch (
+                ShapeBuildingException e) {
             assertTrue(false);
         }
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 656);
-        assertTrue(shape.getMiniShape().size() == 61);
+        assertTrue(shape.getShape().getSize() == 2335);
+        assertTrue(shape.getMiniShape().size() == 43);
     }
 }

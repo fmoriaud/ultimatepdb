@@ -68,7 +68,6 @@ public class AlgoParameters {
 	// Query related to atoms which are within the query
 	// ATOMIDS_WITHIN_SHAPE
 	private List<QueryAtomDefinedByIds> QUERY_ATOMS_DEFINED_BY_IDS;
-	private double RADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS;
 
 	private List<TargetDefinedByWholeChain> LIST_TargetDefinedByWholeChain;
 	private List<TargetDefinedBySegmentOfChainBasedOnSegmentLength> LIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength;
@@ -120,9 +119,6 @@ public class AlgoParameters {
 	}
 	public List<QueryAtomDefinedByIds> getQUERY_ATOMS_DEFINED_BY_IDS() {
 		return QUERY_ATOMS_DEFINED_BY_IDS;
-	}
-	public double getRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS() {
-		return RADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS;
 	}
 	public List<TargetDefinedByWholeChain> getLIST_TargetDefinedByWholeChain() {
 		return LIST_TargetDefinedByWholeChain;
@@ -185,10 +181,6 @@ public class AlgoParameters {
 	public void setQUERY_ATOMS_DEFINED_BY_IDS(
 			List<QueryAtomDefinedByIds> qUERY_ATOMS_DEFINED_BY_IDS) {
 		QUERY_ATOMS_DEFINED_BY_IDS = qUERY_ATOMS_DEFINED_BY_IDS;
-	}
-	public void setRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(
-			double rADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS) {
-		RADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS = rADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS;
 	}
 	public void setLIST_TargetDefinedByWholeChain(
 			List<TargetDefinedByWholeChain> lIST_TargetDefinedByWholeChain) {

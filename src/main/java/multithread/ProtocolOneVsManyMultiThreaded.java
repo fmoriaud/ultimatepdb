@@ -75,7 +75,7 @@ public class ProtocolOneVsManyMultiThreaded implements ProtocolIfc{
 			;
 			break;
 		case "ATOMIDS_WITHIN_SHAPE":
-			queryConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().toCharArray(), algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), algoParameters.getRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(), algoParameters, algoParameters.getCHAIN_TO_IGNORE());
+			queryConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructureGlobalBrut, algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), algoParameters.getCHAIN_TO_IGNORE(), algoParameters);
 			;
 			break;
 		}

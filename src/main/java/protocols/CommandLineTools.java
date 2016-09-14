@@ -144,7 +144,6 @@ public class CommandLineTools {
 			;
 			break;
 		case "ATOMIDS_WITHIN_SHAPE":
-			algoParameters.setRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(Float.valueOf(rootElement.elements("QUERY").get(0).elements("ATOMIDS_WITHIN_SHAPE").get(0).elements("RADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS").get(0).getText()));
 			List<Element> queryAtoms = rootElement.elements("QUERY").get(0).elements("ATOMIDS_WITHIN_SHAPE").get(0).elements("QUERY_ATOMS_DEFINED_BY_IDS").get(0).elements("ATOM_DEFINED_BY_IDS");
 			List<QueryAtomDefinedByIds> listAtoms = new ArrayList<>();
 			for (int i=0; i<queryAtoms.size(); i++){
@@ -152,7 +151,8 @@ public class CommandLineTools {
 				String atomChainId = queryAtom.elements("CHAINID").get(0).getText();
 				int atomMonomerId = Integer.valueOf(queryAtom.elements("MONOMERID").get(0).getText());
 				String atomId = queryAtom.elements("ATOMID").get(0).getText();
-				QueryAtomDefinedByIds atom = new QueryAtomDefinedByIds(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE(), atomChainId, atomMonomerId, atomId);
+				float radius = Float.valueOf(queryAtom.elements("RADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS").get(0).getText());
+				QueryAtomDefinedByIds atom = new QueryAtomDefinedByIds(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE(), atomChainId, atomMonomerId, atomId, radius);
 				listAtoms.add(atom);
 			}
 			algoParameters.setQUERY_ATOMS_DEFINED_BY_IDS(listAtoms);

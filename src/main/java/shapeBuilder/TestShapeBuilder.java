@@ -76,7 +76,7 @@ public class TestShapeBuilder {
 		
 		startTimeMs = System.currentTimeMillis();
 		List<String> chainToIgnore = new ArrayList<>();
-		ShapeContainer shapeContainer = shapeBuilderRefactored.getShapeAroundAtomDefinedByIds(algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), algoParameters.getRADIUS_FOR_QUERY_ATOMS_DEFINED_BY_IDS(), chainToIgnore);
+		ShapeContainer shapeContainer = shapeBuilderRefactored.getShapeAroundAtomDefinedByIds(algoParameters.getQUERY_ATOMS_DEFINED_BY_IDS(), chainToIgnore);
 		shapeContainer.exportShapeToPDBFile("TestShapeBuildershapeLennard_All_C", algoParameters);
 		shapeContainer.exportMiniShapeToPDBFile("TestShapeBuilderLennardminishape_All_C", algoParameters);
 		shapeContainer.exportMiniShapeColoredToPDBFile("TestShapeBuilderLennardminishape_Colored", algoParameters);

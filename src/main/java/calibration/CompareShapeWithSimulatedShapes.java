@@ -195,15 +195,16 @@ public class CompareShapeWithSimulatedShapes {
 	}
 
 
+	// Why this one ???
 	private ShapeContainerIfc makeShapeContainer(MyStructureIfc myStructure) throws ShapeBuildingException {
 
-		QueryAtomDefinedByIds atom = new QueryAtomDefinedByIds(String.valueOf(myStructure.getFourLetterCode()), "C", 3, "CA");
+		QueryAtomDefinedByIds atom = new QueryAtomDefinedByIds(String.valueOf(myStructure.getFourLetterCode()), "C", 3, "CA", 7.0f);
 		List<QueryAtomDefinedByIds> listQueryAtom = new ArrayList<>();
 		listQueryAtom.add(atom);
 
 		List<String> chainToIgnore = new ArrayList<>();
 		chainToIgnore.add("C");
-		ShapeBuilderConstructorAtomIdsWithinShape targetConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructure, listQueryAtom, 8.0, algoParameters, chainToIgnore);
+		ShapeBuilderConstructorAtomIdsWithinShape targetConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructure, listQueryAtom, chainToIgnore, algoParameters);
 		ShapeContainerIfc targetShape = targetConstructor.getShapeContainer();
 		return targetShape;
 	}
