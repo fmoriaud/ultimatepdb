@@ -1,6 +1,7 @@
 package shapeBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -13,109 +14,99 @@ import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 
-public class StructureLocalToBuildShapeAroundAtomDefinedByIds implements StructureLocalToBuildShapeIfc{
-	//-------------------------------------------------------------
-	// Class variables
-	//-----------------------------------------------------
-	private MyStructureIfc myStructureGlobalBrut;
-	private List<QueryAtomDefinedByIds> queryAtomsDefinedByIds;
-	private List<String> chainToIgnore;
-	private MyStructureIfc myStructureLocal;
-	private AlgoParameters algoParameters;
+public class StructureLocalToBuildShapeAroundAtomDefinedByIds implements StructureLocalToBuildShapeIfc {
+    //-------------------------------------------------------------
+    // Class variables
+    //-----------------------------------------------------
+    private MyStructureIfc myStructureGlobalBrut;
+    private List<QueryAtomDefinedByIds> queryAtomsDefinedByIds;
+    private List<String> chainToIgnore;
+    private MyStructureIfc myStructureLocal;
+    private AlgoParameters algoParameters;
 
 
-	
-	
-	//-------------------------------------------------------------
-	// Constructor
-	//-------------------------------------------------------------
-	public StructureLocalToBuildShapeAroundAtomDefinedByIds(MyStructureIfc myStructureGlobalBrut,
-			List<QueryAtomDefinedByIds> queryAtomsDefinedByIds, AlgoParameters algoParameters, List<String> chainToIgnore){
+    //-------------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------------
+    public StructureLocalToBuildShapeAroundAtomDefinedByIds(MyStructureIfc myStructureGlobalBrut,
+                                                            List<QueryAtomDefinedByIds> queryAtomsDefinedByIds, AlgoParameters algoParameters, List<String> chainToIgnore) {
 
-		this.chainToIgnore = chainToIgnore;
-		this.myStructureGlobalBrut = myStructureGlobalBrut;
-		this.queryAtomsDefinedByIds = queryAtomsDefinedByIds;
-		this.algoParameters = algoParameters;
+        this.chainToIgnore = chainToIgnore;
+        this.myStructureGlobalBrut = myStructureGlobalBrut;
+        this.queryAtomsDefinedByIds = queryAtomsDefinedByIds;
+        this.algoParameters = algoParameters;
 
-	}
+    }
 
 
+    //-------------------------------------------------------------
+    // Interface & Public methods
+    //-------------------------------------------------------------
+    public void compute() throws ShapeBuildingException {
+
+        List<MyMonomerIfc> monomersContainingAtomsDefinedByIds = findMyMonomersOnlyInAminoChainsContainingAtomsDefinedByIds(myStructureGlobalBrut, queryAtomsDefinedByIds);
+        if (monomersContainingAtomsDefinedByIds.isEmpty()){
+            return;
+        }
+        MyChainIfc correspondingChain = new MyChain(monomersContainingAtomsDefinedByIds);
+        myStructureLocal = makeStructureLocalAroundAndWithChain(correspondingChain, chainToIgnore);
+    }
 
 
-	//-------------------------------------------------------------
-	// Interface & Public methods
-	//-------------------------------------------------------------
-	public void compute() throws ShapeBuildingException{
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
+    private MyStructureIfc makeStructureLocalAroundAndWithChain(MyChainIfc myChain, List<String> chainToIgnore) {
 
-		List<MyMonomerIfc> monomersContainingAtomsDefinedByIds = findMyMonomersOnlyInAminoChainsContainingAtomsDefinedByIds(myStructureGlobalBrut, queryAtomsDefinedByIds);
-		MyChainIfc correspondingChain = new MyChain(monomersContainingAtomsDefinedByIds);
-		myStructureLocal = makeStructureLocalAroundAndWithChain(correspondingChain, chainToIgnore);
-	}
+        Set<MyMonomerIfc> queryMonomers = StructureLocalTools.makeMyMonomersLocalAroundAndWithChain(myChain);
+        MyStructureIfc myStructureLocal;
+        try {
+            myStructureLocal = myStructureGlobalBrut.cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(queryMonomers);
+        } catch (ExceptionInMyStructurePackage e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
 
+        ShapeBuildingTools.deleteChains(chainToIgnore, myStructureLocal);
 
-
-
-	//-------------------------------------------------------------
-	// Implementation
-	//-------------------------------------------------------------
-	private MyStructureIfc makeStructureLocalAroundAndWithChain(MyChainIfc myChain, List<String> chainToIgnore) {
-
-		Set<MyMonomerIfc> queryMonomers = StructureLocalTools.makeMyMonomersLocalAroundAndWithChain(myChain);
-		MyStructureIfc myStructureLocal;
-		try {
-			myStructureLocal = myStructureGlobalBrut.cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(queryMonomers);
-		} catch (ExceptionInMyStructurePackage e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-
-		ShapeBuildingTools.deleteChains(chainToIgnore, myStructureLocal);
-
-		return myStructureLocal;
-	}
+        return myStructureLocal;
+    }
 
 
+    private List<MyMonomerIfc> findMyMonomersOnlyInAminoChainsContainingAtomsDefinedByIds(MyStructureIfc myStructure, List<QueryAtomDefinedByIds> queryAtomsDefinedByIds) {
 
-	private List<MyMonomerIfc> findMyMonomersOnlyInAminoChainsContainingAtomsDefinedByIds(MyStructureIfc myStructure, List<QueryAtomDefinedByIds> queryAtomsDefinedByIds){
+        List<MyMonomerIfc> monomersFound = new ArrayList<>();
 
-		List<MyMonomerIfc> monomersFound = new ArrayList<>();
+        for (QueryAtomDefinedByIds atomDefinedByIds : queryAtomsDefinedByIds) {
 
-		for (QueryAtomDefinedByIds atomDefinedByIds: queryAtomsDefinedByIds){
-
-			char[] chainIdToFind = atomDefinedByIds.getChainQuery().toCharArray();
-			MyChainIfc foundMyChain = myStructure.getAminoMyChain(chainIdToFind);
-			if (foundMyChain == null){
-				System.out.println("chain not found : " + String.valueOf(chainIdToFind));
-				continue;
-			}
-
-			int residueIdToFind = atomDefinedByIds.getResidueId();
-			MyMonomerIfc foundMyMonomer = foundMyChain.getMyMonomerFromResidueId(residueIdToFind);
-			if (foundMyMonomer == null){
-				System.out.println("monomer not found : " + residueIdToFind);
-				continue;
-			}
-
-			char[] atomNameToFind = atomDefinedByIds.getAtomName().toCharArray();
-			MyAtomIfc foundMyAtom = foundMyMonomer.getMyAtomFromMyAtomName(atomNameToFind);
-			if (foundMyAtom == null){
-				System.out.println("atom not found : " + String.valueOf(atomNameToFind));
-				continue;
-			}
-			monomersFound.add(foundMyMonomer);
-		}
-		return monomersFound;
-	}
+            char[] chainIdToFind = atomDefinedByIds.getChainQuery().toCharArray();
+            MyChainIfc[] chains = myStructure.getAllChainsRelevantForShapeBuilding();
+            for (MyChainIfc foundMyChain : chains) {
+                if (Arrays.equals(foundMyChain.getChainId(), chainIdToFind)) {
+                    int residueIdToFind = atomDefinedByIds.getResidueId();
+                    MyMonomerIfc foundMyMonomer = foundMyChain.getMyMonomerFromResidueId(residueIdToFind);
+                    char[] atomNameToFind = atomDefinedByIds.getAtomName().toCharArray();
+                    MyAtomIfc foundMyAtom = foundMyMonomer.getMyAtomFromMyAtomName(atomNameToFind);
+                    if (foundMyAtom != null) {
+                        monomersFound.add(foundMyMonomer);
+                        break;
+                    }
+                }
+            }
+            if (monomersFound.isEmpty()) {
+                System.out.println("Monomer not found ");
+            }
+        }
+        return monomersFound;
+    }
 
 
-
-
-	//-------------------------------------------------------------
-	// Getters & Setters
-	//-------------------------------------------------------------
-	@Override
-	public MyStructureIfc getMyStructureLocal() {
-		return myStructureLocal;
-	}
+    //-------------------------------------------------------------
+    // Getters & Setters
+    //-------------------------------------------------------------
+    @Override
+    public MyStructureIfc getMyStructureLocal() {
+        return myStructureLocal;
+    }
 }

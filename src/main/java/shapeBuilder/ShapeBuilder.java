@@ -1,11 +1,7 @@
 package shapeBuilder;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 import fingerprint.ShapeFingerprint;
@@ -141,6 +137,9 @@ public class ShapeBuilder {
         StructureLocalToBuildShapeAroundAtomDefinedByIds structureLocalToBuildShapeAroundAtomDefinedByIds = new StructureLocalToBuildShapeAroundAtomDefinedByIds(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
         structureLocalToBuildShapeAroundAtomDefinedByIds.compute();
         MyStructureIfc myStructureLocal = structureLocalToBuildShapeAroundAtomDefinedByIds.getMyStructureLocal();
+        if (myStructureLocal == null) {
+            return null;
+        }
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
 
@@ -222,7 +221,7 @@ public class ShapeBuilder {
         // Extract a sub part of the LN points
 
         List<float[]> listV2 = new ArrayList<>();
-        for (PointIfc coordQuery: listCoordsCenterQuery){
+        for (PointIfc coordQuery : listCoordsCenterQuery) {
             listV2.add(coordQuery.getCoords());
         }
         for (QueryAtomDefinedByIds queryAtomDefinedByIds : listQueryAtomDefinedByIds) {
@@ -252,24 +251,21 @@ public class ShapeBuilder {
 
         for (QueryAtomDefinedByIds atomDefinedByIds : atomsDefinedByIds) {
 
+            MyAtomIfc foundMyAtom = null;
             char[] chainIdToFind = atomDefinedByIds.getChainQuery().toCharArray();
-            MyChainIfc foundMyChain = myStructure.getAminoMyChain(chainIdToFind);
-            if (foundMyChain == null) {
-                System.out.println("chain not found : " + String.valueOf(chainIdToFind));
-                continue;
+            MyChainIfc[] chains = myStructure.getAllChainsRelevantForShapeBuilding();
+            A: for (MyChainIfc foundMyChain : chains) {
+                if (Arrays.equals(foundMyChain.getChainId(), chainIdToFind)) {
+                    int residueIdToFind = atomDefinedByIds.getResidueId();
+                    MyMonomerIfc foundMyMonomer = foundMyChain.getMyMonomerFromResidueId(residueIdToFind);
+                    char[] atomNameToFind = atomDefinedByIds.getAtomName().toCharArray();
+                    foundMyAtom = foundMyMonomer.getMyAtomFromMyAtomName(atomNameToFind);
+                    break A;
+                }
             }
 
-            int residueIdToFind = atomDefinedByIds.getResidueId();
-            MyMonomerIfc foundMyMonomer = foundMyChain.getMyMonomerFromResidueId(residueIdToFind);
-            if (foundMyMonomer == null) {
-                System.out.println("monomer not found : " + residueIdToFind);
-                continue;
-            }
-
-            char[] atomNameToFind = atomDefinedByIds.getAtomName().toCharArray();
-            MyAtomIfc foundMyAtom = foundMyMonomer.getMyAtomFromMyAtomName(atomNameToFind);
             if (foundMyAtom == null) {
-                System.out.println("atom not found : " + String.valueOf(atomNameToFind));
+                System.out.println("atom not found : " + String.valueOf(foundMyAtom.getAtomName()));
                 continue;
             }
             PointIfc pointAtom = new Point(foundMyAtom.getCoords());

@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
 
     @Test
-    public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
+    public void testShapeBuilderConstructorProtein() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
@@ -51,7 +51,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         }
 
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
-        String fourLetterCode = "1di9" ;
+        String fourLetterCode = "1di9";
         String chainQuery = "A";
         int residueId = 168;
         String atomName = "OD2";
@@ -71,5 +71,49 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 2335);
         assertTrue(shape.getMiniShape().size() == 43);
+    }
+
+
+    @Test
+    public void testShapeBuilderConstructorDNARNA() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = Tools.getStructure(url);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+        List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
+        String fourLetterCode = "394d";
+        String chainQuery = "A";
+        int residueId = 4;
+        String atomName = "N7";
+        float radiusForQueryAtomsDefinedByIds = 8;
+        QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
+        listAtomDefinedByIds.add(queryAtomDefinedByIds);
+
+        List<String> chainToIgnore = new ArrayList<>();
+        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorAtomIdsWithinShape(mystructure, listAtomDefinedByIds, chainToIgnore, algoParameters);
+        ShapeContainerIfc shape = null;
+        try {
+            shape = shapeBuilder.getShapeContainer();
+        } catch (
+                ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        // don't know if it is good, it is as it is now.
+        assertTrue(shape.getShape().getSize() == 2136);
+        assertTrue(shape.getMiniShape().size() == 1);
     }
 }
