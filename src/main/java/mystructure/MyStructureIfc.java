@@ -18,6 +18,8 @@ public interface MyStructureIfc {
 	MyChainIfc[] getAllHetatmchains();
 	MyChainIfc[] getAllNucleosidechains();
 	MyChainIfc getAminoMyChain(char[] chainId);
+	MyChainIfc getNucleosideChain(char[] chainId);
+	MyChainIfc getHeteroChain(char[] chainId);
 	MyChainIfc[] getAllChainsRelevantForShapeBuilding();
 	/**
 	 * Get All MyChains in the following order 	AMINOACID, HETATM, NUCLEOTIDE

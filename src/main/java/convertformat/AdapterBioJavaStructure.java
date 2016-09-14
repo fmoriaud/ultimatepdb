@@ -91,14 +91,6 @@ public class AdapterBioJavaStructure {
                 }
             }
 
-            if (aminoChains.size() == 0) {
-                // then nothing to do, problem in the file
-                String message = "Only empty amino chain were parsed for " + String.valueOf(fourLetterCode);
-                ReadingStructurefileException exception = new ReadingStructurefileException(message);
-                //there still can be hetatom with only one atom because not resolved completely ...
-                throw exception;
-            }
-
             listGroupsHetAtm = chain.getAtomGroups(GroupType.HETATM);
             cleanListOfGroup(listGroupsHetAtm);
             countOfHetAtm = listGroupsHetAtm.size();
@@ -120,6 +112,14 @@ public class AdapterBioJavaStructure {
                     nucleotidesChains.add(nucleotideChain);
                 }
             }
+        }
+
+        if (aminoChains.size() == 0 && nucleotidesChains.size() == 0) {
+            // then nothing to do, problem in the file
+            String message = "Only empty amino chain and empty nucleotides chain were parsed for " + String.valueOf(fourLetterCode);
+            ReadingStructurefileException exception = new ReadingStructurefileException(message);
+            //there still can be hetatom with only one atom because not resolved completely ...
+            throw exception;
         }
 
         // define bonds before building MyStructure otherwise the call for building neighbors by Bond won't work

@@ -332,6 +332,28 @@ public class MyStructure implements MyStructureIfc {
 
 
     @Override
+    public MyChainIfc getNucleosideChain(char[] chainId) {
+        for (MyChainIfc myChain : myNucleotideChains) {
+            if (String.valueOf(myChain.getChainId()).equals(String.valueOf(chainId))) {
+                return myChain;
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public MyChainIfc getHeteroChain(char[] chainId) {
+        for (MyChainIfc myChain : myHetatmChains) {
+            if (String.valueOf(myChain.getChainId()).equals(String.valueOf(chainId))) {
+                return myChain;
+            }
+        }
+        return null;
+    }
+
+
+    @Override
     public void setAminoChain(char[] chainId, MyChainIfc myNewChain) {
         tempChainList.clear(); // I use a list because I didnt succeed in changing an element of the array
         tempChainList.addAll(Arrays.asList(this.getAllAminochains()));
