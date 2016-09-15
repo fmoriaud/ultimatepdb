@@ -187,9 +187,12 @@ public class AdapterBioJavaStructure {
                         hetatm.addBond(new MyBond(aminoAtom, 1)); // bond order one by default
                         if (Arrays.equals(aminoAtom.getAtomName(), "N".toCharArray())) {
                             chainWhereToAdd.addFirstRank(hetatmMonomer);
+                            System.out.println(hetatmMonomer + " was moved first rank because covalent bonding to amino chain " + aminoMonomer);
 
                         } else {
                             chainWhereToAdd.addLastRank(hetatmMonomer);
+                            System.out.println(hetatmMonomer + " was moved last rank because covalent bonding to amino chain " + aminoMonomer);
+
                         }
                     }
                 }
@@ -381,7 +384,7 @@ public class AdapterBioJavaStructure {
                 tempMyBondList.clear();
 
                 int sourceBondCount = 0; //atom.getBonds().size();
-                if (atom.getBonds() == null){
+                if (atom.getBonds() == null) {
                     continue; // that could happen that an atom has no bond e.g. N in Non polymeric NH2
                 }
                 for (Bond bond : atom.getBonds()) {
