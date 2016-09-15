@@ -56,8 +56,10 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
+
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 432);
-        assertTrue(shape.getMiniShape().size() == 44);
+        // especially because ACE and NH2 were moved...
+        assertTrue(shape.getShape().getSize() == 430);
+        assertTrue(shape.getMiniShape().size() == 48);
     }
 }
