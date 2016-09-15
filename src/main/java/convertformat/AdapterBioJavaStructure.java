@@ -1,12 +1,6 @@
 package convertformat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import math.AddToMap;
 import math.ToolsMath;
@@ -151,6 +145,58 @@ public class AdapterBioJavaStructure {
             System.exit(0);
         }
 
+        // look at hetatm residue if they can bind an amino
+        float thresholdDistance = 2.0f;
+        Map<MyMonomerIfc, MyMonomerIfc> hetBoundToAmino = new LinkedHashMap<>();
+        float thresholdDistanceRepresentativeResidue = 15;
+        MyChainIfc[] hetatmChains = myStructure.getAllHetatmchains();
+        for (MyChainIfc hetatmChain : hetatmChains) {
+            MyMonomerIfc[] hetatmMonomers = hetatmChain.getMyMonomers();
+            for (MyMonomerIfc hetatmMonomer : hetatmMonomers) {
+                MyChainIfc[] neighbors = hetatmMonomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+
+                List<MyMonomerIfc> boundableMonomers = findBoundableMonomers(neighbors, hetatmMonomer, thresholdDistance);
+                for (MyMonomerIfc boundableMonomer : boundableMonomers) {
+                    hetBoundToAmino.put(hetatmMonomer, boundableMonomer);
+                }
+            }
+        }
+        // loop on bindable
+
+        for (Map.Entry<MyMonomerIfc, MyMonomerIfc> entry : hetBoundToAmino.entrySet()) {
+            // remove it from hetchain
+
+            // remove hetatm
+            MyMonomerIfc hetatmMonomer = entry.getKey();
+            char[] hetatmMonomerChainId = hetatmMonomer.getParent().getChainId();
+            MyChainIfc chainWhereToRemove = myStructure.getHeteroChain(hetatmMonomerChainId);
+            chainWhereToRemove.removeMyMonomer(hetatmMonomer);
+
+            MyChainIfc chainWhereToAdd = myStructure.getAminoMyChain(hetatmMonomerChainId); // by default to the chain with same id
+            MyMonomerIfc aminoMonomer = entry.getValue();
+            // add it to corresponding chain
+            // before if bound to amino N first residue
+            // after if bound to amino C last residue
+            // at the end as well if anywhere else
+
+            for (MyAtomIfc hetatm : hetatmMonomer.getMyAtoms()) {
+                for (MyAtomIfc aminoAtom : aminoMonomer.getMyAtoms()) {
+                    float distance = ToolsMath.computeDistance(aminoAtom.getCoords(), hetatm.getCoords());
+                    if (distance < thresholdDistance) {
+                        aminoAtom.addBond(new MyBond(hetatm, 1)); // bond order one by default
+                        hetatm.addBond(new MyBond(aminoAtom, 1)); // bond order one by default
+                        if (Arrays.equals(aminoAtom.getAtomName(), "N".toCharArray())) {
+                            chainWhereToAdd.addFirstRank(hetatmMonomer);
+
+                        } else {
+                            chainWhereToAdd.addLastRank(hetatmMonomer);
+                        }
+                    }
+                }
+            }
+        }
+
+
         return myStructure;
     }
 
@@ -158,6 +204,28 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private List<MyMonomerIfc> findBoundableMonomers(MyChainIfc[] neighbors, MyMonomerIfc hetatmMonomer, float thresholdDistance) {
+
+
+        List<MyMonomerIfc> bondableMonomers = new ArrayList<>();
+
+        for (MyAtomIfc hetatm : hetatmMonomer.getMyAtoms()) {
+            for (MyChainIfc chain : neighbors) {
+                MyMonomerIfc[] monomers = chain.getMyMonomers();
+                for (MyMonomerIfc monomer : monomers) {
+                    for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                        float distance = ToolsMath.computeDistance(atom.getCoords(), hetatm.getCoords());
+                        if (distance < thresholdDistance) {
+                            bondableMonomers.add(monomer);
+                        }
+                    }
+                }
+            }
+        }
+        return bondableMonomers;
+    }
+
+
     private ExpTechniquesEnum convertExpTechniques(Set<ExperimentalTechnique> expTechniqueBiojava) {
 
         if (expTechniqueBiojava.contains(ExperimentalTechnique.XRAY_DIFFRACTION)) {
@@ -211,7 +279,7 @@ public class AdapterBioJavaStructure {
                 //System.out.println(structure.getPDBCode() + "  " + group.getPDBName() + "  " + group.getResidueNumber() + " has alt loc so removed ");
                 //continue;
             }
-            if (group.getAtoms().size() == 1) { // only CA
+            if (group.getAtoms().size() == 1 && (group.getPDBName().equals("HOH") || group.getPDBName().equals("CA"))) { // only CA and HOH
                 it.remove();
                 //System.out.println(structure.getPDBCode() + "  " + group.getPDBName() + "  " + group.getResidueNumber() + " has only one atom so removed  " + group.getAtoms().get(0).getFullName());
             }
@@ -313,6 +381,9 @@ public class AdapterBioJavaStructure {
                 tempMyBondList.clear();
 
                 int sourceBondCount = 0; //atom.getBonds().size();
+                if (atom.getBonds() == null){
+                    continue; // that could happen that an atom has no bond e.g. N in Non polymeric NH2
+                }
                 for (Bond bond : atom.getBonds()) {
 
                     Atom bondAtomA = bond.getAtomA();

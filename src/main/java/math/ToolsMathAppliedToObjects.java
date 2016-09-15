@@ -33,6 +33,4 @@ public class ToolsMathAppliedToObjects {
 			return null;
 		}
 	}
-
-
 }

@@ -270,4 +270,42 @@ public class AdapterBioJavaStructureTest {
             assertTrue(foundNeighbor);
         }
     }
+
+    @Test
+    public void testconvertStructureToMyStructureProteinWithNonPolymeric() throws ParsingConfigFileException, IOException {
+
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = Tools.getStructure(url);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+        List<String> expectedSequence = new ArrayList<>(Arrays.asList("ACE", "HIS", "MK8", "ILE", "LEU", "HIS", "MK8", "LEU", "LEU", "GLN", "ASP", "SER", "NH2"));
+
+        List<String> sequence = new ArrayList<>();
+        MyChainIfc aminoChainC = mystructure.getAminoMyChain("C".toCharArray());
+        assertTrue(aminoChainC.getMyMonomers().length == 13);
+        for (int i = 0; i < expectedSequence.size(); i++) {
+            char[] name = aminoChainC.getMyMonomerByRank(i).getThreeLetterCode();
+            assertTrue(Arrays.equals(name, expectedSequence.get(i).toCharArray()));
+        }
+        MyChainIfc aminoChainD = mystructure.getAminoMyChain("D".toCharArray());
+        assertTrue(aminoChainD.getMyMonomers().length == 13);
+        for (int i = 0; i < expectedSequence.size(); i++) {
+            char[] name = aminoChainD.getMyMonomerByRank(i).getThreeLetterCode();
+            assertTrue(Arrays.equals(name, expectedSequence.get(i).toCharArray()));
+        }
+    }
 }
