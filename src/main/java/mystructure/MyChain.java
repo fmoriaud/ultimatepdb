@@ -199,20 +199,61 @@ public class MyChain implements MyChainIfc {
 
 
     @Override
-    public void addFirstRank(MyMonomerIfc monomer) {
+    public void addAtCorrectRank(MyMonomerIfc monomer) {
 
         if (this.getMyMonomers().length == 0) {
             MyMonomerIfc[] monomers = new MyMonomerIfc[1];
             monomers[0] = monomer;
             this.setMyMonomers(monomers);
         } else {
-            MyMonomerIfc[] monomers = new MyMonomerIfc[this.getMyMonomers().length + 1];
-            monomers[0] = monomer;
-            for (int i = 0; i < this.getMyMonomers().length; i++) {
-                monomers[i + 1] = this.getMyMonomers()[i];
+            // correct rank is in between
+            int residueIdToInsert = monomer.getResidueID();
+
+            // insert First
+            if (residueIdToInsert < this.getMyMonomers()[0].getResidueID()) {
+                MyMonomerIfc[] monomers = new MyMonomerIfc[this.getMyMonomers().length + 1];
+                monomers[0] = monomer;
+                for (int i = 0; i < this.getMyMonomers().length; i++) {
+                    monomers[i + 1] = this.getMyMonomers()[i];
+                }
+                this.setMyMonomers(monomers);
+                return;
             }
-            this.setMyMonomers(monomers);
+            // insert Last
+            if (residueIdToInsert > this.getMyMonomers()[this.getMyMonomers().length - 1].getResidueID()) {
+                MyMonomerIfc[] monomers = new MyMonomerIfc[this.getMyMonomers().length + 1];
+                monomers[monomers.length - 1] = monomer;
+                for (int i = 0; i < this.getMyMonomers().length; i++) {
+                    monomers[i] = this.getMyMonomers()[i];
+                }
+                this.setMyMonomers(monomers);
+                return;
+            }
+            // find right position in between
+            for (int i = 0; i < this.getMyMonomers().length - 1; i++) {
+                int currentResidueId = this.getMyMonomers()[i].getResidueID();
+                int nextResidueId = this.getMyMonomers()[i + 1].getResidueID();
+
+                if (residueIdToInsert > currentResidueId && residueIdToInsert < nextResidueId) {
+
+                    // insert in between
+                    MyMonomerIfc[] monomers = new MyMonomerIfc[this.getMyMonomers().length + 1];
+                    for (int j=0; j<= currentResidueId; j++){
+                        monomers[j] = this.getMyMonomers()[j];
+                    }
+                    monomers[currentResidueId+1] = monomer;
+
+                    for (int j=currentResidueId+2; j<monomers.length-1; j++){
+                        monomers[j] = this.getMyMonomers()[j-1];
+                    }
+                    return;
+                }
+
+            }
+
         }
+        System.out.println("Insertion failed");
+        System.exit(0);
     }
 
     @Override

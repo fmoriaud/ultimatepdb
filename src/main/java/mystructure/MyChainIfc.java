@@ -11,6 +11,6 @@ public interface MyChainIfc {
 	MyChainIfc makeSubchain(int startRankId, int length);
 	void setMyMonomers(MyMonomerIfc[] myMonomers);
 	void replaceMonomer(MyMonomerIfc oldMonomer, MyMonomerIfc newMonomer);
-	void addFirstRank(MyMonomerIfc monomer);
+	void addAtCorrectRank(MyMonomerIfc monomer);
 	void addLastRank(MyMonomerIfc monomer);
 }

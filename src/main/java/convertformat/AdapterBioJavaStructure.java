@@ -144,61 +144,7 @@ public class AdapterBioJavaStructure {
             System.out.println("Terminating");
             System.exit(0);
         }
-
-        // look at hetatm residue if they can bind an amino
-        float thresholdDistance = 2.0f;
-        Map<MyMonomerIfc, MyMonomerIfc> hetBoundToAmino = new LinkedHashMap<>();
-        float thresholdDistanceRepresentativeResidue = 15;
-        MyChainIfc[] hetatmChains = myStructure.getAllHetatmchains();
-        for (MyChainIfc hetatmChain : hetatmChains) {
-            MyMonomerIfc[] hetatmMonomers = hetatmChain.getMyMonomers();
-            for (MyMonomerIfc hetatmMonomer : hetatmMonomers) {
-                MyChainIfc[] neighbors = hetatmMonomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
-
-                List<MyMonomerIfc> boundableMonomers = findBoundableMonomers(neighbors, hetatmMonomer, thresholdDistance);
-                for (MyMonomerIfc boundableMonomer : boundableMonomers) {
-                    hetBoundToAmino.put(hetatmMonomer, boundableMonomer);
-                }
-            }
-        }
-        // loop on bindable
-
-        for (Map.Entry<MyMonomerIfc, MyMonomerIfc> entry : hetBoundToAmino.entrySet()) {
-            // remove it from hetchain
-
-            // remove hetatm
-            MyMonomerIfc hetatmMonomer = entry.getKey();
-            char[] hetatmMonomerChainId = hetatmMonomer.getParent().getChainId();
-            MyChainIfc chainWhereToRemove = myStructure.getHeteroChain(hetatmMonomerChainId);
-            chainWhereToRemove.removeMyMonomer(hetatmMonomer);
-
-            MyChainIfc chainWhereToAdd = myStructure.getAminoMyChain(hetatmMonomerChainId); // by default to the chain with same id
-            MyMonomerIfc aminoMonomer = entry.getValue();
-            // add it to corresponding chain
-            // before if bound to amino N first residue
-            // after if bound to amino C last residue
-            // at the end as well if anywhere else
-
-            for (MyAtomIfc hetatm : hetatmMonomer.getMyAtoms()) {
-                for (MyAtomIfc aminoAtom : aminoMonomer.getMyAtoms()) {
-                    float distance = ToolsMath.computeDistance(aminoAtom.getCoords(), hetatm.getCoords());
-                    if (distance < thresholdDistance) {
-                        aminoAtom.addBond(new MyBond(hetatm, 1)); // bond order one by default
-                        hetatm.addBond(new MyBond(aminoAtom, 1)); // bond order one by default
-                        if (Arrays.equals(aminoAtom.getAtomName(), "N".toCharArray())) {
-                            chainWhereToAdd.addFirstRank(hetatmMonomer);
-                            System.out.println(hetatmMonomer + " was moved first rank because covalent bonding to amino chain " + aminoMonomer);
-
-                        } else {
-                            chainWhereToAdd.addLastRank(hetatmMonomer);
-                            System.out.println(hetatmMonomer + " was moved last rank because covalent bonding to amino chain " + aminoMonomer);
-
-                        }
-                    }
-                }
-            }
-        }
-
+        moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(myStructure);
 
         return myStructure;
     }
@@ -207,25 +153,86 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private List<MyMonomerIfc> findBoundableMonomers(MyChainIfc[] neighbors, MyMonomerIfc hetatmMonomer, float thresholdDistance) {
 
+    private void moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(MyStructureIfc myStructure) throws ExceptionInMyStructurePackage {
 
-        List<MyMonomerIfc> bondableMonomers = new ArrayList<>();
+        // look at hetatm residue if they can bind an amino
+        float thresholdDistance = 1.8f;
 
-        for (MyAtomIfc hetatm : hetatmMonomer.getMyAtoms()) {
-            for (MyChainIfc chain : neighbors) {
-                MyMonomerIfc[] monomers = chain.getMyMonomers();
-                for (MyMonomerIfc monomer : monomers) {
-                    for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                        float distance = ToolsMath.computeDistance(atom.getCoords(), hetatm.getCoords());
-                        if (distance < thresholdDistance) {
-                            bondableMonomers.add(monomer);
+        // loop on all pair of atoms to find out covalent bonds
+        // I loop to find out covalent bonds between hetatm and amino
+        Map<MyAtomIfc, MyAtomIfc> covalentbonds = new LinkedHashMap<>();
+
+        MyChainIfc[] hetatmChains = myStructure.getAllHetatmchains();
+        for (MyChainIfc hetatmChain : hetatmChains) {
+            MyMonomerIfc[] hetatmMonomers = hetatmChain.getMyMonomers();
+            for (MyMonomerIfc hetatmMonomer : hetatmMonomers) {
+
+                MyChainIfc[] neighbors = hetatmMonomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+                for (MyChainIfc neighborsInchain : neighbors) {
+                    for (MyMonomerIfc neighborMymonomer : neighborsInchain.getMyMonomers()) {
+                        for (MyAtomIfc neighborAtom : neighborMymonomer.getMyAtoms()) {
+
+                            // for each neighborAtom I look at distance to any of the hetarom
+                            for (MyAtomIfc atomFroHetAtom : hetatmMonomer.getMyAtoms()) {
+                                float distance = ToolsMath.computeDistance(neighborAtom.getCoords(), atomFroHetAtom.getCoords());
+                                if (distance < thresholdDistance) {
+                                    covalentbonds.put(atomFroHetAtom, neighborAtom);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-        return bondableMonomers;
+
+        // create bonds
+        for (Map.Entry<MyAtomIfc, MyAtomIfc> covalentbond : covalentbonds.entrySet()) {
+
+            MyAtomIfc hetatom = covalentbond.getKey();
+            MyAtomIfc aminoatom = covalentbond.getValue();
+            MyBondIfc newBond1 = new MyBond(aminoatom, 1);
+            hetatom.addBond(newBond1);
+            MyBondIfc newBond2 = new MyBond(hetatom, 1);
+            aminoatom.addBond(newBond2);
+        }
+
+        // loop on covalentbonds and build a unique list of MyMonomer from hetatm to insert
+        List<MyMonomerIfc> monomersToInsert = new ArrayList<>();
+        for (
+                Map.Entry<MyAtomIfc, MyAtomIfc> covalentbond : covalentbonds.entrySet())
+
+        {
+
+            MyAtomIfc hetatom = covalentbond.getKey();
+            MyAtomIfc aminoatom = covalentbond.getValue();
+
+            if (!monomersToInsert.contains(hetatom.getParent())) {
+                monomersToInsert.add(hetatom.getParent());
+            }
+        }
+
+        // insert them based on residue Id or add at the end
+        // and delete from hetchain
+        for (MyMonomerIfc monomerToInsert : monomersToInsert) {
+
+            int residueIdToInsert = monomerToInsert.getResidueID();
+            char[] chainId = monomerToInsert.getParent().getChainId();
+            MyChainIfc aminoChain = myStructure.getAminoMyChain(chainId);
+            // look if there is a gap
+            if (aminoChain.getMyMonomerFromResidueId(residueIdToInsert) == null) {
+                aminoChain.addAtCorrectRank(monomerToInsert);
+                System.out.println("moved " + monomerToInsert);
+                monomerToInsert.getParent().removeMyMonomer(monomerToInsert);
+
+            } else {
+                // add at the end
+                aminoChain.addLastRank(monomerToInsert);
+                monomerToInsert.getParent().removeMyMonomer(monomerToInsert);
+                System.out.println("moved " + monomerToInsert);
+            }
+        }
+
     }
 
 
