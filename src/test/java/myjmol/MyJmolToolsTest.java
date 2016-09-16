@@ -92,7 +92,7 @@ public class MyJmolToolsTest {
 
     @Ignore
     @Test
-    public void testProtonateStructureWhichHasALigand() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public void testProtonateStructureWhichHasAHetAtomGroupThatWasInsertedInchain() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5b59.cif.gz");
         Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
@@ -115,12 +115,18 @@ public class MyJmolToolsTest {
             assertTrue(false);
         }
 
-        MyChainIfc chainBeforeProtonation = mystructure.getHeteroChain("A".toCharArray());
+        MyChainIfc chainBeforeProtonation = mystructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc kto201BeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(201);
         assertTrue(kto201BeforeProtonation.getMyAtoms().length == 26);
 
-        MyChainIfc chainAfterProtonation = protonatedStructure.getHeteroChain("A".toCharArray());
+        MyChainIfc chainAfterProtonation = protonatedStructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc kto201AfterProtonation = chainAfterProtonation.getMyMonomerFromResidueId(201);
         assertTrue(kto201AfterProtonation.getMyAtoms().length == 49);
+
+        // Test if atom names are correct
+        MyAtomIfc atomH1C15 = kto201AfterProtonation.getMyAtomFromMyAtomName("H1C15".toCharArray());
+        MyAtomIfc atomH2C15 = kto201AfterProtonation.getMyAtomFromMyAtomName("H2C15".toCharArray());
+        assertTrue(atomH1C15 != null);
+        assertTrue(atomH2C15 != null);
     }
 }

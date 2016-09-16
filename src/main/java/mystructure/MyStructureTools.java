@@ -707,13 +707,21 @@ public class MyStructureTools {
 
 
 
-	private static List<char[]> makeHydrogensName(int size, String heavyAtomName){
+	public static List<char[]> makeHydrogensName(int size, String heavyAtomName){
 
 		List<char[]> hydrogens = new ArrayList<>();
 		for (int i=0; i<size; i++){
-			hydrogens.add(("H" + (i+1) + heavyAtomName).toCharArray());
+			hydrogens.add(makeHydrogenAtomName(i+1, heavyAtomName));
 		}
 		return hydrogens;
+	}
+
+
+
+	public static char[] makeHydrogenAtomName(int hydrogenId, String heavyAtomName){
+
+		String name = "H" + (hydrogenId) + heavyAtomName;
+		return name.toCharArray();
 	}
 
 

@@ -415,7 +415,10 @@ public class AtomProperties {
 		BMTH ("H1N", "BMT", 1.00f),
 		MLEH ("H1N", "MLE", 1.00f),
 		MVAH ("H1N", "MVA", 1.00f),
-		SARH ("H1N", "SAR", 1.00f);
+		SARH ("H1N", "SAR", 1.00f),
+
+		DCH1N4 ("H1N4", "DC", 1.00f),
+		DCH2N4 ("H2N4", "DC", 1.00f);
 
 		private final String atomName ;
 		private final String residueName;

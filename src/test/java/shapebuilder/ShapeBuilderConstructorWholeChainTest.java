@@ -60,7 +60,7 @@ public class ShapeBuilderConstructorWholeChainTest {
             assertTrue(false);
         }
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 686);
-        assertTrue(shape.getMiniShape().size() == 66);
+        assertTrue(shape.getShape().getSize() == 687);
+        assertTrue(shape.getMiniShape().size() == 68);
     }
 }
