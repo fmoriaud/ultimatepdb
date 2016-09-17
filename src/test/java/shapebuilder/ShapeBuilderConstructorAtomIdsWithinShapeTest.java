@@ -113,7 +113,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
             assertTrue(false);
         }
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 1681);
-        assertTrue(shape.getMiniShape().size() ==10);
+        assertTrue(shape.getShape().getSize() == 1424);
+        assertTrue(shape.getMiniShape().size() == 12);
     }
 }
