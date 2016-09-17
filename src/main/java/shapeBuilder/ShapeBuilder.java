@@ -345,10 +345,10 @@ public class ShapeBuilder {
             PointWithPropertiesIfc pointWithtProperties = collectionOfPointsWithProperties.getPointFromId(i);
             Float hdonnor = pointWithtProperties.get(PropertyName.HbondDonnor);
             Float hacceptor = pointWithtProperties.get(PropertyName.HbondAcceptor);
-            if (hdonnor != null && hdonnor > 0.99) {
+            if (hdonnor != null && hdonnor > 0.1) {
                 countHbondDonnor += 1;
             }
-            if (hacceptor != null && hacceptor > 0.99) {
+            if (hacceptor != null && hacceptor > 0.1) {
                 countHbondAcceptor += 1;
             }
             Float dehydron = pointWithtProperties.get(PropertyName.Dehydron);

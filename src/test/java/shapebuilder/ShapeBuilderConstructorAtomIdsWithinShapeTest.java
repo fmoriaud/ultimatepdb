@@ -98,7 +98,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         String fourLetterCode = "394d";
         String chainQuery = "A";
         int residueId = 4;
-        String atomName = "N7";
+        String atomName = "N2";
         float radiusForQueryAtomsDefinedByIds = 8;
         QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
         listAtomDefinedByIds.add(queryAtomDefinedByIds);
@@ -113,7 +113,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
             assertTrue(false);
         }
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 2136);
-        assertTrue(shape.getMiniShape().size() == 1);
+        assertTrue(shape.getShape().getSize() == 1681);
+        assertTrue(shape.getMiniShape().size() ==10);
     }
 }

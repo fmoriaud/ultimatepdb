@@ -24,6 +24,14 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 	//-------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------
+
+	/**
+	 * Constructor of Shapecontainer based on Atoms. The shape is built on the neighborhing surface.
+	 * @param myStructureGlobalBrut
+	 * @param listAtomDefinedByIds is a list of definition of MyAtom. Residue Id is the residue Id not the rank in the chain.
+	 * @param chainToIgnore
+	 * @param algoParameters
+	 */
 	public ShapeBuilderConstructorAtomIdsWithinShape(MyStructureIfc myStructureGlobalBrut, List<QueryAtomDefinedByIds> listAtomDefinedByIds,
 			List<String> chainToIgnore, AlgoParameters algoParameters){
 		super(algoParameters);
@@ -49,7 +57,11 @@ public class ShapeBuilderConstructorAtomIdsWithinShape extends ShapeBuilderConst
 	}
 
 
-
+	/**
+	 * Return the shape container based on parameters of the constructor
+	 * @return
+	 * @throws ShapeBuildingException
+	 */
 	@Override
 	public ShapeContainerIfc getShapeContainer() throws ShapeBuildingException {
 
