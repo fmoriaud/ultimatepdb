@@ -17,6 +17,7 @@ import shapeBuilder.ShapeBuilderConstructorAtomIdsWithinShape;
 import shapeBuilder.ShapeBuilderConstructorHetAtm;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
+import tools.ToolsForTests;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,20 +36,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = Tools.getStructure(url);
-        } catch (IOException e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
-            assertTrue(false);
-        }
+        MyStructureIfc mystructure = ToolsForTests.getMyStructureIfc(algoParameters, "1di9.cif.gz");
 
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
         String fourLetterCode = "1di9";
@@ -79,20 +67,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = Tools.getStructure(url);
-        } catch (IOException e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
-            assertTrue(false);
-        }
+        MyStructureIfc mystructure = ToolsForTests.getMyStructureIfc(algoParameters, "394d.cif.gz");
 
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
         String fourLetterCode = "394d";

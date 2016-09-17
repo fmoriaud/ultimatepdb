@@ -1,6 +1,7 @@
 package io;
 
 import genericBuffer.GenericBuffer;
+import math.ProcrustesAnalysisIfc;
 import mystructure.MyStructureIfc;
 import org.apache.commons.io.FileUtils;
 import org.biojava.nbio.structure.*;
@@ -8,6 +9,7 @@ import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import mystructure.EnumMyReaderBiojava;
+import shapeCompare.ProcrustesAnalysis;
 import ultiJmol1462.MyJmol1462;
 
 import java.io.File;
@@ -101,7 +103,13 @@ public class Tools {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        ProcrustesAnalysisIfc procrustesAnalysisIfc = new ProcrustesAnalysis();
+        try {
+            algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysisIfc);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return algoParameters;
     }
 

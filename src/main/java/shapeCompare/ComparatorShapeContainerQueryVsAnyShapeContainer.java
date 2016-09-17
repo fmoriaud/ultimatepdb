@@ -26,7 +26,7 @@ import scorePairing.ScorePairing;
 import shape.ShapeContainerIfc;
 import shapeReduction.TriangleInteger;
 
-public class ComparatorShapeContainerQueryVsAnyShapeFull {
+public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 	//------------------------
 	// Constant
 	//------------------------
@@ -48,7 +48,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeFull {
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ComparatorShapeContainerQueryVsAnyShapeFull (ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters){
+	public ComparatorShapeContainerQueryVsAnyShapeContainer(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters){
 
 		this.shapeContainerQuery = shapeContainerQuery;
 		this.shapeContainerAnyShape = shapeContainerAnyShape;

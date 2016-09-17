@@ -16,7 +16,7 @@ import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
-import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeFull;
+import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
 import mystructure.ExceptionInMyStructurePackage;
@@ -116,7 +116,7 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 
 		Hit currentBestHit = null;
 
-		ComparatorShapeContainerQueryVsAnyShapeFull comparatorShapeContainerV1 = new ComparatorShapeContainerQueryVsAnyShapeFull(queryShape, targetShape, algoParameters);
+		ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShapeContainerV1 = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
 
 		List<Hit> listBestHitForEachAndEverySeed;
 		try {
