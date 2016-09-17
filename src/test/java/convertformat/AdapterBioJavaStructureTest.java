@@ -4,6 +4,9 @@ import io.BiojavaReader;
 import io.BiojavaReaderFromPathToMmcifFileTest;
 import io.Tools;
 import mystructure.*;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -111,7 +114,6 @@ public class AdapterBioJavaStructureTest {
     }
 
 
-    @Ignore
     @Test
     public void testconvertStructureToMyStructureProteinWithPolymericResidueAsHetatm() throws ParsingConfigFileException, IOException {
 
@@ -128,6 +130,21 @@ public class AdapterBioJavaStructureTest {
             assertTrue(false);
         }
 
+        Chain chainA = mmcifStructure.getChain(0);
+        Chain chainB = mmcifStructure.getChain(1);
+        List<Group> aminoChainA = chainA.getAtomGroups(GroupType.AMINOACID);
+        assertTrue(aminoChainA.size() == 348);
+        List<Group> heteroatomChainA = chainA.getAtomGroups(GroupType.HETATM);
+        assertTrue(heteroatomChainA.size() == 98);
+        assertTrue(heteroatomChainA.get(0).getPDBName().equals("PLP"));
+
+        List<Group> aminoChainB = chainB.getAtomGroups(GroupType.AMINOACID);
+        assertTrue(aminoChainB.size() == 365);
+        List<Group> heteroatomChainB = chainA.getAtomGroups(GroupType.HETATM);
+        assertTrue(heteroatomChainB.size() == 98);
+        assertTrue(heteroatomChainB.get(0).getPDBName().equals("PLP"));
+        assertTrue(heteroatomChainB.get(1).getPDBName().equals("HOH")); // EPE is gone
+
         // check content
         MyChainIfc[] myChains = mystructure.getAllChains();
         int count = myChains.length;
@@ -141,10 +158,11 @@ public class AdapterBioJavaStructureTest {
         assertTrue(heteroMyChains.length == 2);
 
         // Yhat is how it is, don't know if it makes sense that the number is different in Structure ...
-        assertTrue(aminoMyChains[0].getMyMonomers().length == 347);
-        assertTrue(aminoMyChains[1].getMyMonomers().length == 365);
-        assertTrue(heteroMyChains[0].getMyMonomers().length == 1);
-        assertTrue(heteroMyChains[1].getMyMonomers().length == 2);
+        assertTrue(aminoMyChains[0].getMyMonomers().length == 349); // with PLP integrated
+        assertTrue(aminoMyChains[1].getMyMonomers().length == 366); // with PLP integrated
+        assertTrue(heteroMyChains[0].getMyMonomers().length == 0);
+        assertTrue(heteroMyChains[1].getMyMonomers().length == 1);
+        assertTrue(Arrays.equals(heteroMyChains[1].getMyMonomers()[0].getThreeLetterCode(), "EPE".toCharArray()));
 
         // check bonds
 
