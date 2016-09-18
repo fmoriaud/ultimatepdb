@@ -41,15 +41,15 @@ public class TestShapeCompare {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         MyStructureIfc myStructure1di9 = ToolsForTests.getMyStructureIfc(algoParameters, "1di9.cif.gz");
-        MyStructureIfc myStructure5lar = ToolsForTests.getMyStructureIfc(algoParameters, "4l8m.cif.gz");
+        MyStructureIfc myStructure5lar = ToolsForTests.getMyStructureIfc(algoParameters, "1a9u.cif.gz");
 
 
-        char[] hetatmLigandF46 = "F46".toCharArray();
+        char[] hetatmLigandF46 = "SB2".toCharArray();
         int occurenceId = 1;
-        ShapeBuilderConstructorIfc shapeBuilder6SH = new ShapeBuilderConstructorHetAtm(myStructure5lar, hetatmLigandF46, occurenceId, algoParameters);
+        ShapeBuilderConstructorIfc shapeBuilderSB2 = new ShapeBuilderConstructorHetAtm(myStructure5lar, hetatmLigandF46, occurenceId, algoParameters);
         ShapeContainerIfc shapeF46 = null;
         try {
-            shapeF46 = shapeBuilder6SH.getShapeContainer();
+            shapeF46 = shapeBuilderSB2.getShapeContainer();
         } catch (
                 ShapeBuildingException e) {
             assertTrue(false);
