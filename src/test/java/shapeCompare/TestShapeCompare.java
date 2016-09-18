@@ -76,14 +76,14 @@ public class TestShapeCompare {
         }
         // dont know if good but it is like this currently
         // It is not reproducible
-        assertTrue(listBestHitForEachAndEverySeed.size() == 16 || listBestHitForEachAndEverySeed.size() == 19 || listBestHitForEachAndEverySeed.size() == 20);
-
+        //assertTrue(listBestHitForEachAndEverySeed.size() == 16 || listBestHitForEachAndEverySeed.size() == 19 || listBestHitForEachAndEverySeed.size() == 20);
+        assertTrue(listBestHitForEachAndEverySeed.size() == 20);
         float coverageTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCoverage();
         assertEquals(coverageTopHit, 0.679, 0.001);
         double costTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCost();
         assertEquals(costTopHit, 0.0386, 0.0001);
 
-        if (listBestHitForEachAndEverySeed.size() == 19) {
+       /* if (listBestHitForEachAndEverySeed.size() == 19) {
 
             float coverageLastHit = listBestHitForEachAndEverySeed.get(18).getResultsFromEvaluateCost().getCoverage();
             assertEquals(coverageLastHit, 0.665, 0.001);
@@ -97,13 +97,13 @@ public class TestShapeCompare {
             double costLastHit = listBestHitForEachAndEverySeed.get(15).getResultsFromEvaluateCost().getCost();
             assertEquals(costLastHit, 0.140, 0.001);
         }
-
+*/
         if (listBestHitForEachAndEverySeed.size() == 20) {
 
             float coverageLastHit = listBestHitForEachAndEverySeed.get(19).getResultsFromEvaluateCost().getCoverage();
-            assertEquals(coverageLastHit, 0.658, 0.001);
+            assertEquals(coverageLastHit, 0.665, 0.001);
             double costLastHit = listBestHitForEachAndEverySeed.get(19).getResultsFromEvaluateCost().getCost();
-            assertEquals(costLastHit, 0.140, 0.001);
+            assertEquals(costLastHit, 0.139, 0.001);
         }
     }
 

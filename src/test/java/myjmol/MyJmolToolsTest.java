@@ -90,7 +90,7 @@ public class MyJmolToolsTest {
     }
 
 
-    @Ignore
+
     @Test
     public void testProtonateStructureWhichHasAHetAtomGroupThatWasInsertedInchain() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 

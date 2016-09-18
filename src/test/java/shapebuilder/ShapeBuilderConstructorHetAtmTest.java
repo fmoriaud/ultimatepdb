@@ -61,6 +61,6 @@ public class ShapeBuilderConstructorHetAtmTest {
         System.out.println(shape.getShape().getSize());
         System.out.println(shape.getMiniShape().size());
         assertTrue(shape.getShape().getSize() == 795);
-        assertTrue(shape.getMiniShape().size() == 45 || shape.getMiniShape().size() == 44);
+        assertTrue(shape.getMiniShape().size() == 45 );//|| shape.getMiniShape().size() == 44);
     }
 }

@@ -1,16 +1,7 @@
 package shapeReduction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.math3.geometry.euclidean.threed.SphericalCoordinates;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -74,7 +65,7 @@ public class ShapeReductorV4 {
 	// -------------------------------------------------------------------	
 	private Map<PointWithPropertiesIfc, Integer> fillMap(){
 
-		Map<PointWithPropertiesIfc, Integer> mapPointToOriginalId = new HashMap<>();
+		Map<PointWithPropertiesIfc, Integer> mapPointToOriginalId = new LinkedHashMap<>();
 		for (int i=0; i<shapeCollectionPoints.getSize(); i++){
 			mapPointToOriginalId.put(shapeCollectionPoints.getPointFromId(i), i);
 		}
@@ -143,7 +134,7 @@ public class ShapeReductorV4 {
 
 	private Map<PointWithPropertiesIfc, PointWithPropertiesIfc> findPointsTooCloseWithASharedStrikingProperties(Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties) {
 
-		Map<PointWithPropertiesIfc, PointWithPropertiesIfc> pairsPointCloseBy = new HashMap<>();
+		Map<PointWithPropertiesIfc, PointWithPropertiesIfc> pairsPointCloseBy = new LinkedHashMap<>();
 
 		for (Entry<Integer, PointWithPropertiesIfc> entry: collectionOfPointsWithProperties.entrySet()){
 			for (Entry<Integer, PointWithPropertiesIfc> entry2: collectionOfPointsWithProperties.entrySet()){
@@ -171,7 +162,7 @@ public class ShapeReductorV4 {
 
 	private Map<Integer, PointWithPropertiesIfc> doClustering(Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints) {
 
-		Map<Integer, PointWithPropertiesIfc> miniShape = new HashMap<>();
+		Map<Integer, PointWithPropertiesIfc> miniShape = new LinkedHashMap<>();
 
 		for (Entry<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapSectorAndPoint: mapPropertyAndMapSectorAndPoints.entrySet()){
 
@@ -334,13 +325,13 @@ public class ShapeReductorV4 {
 	// -------------------------------------------------------------------
 	private Map<StrikingProperties, Map<PhiThetaRadiusInterval,  Map<Integer, PointWithPropertiesIfc>>> multiplySectorByProperty(Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints, Map<PhiThetaRadiusInterval, List<StrikingProperties>> mapSectorAndListProperties){
 
-		Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints = new HashMap<>();
+		Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints = new LinkedHashMap<>();
 
 		// Initialize the returned Map with all predefined properties
 		StrikingProperties[] allProperties = StrikingProperties.values();
 
 		for (StrikingProperties strikingProperty: allProperties){
-			Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> instanciatedMap = new HashMap<>();
+			Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> instanciatedMap = new LinkedHashMap<>();
 
 			mapPropertyAndMapSectorAndPoints.put(strikingProperty, instanciatedMap);
 		}
@@ -394,12 +385,12 @@ public class ShapeReductorV4 {
 		SectorsIfc sectors = generateSector(deltaOnlyForTheta, phiValues, tethaValues, radiusValues);
 
 		// create the Map to return
-		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> groupPoints = new HashMap<>();
+		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> groupPoints = new LinkedHashMap<>();
 
 		Iterator<PhiThetaRadiusInterval> it = sectors.iterator();
 		while (it.hasNext()){
 			PhiThetaRadiusInterval sector = it.next();
-			Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties = new HashMap<>();
+			Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties = new LinkedHashMap<>();
 			groupPoints.put(sector, collectionOfPointsWithProperties);
 		}
 		
@@ -507,7 +498,7 @@ public class ShapeReductorV4 {
 	
 	private Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> removeSectorsWith2orLessPoints(Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints){
 
-		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> newMap = new HashMap<>();
+		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> newMap = new LinkedHashMap<>();
 
 		for (Entry<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> entry: mapSectorAndPoints.entrySet()){
 
