@@ -157,7 +157,7 @@ public class AdapterBioJavaStructure {
     private void moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(MyStructureIfc myStructure) throws ExceptionInMyStructurePackage {
 
         // look at hetatm residue if they can bind an amino
-        float thresholdDistance = 1.8f;
+        float thresholdDistance = 2.0f;
 
         // loop on all pair of atoms to find out covalent bonds
         // I loop to find out covalent bonds between hetatm and amino
