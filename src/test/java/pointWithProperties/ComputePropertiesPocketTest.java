@@ -56,17 +56,17 @@ public class ComputePropertiesPocketTest {
         List<PointIfc> listOfLigandPoints = new ArrayList<>();
         PointIfc ligandPoint = new Point(14.6f, 23.1f, 7.2f);
         listOfLigandPoints.add(ligandPoint);
-        ComputePropertiesPocket computePropertiesPocket = new ComputePropertiesPocket(protonatedStructure, algoParameters, dehydrons, listOfLigandPoints);
+        ComputePropertiesRNADNA computeProperties = new ComputePropertiesRNADNA(protonatedStructure, algoParameters, dehydrons, listOfLigandPoints);
 
         MyChainIfc nucleoChain = protonatedStructure.getAllNucleosidechains()[0];
 
         // Test for a donnor atom
         MyAtomIfc dt2H1N3 = nucleoChain.getMyMonomerByRank(1).getMyAtomFromMyAtomName("H1N3".toCharArray());
         float[] positionWhereToCompute = shiftABit(dt2H1N3.getCoords());
-        boolean atomClosestWithDistanceLessThanFwhm = computePropertiesPocket.compute(positionWhereToCompute);
+        boolean atomClosestWithDistanceLessThanFwhm = computeProperties.compute(positionWhereToCompute);
 
         assertTrue(atomClosestWithDistanceLessThanFwhm);
-        assertEquals(computePropertiesPocket.gethDonnor(), 0.25, 0.0001);
+        assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
     }
 
 
@@ -102,17 +102,17 @@ public class ComputePropertiesPocketTest {
         List<PointIfc> listOfLigandPoints = new ArrayList<>();
         PointIfc ligandPoint = new Point(1.1f, -2.9f, 22.1f);
         listOfLigandPoints.add(ligandPoint);
-        ComputePropertiesPocket computePropertiesPocket = new ComputePropertiesPocket(protonatedStructure, algoParameters, dehydrons, listOfLigandPoints);
+        ComputePropertiesRNADNA computeProperties = new ComputePropertiesRNADNA(protonatedStructure, algoParameters, dehydrons, listOfLigandPoints);
 
         MyChainIfc nucleoChain = protonatedStructure.getAllNucleosidechains()[0];
 
         // Test for a donnor atom
         MyAtomIfc dg4H1N2 = nucleoChain.getMyMonomerByRank(3).getMyAtomFromMyAtomName("H1N2".toCharArray());
         float[] positionWhereToCompute = shiftABit(dg4H1N2.getCoords());
-        boolean atomClosestWithDistanceLessThanFwhm = computePropertiesPocket.compute(positionWhereToCompute);
+        boolean atomClosestWithDistanceLessThanFwhm = computeProperties.compute(positionWhereToCompute);
 
         assertTrue(atomClosestWithDistanceLessThanFwhm);
-        assertEquals(computePropertiesPocket.gethDonnor(), 0.25, 0.0001);
+        assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
     }
 
 

@@ -6,7 +6,7 @@ import java.util.concurrent.RecursiveTask;
 
 import math.ToolsMath;
 import parameters.AlgoParameters;
-import pointWithProperties.ComputePropertiesPocket;
+import pointWithProperties.ComputePropertiesProtein;
 import pointWithProperties.Enum.PropertyName;
 import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
@@ -42,7 +42,7 @@ public class ComputeShapePointsMultiThread extends RecursiveTask<List<PointWithP
 	private final AlgoParameters algoParameters;
 	private final List<HBondDefinedWithAtoms> dehydrons;
 
-	private final ComputePropertiesPocket computeProperties;
+	private final ComputePropertiesProtein computeProperties;
 
 
 	// -------------------------------------------------------------------
@@ -69,7 +69,7 @@ public class ComputeShapePointsMultiThread extends RecursiveTask<List<PointWithP
 		this.algoParameters = algoParameters;
 		this.dehydrons = dehydrons;
 
-		this.computeProperties = new ComputePropertiesPocket(myStructureShape, algoParameters, dehydrons, listOfLigandPoints);
+		this.computeProperties = new ComputePropertiesProtein(myStructureShape, algoParameters, dehydrons, listOfLigandPoints);
 
 	}
 
