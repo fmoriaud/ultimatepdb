@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Fabrice on 11/09/16.
  */
-public class MyJmolToolsTest {
+public class MyJmolToolsProtonateTest {
 
     @Test
     public void testProtonateStructureWhichIsAlreadyProtonated() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {

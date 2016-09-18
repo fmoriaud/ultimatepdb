@@ -67,7 +67,7 @@ public class MyStructure implements MyStructureIfc {
         if (myAminoChains == null || myHetatmChains == null || myNucleotideChains == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null MyChain[]");
         }
-        if (myAminoChains.length == 0 && myNucleotideChains.length == 0 && myNucleotideChains.length == 0) {
+        if (myAminoChains.length == 0 && myNucleotideChains.length == 0 && myHetatmChains.length == 0) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built if all MyChain[] are empty");
         }
 
@@ -123,7 +123,9 @@ public class MyStructure implements MyStructureIfc {
         this.algoParameters = algoParameters;
 
         MyMonomerIfc newMonomer = cloneMyMonomer(monomer);
-
+        // set the same
+        newMonomer.setNeighboringMyMonomerByBond(monomer.getNeighboringMyMonomerByBond());
+        newMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
         char[] parentChainId = null;
         if (monomer.getParent() != null) {
             parentChainId = monomer.getParent().getChainId();
@@ -670,7 +672,7 @@ public class MyStructure implements MyStructureIfc {
             }
         }
         MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.getInsertionLetter());
-
+        myMonomerCloned.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
         MyStructureTools.setAtomParentReference(myMonomerCloned);
 
         return myMonomerCloned;

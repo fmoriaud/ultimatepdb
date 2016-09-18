@@ -154,6 +154,47 @@ public class MyStructureTest {
     }
 
 
+
+    @Test
+    public void testToV3000ForMyStructurebuiltWithOnlyOneHetatmMonomer() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+
+        // Get a structure with a ligand
+        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
+        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+
+        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+
+        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
+        MyStructureIfc myStructureMadeWithLigand = new MyStructure(msqLigand, algoParameters);
+
+        String myStructureV3000 = myStructureMadeWithLigand.toV3000();
+
+        // write to a temp text file
+        String pathToTempFolder = folder.getRoot().getAbsolutePath();
+        String pathTOWriteV3000Molfile = pathToTempFolder + "//v3000test.mol";
+        WriteTextFile.writeTextFile(myStructureV3000, pathTOWriteV3000Molfile);
+
+        // read it with cdk and check atom and bond count
+
+        IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
+        int atomCount = getAtomCount(myStructureMadeWithLigand);
+        int bondCount = getBondCount(myStructureMadeWithLigand);
+        assertTrue(mol.getAtomCount() == atomCount);
+        assertTrue(mol.getBondCount() * 2 == bondCount);
+    }
+
+
+
     private int getAtomCount(MyStructureIfc myStructure) {
 
         int atomCount = 0;
