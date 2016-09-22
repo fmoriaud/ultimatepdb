@@ -3,6 +3,7 @@ package shape;
 import java.util.ArrayList;
 import java.util.List;
 
+import mystructure.Cloner;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
@@ -174,8 +175,9 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 	
 	private List<String> makeContentRotatedPDBFileHetatmLigand(AlgoParameters algoParameters, ResultsFromEvaluateCost result){
 		List<String> contentPDBFilePeptide = new ArrayList<>();
-		
-		MyMonomerIfc hetatmLigandRotated = MyStructureTools.returnCloneRotatedMonomer(result, this.hetatmLigand, algoParameters);
+
+		Cloner cloner = new Cloner(this.hetatmLigand, algoParameters);
+		MyMonomerIfc hetatmLigandRotated = cloner.getRotatedClone(result).getAllChains()[0].getMyMonomers()[0];
 		contentPDBFilePeptide.addAll(ShapeContainerTools.generateLinesFromMyMonomer(hetatmLigandRotated, algoParameters, this.hetatmLigand.getParent().getChainId()));
 
 		contentPDBFilePeptide.addAll(ShapeContainerTools.generateConnectLines(hetatmLigandRotated));

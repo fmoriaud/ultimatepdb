@@ -1,7 +1,7 @@
 package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReader;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
@@ -14,7 +14,6 @@ import protocols.ParsingConfigFileException;
 import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuilderConstructorHetAtm;
 import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorSegmentOfChain;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
@@ -32,13 +31,15 @@ public class ShapeBuilderConstructorHetAtmTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {

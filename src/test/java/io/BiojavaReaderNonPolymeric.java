@@ -21,13 +21,15 @@ public class BiojavaReaderNonPolymeric {
     @Test
     public void testReadFromResourcesProtein() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
+        String fourLetterCode = "2yjd";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         // Check the current situation Biojava 4.2.4
         // Four chains which is fine
         // Non Polymeric groups are found as HETATM Groups

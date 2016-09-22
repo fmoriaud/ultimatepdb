@@ -1,7 +1,7 @@
 package pointWithProperties;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReader;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
@@ -30,13 +30,15 @@ public class ComputePropertiesPocketTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2kh4.cif.gz");
+        String fourLetterCode = "2kh4";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
@@ -76,13 +78,15 @@ public class ComputePropertiesPocketTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
+        String fourLetterCode = "394d";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {

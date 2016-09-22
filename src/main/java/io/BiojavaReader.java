@@ -69,7 +69,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
 
         // done only once
         if (indexPDBFileInFolder == null) {
-            indexPDBFileInFolder(pathToDividedPDBFolder);
+            indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToDividedPDBFolder);
         }
         // done only once
         initializeOnceDowloadChemCompProvider(pathToChemcompFolder);
@@ -121,6 +121,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
             downloadChemCompProvider = new DownloadChemCompProvider(pathToChemcompFolder);
             // don't know if needed
             downloadChemCompProvider.setDownloadAll(true);
+
             //downloadChemCompProvider.checkDoFirstInstall();
         }
     }
@@ -140,19 +141,6 @@ public class BiojavaReader implements BiojavaReaderIfc {
     private static boolean isDirEmpty(final Path directory) throws IOException {
         try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
             return !dirStream.iterator().hasNext();
-        }
-    }
-
-
-    private static void indexPDBFileInFolder(String pathToDividedPDBFolder) {
-
-        try {
-            FileListingVisitor fileListingVisitor = new FileListingVisitor(pathToDividedPDBFolder);
-            indexPDBFileInFolder = fileListingVisitor.getIndexFiles();
-
-        } catch (IOException e) {
-            System.out.println("FAILURE: in makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder");
-            //e.printStackTrace();
         }
     }
 }

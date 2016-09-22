@@ -2,7 +2,7 @@ package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReader;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
@@ -16,6 +16,7 @@ import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 import java.io.IOException;
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -25,13 +26,18 @@ public class MyJmolToolsMinimizeTest {
 
 
     @Test
-    public void testMinimizeLigand() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
+    public void testLoadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
 
         // Get a structure with a ligand
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -42,9 +48,10 @@ public class MyJmolToolsMinimizeTest {
             assertTrue(false);
         }
 
-
         MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
-        MyStructureIfc myStructureMadeWithLigand = new MyStructure(msqLigand, algoParameters);
+        Cloner cloner = new Cloner(msqLigand, algoParameters);
+        MyStructureIfc myStructureMadeWithLigand = cloner.getClone();
+
         MyStructureIfc protonatedLigand = null;
         try {
             protonatedLigand = MyJmolTools.protonateStructure(myStructureMadeWithLigand, algoParameters);
@@ -62,7 +69,7 @@ public class MyJmolToolsMinimizeTest {
         } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
-        // modify ligand coordinates
+        // notcmodifying ligand coordinates
 
 
         // minimze ligand in original structure
@@ -73,6 +80,8 @@ public class MyJmolToolsMinimizeTest {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
         assertTrue(results != null);
+        assertTrue(results.isReceptorFixedLigandOptimizedConvergenceReached() == true);
+        assertEquals(results.getInteractionEFinal(), -5247.0, 1.0);
     }
 
 }

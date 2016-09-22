@@ -1,6 +1,6 @@
 package protocols;
 
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReaderFromPDBFolderTest;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import mystructure.EnumMyReaderBiojava;
@@ -18,7 +18,7 @@ public class CommandLineToolsTest {
     @Test
     public void generateModifiedAlgoParametersTest(){
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = null;
         try {
             algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);

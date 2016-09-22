@@ -1,14 +1,13 @@
 package convertformat;
 
 import io.BiojavaReader;
-import io.BiojavaReaderFromPathToMmcifFileTest;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -28,6 +27,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class AdapterBioJavaStructureTest {
 
+    @Before
+    public void initialize(){
+        Tools.class.toString();
+    }
     /**
      * Test of the expected conversion os Structure to MyStructureIfc
      * H2O are discarded
@@ -38,10 +41,15 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureProtein() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -98,8 +106,14 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureDNARNAHybrid() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "394d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
@@ -117,8 +131,14 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureProteinWithPolymericResidueAsHetatm() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2hhf.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "2hhf";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
@@ -198,15 +218,14 @@ public class AdapterBioJavaStructureTest {
     public void testconvertStructureToMyStructureProteinFromFolder() throws ParsingConfigFileException, IOException {
 
         String fourLetterCode = "1di9";
-
         BiojavaReader reader = new BiojavaReader();
-
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -257,10 +276,15 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureProteinHasNeighborsByBondAndDistance() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -292,14 +316,15 @@ public class AdapterBioJavaStructureTest {
     @Test
     public void testconvertStructureToMyStructureProteinWithNonPolymeric() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
+        String fourLetterCode = "2yjd";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

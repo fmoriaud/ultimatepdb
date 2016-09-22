@@ -28,6 +28,11 @@ public class AdapterBioJavaStructure {
     private List<MyAtomIfc> listAtom1 = new ArrayList<>();
     private List<MyAtomIfc> listAtom2 = new ArrayList<>();
 
+    private boolean skipAllHydrogenAtoms = true;
+
+
+
+
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
@@ -322,9 +327,8 @@ public class AdapterBioJavaStructure {
             //System.out.println(countOfAtoms + " read atom");
             for (int k = 0; k < countOfAtoms; k++) {
                 atom = currentGroup.getAtom(k);
-                // TODO Figure out if it is nice to skip H as I also delete them when I build the MyStructure
-                // I would say I should skip the one from exp files as not reliable
-                if (atom.getElement().equals(Element.H)) {
+
+                if (skipAllHydrogenAtoms && atom.getElement().equals(Element.H)) {
                     continue;
                 }
 

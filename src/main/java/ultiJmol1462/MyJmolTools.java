@@ -5,20 +5,10 @@ import java.util.Map.Entry;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.AddToMap;
+import mystructure.*;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyAtom;
-import mystructure.MyAtomIfc;
-import mystructure.MyBond;
-import mystructure.MyBondIfc;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructure;
-import mystructure.MyStructureConstants;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
 
 public class MyJmolTools {
 
@@ -136,7 +126,8 @@ public class MyJmolTools {
 
             float rmsd = computeRmsd.getRmsd();
             int countOfLongDistanceChange = computeRmsd.getCountOfLongDistanceChange();
-            hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(receptorFixedLigandOptimizedEStart, energyComplexFinal, countIteration, receptorFixedLigandOptimizedConvergenceReached, rmsd, countOfLongDistanceChange, eInterfinal, eCorrected);
+            hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(receptorFixedLigandOptimizedEStart, energyComplexFinal, countIteration, receptorFixedLigandOptimizedConvergenceReached,
+                    rmsd, countOfLongDistanceChange, eInterfinal, eCorrected);
 
         } catch (Exception e) {
 
@@ -445,6 +436,7 @@ public class MyJmolTools {
         //
         //			}
         //		}
+
         MyStructureTools.removeAllExplicitHydrogens(myStructureThatCouldHaveHydrogens);
         Map<MyAtomIfc, MyAtomIfc> mapToGetCorrespondingAtomWithInformation = buildCorrespondanceHeavyAtomsMapBasedOnAtomXYZ(myStructureWithBondsAndHydrogenAtoms, myStructureThatCouldHaveHydrogens);
 
@@ -627,6 +619,7 @@ public class MyJmolTools {
     }
 
 
+
     public static Float loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException {
 
         ultiJmol.jmolPanel.evalString("zap");
@@ -750,18 +743,24 @@ public class MyJmolTools {
         }
         int countAtomFile2 = myStructureFile2.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
 
-        MyStructureIfc mergedMyStructure = new MyStructure(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
+        Merger merger = new Merger(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
+
+        MyStructureIfc mergedMyStructure = merger.getMerge();
         int countAtomOutput = mergedMyStructure.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length + mergedMyStructure.getAllAminochains()[1].getMyMonomers()[0].getMyAtoms().length;
 
         //System.out.println(countAtomFile1 + " + " + countAtomFile2 + " = " + countAtomOutput );
+
         if ((countAtomFile1 + countAtomFile2) != countAtomOutput) {
+
+
             String message = ("countAtomFile1 + countAtomFile2 is not equal to countAtomOutput");
             ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
             throw exception;
         }
 
         ultiJMol.jmolPanel.evalString("zap");
-        ultiJMol.jmolPanel.openStringInline(mergedMyStructure.toV3000());
+        String v3000 = mergedMyStructure.toV3000();
+        ultiJMol.jmolPanel.openStringInline(v3000);
 
         return countAtomFile1 + 1;
     }

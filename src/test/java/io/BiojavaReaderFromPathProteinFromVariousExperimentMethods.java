@@ -24,13 +24,15 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void testReadFromResourcesProteinSolutionNMR() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2n8y.cif.gz");
+        String fourLetterCode = "2n8y";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.SOLUTION_NMR));
@@ -40,13 +42,15 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void testReadFromResourcesProteinSolidstateNMR() throws ParsingConfigFileException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2n3d.cif.gz");
+        String fourLetterCode = "2n3d";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.SOLID_STATE_NMR));
@@ -56,15 +60,16 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
 
     @Test
     public void testReadFromResourcesProteinElectronMicroscopy() throws ParsingConfigFileException {
-        // 5fwm is not working
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5irz.cif.gz");
+
+        String fourLetterCode = "5irz";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
-
-        } catch (IOException | NullPointerException e) {
-            //assertTrue(false);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.ELECTRON_MICROSCOPY));
@@ -75,15 +80,15 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileNeutronDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5e5j.cif.gz");
+        String fourLetterCode = "5e5j";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         try {
-            BioJavaReaderProtocol reader = new BioJavaReaderProtocol();
-            mmcifStructure = reader.read(Paths.get(url.getPath().toString()), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 2);
         assertTrue(expTechniques.contains(ExperimentalTechnique.XRAY_DIFFRACTION));
@@ -93,15 +98,15 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileProteinFiberDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2zwh.cif.gz");
+        String fourLetterCode = "2zwh";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         try {
-            BioJavaReaderProtocol reader = new BioJavaReaderProtocol();
-            mmcifStructure = reader.read(Paths.get(url.getPath().toString()), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 1);
         assertTrue(expTechniques.contains(ExperimentalTechnique.FIBER_DIFFRACTION));
@@ -110,15 +115,15 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileHybridThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5ebj.cif.gz");
+        String fourLetterCode = "5ebj";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         try {
-            BioJavaReaderProtocol reader = new BioJavaReaderProtocol();
-            mmcifStructure = reader.read(Paths.get(url.getPath().toString()), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         Set<ExperimentalTechnique> expTechniques = mmcifStructure.getPDBHeader().getExperimentalTechniques();
         assertTrue(expTechniques.size() == 2);
         assertTrue(expTechniques.contains(ExperimentalTechnique.XRAY_DIFFRACTION));

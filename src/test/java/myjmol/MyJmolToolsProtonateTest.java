@@ -1,11 +1,10 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReader;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -25,10 +24,15 @@ public class MyJmolToolsProtonateTest {
     @Test
     public void testProtonateStructureWhichIsAlreadyProtonated() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2n0u.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "2n0u";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -59,10 +63,15 @@ public class MyJmolToolsProtonateTest {
     @Test
     public void testProtonateStructureRNADNA() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("394d.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "394d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -94,10 +103,15 @@ public class MyJmolToolsProtonateTest {
     @Test
     public void testProtonateStructureWhichHasAHetAtomGroupThatWasInsertedInchain() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("5b59.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "5b59";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

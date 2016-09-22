@@ -1,7 +1,7 @@
 package mystructure;
 
 import convertformat.AdapterBioJavaStructure;
-import io.BiojavaReaderFromPathToMmcifFileTest;
+import io.BiojavaReader;
 import io.CdkTools;
 import io.Tools;
 import io.WriteTextFile;
@@ -16,6 +16,7 @@ import protocols.ParsingConfigFileException;
 import java.io.IOException;
 import java.net.URL;
 
+import static mystructure.TestTools.getBondCount;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,29 +27,6 @@ public class MyStructureTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void MyStructureConstructorWithOnlyOneMonomer() throws ParsingConfigFileException, IOException {
-
-        MyMonomerIfc monomer = null;
-        try {
-            monomer = TestTools.buildValidMyMonomer(1);
-        } catch (ExceptionInMyStructurePackage e1) {
-        }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        try {
-            MyStructure myStructureOK = new MyStructure(monomer, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            assertTrue(false);
-        }
-
-        algoParameters = null;
-        try {
-            MyStructure MyStructureNotOK = new MyStructure(monomer, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            assertTrue(true);
-        }
-    }
 
     @Test
     public void MyStructureConstructorWithThreeChainArray() {
@@ -129,8 +107,14 @@ public class MyStructureTest {
     @Test
     public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
@@ -147,76 +131,10 @@ public class MyStructureTest {
         // read it with cdk and check atom and bond count
 
         IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
-        int atomCount = getAtomCount(myStructure);
-        int bondCount = getBondCount(myStructure);
+        int atomCount = TestTools.getAtomCount(myStructure);
+        int bondCount = TestTools.getBondCount(myStructure);
         assertTrue(mol.getAtomCount() == atomCount);
         assertTrue(mol.getBondCount() * 2 == bondCount);
     }
 
-
-
-    @Test
-    public void testToV3000ForMyStructurebuiltWithOnlyOneHetatmMonomer() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
-
-        // Get a structure with a ligand
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
-        Structure mmcifStructure = mmcifStructure = Tools.getStructure(url);
-
-        URL urlUltimate = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
-            assertTrue(false);
-        }
-
-
-        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
-        MyStructureIfc myStructureMadeWithLigand = new MyStructure(msqLigand, algoParameters);
-
-        String myStructureV3000 = myStructureMadeWithLigand.toV3000();
-
-        // write to a temp text file
-        String pathToTempFolder = folder.getRoot().getAbsolutePath();
-        String pathTOWriteV3000Molfile = pathToTempFolder + "//v3000test.mol";
-        WriteTextFile.writeTextFile(myStructureV3000, pathTOWriteV3000Molfile);
-
-        // read it with cdk and check atom and bond count
-
-        IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
-        int atomCount = getAtomCount(myStructureMadeWithLigand);
-        int bondCount = getBondCount(myStructureMadeWithLigand);
-        assertTrue(mol.getAtomCount() == atomCount);
-        assertTrue(mol.getBondCount() * 2 == bondCount);
-    }
-
-
-
-    private int getAtomCount(MyStructureIfc myStructure) {
-
-        int atomCount = 0;
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                atomCount += monomer.getMyAtoms().length;
-            }
-        }
-        return atomCount;
-    }
-
-
-    private int getBondCount(MyStructureIfc myStructure) {
-
-        int bondCount = 0;
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    bondCount += atom.getBonds().length;
-                }
-            }
-        }
-        return bondCount;
-    }
 }

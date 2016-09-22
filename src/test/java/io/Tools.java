@@ -2,7 +2,6 @@ package io;
 
 import genericBuffer.GenericBuffer;
 import math.ProcrustesAnalysisIfc;
-import mystructure.MyStructureIfc;
 import org.apache.commons.io.FileUtils;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
@@ -21,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -36,32 +36,51 @@ public class Tools {
     public static String testChemcompFolder = createPermanentTestFolder();
     public static String testPDBFolder;
 
-    public static String createPermanentTestFolder(){
+    /**
+     * Create test PDB and Chemcomp folder. Also all PDB files in resources are copied there so all test can use this
+     * folder
+     *
+     * @return
+     */
+    public static String createPermanentTestFolder() {
 
         String d = System.getProperty("user.home");
-        String builttestChemcompFolder = d + File.separator+"Documents"+File.separator+"testultimatepdb";
+        String builttestChemcompFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb";
         final File baseDir = new File(builttestChemcompFolder);
 
         // if baseDir already exists then empty it
-        if (baseDir.exists()){
+        /*
+        if (baseDir.exists()) {
             try {
                 FileUtils.deleteDirectory(baseDir);
-            } catch (IOException e){
+            } catch (IOException e) {
 
             }
         }
-
-        String builttestPDBFolder = builttestChemcompFolder+File.separator+"pdb";
+        */
+        String builttestPDBFolder = builttestChemcompFolder + File.separator + "pdb";
         baseDir.mkdirs();
         final File pdbDir = new File(builttestPDBFolder);
         pdbDir.mkdir();
         testChemcompFolder = builttestChemcompFolder;
         testPDBFolder = builttestPDBFolder;
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
+        //URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
+        String resourcesPDBFolder = null;
         try {
-            FileUtils.copyFileToDirectory(new File(url.toURI()), pdbDir);
-        } catch (IOException | URISyntaxException e) {
+            URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("pdb/1di9.cif.gz");
+            File pdb1di9file = new File(url.toURI());
+            resourcesPDBFolder = pdb1di9file.getParent();
+            Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(new File(resourcesPDBFolder).toString());
+            for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
+                try {
+                    FileUtils.copyFileToDirectory(new File(entry.getValue().get(0).toString()), pdbDir);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
@@ -76,7 +95,7 @@ public class Tools {
      * @throws ParsingConfigFileException
      * @throws IOException
      */
-    public static Structure getStructure(URL url) throws ParsingConfigFileException, IOException {
+    private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException {
         Path path = null;
         try {
             path = Paths.get(url.toURI());
@@ -114,10 +133,9 @@ public class Tools {
     }
 
 
-
     public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFolders() throws ParsingConfigFileException, IOException {
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("ultimate.xml");
+        URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
 
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
@@ -125,7 +143,6 @@ public class Tools {
 
         return algoParameters;
     }
-
 
 
     public static boolean isGood1di9(Structure mmcifStructure) {

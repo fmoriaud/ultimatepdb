@@ -44,7 +44,7 @@ public class MyStructure implements MyStructureIfc {
 
 
     //-------------------------------------------------------------
-    // Constructor
+    // Constructors
     //-------------------------------------------------------------
 
     /**
@@ -75,7 +75,7 @@ public class MyStructure implements MyStructureIfc {
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
         this.expTechnique = expTechnique;
-        removeHydrogenAndcomputeStructuralInformations(algoParameters);
+        computeStructuralInformation(this, algoParameters);
         fixParents(this);
     }
 
@@ -107,62 +107,6 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-    /**
-     * Constructor with one MyMonomer. MyMonomer is cloned in the returned MyStructure and
-     * has new parent MyChainIfc
-     *
-     * @param monomer
-     * @param algoParameters
-     * @throws ExceptionInMyStructurePackage
-     */
-    public MyStructure(MyMonomerIfc monomer, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage {
-
-        if (algoParameters == null) {
-            throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
-        }
-        this.algoParameters = algoParameters;
-
-        MyMonomerIfc newMonomer = cloneMyMonomer(monomer);
-        // set the same
-        newMonomer.setNeighboringMyMonomerByBond(monomer.getNeighboringMyMonomerByBond());
-        newMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
-        char[] parentChainId = null;
-        if (monomer.getParent() != null) {
-            parentChainId = monomer.getParent().getChainId();
-        } else {
-            parentChainId = MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray();
-        }
-        MyChainIfc newChain = new MyChain(newMonomer, parentChainId);
-
-        MyChainIfc[] chains = new MyChainIfc[1];
-        chains[0] = newChain;
-
-        if (String.valueOf(monomer.getType()).equals("amino")) {
-            this.myAminoChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myNucleotideChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myHetatmChains = other2;
-        }
-        if (String.valueOf(monomer.getType()).equals("nucleotide")) {
-            this.myNucleotideChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myAminoChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myHetatmChains = other2;
-        }
-        if (String.valueOf(monomer.getType()).equals("hetatm")) {
-            this.myHetatmChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myNucleotideChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myAminoChains = other2;
-        }
-
-        removeHydrogenAndcomputeStructuralInformations(algoParameters);
-        fixParents(this);
-    }
-
 
     public MyStructure(MyChainIfc chain, AlgoParameters algoParameters) {
 
@@ -178,7 +122,7 @@ public class MyStructure implements MyStructureIfc {
         this.myAminoChains[0] = chain;
         this.fourLetterCode = "XXXX".toCharArray();
 
-        removeHydrogenAndcomputeStructuralInformations(algoParameters);
+        computeStructuralInformation(this, algoParameters);
         fixParents(this);
     }
 
@@ -198,7 +142,7 @@ public class MyStructure implements MyStructureIfc {
         this.myAminoChains[1] = chain2;
         this.fourLetterCode = "XXXX".toCharArray();
 
-        removeHydrogenAndcomputeStructuralInformations(algoParameters);
+        computeStructuralInformation(this, algoParameters);
         fixParents(this);
     }
 
@@ -605,12 +549,6 @@ public class MyStructure implements MyStructureIfc {
         }
     }
 
-
-    private void removeHydrogenAndcomputeStructuralInformations(AlgoParameters algoParameters) {
-
-        MyStructureTools.removeAllExplicitHydrogens(this);
-        computeStructuralInformation(this, algoParameters);
-    }
 
 
     private void computeStructuralInformation(MyStructureIfc myStructure, AlgoParameters algoParameters) {

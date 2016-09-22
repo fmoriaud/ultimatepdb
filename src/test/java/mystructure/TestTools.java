@@ -1,13 +1,7 @@
 package mystructure;
 
-import io.BiojavaReaderFromPathToMmcifFileTest;
-import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,5 +145,32 @@ public class TestTools {
 			count += chain.getMyMonomers().length;
 		}
 		return count;
+	}
+
+
+
+	public static int getAtomCount(MyStructureIfc myStructure) {
+
+		int atomCount = 0;
+		for (MyChainIfc chain : myStructure.getAllChains()) {
+			for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+				atomCount += monomer.getMyAtoms().length;
+			}
+		}
+		return atomCount;
+	}
+
+
+	public static  int getBondCount(MyStructureIfc myStructure) {
+
+		int bondCount = 0;
+		for (MyChainIfc chain : myStructure.getAllChains()) {
+			for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+				for (MyAtomIfc atom : monomer.getMyAtoms()) {
+					bondCount += atom.getBonds().length;
+				}
+			}
+		}
+		return bondCount;
 	}
 }

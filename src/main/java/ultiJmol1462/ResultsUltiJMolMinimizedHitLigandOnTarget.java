@@ -16,8 +16,6 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	
 	// it is actually only working if query is a peptide. In other cases this value stays to DoubleMax
 	private double ratioPairedPointToHitPoints;
-	
-
 
 
 	// -------------------------------------------------------------------

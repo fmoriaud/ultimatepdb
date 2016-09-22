@@ -2,15 +2,12 @@ package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
 import io.BiojavaReader;
-import io.BiojavaReaderFromPathToMmcifFileTest;
-import io.BiojavaReaderIfc;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -18,7 +15,6 @@ import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuilderConstructorWholeChain;
 import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildShapeIfc;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,13 +33,15 @@ public class ShapeBuilderConstructorWholeChainTest {
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("2yjd.cif.gz");
+        String fourLetterCode = "2yjd";
+        BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = Tools.getStructure(url);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException e) {
             assertTrue(false);
         }
+
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
