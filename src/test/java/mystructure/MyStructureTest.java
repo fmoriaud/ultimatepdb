@@ -131,7 +131,7 @@ public class MyStructureTest {
         // read it with cdk and check atom and bond count
 
         IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
-        int atomCount = TestTools.getAtomCount(myStructure);
+        int atomCount = MyStructureTools.getAtomCount(myStructure);
         int bondCount = TestTools.getBondCount(myStructure);
         assertTrue(mol.getAtomCount() == atomCount);
         assertTrue(mol.getBondCount() * 2 == bondCount);

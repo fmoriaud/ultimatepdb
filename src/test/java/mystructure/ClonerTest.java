@@ -61,7 +61,7 @@ public class ClonerTest {
         // read it with cdk and check atom and bond count
 
         IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
-        int atomCount = TestTools.getAtomCount(myStructureFromAMyMonomer);
+        int atomCount = MyStructureTools.getAtomCount(myStructureFromAMyMonomer);
         int bondCount = TestTools.getBondCount(myStructureFromAMyMonomer);
         assertTrue(mol.getAtomCount() == atomCount);
         assertTrue(mol.getBondCount() * 2 == bondCount);

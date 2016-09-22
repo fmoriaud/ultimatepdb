@@ -37,6 +37,7 @@ public class MyJmolTools {
 
     /**
      * Need to be tested !!!
+     *
      * @param inputStructureV3000
      * @param algoParameters
      * @return
@@ -59,6 +60,7 @@ public class MyJmolTools {
 
     /**
      * Minimize an input of two MyStructureIfc
+     *
      * @param algoParameters
      * @param peptide
      * @param target
@@ -73,16 +75,40 @@ public class MyJmolTools {
         try {
             ultiJMol = algoParameters.ultiJMolBuffer.get();
 
-            float energyTargetBefore = loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(target, ultiJMol, algoParameters);
+            // give energy and structure back
+            String script = MyJmolTools.getScriptMinimization();
+            ScriptCommandOnUltiJmol scriptCommandOnUltiJmolTarget = new ScriptCommandOnUltiJmol(script, target.toV3000(), ultiJMol);
+            scriptCommandOnUltiJmolTarget.execute();
+            Map<String, Object> results = scriptCommandOnUltiJmolTarget.getResults();
+            Float energyTargetBefore = (Float) results.get("final energy");
             System.out.println("ET0 = " + energyTargetBefore);
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String targetAfterHyfrogenMinimizationV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
 
-            // Peptide of a hit is not proptonated by definition
-            float energyPeptideBefore = loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(peptide, ultiJMol, algoParameters);
+            ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, peptide.toV3000(), ultiJMol);
+            scriptCommandOnUltiJmolLigand.execute();
+            results = scriptCommandOnUltiJmolLigand.getResults();
+            Float energyPeptideBefore = (Float) results.get("final energy");
             System.out.println("EL0 = " + energyPeptideBefore);
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String peptideAfterHyfrogenMinimizationV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
 
             int firstAtomNumberPeptide = mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(targetAfterHyfrogenMinimizationV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters, ultiJMol);
+
+            // ultiJMol.jmolPanel.evalString("zap");
+            //String v3000 = mergedMyStructure.toV3000();
+            // ultiJMol.jmolPanel.openStringInline(v3000);
+
+            //int atomCountTarget = MyStructureTools.getAtomCount(target);
+            //int firstAtomNumberPeptide = atomCountTarget + 1;
 
             String selectTarget = "atomno > 0 and atomno < " + firstAtomNumberPeptide;
             String selectLigand = "{atomno > " + (firstAtomNumberPeptide - 1) + "}";
@@ -159,6 +185,48 @@ public class MyJmolTools {
         return hitScore;
     }
 
+
+    private static int mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+
+        MyStructureIfc myStructureFile1 = null;
+        try {
+            myStructureFile1 = new MyStructure(structureV3000, algoParameters);
+        } catch (ExceptionInMyStructurePackage e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        int countAtomFile1 = myStructureFile1.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
+
+        MyStructureIfc myStructureFile2 = null;
+        try {
+            myStructureFile2 = new MyStructure(peptideV3000, algoParameters);
+        } catch (ExceptionInMyStructurePackage e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        int countAtomFile2 = myStructureFile2.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
+
+        Merger merger = new Merger(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
+
+        MyStructureIfc mergedMyStructure = merger.getMerge();
+        int countAtomOutput = mergedMyStructure.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length + mergedMyStructure.getAllAminochains()[1].getMyMonomers()[0].getMyAtoms().length;
+
+        //System.out.println(countAtomFile1 + " + " + countAtomFile2 + " = " + countAtomOutput );
+
+        if ((countAtomFile1 + countAtomFile2) != countAtomOutput) {
+
+
+            String message = ("countAtomFile1 + countAtomFile2 is not equal to countAtomOutput");
+            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
+            throw exception;
+        }
+
+        ultiJMol.jmolPanel.evalString("zap");
+        String v3000 = mergedMyStructure.toV3000();
+        ultiJMol.jmolPanel.openStringInline(v3000);
+
+        return countAtomFile1 + 1;
+    }
 
 
     public static ResultsUltiJMolMinimizeSideChain minimizeSideChainOfAProtonatedMyStructure(AlgoParameters algoParameters, MyStructureIfc myStructureInput, char[] chainid, int residueID, char[] monomerTochangeThreeLettercode) throws ExceptionInScoringUsingBioJavaJMolGUI {
@@ -297,7 +365,6 @@ public class MyJmolTools {
     }
 
 
-
     public static Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         Float energy = waitMinimizationEnergyAvailable(2, ultiJMol);
@@ -309,6 +376,25 @@ public class MyJmolTools {
         return energy;
     }
 
+
+    public static String getScriptMinimization() {
+
+        // Build script
+        boolean onlyHydrogen = true;
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"UFF\"\n" + "set minimizationsteps 50\n");
+        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
+        String selectString = "";
+        if (onlyHydrogen == true) {
+            selectString = "not { hydrogen }";
+            sb.append("minimize FIX {" + selectString + "} select {*}\n");
+        } else {
+            sb.append("minimize select {*}\n");
+        }
+        String script = sb.toString();
+
+        return script;
+    }
 
     //-------------------------------------------------------------
     // Implementation
@@ -333,7 +419,11 @@ public class MyJmolTools {
             //deleteFileIfExist(outputFileName);
             addHydrogensInJMolUsingUFF(ultiJMol, clonedMyStructureThatCouldHaveHydrogens, algoParameters);
             readV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
 
+            }
         } catch (Exception e) {
             System.out.println("Exception in protonation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
@@ -619,7 +709,6 @@ public class MyJmolTools {
     }
 
 
-
     public static Float loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException {
 
         ultiJmol.jmolPanel.evalString("zap");
@@ -723,49 +812,6 @@ public class MyJmolTools {
     }
 
 
-    private static int mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
-
-        MyStructureIfc myStructureFile1 = null;
-        try {
-            myStructureFile1 = new MyStructure(structureV3000, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        int countAtomFile1 = myStructureFile1.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
-
-        MyStructureIfc myStructureFile2 = null;
-        try {
-            myStructureFile2 = new MyStructure(peptideV3000, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        int countAtomFile2 = myStructureFile2.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
-
-        Merger merger = new Merger(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
-
-        MyStructureIfc mergedMyStructure = merger.getMerge();
-        int countAtomOutput = mergedMyStructure.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length + mergedMyStructure.getAllAminochains()[1].getMyMonomers()[0].getMyAtoms().length;
-
-        //System.out.println(countAtomFile1 + " + " + countAtomFile2 + " = " + countAtomOutput );
-
-        if ((countAtomFile1 + countAtomFile2) != countAtomOutput) {
-
-
-            String message = ("countAtomFile1 + countAtomFile2 is not equal to countAtomOutput");
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
-        }
-
-        ultiJMol.jmolPanel.evalString("zap");
-        String v3000 = mergedMyStructure.toV3000();
-        ultiJMol.jmolPanel.openStringInline(v3000);
-
-        return countAtomFile1 + 1;
-    }
-
-
     private static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
@@ -862,7 +908,6 @@ public class MyJmolTools {
         }
         return foundId.get(0);
     }
-
 
 
     private void generateeparam(String fileName, String fullPath, String type) {

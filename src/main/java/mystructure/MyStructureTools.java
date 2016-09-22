@@ -6,6 +6,7 @@ import java.util.List;
 
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.ToolsMath;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
@@ -14,6 +15,7 @@ import pointWithProperties.PointIfc;
 import pointWithProperties.PointsTools;
 import shapeCompare.ResultsFromEvaluateCost;
 import mystructure.EnumResidues.HetatmResidues;
+import ultiJmol1462.MyJmol1462;
 
 public class MyStructureTools {
 
@@ -360,7 +362,6 @@ public class MyStructureTools {
     }
 
 
-
     public static float computeDistance(MyMonomerIfc monomer1, MyMonomerIfc monomer2) {
 
         float mindistance = Float.MAX_VALUE;
@@ -407,6 +408,7 @@ public class MyStructureTools {
     }
 
 
+
     public static MyChainIfc[] makeArrayFromList(List<MyChainIfc> myChains) {
 
         int countOfChains = myChains.size();
@@ -416,6 +418,47 @@ public class MyStructureTools {
         }
         return myChainsArray;
     }
+
+
+
+    public static int getAtomCount(MyStructureIfc myStructure) {
+
+        int atomCount = 0;
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                atomCount += monomer.getMyAtoms().length;
+            }
+        }
+        return atomCount;
+    }
+
+
+
+    public static MyStructureIfc mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters) {
+
+        MyStructureIfc myStructureFile1 = null;
+        try {
+            myStructureFile1 = new MyStructure(structureV3000, algoParameters);
+        } catch (ExceptionInMyStructurePackage e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        MyStructureIfc myStructureFile2 = null;
+        try {
+            myStructureFile2 = new MyStructure(peptideV3000, algoParameters);
+        } catch (ExceptionInMyStructurePackage e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        Merger merger = new Merger(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
+
+        MyStructureIfc mergedMyStructure = merger.getMerge();
+        return mergedMyStructure;
+    }
+
+
 
 
     //-------------------------------------------------------------
@@ -689,7 +732,6 @@ public class MyStructureTools {
     }
 
 
-
     private static List<MyAtomIfc> extractMyAtoms(MyChainIfc myChain) {
         List<MyAtomIfc> tempListMyAtomIfc = new ArrayList<>();
 
@@ -702,7 +744,6 @@ public class MyStructureTools {
     }
 
 
-
     private static List<MyAtomIfc> extractMyAtoms(MyMonomerIfc myMonomer) {
         List<MyAtomIfc> tempListMyAtomIfc = new ArrayList<>();
 
@@ -711,7 +752,6 @@ public class MyStructureTools {
         }
         return tempListMyAtomIfc;
     }
-
 
 
     private static List<MyAtomIfc> extractMyAtomsFromMyChain(MyChainIfc myChain) {

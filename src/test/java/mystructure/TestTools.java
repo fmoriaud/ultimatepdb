@@ -149,18 +149,6 @@ public class TestTools {
 
 
 
-	public static int getAtomCount(MyStructureIfc myStructure) {
-
-		int atomCount = 0;
-		for (MyChainIfc chain : myStructure.getAllChains()) {
-			for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-				atomCount += monomer.getMyAtoms().length;
-			}
-		}
-		return atomCount;
-	}
-
-
 	public static  int getBondCount(MyStructureIfc myStructure) {
 
 		int bondCount = 0;

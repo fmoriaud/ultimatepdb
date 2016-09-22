@@ -57,20 +57,7 @@ public class ScriptCommandOnUltiJmolTest {
         }
         String moleculeV3000 = protonatedTarget.toV3000();
 
-        // Build script
-        boolean onlyHydrogen = true;
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"UFF\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectString = "";
-        if (onlyHydrogen == true) {
-            selectString = "not { hydrogen }";
-            sb.append("minimize FIX {" + selectString + "} select {*}\n");
-        } else {
-            sb.append("minimize select {*}\n");
-        }
-        String script = sb.toString();
-
+        String script = MyJmolTools.getScriptMinimization();
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmol = new ScriptCommandOnUltiJmol(script, moleculeV3000, algoParameters);
         scriptCommandOnUltiJmol.execute();
         Map<String, Object> results = scriptCommandOnUltiJmol.getResults();
