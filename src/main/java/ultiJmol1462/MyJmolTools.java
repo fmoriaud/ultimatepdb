@@ -10,6 +10,8 @@ import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
 
+import static junit.framework.Assert.assertTrue;
+
 public class MyJmolTools {
 
     /**
@@ -72,103 +74,195 @@ public class MyJmolTools {
         ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
         MyJmol1462 ultiJMol = null;
 
+        // translate ligand for checking
+
+        MyAtomIfc[] ligandAtoms = peptide.getAllChains()[0].getMyMonomers()[0].getMyAtoms();
+        for (MyAtomIfc atom : ligandAtoms) {
+            float x = atom.getCoords()[0];
+            float y = atom.getCoords()[1];
+            float z = atom.getCoords()[2];
+            float newX = x + 16.0f;
+            float newY = y + 16.0f;
+            float newZ = z + 16.0f;
+            float[] newCoords = new float[3];
+            newCoords[0] = newX;
+            newCoords[1] = newY;
+            newCoords[2] = newZ;
+            atom.setCoords(newCoords);
+        }
+
+
         try {
             ultiJMol = algoParameters.ultiJMolBuffer.get();
-
-            // give energy and structure back
-            String script = MyJmolTools.getScriptMinimization();
-            ScriptCommandOnUltiJmol scriptCommandOnUltiJmolTarget = new ScriptCommandOnUltiJmol(script, target.toV3000(), ultiJMol);
-            scriptCommandOnUltiJmolTarget.execute();
-            Map<String, Object> results = scriptCommandOnUltiJmolTarget.getResults();
-            Float energyTargetBefore = (Float) results.get("final energy");
-            System.out.println("ET0 = " + energyTargetBefore);
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            String targetAfterHyfrogenMinimizationV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
-
-            ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, peptide.toV3000(), ultiJMol);
-            scriptCommandOnUltiJmolLigand.execute();
-            results = scriptCommandOnUltiJmolLigand.getResults();
-            Float energyPeptideBefore = (Float) results.get("final energy");
-            System.out.println("EL0 = " + energyPeptideBefore);
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            String peptideAfterHyfrogenMinimizationV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
-
-            int firstAtomNumberPeptide = mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(targetAfterHyfrogenMinimizationV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters, ultiJMol);
-
-            // ultiJMol.jmolPanel.evalString("zap");
-            //String v3000 = mergedMyStructure.toV3000();
-            // ultiJMol.jmolPanel.openStringInline(v3000);
-
-            //int atomCountTarget = MyStructureTools.getAtomCount(target);
-            //int firstAtomNumberPeptide = atomCountTarget + 1;
-
-            String selectTarget = "atomno > 0 and atomno < " + firstAtomNumberPeptide;
-            String selectLigand = "{atomno > " + (firstAtomNumberPeptide - 1) + "}";
-
-            //String select = "select *";
-            ultiJMol.jmolPanel.evalString("select {" + selectTarget + "}");
-            ultiJMol.jmolPanel.evalString("spacefill 400");
-            ultiJMol.jmolPanel.evalString("select " + selectLigand);
-            ultiJMol.jmolPanel.evalString("spacefill 200");
-
-            Minimize minimize = new Minimize(ultiJMol, selectTarget, algoParameters);
-            minimize.compute();
-            Float energyComplexFinal = minimize.getEnergyComplexFinal();
-            Float receptorFixedLigandOptimizedEStart = minimize.getReceptorFixedLigandOptimizedEStart();
-            int countIteration = minimize.getCountIteration();
-            boolean receptorFixedLigandOptimizedConvergenceReached = minimize.isReceptorFixedLigandOptimizedConvergenceReached();
-
-            // now I do stuff to compute rmsd
-            ultiJMol.jmolPanel.evalString("delete (" + selectTarget + ") \n");
-            Thread.sleep(1000L);
-            String peptideAfterMinimizeFixingSelectionV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
-
-            ultiJMol.jmolPanel.evalString("zap");
-            double energyMinimizedLigand = computeEnergyForInPutV3000(ultiJMol, algoParameters, peptideAfterMinimizeFixingSelectionV3000, true);
-
-            Thread.sleep(1000L);
-            System.out.println("Elf = " + energyMinimizedLigand);
-
-            // relqx completely ligqnd to hqve strained energy
-            float energyPeptideRelaxed = loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(peptide, ultiJMol, algoParameters);
-
-            double strainedEnergy = energyMinimizedLigand - energyPeptideRelaxed; // if strained then energyMinimizedLigand > energyPeptideRelaxed so positive result
-            System.out.println("EstrainedLigand = " + strainedEnergy);
-
-            double eInterfinal = energyComplexFinal - energyTargetBefore - energyMinimizedLigand;
-            double eCorrected = eInterfinal + energyMinimizedLigand;
-            System.out.println("Einter = " + eInterfinal);
-            System.out.println("Einter + EstrainedLigand = " + eCorrected);
-
-            ComputeRmsd computeRmsd = new ComputeRmsd(peptideAfterMinimizeFixingSelectionV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters);
-
-            float rmsd = computeRmsd.getRmsd();
-            int countOfLongDistanceChange = computeRmsd.getCountOfLongDistanceChange();
-            hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(receptorFixedLigandOptimizedEStart, energyComplexFinal, countIteration, receptorFixedLigandOptimizedConvergenceReached,
-                    rmsd, countOfLongDistanceChange, eInterfinal, eCorrected);
-
-        } catch (Exception e) {
-
-            System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
-            try {
-                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        // give energy and structure back
+        String script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolTarget = new ScriptCommandOnUltiJmol(script, target.toV3000(), ultiJMol, null);
+        try {
+            scriptCommandOnUltiJmolTarget.execute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+        }
+        Map<String, Object> results = scriptCommandOnUltiJmolTarget.getResults();
+        Float energyTargetBefore = (Float) results.get("final energy");
+        System.out.println("ET0 = " + energyTargetBefore);
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String targetAfterHyfrogenMinimizationV3000 = (String) results.get("structureV3000");
+
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, peptide.toV3000(), ultiJMol, null);
+        try {
+            scriptCommandOnUltiJmolLigand.execute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+        }
+        results = scriptCommandOnUltiJmolLigand.getResults();
+        Float energyPeptideBefore = (Float) results.get("final energy");
+        System.out.println("EL0 = " + energyPeptideBefore);
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String peptideAfterHyfrogenMinimizationV3000 = (String) results.get("structureV3000");
+
+
+        MyStructureIfc mergedMyStructure = MyStructureTools.mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(targetAfterHyfrogenMinimizationV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters);
+
+        int atomCountTarget = MyStructureTools.getAtomCount(target);
+        script = MyJmolTools.getScriptMinimizationWholeLigandTargetFixed(atomCountTarget);
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplex = new ScriptCommandOnUltiJmol(script, mergedMyStructure.toV3000(), ultiJMol, null);
+        try {
+            scriptCommandOnUltiJmolComplex.execute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+        }
+        results = scriptCommandOnUltiJmolComplex.getResults();
+        boolean receptorFixedLigandOptimizedConvergenceReached = (boolean) results.get("convergence reached");
+        Float energyComplexAfterLigandMinimization = (Float) results.get("final energy");
+        System.out.println("EC0 = " + energyComplexAfterLigandMinimization);
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String complexAfterLigandMinimizationV3000 = (String) results.get("structureV3000");
+
+        script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexAfterMini = new ScriptCommandOnUltiJmol(script, complexAfterLigandMinimizationV3000, ultiJMol, null);
+        try {
+            scriptCommandOnUltiJmolComplexAfterMini.execute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+        }
+        results = scriptCommandOnUltiJmolComplexAfterMini.getResults();
+        Float energyComplexAfterLigandMinimizationRedo = (Float) results.get("final energy");
+        System.out.println("ECAfterLigandMinimized Redo = " + energyComplexAfterLigandMinimizationRedo);
+
+        // redo with other script to be sure it is related to what is fixed the output energy
+        // minimze fixed then it is excluded from energy ?
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        script = MyJmolTools.getScriptMinimizationWholeLigandTargetFixed(atomCountTarget);
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexAfterMiniOtherScript = new ScriptCommandOnUltiJmol(script, complexAfterLigandMinimizationV3000, ultiJMol, null);
+        try {
+            scriptCommandOnUltiJmolComplexAfterMiniOtherScript.execute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+        }
+        results = scriptCommandOnUltiJmolComplexAfterMiniOtherScript.getResults();
+        Float energyComplexAfterLigandMinimizationRedoOtherScript = (Float) results.get("final energy");
+        System.out.println("ECAfterLigandMinimized Redo other script = " + energyComplexAfterLigandMinimizationRedoOtherScript);
+
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        // now I do stuff to compute rmsd
+        int firstAtomPeptide = atomCountTarget + 1;
+        String selectStringTarget = "atomno > 0 and atomno < " + firstAtomPeptide;
+        ultiJMol.jmolPanel.evalString("delete (" + selectStringTarget + ") \n");
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String peptideAfterMinimizeFixingSelectionV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
+
+        /*
+        ultiJMol.jmolPanel.evalString("zap");
+        double energyMinimizedLigand = 0;
+        try {
+            energyMinimizedLigand = computeEnergyForInPutV3000(ultiJMol, algoParameters, peptideAfterMinimizeFixingSelectionV3000, true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Elf = " + energyMinimizedLigand);
+
+        // relqx completely ligqnd to hqve strained energy
+        float energyPeptideRelaxed = 0;
+        try {
+            energyPeptideRelaxed = loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(peptide, ultiJMol, algoParameters);
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        double strainedEnergy = energyMinimizedLigand - energyPeptideRelaxed; // if strained then energyMinimizedLigand > energyPeptideRelaxed so positive result
+        System.out.println("EstrainedLigand = " + strainedEnergy);
+
+*/
+        float energyMinimizedLigand = 0;
+        double eInterfinal = energyComplexAfterLigandMinimizationRedo - energyTargetBefore - energyMinimizedLigand;
+        double eCorrected = eInterfinal + energyMinimizedLigand;
+        System.out.println("Einter = " + eInterfinal);
+        System.out.println("Einter + EstrainedLigand = " + eCorrected);
+
+        ComputeRmsd computeRmsd = new ComputeRmsd(peptideAfterMinimizeFixingSelectionV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters);
+
+        float rmsd = computeRmsd.getRmsd();
+        int countOfLongDistanceChange = computeRmsd.getCountOfLongDistanceChange();
+        hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, energyComplexAfterLigandMinimizationRedo, 5, receptorFixedLigandOptimizedConvergenceReached,
+                rmsd, countOfLongDistanceChange, eInterfinal, eCorrected);
+
+        //} catch (Exception e) {
+
+        System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
+        try {
+            algoParameters.ultiJMolBuffer.put(new MyJmol1462());
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        // String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
+        // ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
+        // throw exception;
+        // }
 
         try {
             ultiJMol.jmolPanel.evalString("zap");
@@ -183,49 +277,6 @@ public class MyJmolTools {
             e.printStackTrace();
         }
         return hitScore;
-    }
-
-
-    private static int mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
-
-        MyStructureIfc myStructureFile1 = null;
-        try {
-            myStructureFile1 = new MyStructure(structureV3000, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        int countAtomFile1 = myStructureFile1.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
-
-        MyStructureIfc myStructureFile2 = null;
-        try {
-            myStructureFile2 = new MyStructure(peptideV3000, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        int countAtomFile2 = myStructureFile2.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length;
-
-        Merger merger = new Merger(myStructureFile1.getAllAminochains()[0], myStructureFile2.getAllAminochains()[0], algoParameters);
-
-        MyStructureIfc mergedMyStructure = merger.getMerge();
-        int countAtomOutput = mergedMyStructure.getAllAminochains()[0].getMyMonomers()[0].getMyAtoms().length + mergedMyStructure.getAllAminochains()[1].getMyMonomers()[0].getMyAtoms().length;
-
-        //System.out.println(countAtomFile1 + " + " + countAtomFile2 + " = " + countAtomOutput );
-
-        if ((countAtomFile1 + countAtomFile2) != countAtomOutput) {
-
-
-            String message = ("countAtomFile1 + countAtomFile2 is not equal to countAtomOutput");
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
-        }
-
-        ultiJMol.jmolPanel.evalString("zap");
-        String v3000 = mergedMyStructure.toV3000();
-        ultiJMol.jmolPanel.openStringInline(v3000);
-
-        return countAtomFile1 + 1;
     }
 
 
@@ -247,7 +298,7 @@ public class MyJmolTools {
 
         try {
             ultiJMol = algoParameters.ultiJMolBuffer.get();
-            float energyTargetBefore = MyJmolTools.loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(clonedMyStructure, ultiJMol, algoParameters);
+            float energyTargetBefore = 0; // MyJmolTools.loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(clonedMyStructure, ultiJMol, algoParameters);
             System.out.println("EnergyTargetBefore = " + energyTargetBefore);
 
             // make V3000 and identify atomIds to minimize based on coords
@@ -307,8 +358,8 @@ public class MyJmolTools {
 
 
             ultiJMol.jmolPanel.evalString("zap");
-            float energyMinimizedSideChainStrained = MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), true);
-            float energyMinimizedFullyMinimized = MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), false);
+            float energyMinimizedSideChainStrained = 0; // MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), true);
+            float energyMinimizedFullyMinimized = 0; //MyJmolTools.computeEnergyForInPutV3000(ultiJMol, algoParameters, sidechainMinizedReprotonated.toV3000(), false);
             Thread.sleep(1000L);
             System.out.println("E sideChainStrained = " + energyMinimizedSideChainStrained);
             System.out.println("E sideChain Relaxed = " + energyMinimizedFullyMinimized);
@@ -377,10 +428,10 @@ public class MyJmolTools {
     }
 
 
-    public static String getScriptMinimization() {
+    public static String getScriptMinimizationAll() {
 
         // Build script
-        boolean onlyHydrogen = true;
+        boolean onlyHydrogen = false;
         StringBuilder sb = new StringBuilder();
         sb.append("set forcefield \"UFF\"\n" + "set minimizationsteps 50\n");
         sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
@@ -395,6 +446,134 @@ public class MyJmolTools {
 
         return script;
     }
+
+
+    public static String getScriptMinimizationOnlyHydrogens() {
+
+        // Build script
+        boolean onlyHydrogen = true;
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
+        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
+        String selectString = "";
+        if (onlyHydrogen == true) {
+            selectString = "not { hydrogen }";
+            sb.append("minimize FIX {" + selectString + "} select {*}\n");
+        } else {
+            sb.append("minimize select {*}\n");
+        }
+        String script = sb.toString();
+
+        return script;
+    }
+
+
+    public static String getScriptMinimizationWholeLigandTargetFixed(int atomCountTarget) {
+
+        // Build script
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
+        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
+        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
+        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
+        sb.append("select {" + selectStringTarget + "}\n");
+        sb.append("spacefill 50\n");
+        sb.append("select {" + selectLigand + "}\n");
+        sb.append("spacefill 400\n");
+        sb.append("minimize FIX {" + selectStringTarget + "} select {*}\n");
+
+        String script = sb.toString();
+
+        return script;
+    }
+
+
+    public static String getScriptMinimizationWholeLigandAndTargetHydrogens(int atomCountTarget) {
+
+        // Build script
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
+        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
+        String selectStringTargetNonHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { hydrogen }";
+        String selectStringTargetHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and { hydrogen }";
+
+        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
+        sb.append("select {" + selectStringTargetNonHydrogens + "}\n");
+        sb.append("spacefill 50\n");
+        sb.append("select {" + selectLigand + "}\n");
+        sb.append("spacefill 400\n");
+        sb.append("select {" + selectStringTargetHydrogens + "}\n");
+        sb.append("spacefill 400\n");
+        sb.append("minimize FIX {" + selectStringTargetNonHydrogens + "} select {*}\n");
+
+        String script = sb.toString();
+
+        return script;
+    }
+
+
+    public static String getScriptMinimizationWholeLigandAndTargetAtomCloseBy(int atomCountTarget, List<Integer> atomIds) {
+
+        // Build script
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
+        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
+        String selectStringTargetNonHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { hydrogen }";
+        String selectStringTargetHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and { hydrogen }";
+
+        StringBuilder sbAtomIds = new StringBuilder();
+        for (int i = 0; i < atomIds.size(); i++) {
+            sbAtomIds.append("atomno = " + atomIds.get(i));
+            if (i != atomIds.size() - 1) {
+                sbAtomIds.append(" or ");
+            }
+        }
+
+        String selectStringTargetNotToFix = sbAtomIds.toString();
+        String selectStringTargetToFix = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { " + selectStringTargetNotToFix + " }";
+
+        if (atomIds.isEmpty()) {
+            selectStringTargetToFix = "atomno > 0 and atomno < " + (atomCountTarget + 1);
+            selectStringTargetNotToFix = null;
+        }
+
+        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
+        sb.append("select {" + selectStringTargetToFix + "}\n");
+        sb.append("spacefill 50\n");
+        sb.append("select {" + selectLigand + "}\n");
+        sb.append("spacefill 400\n");
+        if (selectStringTargetNotToFix != null) {
+            sb.append("select {" + selectStringTargetNotToFix + "}\n");
+            sb.append("spacefill 400\n");
+        }
+        sb.append("minimize FIX {" + selectStringTargetToFix + "} select {*}\n");
+
+        String script = sb.toString();
+
+        return script;
+    }
+
+
+    public static String getPostScriptDeleteTarget(int atomCountTarget) {
+
+        StringBuilder sb = new StringBuilder();
+        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
+
+        sb.append("delete (" + selectStringTarget + ") \n");
+
+        return sb.toString();
+    }
+
+
+    public static String getPostScriptDeleteLigand(int atomCountTarget) {
+
+        StringBuilder sb = new StringBuilder();
+        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
+        sb.append("delete (" + selectLigand + ") \n");
+
+        return sb.toString();
+    }
+
 
     //-------------------------------------------------------------
     // Implementation
@@ -481,7 +660,7 @@ public class MyJmolTools {
 
             }
 
-            ultiJmol.jmolPanel.evalString("set forcefield \"UFF\"\n" + "set minimizationsteps 20\n");
+            ultiJmol.jmolPanel.evalString("set forcefield \"MMFF94\"\n" + "set minimizationsteps 20\n");
             ultiJmol.jmolPanel.evalString("minimize energy ADDHYDROGENS\n");
 
             try {
@@ -706,109 +885,6 @@ public class MyJmolTools {
             }
         }
         return true;
-    }
-
-
-    public static Float loadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException {
-
-        ultiJmol.jmolPanel.evalString("zap");
-        String myStructureV3000 = myStructure.toV3000();
-
-        return computeEnergyForInPutV3000(ultiJmol, algoParameters, myStructureV3000, true);
-    }
-
-
-    private static Float loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(MyStructureIfc myStructure, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException {
-
-        ultiJmol.jmolPanel.evalString("zap");
-        String myStructureV3000 = myStructure.toV3000();
-
-        return computeEnergyForInPutV3000(ultiJmol, algoParameters, myStructureV3000, false);
-    }
-
-
-    public static Float loadV3000FileInBiojavaMinimizeAllComputeEnergyUFF(String myStructureV3000, MyJmol1462 ultiJmol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI, InterruptedException {
-
-        ultiJmol.jmolPanel.evalString("zap");
-        return computeEnergyForInPutV3000(ultiJmol, algoParameters, myStructureV3000, false);
-    }
-
-
-    public static Float computeEnergyForInPutV3000(MyJmol1462 ultiJMol, AlgoParameters algoParameters,
-                                                   String myStructureV3000, boolean onlyHydrogen) throws InterruptedException,
-            ExceptionInScoringUsingBioJavaJMolGUI {
-        Float energy;
-        Thread.sleep(1000L);
-        ultiJMol.jmolPanel.openStringInline(myStructureV3000);
-
-        // What about minimizing a bit the hydrogens
-        boolean convergenceReached = false;
-
-
-        //ultiJMol.jmolviewerForUlti.evalString("spacefill 200");
-
-        ultiJMol.jmolPanel.evalString("set forcefield \"UFF\"\n" + "set minimizationsteps 50\n");
-        ultiJMol.jmolPanel.evalString("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-
-        energy = 1E8f;
-        //System.out.println("startenergy = " + energy);
-        String selectString = "";
-        if (onlyHydrogen == true) {
-            selectString = "not { hydrogen }";
-            //ultiJMol.jmolviewerForUlti.evalString("select " + selectString);
-            ultiJMol.jmolPanel.evalString("minimize FIX {" + selectString + "} select {*}\n");
-        } else {
-            ultiJMol.jmolPanel.evalString("minimize select {*}\n");
-            //ultiJMol.jmolviewerForUlti.evalString("select " + selectString);
-        }
-
-
-        int countIteration = 0;
-        int maxIteration = 20;
-        boolean goAhead = true;
-        while (countIteration <= maxIteration && goAhead == true) {
-
-            Thread.sleep(4000L);
-
-            Float currentEnergy = getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
-            if (currentEnergy == null) {
-                System.out.println();
-            }
-            countIteration += 1;
-
-            System.out.println("currentEnergy = " + currentEnergy);
-            // when too high then I should give up
-            if (currentEnergy > 1E8) {
-                //System.out.println("Minimization is aborted as energy is > 1E8 ");
-                //return null;
-            }
-
-            if (Math.abs(currentEnergy - energy) < 5.0) {
-                goAhead = false;
-            }
-            energy = currentEnergy;
-        }
-
-        System.out.println("did " + countIteration + " iterations");
-        Thread.sleep(1000L);
-
-        if (countIteration <= maxIteration == false) {
-            convergenceReached = false;
-        } else {
-            convergenceReached = true;
-        }
-
-        energy = getEnergyBiojavaJmolNewCode(ultiJMol, algoParameters);
-        ultiJMol.jmolPanel.evalString("minimize stop");
-
-        // ??
-        ultiJMol.jmolPanel.evalString("minimize FIX {*}");
-        ultiJMol.jmolPanel.evalString("select {*}\n");
-
-        //		}finally{
-        //			StaticObjects.biojavaJmol.evalString("zap");
-        //		}
-        return energy;
     }
 
 
