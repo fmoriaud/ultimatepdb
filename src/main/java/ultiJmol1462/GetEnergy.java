@@ -58,9 +58,8 @@ public class GetEnergy {
 
 
         String newScript = script.replace("set minimizationsteps 50", "set minimizationsteps 0");
-        String newScript2 = newScript.replace("minimize select {*}", "minimize energy");
 
-        ultiJmol.jmolPanel.evalString(newScript2);
+        ultiJmol.jmolPanel.evalString(newScript);
 
 
 
