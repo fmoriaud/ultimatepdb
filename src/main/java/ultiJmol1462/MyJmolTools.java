@@ -280,6 +280,7 @@ public class MyJmolTools {
     }
 
 
+    /*
     public static ResultsUltiJMolMinimizeSideChain minimizeSideChainOfAProtonatedMyStructure(AlgoParameters algoParameters, MyStructureIfc myStructureInput, char[] chainid, int residueID, char[] monomerTochangeThreeLettercode) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         ResultsUltiJMolMinimizeSideChain resultsUltiJMolMinimizeSideChain = null;
@@ -414,7 +415,7 @@ public class MyJmolTools {
 
         return resultsUltiJMolMinimizeSideChain;
     }
-
+*/
 
     public static Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
@@ -433,7 +434,7 @@ public class MyJmolTools {
         // Build script
         boolean onlyHydrogen = false;
         StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"UFF\"\n" + "set minimizationsteps 50\n");
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
         sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
         String selectString = "";
         if (onlyHydrogen == true) {

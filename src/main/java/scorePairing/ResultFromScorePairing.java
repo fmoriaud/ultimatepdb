@@ -5,15 +5,20 @@ import org.apache.commons.math3.linear.RealVector;
 
 public class ResultFromScorePairing {
 
-	
+	//------------------------
+	// Class variables
+	//------------------------
 	private double cost;
-	
 
 	private RealMatrix rotationMatrixToRotateShape2ToShape1;
 	private RealVector translationVectorToTranslateShape2ToShape1;
 	private RealVector translationVectorToTranslateShape2ToOrigin;
 	private double distanceResidual;
-	
+
+
+	// -------------------------------------------------------------------
+	// Constructor
+	// -------------------------------------------------------------------
 	public ResultFromScorePairing(double cost, RealMatrix rotationMatrixToRotateShape2ToShape1, RealVector translationVectorToTranslateShape2ToShape1, RealVector translationVectorToTranslateShape2ToOrigin, double distanceResidual){
 		
 		this.cost = cost;
@@ -23,8 +28,11 @@ public class ResultFromScorePairing {
 		this.distanceResidual = distanceResidual;
 		
 	}
-	
-	
+
+
+	//------------------------
+	// Getter and Setter
+	//------------------------
 	public double getCost() {
 		return cost;
 	}

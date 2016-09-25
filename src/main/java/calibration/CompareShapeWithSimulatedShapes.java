@@ -154,7 +154,7 @@ public class CompareShapeWithSimulatedShapes {
 				// what about minimizing sidechain
 				// need to protonate but weird as it was done in chani preparatino TODO clean that
 				MyStructureIfc protonatedStructure = MyJmolTools.protonateStructure(clonedStructure, algoParameters);
-				ResultsUltiJMolMinimizeSideChain resultsUltiJMolMinimizeSideChain = MyJmolTools.minimizeSideChainOfAProtonatedMyStructure(algoParameters, protonatedStructure, monomerToMutateChainId, monomerToMutateResidueId, monomerToMutateThreeLetterCode);
+				ResultsUltiJMolMinimizeSideChain resultsUltiJMolMinimizeSideChain = null; // MyJmolTools.minimizeSideChainOfAProtonatedMyStructure(algoParameters, protonatedStructure, monomerToMutateChainId, monomerToMutateResidueId, monomerToMutateThreeLetterCode);
 				// only to be used as a filter to go ahead or not, if too strained then skip it
 				System.out.println("strainedEnergySideChainAfterMinimization = " + resultsUltiJMolMinimizeSideChain.getStrainedEnergySideChainAfterMinimization());
 				float strainedEnergy = resultsUltiJMolMinimizeSideChain.getStrainedEnergySideChainAfterMinimization();

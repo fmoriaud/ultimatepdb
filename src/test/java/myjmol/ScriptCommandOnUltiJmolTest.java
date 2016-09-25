@@ -7,6 +7,7 @@ import io.Tools;
 import math.ToolsMath;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -82,6 +83,8 @@ public class ScriptCommandOnUltiJmolTest {
     }
 
 
+    // Only to keep old code
+    @Ignore
     @Test
     public void findInteractionEnergy() throws IOException, ParsingConfigFileException {
 
