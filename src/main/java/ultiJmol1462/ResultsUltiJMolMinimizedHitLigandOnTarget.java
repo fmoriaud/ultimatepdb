@@ -4,36 +4,25 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	// -------------------------------------------------------------------
 	// Class variables
 	// -------------------------------------------------------------------
-	private double receptorFixedLigandOptimizedEStart;
-	private double receptorFixedLigandOptimizedEFinal;
-	private int receptorFixedLigandOptimizedCountOfIteration;
-	private boolean receptorFixedLigandOptimizedConvergenceReached;
-	private double receptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization;
 	private int countOfLongDistanceChange;
-	private double interactionEFinal;
-	private double eCorrectedStrained;
-	private double rmsdLigand = Double.MAX_VALUE; // TODO it is shitty as Hitscore used for all shapes and
-	
+	private float interactionEFinal;
+	private float ligandStrainedEnergy;
+	private float rmsdLigand = Float.MAX_VALUE;
+
 	// it is actually only working if query is a peptide. In other cases this value stays to DoubleMax
-	private double ratioPairedPointToHitPoints;
+	private float ratioPairedPointToHitPoints = Float.MAX_VALUE;
 
 
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ResultsUltiJMolMinimizedHitLigandOnTarget(double receptorFixedLigandOptimizedEStart, double receptorFixedLigandOptimizedEFinal, 
-			int receptorFixedLigandOptimizedCountOfIteration, boolean receptorFixedLigandOptimizedConvergenceReached, 
-			double receptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization, int countOfLongDistanceChange, 
-			double interactionEFinal, double eCorrectedStrained){
+	public ResultsUltiJMolMinimizedHitLigandOnTarget(int countOfLongDistanceChange,
+			float interactionEFinal, float eCorrectedStrained, float rmsdLigand){
 
-		this.receptorFixedLigandOptimizedEStart = receptorFixedLigandOptimizedEStart;
-		this.receptorFixedLigandOptimizedEFinal = receptorFixedLigandOptimizedEFinal;
-		this.receptorFixedLigandOptimizedCountOfIteration = receptorFixedLigandOptimizedCountOfIteration;
-		this.receptorFixedLigandOptimizedConvergenceReached = receptorFixedLigandOptimizedConvergenceReached;
-		this.receptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization = receptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization;
 		this.countOfLongDistanceChange = countOfLongDistanceChange;
 		this.interactionEFinal = interactionEFinal;
-		this.eCorrectedStrained = eCorrectedStrained;
+		this.ligandStrainedEnergy = eCorrectedStrained;
+		this.rmsdLigand = rmsdLigand;
 	}
 
 
@@ -46,14 +35,10 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 		StringBuilder result = new StringBuilder();
 		String NEW_LINE = System.getProperty("line.separator");
 
-		result.append("Estart = " + this.getReceptorFixedLigandOptimizedEStart() +
-				" Efinal = " + this.getReceptorFixedLigandOptimizedEFinal() +
-				" Iterations = " + this.getReceptorFixedLigandOptimizedCountOfIteration() + 
-				" Convergence reached = " + this.isReceptorFixedLigandOptimizedConvergenceReached() + 
-				" Rmsd before/after opt. = " + this.getReceptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization() +
+		result.append(
 				" count of Long distance = " + this.countOfLongDistanceChange +
 				" Einteraction final = " + this.interactionEFinal +
-				" Einteraction + Estrainedligand = " + this.eCorrectedStrained +
+				" Einteraction + Estrainedligand = " + this.ligandStrainedEnergy +
 				" rmsd ligand = " + this.rmsdLigand +
 				" ratioPairedPointToHitPoints = " + this.ratioPairedPointToHitPoints
 				+ NEW_LINE);
@@ -65,26 +50,6 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	//------------------------
 	// Getter and Setter
 	//------------------------
-	public double getReceptorFixedLigandOptimizedEStart() {
-		return receptorFixedLigandOptimizedEStart;
-	}
-
-	public double getReceptorFixedLigandOptimizedEFinal() {
-		return receptorFixedLigandOptimizedEFinal;
-	}
-
-	public int getReceptorFixedLigandOptimizedCountOfIteration() {
-		return receptorFixedLigandOptimizedCountOfIteration;
-	}
-
-	public boolean isReceptorFixedLigandOptimizedConvergenceReached() {
-		return receptorFixedLigandOptimizedConvergenceReached;
-	}
-
-	public double getReceptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization() {
-		return receptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization;
-	}
-
 	public int getCountOfLongDistanceChange() {
 		return countOfLongDistanceChange;
 	}
@@ -93,22 +58,23 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 		return interactionEFinal;
 	}
 
-	public double geteCorrectedStrained() {
-		return eCorrectedStrained;
+	public double getLigandStrainedEnergy() {
+		return ligandStrainedEnergy;
 	}
 
 	public double getRmsdLigand() {
 		return rmsdLigand;
 	}
-	
-	public void setRmsdLigand(double rmsdLigand) {
+
+	public void setRmsdLigand(float rmsdLigand) {
 		this.rmsdLigand = rmsdLigand;
 	}
 	
 	public double getRatioPairedPointToHitPoints() {
 		return ratioPairedPointToHitPoints;
 	}
-	public void setRatioPairedPointToHitPoints(double ratioPairedPointToHitPoints) {
+
+	public void setRatioPairedPointToHitPoints(float ratioPairedPointToHitPoints) {
 		this.ratioPairedPointToHitPoints = ratioPairedPointToHitPoints;
 	}
 }

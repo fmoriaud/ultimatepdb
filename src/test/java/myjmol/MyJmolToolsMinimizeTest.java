@@ -14,7 +14,6 @@ import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +25,7 @@ public class MyJmolToolsMinimizeTest {
 
 
     @Test
-    public void testLoadMyStructureInBiojavaMinimizeHydrogensComputeEnergyUFF() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
+    public void testScoreByMinimizingLigandOnFixedReceptor() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
 
         // Get a structure with a ligand
         String fourLetterCode = "1di9";
@@ -79,8 +78,12 @@ public class MyJmolToolsMinimizeTest {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
         assertTrue(results != null);
-        assertTrue(results.isReceptorFixedLigandOptimizedConvergenceReached() == true);
-        assertEquals(results.getInteractionEFinal(), -3576.0, 200.0);
-    }
+        assertTrue(results.getCountOfLongDistanceChange() == 0);
+        assertTrue(results.getInteractionEFinal() < 0);
+        assertTrue(Math.abs(results.getInteractionEFinal()) > 20 && Math.abs(results.getInteractionEFinal()) < 30);
+        assertTrue(results.getLigandStrainedEnergy() > 0);
+        assertTrue(Math.abs(results.getLigandStrainedEnergy()) > 20 && Math.abs(results.getLigandStrainedEnergy()) < 40);
+        assertTrue(results.getRmsdLigand() > 0.1 && results.getRmsdLigand() < 0.3);
 
+    }
 }

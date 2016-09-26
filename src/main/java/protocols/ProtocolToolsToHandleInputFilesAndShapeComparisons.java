@@ -94,14 +94,14 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 
 		double cutoffInterEnergyPerResidue = 0.0;
 
-		if (Double.isNaN(hitScore.geteCorrectedStrained()) || hitScore.geteCorrectedStrained() > cutoffInterEnergyPerResidue){
+		if (Double.isNaN(hitScore.getLigandStrainedEnergy()) || hitScore.getLigandStrainedEnergy() > cutoffInterEnergyPerResidue){
 			return false;
 		}
 
-		if (hitScore.getReceptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization() > 2.0){
-			return false; // If the rmsd on backbone and CB before and after mini is higher than 2A then I consider 
+		//if (hitScore.getReceptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization() > 2.0){
+		//	return false; // If the rmsd on backbone and CB before and after mini is higher than 2A then I consider
 			// the minimization has too much modified the posed peptide by similarity
-		}
+		//}
 
 		if (hitScore.getCountOfLongDistanceChange() > 1){
 			return false;
@@ -176,11 +176,10 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 						hitScore = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
 						if (hitScore != null){
-							System.out.println("Estart = " + hitScore.getReceptorFixedLigandOptimizedEStart());
-							System.out.println("Efinal = " + hitScore.getReceptorFixedLigandOptimizedEFinal());
-							System.out.println("iteration = " + hitScore.getReceptorFixedLigandOptimizedCountOfIteration());
-							System.out.println("convergence reached = " + hitScore.isReceptorFixedLigandOptimizedConvergenceReached());
-							System.out.println("rmsd before/after opt. = " + hitScore.getReceptorFixedLigandOptimizedRmsdBeforeAndAfterOptimization());
+
+							System.out.println("interaction = " + hitScore.getInteractionEFinal());
+							System.out.println("strained energy = " + hitScore.getLigandStrainedEnergy());
+							System.out.println("rmsd before/after opt. = " + hitScore.getRmsdLigand());
 							System.out.println("count longer than 2A change = " + hitScore.getCountOfLongDistanceChange());
 						}
 
@@ -199,14 +198,14 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 					}
 				}else{
 
-					hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(-100.0, 0.0, 0, false, 0.0, 0, 0.0, 0.0);
+					hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, 0.0f, 0.0f, 0.0f);
 				}
 
 				hitScore.setRatioPairedPointToHitPoints(ratioPairedPointToHitPoints);
 
 				if (rmsdLigand != null){
 					System.out.println("rmsdLigand = " + rmsdLigand);
-					hitScore.setRmsdLigand(rmsdLigand);
+					hitScore.setRmsdLigand((float) rmsdLigand.doubleValue());
 				}
 
 				//				boolean isShapeOverlapOK = checkIfQuerySignificantlyCovered(currentBestHit.getResultsFromEvaluateCost(), hitScore);

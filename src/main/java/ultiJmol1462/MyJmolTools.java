@@ -72,206 +72,48 @@ public class MyJmolTools {
     public static ResultsUltiJMolMinimizedHitLigandOnTarget scoreByMinimizingLigandOnFixedReceptor(
             AlgoParameters algoParameters, MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
         ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
-        MyJmol1462 ultiJMol = null;
-
-        // translate ligand for checking
-
-        MyAtomIfc[] ligandAtoms = peptide.getAllChains()[0].getMyMonomers()[0].getMyAtoms();
-        for (MyAtomIfc atom : ligandAtoms) {
-            float x = atom.getCoords()[0];
-            float y = atom.getCoords()[1];
-            float z = atom.getCoords()[2];
-            float newX = x + 16.0f;
-            float newY = y + 16.0f;
-            float newZ = z + 16.0f;
-            float[] newCoords = new float[3];
-            newCoords[0] = newX;
-            newCoords[1] = newY;
-            newCoords[2] = newZ;
-            atom.setCoords(newCoords);
-        }
-
+        MyJmol1462 ultiJmol = null;
 
         try {
-            ultiJMol = algoParameters.ultiJMolBuffer.get();
+            ultiJmol = algoParameters.ultiJMolBuffer.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        // give energy and structure back
-        String script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolTarget = new ScriptCommandOnUltiJmol(script, target.toV3000(), ultiJMol, null);
         try {
-            scriptCommandOnUltiJmolTarget.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-        }
-        Map<String, Object> results = scriptCommandOnUltiJmolTarget.getResults();
-        Float energyTargetBefore = (Float) results.get("final energy");
-        System.out.println("ET0 = " + energyTargetBefore);
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String targetAfterHyfrogenMinimizationV3000 = (String) results.get("structureV3000");
+            ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(ultiJmol, target, peptide, algoParameters);
+            score.run();
 
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, peptide.toV3000(), ultiJMol, null);
-        try {
-            scriptCommandOnUltiJmolLigand.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-        }
-        results = scriptCommandOnUltiJmolLigand.getResults();
-        Float energyPeptideBefore = (Float) results.get("final energy");
-        System.out.println("EL0 = " + energyPeptideBefore);
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String peptideAfterHyfrogenMinimizationV3000 = (String) results.get("structureV3000");
+            float rmsd = score.getRmsdOfLigandBeforeAndAfterMinimization();
+            int longDistanceChangeCount = score.getCountOfLongDistanceChange();
+            float strainedEnergy = score.getStrainedEnergy();
+            float interactionEnergy = score.getInteractionEnergy();
 
+            hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(longDistanceChangeCount, interactionEnergy, strainedEnergy, rmsd);
 
-        MyStructureIfc mergedMyStructure = MyStructureTools.mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(targetAfterHyfrogenMinimizationV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters);
+        } catch (Exception e) {
 
-        int atomCountTarget = MyStructureTools.getAtomCount(target);
-        script = MyJmolTools.getScriptMinimizationWholeLigandTargetFixed(atomCountTarget);
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplex = new ScriptCommandOnUltiJmol(script, mergedMyStructure.toV3000(), ultiJMol, null);
-        try {
-            scriptCommandOnUltiJmolComplex.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-        }
-        results = scriptCommandOnUltiJmolComplex.getResults();
-        boolean receptorFixedLigandOptimizedConvergenceReached = (boolean) results.get("convergence reached");
-        Float energyComplexAfterLigandMinimization = (Float) results.get("final energy");
-        System.out.println("EC0 = " + energyComplexAfterLigandMinimization);
-
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String complexAfterLigandMinimizationV3000 = (String) results.get("structureV3000");
-
-        script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexAfterMini = new ScriptCommandOnUltiJmol(script, complexAfterLigandMinimizationV3000, ultiJMol, null);
-        try {
-            scriptCommandOnUltiJmolComplexAfterMini.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-        }
-        results = scriptCommandOnUltiJmolComplexAfterMini.getResults();
-        Float energyComplexAfterLigandMinimizationRedo = (Float) results.get("final energy");
-        System.out.println("ECAfterLigandMinimized Redo = " + energyComplexAfterLigandMinimizationRedo);
-
-        // redo with other script to be sure it is related to what is fixed the output energy
-        // minimze fixed then it is excluded from energy ?
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        script = MyJmolTools.getScriptMinimizationWholeLigandTargetFixed(atomCountTarget);
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexAfterMiniOtherScript = new ScriptCommandOnUltiJmol(script, complexAfterLigandMinimizationV3000, ultiJMol, null);
-        try {
-            scriptCommandOnUltiJmolComplexAfterMiniOtherScript.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-        }
-        results = scriptCommandOnUltiJmolComplexAfterMiniOtherScript.getResults();
-        Float energyComplexAfterLigandMinimizationRedoOtherScript = (Float) results.get("final energy");
-        System.out.println("ECAfterLigandMinimized Redo other script = " + energyComplexAfterLigandMinimizationRedoOtherScript);
-
-
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-        // now I do stuff to compute rmsd
-        int firstAtomPeptide = atomCountTarget + 1;
-        String selectStringTarget = "atomno > 0 and atomno < " + firstAtomPeptide;
-        ultiJMol.jmolPanel.evalString("delete (" + selectStringTarget + ") \n");
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String peptideAfterMinimizeFixingSelectionV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
-
-        /*
-        ultiJMol.jmolPanel.evalString("zap");
-        double energyMinimizedLigand = 0;
-        try {
-            energyMinimizedLigand = computeEnergyForInPutV3000(ultiJMol, algoParameters, peptideAfterMinimizeFixingSelectionV3000, true);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+            System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
+            try {
+                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
+            } catch (InterruptedException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
+            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
+            throw exception;
         }
 
         try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Elf = " + energyMinimizedLigand);
-
-        // relqx completely ligqnd to hqve strained energy
-        float energyPeptideRelaxed = 0;
-        try {
-            energyPeptideRelaxed = loadMyStructureInBiojavaMinimizeAllComputeEnergyUFF(peptide, ultiJMol, algoParameters);
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        double strainedEnergy = energyMinimizedLigand - energyPeptideRelaxed; // if strained then energyMinimizedLigand > energyPeptideRelaxed so positive result
-        System.out.println("EstrainedLigand = " + strainedEnergy);
-
-*/
-        float energyMinimizedLigand = 0;
-        double eInterfinal = energyComplexAfterLigandMinimizationRedo - energyTargetBefore - energyMinimizedLigand;
-        double eCorrected = eInterfinal + energyMinimizedLigand;
-        System.out.println("Einter = " + eInterfinal);
-        System.out.println("Einter + EstrainedLigand = " + eCorrected);
-
-        ComputeRmsd computeRmsd = new ComputeRmsd(peptideAfterMinimizeFixingSelectionV3000, peptideAfterHyfrogenMinimizationV3000, algoParameters);
-
-        float rmsd = computeRmsd.getRmsd();
-        int countOfLongDistanceChange = computeRmsd.getCountOfLongDistanceChange();
-        hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, energyComplexAfterLigandMinimizationRedo, 5, receptorFixedLigandOptimizedConvergenceReached,
-                rmsd, countOfLongDistanceChange, eInterfinal, eCorrected);
-
-        //} catch (Exception e) {
-
-        System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
-        try {
-            algoParameters.ultiJMolBuffer.put(new MyJmol1462());
-        } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        // String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
-        // ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-        // throw exception;
-        // }
-
-        try {
-            ultiJMol.jmolPanel.evalString("zap");
+            ultiJmol.jmolPanel.evalString("zap");
             try {
                 Thread.sleep(2000L);
             } catch (InterruptedException e) {
 
             }
-            algoParameters.ultiJMolBuffer.put(ultiJMol);
+            algoParameters.ultiJMolBuffer.put(ultiJmol);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
