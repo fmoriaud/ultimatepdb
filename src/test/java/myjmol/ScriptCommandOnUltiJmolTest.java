@@ -79,7 +79,7 @@ public class ScriptCommandOnUltiJmolTest {
 
         assertTrue(convergenceReached);
         // not reproducible
-        assertEquals(finalEnergy, 5479.0f, 400.0f);
+        assertEquals(finalEnergy, 597.0f, 50.0f);
     }
 
 
