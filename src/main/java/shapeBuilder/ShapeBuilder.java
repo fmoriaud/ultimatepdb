@@ -23,9 +23,7 @@ import shape.ShapeContainer;
 import shape.ShapeContainerAtomIdsWithinShapeWithPeptide;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
-import shapeReduction.GenerateTriangles;
-import shapeReduction.ShapeReductorV4;
-import shapeReduction.TriangleInteger;
+import shapeReduction.*;
 import mystructure.AtomProperties.AtomHAcceptorDescriptors;
 import mystructure.AtomProperties.AtomHDonnorDescriptors;
 import mystructure.HBondDefinedWithAtoms;
@@ -44,6 +42,7 @@ public class ShapeBuilder {
     //-------------------------------------------------------------
     private AlgoParameters algoParameters;
     private final MyStructureIfc myStructureGlobalBrut;
+    private EnumShapeReductor enumShapeReductor;
 
     private boolean debug = true;
     private List<PointWithPropertiesIfc> listShrinkedShapePoints = new ArrayList<>();
@@ -52,10 +51,11 @@ public class ShapeBuilder {
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ShapeBuilder(MyStructureIfc myStructureGlobal, AlgoParameters algoParameters) {
+    public ShapeBuilder(MyStructureIfc myStructureGlobal, AlgoParameters algoParameters, EnumShapeReductor enumShapeReductor) {
 
         this.myStructureGlobalBrut = myStructureGlobal;
         this.algoParameters = algoParameters;
+        this.enumShapeReductor = enumShapeReductor;
     }
 
 
@@ -254,7 +254,8 @@ public class ShapeBuilder {
             MyAtomIfc foundMyAtom = null;
             char[] chainIdToFind = atomDefinedByIds.getChainQuery().toCharArray();
             MyChainIfc[] chains = myStructure.getAllChainsRelevantForShapeBuilding();
-            A: for (MyChainIfc foundMyChain : chains) {
+            A:
+            for (MyChainIfc foundMyChain : chains) {
                 if (Arrays.equals(foundMyChain.getChainId(), chainIdToFind)) {
                     int residueIdToFind = atomDefinedByIds.getResidueId();
                     MyMonomerIfc foundMyMonomer = foundMyChain.getMyMonomerFromResidueId(residueIdToFind);
@@ -473,10 +474,19 @@ public class ShapeBuilder {
     private Map<Integer, PointWithPropertiesIfc> buildMinishape(List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints) {
 
         long startTime = System.currentTimeMillis();
-        ShapeReductorV4 shapeReductor = new ShapeReductorV4(shapeCollectionPoints, algoParameters);
-        Map<Integer, PointWithPropertiesIfc> miniShape = shapeReductor.computeReducedCollectionOfPointsWithProperties();
+        Map<Integer, PointWithPropertiesIfc> miniShape = null;
+        if (enumShapeReductor == EnumShapeReductor.CLUSTERING) {
+            ShapeReductorIfc shapeReductor = new ShapeReductorByClustering(shapeCollectionPoints, algoParameters);
+             miniShape = shapeReductor.computeReducedCollectionOfPointsWithProperties();
+        }
+        if (enumShapeReductor == EnumShapeReductor.SELECTING) {
+            ShapeReductorIfc shapeReductor = new ShapeReductorBySelectingPoints(shapeCollectionPoints, algoParameters);
+            miniShape = shapeReductor.computeReducedCollectionOfPointsWithProperties();
+        }
+
         long compTime = System.currentTimeMillis() - startTime;
         double comptimeSeconds = compTime / 1000.0;
+
         System.out.println("mini shape size = " + miniShape.size() + " done in " + comptimeSeconds + " s ");
         //Map<Integer, PointWithProperties> shrinkedMiniShape = shrinkMiniShapeAccordingToFinalMaxDistanceToLigand(miniShape, algoParameters);
         //System.out.println("mini shape after = " + shrinkedMiniShape.size());

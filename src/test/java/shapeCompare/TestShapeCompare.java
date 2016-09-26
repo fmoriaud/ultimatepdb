@@ -14,8 +14,9 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.CommandLineException;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorHetAtm;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 import mystructure.ExceptionInMyStructurePackage;
@@ -68,22 +69,19 @@ public class TestShapeCompare {
 
         char[] hetatmLigandSB2 = "SB2".toCharArray();
         int occurenceId = 1;
-        ShapeBuilderConstructorIfc shapeBuilderSB2 = new ShapeBuilderConstructorHetAtm(myStructure1a9u, hetatmLigandSB2, occurenceId, algoParameters);
         ShapeContainerIfc shapeSB2 = null;
         try {
-            shapeSB2 = shapeBuilderSB2.getShapeContainer();
-        } catch (
-                ShapeBuildingException e) {
-            assertTrue(false);
+            shapeSB2 = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure1a9u, algoParameters, hetatmLigandSB2, occurenceId);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
         }
+
         char[] hetatmLigandMSQ = "MSQ".toCharArray();
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorHetAtm(myStructure1di9, hetatmLigandMSQ, occurenceId, algoParameters);
         ShapeContainerIfc shapeMSQ = null;
         try {
-            shapeMSQ = shapeBuilder.getShapeContainer();
-        } catch (
-                ShapeBuildingException e) {
-            assertTrue(false);
+            shapeMSQ = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure1di9, algoParameters, hetatmLigandMSQ, occurenceId);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
         }
 
         ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(shapeMSQ, shapeSB2, algoParameters);

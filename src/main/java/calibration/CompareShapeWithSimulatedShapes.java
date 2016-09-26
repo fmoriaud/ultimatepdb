@@ -19,9 +19,10 @@ import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.PointIfc;
 import protocols.ControllerLoger;
 import protocols.ProtocolToolsToHandleInputFilesAndShapeComparisons;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerAtomIdsWithinShapeWithPeptide;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorAtomIdsWithinShape;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
 import mystructure.EnumMyReaderBiojava;
@@ -204,8 +205,7 @@ public class CompareShapeWithSimulatedShapes {
 
 		List<String> chainToIgnore = new ArrayList<>();
 		chainToIgnore.add("C");
-		ShapeBuilderConstructorAtomIdsWithinShape targetConstructor = new ShapeBuilderConstructorAtomIdsWithinShape(myStructure, listQueryAtom, chainToIgnore, algoParameters);
-		ShapeContainerIfc targetShape = targetConstructor.getShapeContainer();
+		ShapeContainerIfc targetShape = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, listQueryAtom, chainToIgnore);
 		return targetShape;
 	}
 

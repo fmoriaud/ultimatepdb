@@ -48,7 +48,7 @@ public class TestShapeBuilder {
 
 		System.out.println("Structure read successfully");
 
-		ShapeBuilder shapeBuilderRefactored = new ShapeBuilder(query, algoParameters);
+		ShapeBuilder shapeBuilderRefactored = new ShapeBuilder(query, algoParameters, EnumShapeReductor.CLUSTERING);
 		
 		long startTimeMs = System.currentTimeMillis();
 		ShapeContainerWithLigand shape = shapeBuilderRefactored.getShapeAroundAHetAtomLigand("CIT".toCharArray(), 1);

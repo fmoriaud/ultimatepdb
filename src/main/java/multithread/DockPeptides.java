@@ -16,13 +16,10 @@ import fingerprint.MyStructureFingerprint;
 import parameters.AlgoParameters;
 import parameters.TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
 import parameters.TargetsIfc;
+import protocols.ShapeContainerFactory;
 import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorSegmentOfChain;
-import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.ShapeBuildingTools;
-import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
+import shapeBuilder.*;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.MyChainIfc;
 import mystructure.MyStructureIfc;
@@ -210,8 +207,13 @@ public class DockPeptides {
 					}
 
 					if (foundGoodOne == true){ // only one good one is enough to allow the comparison as it could be a good one
-						ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrutTarget, chainIdFromDB.toCharArray(), matchingRankId, peptideLength, algoParameters);
-						CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+						ShapeContainerIfc shapecontainer = null;
+						try {
+							shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructureGlobalBrutTarget, algoParameters, chainIdFromDB.toCharArray(), matchingRankId, peptideLength);
+						} catch (ShapeBuildingException e) {
+							e.printStackTrace();
+						}
+						CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapecontainer, algoParameters);
 						try{
 							executorService.execute(compare);
 						}catch (RejectedExecutionException e){

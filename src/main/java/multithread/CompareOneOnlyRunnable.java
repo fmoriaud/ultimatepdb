@@ -13,7 +13,7 @@ public class CompareOneOnlyRunnable implements Runnable{
 	// Class variables
 	//------------------------
 	private final ShapeContainerIfc queryShape;
-	private final ShapeBuilderConstructorIfc shapeBuilder;
+	private final ShapeContainerIfc targetShape;
 	private final AlgoParameters algoParameters;
 
 
@@ -22,10 +22,10 @@ public class CompareOneOnlyRunnable implements Runnable{
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public CompareOneOnlyRunnable( ShapeContainerIfc queryShape, ShapeBuilderConstructorIfc shapeBuilder, AlgoParameters algoParameters){
+	public CompareOneOnlyRunnable( ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters){
 
 		this.queryShape = queryShape;
-		this.shapeBuilder = shapeBuilder;
+		this.targetShape = targetShape;
 		this.algoParameters = algoParameters;
 	}
 
@@ -38,7 +38,7 @@ public class CompareOneOnlyRunnable implements Runnable{
 	@Override
 	public void run() {
 		try{
-			boolean comparingWasOK = compare(shapeBuilder);
+			boolean comparingWasOK = compare();
 		} catch(Exception e){
 		}
 
@@ -50,7 +50,7 @@ public class CompareOneOnlyRunnable implements Runnable{
 	// -------------------------------------------------------------------
 	// Implementation
 	// -------------------------------------------------------------------
-	private boolean compare(ShapeBuilderConstructorIfc targetShape){
+	private boolean compare(){
 
 		try {
 			ProtocolToolsToHandleInputFilesAndShapeComparisons.compareQueryToOneShape(queryShape, targetShape, algoParameters);

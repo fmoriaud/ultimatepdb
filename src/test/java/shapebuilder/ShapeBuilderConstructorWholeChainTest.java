@@ -11,13 +11,13 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorWholeChain;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 
@@ -50,15 +50,15 @@ public class ShapeBuilderConstructorWholeChainTest {
             assertTrue(false);
         }
 
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(mystructure, chainId, algoParameters);
-        ShapeContainerIfc shape = null;
+        ShapeContainerIfc shapecontainer = null;
         try {
-            shape = shapeBuilder.getShapeContainer();
+            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
         } catch (ShapeBuildingException e) {
-            assertTrue(false);
+            e.printStackTrace();
         }
+
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 687);
-        assertTrue(shape.getMiniShape().size() == 68);
+        assertTrue(shapecontainer.getShape().getSize() == 687);
+        assertTrue(shapecontainer.getMiniShape().size() == 68);
     }
 }

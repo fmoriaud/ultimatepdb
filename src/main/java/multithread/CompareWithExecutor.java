@@ -20,11 +20,10 @@ import parameters.TargetDefinedBySegmentOfChainBasedOnSegmentLength;
 import parameters.TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
 import parameters.TargetDefinedByWholeChain;
 import parameters.TargetsIfc;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorHetAtm;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
-import shapeBuilder.ShapeBuilderConstructorSegmentOfChain;
-import shapeBuilder.ShapeBuilderConstructorWholeChain;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
 import mystructure.EnumMyReaderBiojava;
@@ -143,8 +142,13 @@ public class CompareWithExecutor {
 //								continue;
 //							}
 
-                            ShapeBuilderConstructorHetAtm shapeBuilder = new ShapeBuilderConstructorHetAtm(myStructureGlobalBrut, threeLetterCode.toCharArray(), occurenceId, algoParameters);
-                            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                            ShapeContainerIfc shapecontainer = null;
+                            try {
+                               shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructureGlobalBrut, algoParameters, threeLetterCode.toCharArray(), occurenceId);
+                            } catch (ShapeBuildingException e) {
+                                e.printStackTrace();
+                            }
+                           CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapecontainer, algoParameters);
                             try {
                                 executorService.execute(compare);
                             } catch (RejectedExecutionException e) {
@@ -218,9 +222,15 @@ public class CompareWithExecutor {
 //									continue;
 //								}
 
-                                // TODO clean code of four letter code as now I input the structure itself
-                                ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorSegmentOfChain(myStructureGlobalBrut, chainIdFromDB.toCharArray(), i, segmentLength, algoParameters);
-                                CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                                // chainIdFromDB.toCharArray(), i, segmentLength,
+                                ShapeContainerIfc shapecontainer = null;
+                                try {
+                                    shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructureGlobalBrut, algoParameters, chainIdFromDB.toCharArray(), i, segmentLength);
+                                } catch (ShapeBuildingException e) {
+                                    e.printStackTrace();
+                                }
+
+                                CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapecontainer, algoParameters);
 
                                 try {
                                     executorService.execute(compare);
@@ -388,8 +398,13 @@ public class CompareWithExecutor {
 
 
                             // Might not work anymore as I use a different constructor, before was relaoding
-                            ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorWholeChain(myStructureGlobalBrut, chainIdFromDB.toCharArray(), algoParameters);
-                            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapeBuilder, algoParameters);
+                            ShapeContainerIfc shapecontainer = null;
+                            try {
+                                shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureGlobalBrut, algoParameters, chainIdFromDB.toCharArray());
+                            } catch (ShapeBuildingException e) {
+                                e.printStackTrace();
+                            }
+                            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, shapecontainer, algoParameters);
                             try {
                                 executorService.execute(compare);
                             } catch (RejectedExecutionException e) {

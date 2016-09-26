@@ -11,13 +11,13 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorHetAtm;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 
@@ -50,14 +50,13 @@ public class ShapeBuilderConstructorHetAtmTest {
 
         char[] hetatmLigandThreeLetterCode = "MSQ".toCharArray();
         int occurenceId = 1;
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorHetAtm(mystructure, hetatmLigandThreeLetterCode, occurenceId, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = shapeBuilder.getShapeContainer();
-        } catch (
-                ShapeBuildingException e) {
-            assertTrue(false);
+            shape = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, hetatmLigandThreeLetterCode, occurenceId);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
         }
+
         // don't know if it is good, it is as it is now.
         System.out.println(shape.getShape().getSize());
         System.out.println(shape.getMiniShape().size());

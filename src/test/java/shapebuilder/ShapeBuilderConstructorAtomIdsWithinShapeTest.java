@@ -12,8 +12,9 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuilderConstructorAtomIdsWithinShape;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 
@@ -58,14 +59,13 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         listAtomDefinedByIds.add(queryAtomDefinedByIds);
 
         List<String> chainToIgnore = new ArrayList<>();
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorAtomIdsWithinShape(mystructure, listAtomDefinedByIds, chainToIgnore, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = shapeBuilder.getShapeContainer();
-        } catch (
-                ShapeBuildingException e) {
-            assertTrue(false);
+            shape = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
         }
+
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 2335);
         assertTrue(shape.getMiniShape().size() == 43);
@@ -102,14 +102,13 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         listAtomDefinedByIds.add(queryAtomDefinedByIds);
 
         List<String> chainToIgnore = new ArrayList<>();
-        ShapeBuilderConstructorIfc shapeBuilder = new ShapeBuilderConstructorAtomIdsWithinShape(mystructure, listAtomDefinedByIds, chainToIgnore, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = shapeBuilder.getShapeContainer();
-        } catch (
-                ShapeBuildingException e) {
-            assertTrue(false);
+            shape = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
         }
+
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 1424);
         assertTrue(shape.getMiniShape().size() == 12);
