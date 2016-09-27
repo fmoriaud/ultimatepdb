@@ -77,6 +77,12 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
         MyStructureIfc target = new MyStructure(neighbors[0], algoParameters);
         MyStructureIfc protonatedTarget = null;
@@ -85,6 +91,12 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             protonatedTarget.setFourLetterCode("1di9".toCharArray());
         } catch (ShapeBuildingException e) {
             assertTrue(false);
+        }
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(protonatedTarget, protonatedLigand, algoParameters);

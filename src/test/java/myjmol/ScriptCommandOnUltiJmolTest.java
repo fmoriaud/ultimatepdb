@@ -99,48 +99,4 @@ public class ScriptCommandOnUltiJmolTest {
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
     }
-
-
-
-    private List<Integer> atomIdsTargetCloseToLigand(MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
-
-        MyStructureIfc myStructureFile1 = null;
-        try {
-            myStructureFile1 = new MyStructure(protonatedTarget.toV3000(), algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        MyStructureIfc myStructureFile2 = null;
-        try {
-            myStructureFile2 = new MyStructure(protonatedLigand.toV3000(), algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        float thresholdDistance = 5.0f;
-        // atomIds in Target
-        // So as when I merge, I add first target, that will work for the selection
-
-        // I assume first atom has id = 1
-        List<Integer> atomIds = new ArrayList<>();
-
-        int idAtomTarget = 0;
-        for (MyAtomIfc atomTarget : myStructureFile1.getAllChains()[0].getMyMonomers()[0].getMyAtoms()) {
-
-            idAtomTarget += 1;
-            for (MyAtomIfc atomLigand : myStructureFile2.getAllChains()[0].getMyMonomers()[0].getMyAtoms()) {
-
-                float distance = ToolsMath.computeDistance(atomTarget.getCoords(), atomLigand.getCoords());
-                if (distance < thresholdDistance && !atomIds.contains(idAtomTarget)) {
-                    atomIds.add(idAtomTarget);
-                }
-            }
-        }
-
-
-        return atomIds;
-    }
 }
