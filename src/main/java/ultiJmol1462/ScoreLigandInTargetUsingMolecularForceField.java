@@ -138,6 +138,12 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         rmsdOfLigandBeforeAndAfterMinimization = computeRmsd.getRmsd();
         countOfLongDistanceChange = computeRmsd.getCountOfLongDistanceChange();
 
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // strained energy
         script = MyJmolTools.getScriptMinimizationAll();
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, protonatedLigand.toV3000(), ultiJMol, null);
@@ -148,6 +154,12 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
         results = scriptCommandOnUltiJmolLigand.getResults();
         String ligandFullyRelaxedV3000 = (String) results.get("structureV3000");
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         script = MyJmolTools.getScriptMinimizationAll();
         GetEnergy getEnergy2 = new GetEnergy(script, ligandFullyRelaxedV3000, ultiJMol);

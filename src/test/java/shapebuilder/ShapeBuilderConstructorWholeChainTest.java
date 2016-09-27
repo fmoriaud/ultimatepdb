@@ -32,6 +32,7 @@ public class ShapeBuilderConstructorWholeChainTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -60,5 +61,14 @@ public class ShapeBuilderConstructorWholeChainTest {
         // don't know if it is good, it is as it is now.
         assertTrue(shapecontainer.getShape().getSize() == 687);
         assertTrue(shapecontainer.getMiniShape().size() == 68);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

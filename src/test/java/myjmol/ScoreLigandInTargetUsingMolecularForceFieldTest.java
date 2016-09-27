@@ -5,6 +5,7 @@ import io.BiojavaReader;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class ScoreLigandInTargetUsingMolecularForceFieldTest {
 
 
+    @Ignore
     @Test
     public void findInteractionEnergyLigandFarAway() throws IOException, ParsingConfigFileException {
 
@@ -36,6 +38,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -115,11 +118,18 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) < 0.1);
 
-
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
 
+    @Ignore
     @Test
     public void findInteractionEnergyOriginalLigandIn() throws IOException, ParsingConfigFileException {
 
@@ -133,6 +143,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -195,5 +206,14 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         //interactionEnergy = -21.591003
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) > 15 && Math.abs(interactionEnergy) < 25);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

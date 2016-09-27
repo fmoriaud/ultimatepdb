@@ -35,4 +35,11 @@ public class GenericBuffer<T> {
 		notifyAll();
 		return item;
 	}
+
+
+	public synchronized int getSize(){
+
+		return queue.size();
+	}
+
 }

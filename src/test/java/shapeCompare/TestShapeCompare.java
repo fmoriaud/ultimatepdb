@@ -33,6 +33,7 @@ public class TestShapeCompare {
     public void testCompareTwoKinaseLigandShape() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode1di9 = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -124,6 +125,15 @@ public class TestShapeCompare {
             double costLastHit = listBestHitForEachAndEverySeed.get(19).getResultsFromEvaluateCost().getCost();
             assertEquals(costLastHit, 0.139, 0.001);
         }
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 }

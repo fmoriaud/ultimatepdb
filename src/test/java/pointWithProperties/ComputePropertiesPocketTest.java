@@ -29,6 +29,7 @@ public class ComputePropertiesPocketTest {
     public void testWithDC_HDonor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2kh4";
         BiojavaReader reader = new BiojavaReader();
@@ -69,6 +70,15 @@ public class ComputePropertiesPocketTest {
 
         assertTrue(atomClosestWithDistanceLessThanFwhm);
         assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -77,6 +87,7 @@ public class ComputePropertiesPocketTest {
     public void testWithDG_HDonor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "394d";
         BiojavaReader reader = new BiojavaReader();
@@ -117,6 +128,15 @@ public class ComputePropertiesPocketTest {
 
         assertTrue(atomClosestWithDistanceLessThanFwhm);
         assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 

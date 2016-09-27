@@ -144,6 +144,13 @@ public class ScriptCommandOnUltiJmol {
             } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
                 exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
             }
+
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             // as i dont know what is does in jmol, I take the energy before stoping
             ultiJmol.jmolPanel.evalString("minimize stop");
             try {

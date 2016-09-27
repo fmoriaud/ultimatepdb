@@ -31,6 +31,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -63,5 +64,14 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         // especially because ACE and NH2 were moved...
         assertTrue(shape.getShape().getSize() == 433);
         assertTrue(shape.getMiniShape().size() == 48);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

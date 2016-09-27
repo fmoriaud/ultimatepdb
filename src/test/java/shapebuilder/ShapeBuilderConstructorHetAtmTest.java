@@ -30,6 +30,7 @@ public class ShapeBuilderConstructorHetAtmTest {
     public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -62,5 +63,14 @@ public class ShapeBuilderConstructorHetAtmTest {
         System.out.println(shape.getMiniShape().size());
         assertTrue(shape.getShape().getSize() == 795);
         assertTrue(shape.getMiniShape().size() == 45 );//|| shape.getMiniShape().size() == 44);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

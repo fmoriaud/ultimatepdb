@@ -38,6 +38,7 @@ public class ClonerTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -65,6 +66,15 @@ public class ClonerTest {
         int bondCount = TestTools.getBondCount(myStructureFromAMyMonomer);
         assertTrue(mol.getAtomCount() == atomCount);
         assertTrue(mol.getBondCount() * 2 == bondCount);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 }

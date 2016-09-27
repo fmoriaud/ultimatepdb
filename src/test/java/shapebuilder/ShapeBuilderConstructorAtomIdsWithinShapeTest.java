@@ -33,6 +33,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
     public void testShapeBuilderConstructorProtein() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -69,6 +70,15 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 2335);
         assertTrue(shape.getMiniShape().size() == 43);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -76,6 +86,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
     public void testShapeBuilderConstructorDNARNA() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "394d";
         BiojavaReader reader = new BiojavaReader();
@@ -112,5 +123,14 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 1424);
         assertTrue(shape.getMiniShape().size() == 12);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

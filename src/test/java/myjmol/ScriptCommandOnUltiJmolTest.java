@@ -31,10 +31,12 @@ import static org.junit.Assert.assertTrue;
 public class ScriptCommandOnUltiJmolTest {
 
 
+    @Ignore
     @Test
     public void computeHydrogensEnergyAfterHydrogenMinimization() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         // Prepare input as environment of MSQ in 1di9
         String fourLetterCode = "1di9";
@@ -80,6 +82,15 @@ public class ScriptCommandOnUltiJmolTest {
         assertTrue(convergenceReached);
         // not reproducible
         assertEquals(finalEnergy, 597.0f, 50.0f);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -100,6 +111,7 @@ public class ScriptCommandOnUltiJmolTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -377,6 +389,15 @@ public class ScriptCommandOnUltiJmolTest {
         float energyInteraction = complexFromMinimizedComplexEnergy - targetFromMinimizedComplexEnergy - ligandFromMinimizedComplexEnergy;
 
         System.out.println("energyInteraction = " + energyInteraction);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 

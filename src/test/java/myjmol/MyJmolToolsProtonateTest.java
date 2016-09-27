@@ -34,6 +34,7 @@ public class MyJmolToolsProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -57,6 +58,15 @@ public class MyJmolToolsProtonateTest {
         MyChainIfc chainAfterProtonation = protonatedStructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc gln23AfterProtonation = chainAfterProtonation.getMyMonomerFromResidueId(23);
         assertTrue(gln23AfterProtonation.getMyAtoms().length == 18);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -73,6 +83,7 @@ public class MyJmolToolsProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -96,6 +107,15 @@ public class MyJmolToolsProtonateTest {
         MyChainIfc chainAfterProtonation = protonatedStructure.getNucleosideChain("B".toCharArray());
         MyMonomerIfc dc11BAfterProtonation = chainAfterProtonation.getMyMonomerFromResidueId(11);
         assertTrue(dc11BAfterProtonation.getMyAtoms().length == 29);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -113,6 +133,7 @@ public class MyJmolToolsProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -142,5 +163,14 @@ public class MyJmolToolsProtonateTest {
         MyAtomIfc atomH2C15 = kto201AfterProtonation.getMyAtomFromMyAtomName("H2C15".toCharArray());
         assertTrue(atomH1C15 != null);
         assertTrue(atomH2C15 != null);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }
