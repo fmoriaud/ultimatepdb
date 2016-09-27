@@ -65,6 +65,12 @@ public class ScriptCommandOnUltiJmolTest {
         }
         String moleculeV3000 = protonatedTarget.toV3000();
 
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         String script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmol = new ScriptCommandOnUltiJmol(script, moleculeV3000, algoParameters, null);
         try {

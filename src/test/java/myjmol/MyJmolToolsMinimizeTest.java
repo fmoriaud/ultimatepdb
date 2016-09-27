@@ -25,8 +25,6 @@ import static org.junit.Assert.assertTrue;
 public class MyJmolToolsMinimizeTest {
 
 
-    // Not reproducible .... the interaction energy there are two possible values
-    @Ignore
     @Test
     public void testScoreByMinimizingLigandOnFixedReceptor() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
 
