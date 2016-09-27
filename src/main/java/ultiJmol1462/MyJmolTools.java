@@ -72,16 +72,9 @@ public class MyJmolTools {
     public static ResultsUltiJMolMinimizedHitLigandOnTarget scoreByMinimizingLigandOnFixedReceptor(
             AlgoParameters algoParameters, MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
         ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
-        MyJmol1462 ultiJmol = null;
 
         try {
-            ultiJmol = algoParameters.ultiJMolBuffer.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(ultiJmol, target, peptide, algoParameters);
+            ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(target, peptide, algoParameters);
             score.run();
 
             float rmsd = score.getRmsdOfLigandBeforeAndAfterMinimization();
@@ -94,32 +87,50 @@ public class MyJmolTools {
         } catch (Exception e) {
 
             System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
-            try {
-                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+
             String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
             ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
             throw exception;
         }
 
+        return hitScore;
+    }
+
+
+    public static boolean putBackUltiJmolInBufferAndIfFailsPutNewOne(MyJmol1462 ultiJmol, AlgoParameters algoParameters) {
+
+        int sizeBefore = algoParameters.ultiJMolBuffer.getSize();
+        boolean successPutingItBack = false;
         try {
             ultiJmol.jmolPanel.evalString("zap");
             try {
                 Thread.sleep(2000L);
             } catch (InterruptedException e) {
-
             }
+
             algoParameters.ultiJMolBuffer.put(ultiJmol);
+            int sizeAfter = algoParameters.ultiJMolBuffer.getSize();
+            if (sizeAfter == sizeBefore + 1) {
+                successPutingItBack = true;
+            }
+
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-        return hitScore;
+
+        if (successPutingItBack == false) {
+            ultiJmol.frame.dispose();
+            try {
+                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
+            } catch (InterruptedException e) {
+            }
+            int sizeAfter = algoParameters.ultiJMolBuffer.getSize();
+            if (sizeAfter == sizeBefore + 1) {
+                successPutingItBack = true;
+            }
+        }
+        return successPutingItBack;
     }
+
 
 
     /*

@@ -17,7 +17,6 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------
-    private MyJmol1462 ultiJMol;
     private MyStructureIfc protonatedTarget;
     private MyStructureIfc protonatedLigand;
     private AlgoParameters algoParameters;
@@ -31,14 +30,25 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
-    public ScoreLigandInTargetUsingMolecularForceField(MyJmol1462 ultiJMol, MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
+    /*
+    public ScoreLigandInTargetUsingMolecularForceField(MyJmol1462 ultiJmol, MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
 
-        this.ultiJMol = ultiJMol;
+        this.ultiJmol = ultiJmol;
         this.protonatedTarget = protonatedTarget;
         this.protonatedLigand = protonatedLigand;
         this.algoParameters = algoParameters;
 
     }
+*/
+
+
+    public ScoreLigandInTargetUsingMolecularForceField(MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
+
+        this.algoParameters = algoParameters;
+        this.protonatedTarget = protonatedTarget;
+        this.protonatedLigand = protonatedLigand;
+    }
+
 
 
     // -------------------------------------------------------------------
@@ -62,7 +72,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         String script = MyJmolTools.getScriptMinimizationWholeLigandAndTargetAtomCloseBy(atomCountTarget, atomIds);
 
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexTargetAtomCloseByFree = new ScriptCommandOnUltiJmol(script, mergedMyStructure.toV3000(), ultiJMol, atomCountTarget);
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexTargetAtomCloseByFree = new ScriptCommandOnUltiJmol(script, mergedMyStructure.toV3000(), algoParameters, atomCountTarget);
         try {
             scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
@@ -84,7 +94,8 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         script = MyJmolTools.getScriptMinimizationAll();
-        GetEnergy getEnergyTarget = new GetEnergy(script, targetFromMinimizedComplex, ultiJMol);
+
+        GetEnergy getEnergyTarget = new GetEnergy(script, targetFromMinimizedComplex, algoParameters);
         try {
             getEnergyTarget.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
@@ -101,7 +112,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         script = MyJmolTools.getScriptMinimizationAll();
-        GetEnergy getEnergyComplex = new GetEnergy(script, complexFromMinimizedComplex, ultiJMol);
+        GetEnergy getEnergyComplex = new GetEnergy(script, complexFromMinimizedComplex, algoParameters);
         try {
             getEnergyComplex.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
@@ -118,7 +129,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         script = MyJmolTools.getScriptMinimizationAll();
-        GetEnergy getEnergy = new GetEnergy(script, ligandFromMinimizedComplex, ultiJMol);
+        GetEnergy getEnergy = new GetEnergy(script, ligandFromMinimizedComplex, algoParameters);
         try {
             getEnergy.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
@@ -146,7 +157,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         // strained energy
         script = MyJmolTools.getScriptMinimizationAll();
-        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, protonatedLigand.toV3000(), ultiJMol, null);
+        ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, protonatedLigand.toV3000(), algoParameters, null);
         try {
             scriptCommandOnUltiJmolLigand.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
@@ -162,7 +173,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         script = MyJmolTools.getScriptMinimizationAll();
-        GetEnergy getEnergy2 = new GetEnergy(script, ligandFullyRelaxedV3000, ultiJMol);
+        GetEnergy getEnergy2 = new GetEnergy(script, ligandFullyRelaxedV3000, algoParameters);
         try {
             getEnergy2.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {

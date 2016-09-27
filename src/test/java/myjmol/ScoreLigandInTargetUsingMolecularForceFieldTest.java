@@ -23,8 +23,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class ScoreLigandInTargetUsingMolecularForceFieldTest {
 
-
-    @Ignore
     @Test
     public void findInteractionEnergyLigandFarAway() throws IOException, ParsingConfigFileException {
 
@@ -89,14 +87,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        MyJmol1462 ultiJmol = null;
-        try {
-            ultiJmol = algoParameters.ultiJMolBuffer.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(ultiJmol, protonatedTarget, protonatedLigand, algoParameters);
+        ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(protonatedTarget, protonatedLigand, algoParameters);
         score.run();
 
         assertTrue(score.isConvergenReached());
@@ -129,7 +120,6 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
 
 
 
-    @Ignore
     @Test
     public void findInteractionEnergyOriginalLigandIn() throws IOException, ParsingConfigFileException {
 
@@ -177,14 +167,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        MyJmol1462 ultiJmol = null;
-        try {
-            ultiJmol = algoParameters.ultiJMolBuffer.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(ultiJmol, protonatedTarget, protonatedLigand, algoParameters);
+        ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(protonatedTarget, protonatedLigand, algoParameters);
         score.run();
 
         assertTrue(score.isConvergenReached());

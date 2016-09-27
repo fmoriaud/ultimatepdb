@@ -2,6 +2,7 @@ package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import org.jmol.minimize.Minimizer;
+import parameters.AlgoParameters;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class GetEnergy {
     // Class variables
     // -------------------------------------------------------------------
     private String moleculeV3000;
-    private MyJmol1462 ultiJmol;
+    private AlgoParameters algoParameters;
     private String script;
 
     private Map<String, Object> results = new LinkedHashMap<>();
@@ -24,12 +25,7 @@ public class GetEnergy {
     // Constructors
     // -------------------------------------------------------------------
 
-    /**
-     * Get energy of the input structure
-     *
-     * @param moleculeV3000
-     * @param ultiJmol
-     */
+   /*
     public GetEnergy(String script, String moleculeV3000, MyJmol1462 ultiJmol) {
 
         this.script = script;
@@ -37,6 +33,14 @@ public class GetEnergy {
         this.ultiJmol = ultiJmol;
         ultiJmol.jmolPanel.evalString("zap");
     }
+*/
+   public GetEnergy(String script, String moleculeV3000, AlgoParameters algoParameters) {
+
+       this.script = script;
+       this.moleculeV3000 = moleculeV3000;
+       this.algoParameters = algoParameters;
+   }
+
 
     // -------------------------------------------------------------------
     // Public && Interface method
@@ -48,6 +52,13 @@ public class GetEnergy {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        MyJmol1462 ultiJmol = null;
+        try {
+            ultiJmol = algoParameters.ultiJMolBuffer.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ultiJmol.jmolPanel.openStringInline(moleculeV3000);
 
         try {
@@ -67,7 +78,7 @@ public class GetEnergy {
             return;
         }
 
-        Float energyAsInitialAsPossible = waitMinimizationEnergyAvailable();
+        Float energyAsInitialAsPossible = waitMinimizationEnergyAvailable(ultiJmol);
         results.put("initial energy", energyAsInitialAsPossible);
         // Whatever is the minimize script which contains what to fix and that matters for the energy
         ultiJmol.jmolPanel.evalString("minimize clear");
@@ -75,10 +86,13 @@ public class GetEnergy {
         ultiJmol.jmolPanel.evalString("minimize energy");
         ultiJmol.jmolPanel.evalString("show minimization");
 
+        boolean success = MyJmolTools.putBackUltiJmolInBufferAndIfFailsPutNewOne(ultiJmol, algoParameters);
+        System.out.println(" success = " + success);
+
     }
 
 
-    private Float waitMinimizationEnergyAvailable() throws ExceptionInScoringUsingBioJavaJMolGUI {
+    private Float waitMinimizationEnergyAvailable( MyJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
         int countIteration = 0;

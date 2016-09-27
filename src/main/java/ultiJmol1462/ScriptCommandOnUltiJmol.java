@@ -16,6 +16,7 @@ public class ScriptCommandOnUltiJmol {
     // -------------------------------------------------------------------
     private String script;
     private String moleculeV3000;
+    private AlgoParameters algoParameters;
 
     private MyJmol1462 ultiJmol;
     private Map<String, Object> results = new LinkedHashMap<>();
@@ -43,6 +44,7 @@ public class ScriptCommandOnUltiJmol {
         this.moleculeV3000 = moleculeV3000;
         this.ultiJmol = ultiJmol;
         this.atomCountTarget = atomCountTarget;
+        this.algoParameters = algoParameters;
         ultiJmol.jmolPanel.evalString("zap");
     }
 
@@ -60,6 +62,7 @@ public class ScriptCommandOnUltiJmol {
 
         this.script = script;
         this.moleculeV3000 = moleculeV3000;
+        this.algoParameters = algoParameters;
         try {
             ultiJmol = algoParameters.ultiJMolBuffer.get();
         } catch (InterruptedException e) {
@@ -206,6 +209,9 @@ public class ScriptCommandOnUltiJmol {
                 results.put("target", target);
             }
         }
+
+        boolean success = MyJmolTools.putBackUltiJmolInBufferAndIfFailsPutNewOne(ultiJmol, algoParameters);
+        System.out.println(" success = " + success);
     }
 
 
