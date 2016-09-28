@@ -211,6 +211,28 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         float interactionEnergy = score.getInteractionEnergy();
 
         //interactionEnergy = -21.591003
+
+        /*
+        Problem
+        currentEnergy = 173785.69
+currentEnergy = 173766.48
+currentEnergy = 173766.48
+ success = true
+Convergence reached : true
+ success = true
+targetFromMinimizedComplexEnergy = 182351.17
+ success = true
+complexFromMinimizedComplexEnergy = 182680.66
+ success = true
+ligandFromMinimizedComplexEnergy = 219.50972
+interactionEnergy = 109.974655
+currentEnergy = 93.108505
+currentEnergy = 93.108505
+ success = true
+ success = true
+ligandFullyRelaxedEnergy = 93.1085
+         */
+
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) > 15 && Math.abs(interactionEnergy) < 25);
 
