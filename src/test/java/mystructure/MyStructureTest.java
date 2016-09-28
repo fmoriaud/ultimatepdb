@@ -12,6 +12,8 @@ import org.junit.rules.TemporaryFolder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
+import ultiJmol1462.MyJmolTools;
 
 import java.io.IOException;
 import java.net.URL;
@@ -105,7 +107,7 @@ public class MyStructureTest {
     // and without updating the neighbors... Don't know what to do.
 
     @Test
-    public void testToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public void testToV3000ProteinStructure() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -137,4 +139,49 @@ public class MyStructureTest {
         assertTrue(mol.getBondCount() * 2 == bondCount);
     }
 
+
+    @Test
+    public void testToV3000Neighors() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+
+        String fourLetterCode = "1a9u";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
+
+        MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+
+        // is it worth it ? only to fix bond to atoms not in structure ??
+        // TODO what to do to best get clean neighbors ?
+
+
+        Cloner cloner = new Cloner(neighbors, algoParameters);
+        MyStructureIfc clonedNeighbors = cloner.getClone();
+        // there are shitty bonds using the neighbors
+        // need to clean them but only on a clone
+
+        MyStructureIfc protonatedTarget = null;
+        try {
+            protonatedTarget = MyJmolTools.protonateStructure(clonedNeighbors, algoParameters);
+            protonatedTarget.setFourLetterCode("1di9".toCharArray());
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+    }
 }

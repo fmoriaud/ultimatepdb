@@ -170,6 +170,13 @@ public class MyStructureTools {
     }
 
 
+    public static void setAtomParentReference(MyChainIfc myChain) {
+        for (int i = 0; i < myChain.getMyMonomers().length; i++) {
+            setAtomParentReference(myChain.getMyMonomers()[i]);
+            myChain.getMyMonomers()[i].setParent(myChain);
+        }
+    }
+
     /**
      * Returns the count of bonds. There are two MyBond object for one bond, one on each of the 2 bonded atom.
      *
@@ -214,6 +221,13 @@ public class MyStructureTools {
     public static void removeBondsToMyAtomsNotInMyStructure(MyStructureIfc myStructure) {
 
         List<MyAtomIfc> tempListMyAtomIfc = extractMyAtoms(myStructure);
+        removeBondsToMyAtomsNotInMyStructure(tempListMyAtomIfc);
+    }
+
+
+    public static void removeBondsToMyAtomsNotInMyStructure(MyChainIfc[] myChains) {
+
+        List<MyAtomIfc> tempListMyAtomIfc = extractMyAtoms(myChains);
         removeBondsToMyAtomsNotInMyStructure(tempListMyAtomIfc);
     }
 
@@ -408,7 +422,6 @@ public class MyStructureTools {
     }
 
 
-
     public static MyChainIfc[] makeArrayFromList(List<MyChainIfc> myChains) {
 
         int countOfChains = myChains.size();
@@ -418,7 +431,6 @@ public class MyStructureTools {
         }
         return myChainsArray;
     }
-
 
 
     public static int getAtomCount(MyStructureIfc myStructure) {
@@ -431,7 +443,6 @@ public class MyStructureTools {
         }
         return atomCount;
     }
-
 
 
     public static MyStructureIfc mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(String structureV3000, String peptideV3000, AlgoParameters algoParameters) {
@@ -457,8 +468,6 @@ public class MyStructureTools {
         MyStructureIfc mergedMyStructure = merger.getMerge();
         return mergedMyStructure;
     }
-
-
 
 
     //-------------------------------------------------------------
@@ -723,6 +732,20 @@ public class MyStructureTools {
 
         for (MyChainIfc chain : myStructure.getAllChains()) {
             for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                    tempListMyAtomIfc.add(atom);
+                }
+            }
+        }
+        return tempListMyAtomIfc;
+    }
+
+
+    private static List<MyAtomIfc> extractMyAtoms(MyChainIfc[] myChains) {
+        List<MyAtomIfc> tempListMyAtomIfc = new ArrayList<>();
+
+        for (MyChainIfc myChain : myChains) {
+            for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
                     tempListMyAtomIfc.add(atom);
                 }
