@@ -100,7 +100,7 @@ public class MyStructureToV3000 {
 
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println();
+			System.out.println(" weird in getV3000");
 		}
 		return sbWhole.toString();
 	}
@@ -136,7 +136,7 @@ public class MyStructureToV3000 {
 	private void addBondLine(MyAtomIfc myAtom, MyBondIfc myBond, StringBuilder sb, int bondCount){
 
 		if (mapMyAtomToRenumbered.get(myBond.getBondedAtom()) == null){
-			System.out.println();
+			System.out.println("weird addBondLine in to V3000");
 		}
 
 		// if bond missing search here

@@ -66,7 +66,7 @@ public class Protonate {
             e.printStackTrace();
         }
 
-        String script = MyJmolTools.getScriptAddHydrogens();
+        String script = MyJmolScripts.getScriptAddHydrogens();
         ultiJmol.jmolPanel.evalString(script);
 
         boolean convergenceReached = false;
@@ -104,6 +104,12 @@ public class Protonate {
                 goAhead = false;
             }
             energy = currentEnergy;
+        }
+
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+
         }
 
         String readV3000 = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
@@ -232,7 +238,7 @@ public class Protonate {
 
             MyAtomIfc heavyAtomInMyStructure = mapToGetCorrespondingAtomWithInformation.get(entry.getKey());
             if (heavyAtomInMyStructure == null) {
-                System.out.println();
+                System.out.println("weird ...");
                 continue;
             }
 

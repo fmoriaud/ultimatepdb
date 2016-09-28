@@ -12,10 +12,7 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.GetEnergy;
-import ultiJmol1462.MyJmol1462;
-import ultiJmol1462.MyJmolTools;
-import ultiJmol1462.ScriptCommandOnUltiJmol;
+import ultiJmol1462.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +68,7 @@ public class ScriptCommandOnUltiJmolTest {
             e.printStackTrace();
         }
 
-        String script = MyJmolTools.getScriptMinimizationOnlyHydrogens();
+        String script = MyJmolScripts.getScriptMinimizationOnlyHydrogens();
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmol = new ScriptCommandOnUltiJmol(script, moleculeV3000, algoParameters, null);
         try {
             scriptCommandOnUltiJmol.execute();

@@ -24,16 +24,16 @@ public class MyJmolTools {
      */
     public static MyStructureIfc protonateStructure(MyStructureIfc inputStructure, AlgoParameters algoParameters) throws ShapeBuildingException {
 
-        MyStructureIfc protonatedStructure = null;
+        Protonate protonate = new Protonate(inputStructure, algoParameters);
         try {
-            protonatedStructure = protonateStructureUsingJMolUFF(inputStructure, algoParameters);
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI e) {
-            String message = "protonateStructureUsingJMolUFFandStoreBonds failed in Shape Building " + String.valueOf(inputStructure.getFourLetterCode());
-            ShapeBuildingException shapeBuildingException = new ShapeBuildingException(message);
-            throw shapeBuildingException;
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
+        MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        return protonatedStructure;
+
+        return protonatedMyStructure;
     }
 
 
@@ -95,6 +95,7 @@ public class MyJmolTools {
 
         return hitScore;
     }
+
 
 
     public static boolean putBackUltiJmolInBufferAndIfFailsPutNewOne(MyJmol1462 ultiJmol, AlgoParameters algoParameters) {
@@ -269,177 +270,6 @@ public class MyJmolTools {
         return resultsUltiJMolMinimizeSideChain;
     }
 */
-
-    public static Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
-
-        Float energy = waitMinimizationEnergyAvailable(2, ultiJMol);
-        if (energy == null) {
-            String message = "waitMinimizationEnergyAvailable failed";
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
-        }
-        return energy;
-    }
-
-
-    public static String getScriptMinimizationAll() {
-
-        // Build script
-        boolean onlyHydrogen = false;
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectString = "";
-        if (onlyHydrogen == true) {
-            selectString = "not { hydrogen }";
-            sb.append("minimize FIX {" + selectString + "} select {*}\n");
-        } else {
-            sb.append("minimize select {*}\n");
-        }
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getScriptMinimizationOnlyHydrogens() {
-
-        // Build script
-        boolean onlyHydrogen = true;
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectString = "";
-        if (onlyHydrogen == true) {
-            selectString = "not { hydrogen }";
-            sb.append("minimize FIX {" + selectString + "} select {*}\n");
-        } else {
-            sb.append("minimize select {*}\n");
-        }
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getScriptMinimizationWholeLigandTargetFixed(int atomCountTarget) {
-
-        // Build script
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("select {" + selectStringTarget + "}\n");
-        sb.append("spacefill 50\n");
-        sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("minimize FIX {" + selectStringTarget + "} select {*}\n");
-
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-
-    public static String getScriptAddHydrogens(){
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 20\n");
-        sb.append("minimize energy ADDHYDROGENS\n");
-
-        String script = sb.toString();
-        return script;
-    }
-
-
-
-    public static String getScriptMinimizationWholeLigandAndTargetHydrogens(int atomCountTarget) {
-
-        // Build script
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectStringTargetNonHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { hydrogen }";
-        String selectStringTargetHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and { hydrogen }";
-
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("select {" + selectStringTargetNonHydrogens + "}\n");
-        sb.append("spacefill 50\n");
-        sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("select {" + selectStringTargetHydrogens + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("minimize FIX {" + selectStringTargetNonHydrogens + "} select {*}\n");
-
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getScriptMinimizationWholeLigandAndTargetAtomCloseBy(int atomCountTarget, List<Integer> atomIds) {
-
-        // Build script
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectStringTargetNonHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { hydrogen }";
-        String selectStringTargetHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and { hydrogen }";
-
-        StringBuilder sbAtomIds = new StringBuilder();
-        for (int i = 0; i < atomIds.size(); i++) {
-            sbAtomIds.append("atomno = " + atomIds.get(i));
-            if (i != atomIds.size() - 1) {
-                sbAtomIds.append(" or ");
-            }
-        }
-
-        String selectStringTargetNotToFix = sbAtomIds.toString();
-        String selectStringTargetToFix = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { " + selectStringTargetNotToFix + " }";
-
-        if (atomIds.isEmpty()) {
-            selectStringTargetToFix = "atomno > 0 and atomno < " + (atomCountTarget + 1);
-            selectStringTargetNotToFix = null;
-        }
-
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("select {" + selectStringTargetToFix + "}\n");
-        sb.append("spacefill 50\n");
-        sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
-        if (selectStringTargetNotToFix != null) {
-            sb.append("select {" + selectStringTargetNotToFix + "}\n");
-            sb.append("spacefill 400\n");
-        }
-        sb.append("minimize FIX {" + selectStringTargetToFix + "} select {*}\n");
-
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getPostScriptDeleteTarget(int atomCountTarget) {
-
-        StringBuilder sb = new StringBuilder();
-        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
-
-        sb.append("delete (" + selectStringTarget + ") \n");
-
-        return sb.toString();
-    }
-
-
-    public static String getPostScriptDeleteLigand(int atomCountTarget) {
-
-        StringBuilder sb = new StringBuilder();
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("delete (" + selectLigand + ") \n");
-
-        return sb.toString();
-    }
 
 
     //-------------------------------------------------------------
@@ -624,7 +454,7 @@ public class MyJmolTools {
 
             MyAtomIfc heavyAtomInMyStructure = mapToGetCorrespondingAtomWithInformation.get(entry.getKey());
             if (heavyAtomInMyStructure == null) {
-                System.out.println();
+                System.out.println("weird here ...");
                 continue;
             }
 
@@ -755,7 +585,8 @@ public class MyJmolTools {
     }
 
 
-    private static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+
+    public static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
         int countIteration = 0;
@@ -782,6 +613,7 @@ public class MyJmolTools {
         }
         return minimizer.getMinimizationEnergy();
     }
+
 
 
     public static List<Integer> findAtomIds(String structureV3000, List<MyAtomIfc> atomsToFindIdsOf, AlgoParameters algoParameters) {
