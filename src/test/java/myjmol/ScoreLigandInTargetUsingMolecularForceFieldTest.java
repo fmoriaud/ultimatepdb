@@ -213,6 +213,70 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         //interactionEnergy = -21.591003
 
         /*
+
+        Good one
+        currentEnergy = 3208.0256
+currentEnergy = 3187.3818
+currentEnergy = 3187.3818
+ success = true
+Convergence reached : true
+ success = true
+targetFromMinimizedComplexEnergy = 841.3734
+java.lang.ArrayIndexOutOfBoundsException: 0
+	at org.jmol.render.BallsRenderer.render(BallsRenderer.java:45)
+	at org.jmol.render.ShapeRenderer.renderShape(ShapeRenderer.java:74)
+	at org.jmol.render.RepaintManager.render(RepaintManager.java:226)
+	at org.jmol.viewer.Viewer.render(Viewer.java:3583)
+	at org.jmol.viewer.Viewer.getImage(Viewer.java:3550)
+	at org.jmol.viewer.Viewer.getScreenImageBuffer(Viewer.java:3628)
+	at org.jmol.viewer.Viewer.renderScreenImageStereo(Viewer.java:3458)
+	at org.jmol.viewer.Viewer.renderScreenImage(Viewer.java:3537)
+	at org.jmol.awt.Display.renderScreenImage(Display.java:62)
+	at org.jmol.awt.Platform.renderScreenImage(Platform.java:81)
+	at org.jmol.api.JmolViewer.renderScreenImage(JmolViewer.java:508)
+	at ultiJmol1462.JmolPanel.paint(JmolPanel.java:71)
+	at javax.swing.JComponent.paintToOffscreen(JComponent.java:5210)
+	at javax.swing.RepaintManager$PaintManager.paintDoubleBuffered(RepaintManager.java:1579)
+	at javax.swing.RepaintManager$PaintManager.paint(RepaintManager.java:1502)
+	at javax.swing.RepaintManager.paint(RepaintManager.java:1272)
+	at javax.swing.JComponent._paintImmediately(JComponent.java:5158)
+	at javax.swing.JComponent.paintImmediately(JComponent.java:4969)
+	at javax.swing.RepaintManager$4.run(RepaintManager.java:831)
+	at javax.swing.RepaintManager$4.run(RepaintManager.java:814)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at javax.swing.RepaintManager.paintDirtyRegions(RepaintManager.java:814)
+	at javax.swing.RepaintManager.paintDirtyRegions(RepaintManager.java:789)
+	at javax.swing.RepaintManager.prePaintDirtyRegions(RepaintManager.java:738)
+	at javax.swing.RepaintManager.access$1200(RepaintManager.java:64)
+	at javax.swing.RepaintManager$ProcessingRunnable.run(RepaintManager.java:1732)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:311)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:756)
+	at java.awt.EventQueue.access$500(EventQueue.java:97)
+	at java.awt.EventQueue$3.run(EventQueue.java:709)
+	at java.awt.EventQueue$3.run(EventQueue.java:703)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:76)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:726)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:201)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:116)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:105)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+ success = true
+complexFromMinimizedComplexEnergy = 1039.2921
+ success = true
+ligandFromMinimizedComplexEnergy = 219.5097
+interactionEnergy = -21.591003
+currentEnergy = 93.108505
+currentEnergy = 93.108505
+ success = true
+ success = true
+ligandFullyRelaxedEnergy = 93.1085
+
+
+
         Problem
         currentEnergy = 173785.69
 currentEnergy = 173766.48
@@ -231,7 +295,30 @@ currentEnergy = 93.108505
  success = true
  success = true
 ligandFullyRelaxedEnergy = 93.1085
+
+
+    another one
+    currentEnergy = 3209.5874
+currentEnergy = 3187.3818
+currentEnergy = 3187.3818
+ success = true
+Convergence reached : true
+ success = true
+targetFromMinimizedComplexEnergy = 331815.06
+ success = true
+complexFromMinimizedComplexEnergy = 332144.56
+ success = true
+ligandFromMinimizedComplexEnergy = 219.5097
+interactionEnergy = 109.990295
+currentEnergy = 93.108505
+currentEnergy = 93.108505
+ success = true
+ success = true
+ligandFullyRelaxedEnergy = 93.1085
+
          */
+
+
 
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) > 15 && Math.abs(interactionEnergy) < 25);
