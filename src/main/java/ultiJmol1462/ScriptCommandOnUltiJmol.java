@@ -85,6 +85,12 @@ public class ScriptCommandOnUltiJmol {
         }
         ultiJmol.jmolPanel.openStringInline(moleculeV3000);
 
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (script.contains("minimize")) {
             scriptIsMinimizing = true;
         }
@@ -115,7 +121,7 @@ public class ScriptCommandOnUltiJmol {
                 } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
                     throw exceptionInScoringUsingBioJavaJMolGUI;
                 }
-                //System.out.println("currentEnergy = " + currentEnergy);
+                System.out.println("currentEnergy = " + currentEnergy);
 
                 // when too high then I should give up
                 if (currentEnergy > 1E8) {

@@ -342,6 +342,19 @@ public class MyJmolTools {
     }
 
 
+
+    public static String getScriptAddHydrogens(){
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 20\n");
+        sb.append("minimize energy ADDHYDROGENS\n");
+
+        String script = sb.toString();
+        return script;
+    }
+
+
+
     public static String getScriptMinimizationWholeLigandAndTargetHydrogens(int atomCountTarget) {
 
         // Build script
