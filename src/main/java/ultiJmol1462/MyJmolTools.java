@@ -37,6 +37,22 @@ public class MyJmolTools {
     }
 
 
+/*
+    public static MyStructureIfc protonateStructure(MyChainIfc[] inputStructure, AlgoParameters algoParameters) throws ShapeBuildingException {
+
+        Protonate protonate = new Protonate(inputStructure, algoParameters);
+        try {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+        }
+        MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
+
+
+        return protonatedMyStructure;
+    }
+    */
+
     /**
      * Need to be tested !!!
      *

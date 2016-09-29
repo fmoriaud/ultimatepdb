@@ -29,6 +29,7 @@ public class Protonate {
 
     /**
      * Assume there are no hydrogens
+     *
      * @param myStructure
      * @param algoParameters
      */
@@ -42,6 +43,21 @@ public class Protonate {
         }
     }
 
+/*
+    public Protonate(MyChainIfc[] myChains, AlgoParameters algoParameters) {
+
+        // TODO is it worth it to clone just to fix bonded atom ?
+        Cloner cloner = new Cloner(myChains, algoParameters);
+        this.myStructure = cloner.getClone();
+
+        this.algoParameters = algoParameters;
+        try {
+            ultiJmol = algoParameters.ultiJMolBuffer.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+*/
 
     public void compute() throws ExceptionInScoringUsingBioJavaJMolGUI {
 
@@ -135,7 +151,6 @@ public class Protonate {
     }
 
 
-
     private Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         Float energy = waitMinimizationEnergyAvailable(2, ultiJMol);
@@ -175,7 +190,6 @@ public class Protonate {
         }
         return minimizer.getMinimizationEnergy();
     }
-
 
 
     private void addHydrogenInformation(MyStructureIfc myStructureThatCouldHaveHydrogens, MyStructureIfc myStructureWithBondsAndHydrogenAtoms) {
@@ -302,7 +316,6 @@ public class Protonate {
     }
 
 
-
     private Map<MyAtomIfc, List<MyAtomIfc>> buildMapHeavyAtomAndHydrogen(MyStructureIfc myStructureWithBondsAndHydrogenAtoms) {
 
         Map<MyAtomIfc, List<MyAtomIfc>> mapHeavyAtomAndHydrogens = new LinkedHashMap<>();
@@ -356,7 +369,6 @@ public class Protonate {
         }
         return matchingAtoms;
     }
-
 
 
     private boolean doCoordinatesMAtchForSameAtomToOnlyNumericalError(float[] coords1, float[] coords2) {

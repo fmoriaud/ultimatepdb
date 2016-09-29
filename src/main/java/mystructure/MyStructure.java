@@ -107,7 +107,14 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-
+    /**
+     * A cloner should be created instead
+     * As some bonds must be deleted so the original cannot be modified
+     * Typically used to make MyStructure for Jmol V3000
+     * @param chain
+     * @param algoParameters
+     */
+    @Deprecated
     public MyStructure(MyChainIfc chain, AlgoParameters algoParameters) {
 
         this.algoParameters = algoParameters;
@@ -124,6 +131,7 @@ public class MyStructure implements MyStructureIfc {
 
         computeStructuralInformation(this, algoParameters);
         fixParents(this);
+
     }
 
 
@@ -462,7 +470,9 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
+    // A cloner should be used instead
     @Override
+    @Deprecated
     public synchronized MyStructureIfc cloneWithSameObjects() throws ExceptionInMyStructurePackage { // synchronized because of the tempList that should not be in use by another thread
 
         mapToStoreAtomCorrespondanceNeededToFixBondsReference.clear();
@@ -502,8 +512,11 @@ public class MyStructure implements MyStructureIfc {
 
         myStructureCloned.setFourLetterCode(this.getFourLetterCode());
 
+        //MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myStructureCloned);
+
         fixBondedAtom(myStructureCloned);
         computeStructuralInformation(myStructureCloned, algoParameters);
+
 
         return myStructureCloned;
     }

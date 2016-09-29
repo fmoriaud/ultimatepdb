@@ -136,7 +136,7 @@ public class MyStructureToV3000 {
 	private void addBondLine(MyAtomIfc myAtom, MyBondIfc myBond, StringBuilder sb, int bondCount){
 
 		if (mapMyAtomToRenumbered.get(myBond.getBondedAtom()) == null){
-			System.out.println("weird addBondLine in to V3000");
+			System.out.println("weird addBondLine in to V3000: getBondedAtom is not in atom list");
 		}
 
 		// if bond missing search here
