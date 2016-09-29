@@ -167,18 +167,11 @@ public class MyStructureTest {
 
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
 
-        // is it worth it ? only to fix bond to atoms not in structure ??
-        // TODO what to do to best get clean neighbors ?
 
-
-        Cloner cloner = new Cloner(neighbors, algoParameters);
-        MyStructureIfc clonedNeighbors = cloner.getClone();
-        // there are shitty bonds using the neighbors
-        // need to clean them but only on a clone
-
+        MyStructureIfc myStructureFromNeighbors = new MyStructure(neighbors[0], algoParameters);
         MyStructureIfc protonatedTarget = null;
         try {
-            protonatedTarget = MyJmolTools.protonateStructure(clonedNeighbors, algoParameters);
+            protonatedTarget = MyJmolTools.protonateStructure(myStructureFromNeighbors, algoParameters);
             protonatedTarget.setFourLetterCode("1di9".toCharArray());
         } catch (ShapeBuildingException e) {
             assertTrue(false);
