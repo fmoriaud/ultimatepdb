@@ -1,6 +1,7 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.Tools;
 import mystructure.*;
@@ -42,7 +43,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -151,7 +152,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

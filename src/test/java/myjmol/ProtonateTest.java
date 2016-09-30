@@ -1,6 +1,7 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.Tools;
@@ -40,7 +41,7 @@ public class ProtonateTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -91,7 +92,7 @@ public class ProtonateTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -142,7 +143,7 @@ public class ProtonateTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

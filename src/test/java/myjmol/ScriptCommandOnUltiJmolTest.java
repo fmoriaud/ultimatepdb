@@ -1,6 +1,7 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.Tools;
@@ -47,7 +48,7 @@ public class ScriptCommandOnUltiJmolTest {
         MyStructureIfc mystructure1di9 = null;
         try {
             mystructure1di9 = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure1di9, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
         MyMonomerIfc msqLigand = mystructure1di9.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);

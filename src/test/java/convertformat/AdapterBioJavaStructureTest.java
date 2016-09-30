@@ -28,9 +28,10 @@ import static org.junit.Assert.assertTrue;
 public class AdapterBioJavaStructureTest {
 
     @Before
-    public void initialize(){
+    public void initialize() {
         Tools.class.toString();
     }
+
     /**
      * Test of the expected conversion os Structure to MyStructureIfc
      * H2O are discarded
@@ -56,7 +57,7 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -121,7 +122,7 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(e instanceof ReadingStructurefileException);
             assertTrue(e.getMessage().startsWith("Only empty amino chain were parsed for"));
         }
@@ -146,7 +147,7 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -232,7 +233,7 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -291,7 +292,7 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -324,14 +325,14 @@ public class AdapterBioJavaStructureTest {
         } catch (IOException e) {
             assertTrue(false);
         }
-        
+
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -349,6 +350,33 @@ public class AdapterBioJavaStructureTest {
         for (int i = 0; i < expectedSequence.size(); i++) {
             char[] name = aminoChainD.getMyMonomerByRank(i).getThreeLetterCode();
             assertTrue(Arrays.equals(name, expectedSequence.get(i).toCharArray()));
+        }
+    }
+
+
+    @Test
+    public void testconvertStructureToMyStructureNoBondBecauseOnlyCalpha() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "1a1d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        } catch (ExceptionInConvertFormat e1){
+            assertTrue(e1.getMessage().equals("Amino residue with only Calpha so giveup"));
         }
     }
 }

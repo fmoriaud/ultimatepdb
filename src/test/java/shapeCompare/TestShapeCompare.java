@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import io.BiojavaReader;
@@ -47,7 +48,7 @@ public class TestShapeCompare {
         MyStructureIfc myStructure1di9 = null;
         try {
             myStructure1di9 = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure1di9, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -63,7 +64,7 @@ public class TestShapeCompare {
         MyStructureIfc myStructure1a9u = null;
         try {
             myStructure1a9u = adapterBioJavaStructure2.getMyStructureAndSkipHydrogens(mmcifStructure1a9u, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

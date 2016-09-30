@@ -43,7 +43,7 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Interface & Public methods
     //-------------------------------------------------------------
-    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure, EnumMyReaderBiojava enumMyReaderBiojava) throws ExceptionInMyStructurePackage, ReadingStructurefileException {
+    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure, EnumMyReaderBiojava enumMyReaderBiojava) throws ExceptionInMyStructurePackage, ReadingStructurefileException, ExceptionInConvertFormat {
 
         this.enumMyReaderBiojava = enumMyReaderBiojava;
 
@@ -53,7 +53,7 @@ public class AdapterBioJavaStructure {
     }
 
 
-    public MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters) throws ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters) throws ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
 
         aminoChains.clear();
         hetatmChains.clear();
@@ -320,7 +320,7 @@ public class AdapterBioJavaStructure {
     }
 
 
-    private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) {
+    private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) throws ExceptionInConvertFormat {
 
         tempMyMonomerList.clear();
         int countOfAtoms;
@@ -332,6 +332,12 @@ public class AdapterBioJavaStructure {
             currentGroup = listGroups.get(j);
             countOfAtoms = currentGroup.getAtoms().size();
 
+            if (countOfAtoms == 1) {
+                if (currentGroup.getAtom(0).getName().equals("CA")) {
+                    ExceptionInConvertFormat exception = new ExceptionInConvertFormat("Amino residue with only Calpha so giveup");
+                    throw exception;
+                }
+            }
             Atom atom = null;
             //System.out.println(countOfAtoms + " read atom");
             for (int k = 0; k < countOfAtoms; k++) {

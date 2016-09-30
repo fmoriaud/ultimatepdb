@@ -1,6 +1,7 @@
 package database;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.IOTools;
 import mystructure.*;
@@ -64,10 +65,7 @@ public class CreateAndSearchSequenceDatabase {
                 MyStructureIfc myStructure = null;
                 try {
                     myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-                } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-                    exceptionInMyStructurePackage.printStackTrace();
-                } catch (ReadingStructurefileException e) {
-                    e.printStackTrace();
+                } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat exception) {
                     continue;
                 }
 
@@ -115,26 +113,25 @@ public class CreateAndSearchSequenceDatabase {
     }
 
 
-
-    public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName){
+    public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
 
         String sequenceInDb = null;
         try {
             Statement stmt = connexion.createStatement();
-            String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "' and chainId = '" + chainName + "'" ;
+            String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "' and chainId = '" + chainName + "'";
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
             int foundEntriesCount = 0;
             String fourLetterCodeFromDB;
             String chainIdFromDB;
-            if (resultFindEntry.next()){
-                foundEntriesCount+=1;
+            if (resultFindEntry.next()) {
+                foundEntriesCount += 1;
 
                 fourLetterCodeFromDB = resultFindEntry.getString(1);
                 chainIdFromDB = resultFindEntry.getString(2);
                 sequenceInDb = resultFindEntry.getString(4);
             }
 
-            if (foundEntriesCount != 1){
+            if (foundEntriesCount != 1) {
                 System.out.println("problem isFourLetterCodeAndChainfoundInDatabase " + fourLetterCode + "  " + chainName + "  " + foundEntriesCount);
                 return null;
             }
@@ -145,7 +142,6 @@ public class CreateAndSearchSequenceDatabase {
         }
         return sequenceInDb;
     }
-
 
 
     //-------------------------------------------------------------

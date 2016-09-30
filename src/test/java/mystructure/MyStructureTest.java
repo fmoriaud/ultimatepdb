@@ -1,6 +1,7 @@
 package mystructure;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.CdkTools;
 import io.Tools;
@@ -107,7 +108,7 @@ public class MyStructureTest {
     // and without updating the neighbors... Don't know what to do.
 
     @Test
-    public void testToV3000ProteinStructure() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public void testToV3000ProteinStructure() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -159,7 +160,7 @@ public class MyStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

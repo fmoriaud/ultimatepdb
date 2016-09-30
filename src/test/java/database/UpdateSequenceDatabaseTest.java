@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 public class UpdateSequenceDatabaseTest {
 
 
+    @Ignore
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
@@ -41,7 +42,7 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
-    @Ignore
+
     @Test
     public void testBuildDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
 

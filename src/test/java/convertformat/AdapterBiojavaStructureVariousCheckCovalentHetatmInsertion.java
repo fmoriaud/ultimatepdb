@@ -41,7 +41,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -72,7 +72,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -109,7 +109,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
@@ -143,7 +143,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

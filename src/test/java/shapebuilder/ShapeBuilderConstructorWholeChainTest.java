@@ -1,6 +1,7 @@
 package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
@@ -47,7 +48,7 @@ public class ShapeBuilderConstructorWholeChainTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 

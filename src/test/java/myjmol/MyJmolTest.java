@@ -1,6 +1,7 @@
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.Tools;
 import org.biojava.nbio.structure.Structure;
@@ -48,7 +49,7 @@ public class MyJmolTest {
     }
 
     @Test
-    public void testOpenStringInlineV3000Jmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
+    public void testOpenStringInlineV3000Jmol() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
