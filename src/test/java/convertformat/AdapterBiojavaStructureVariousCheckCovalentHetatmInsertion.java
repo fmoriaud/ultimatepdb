@@ -54,7 +54,6 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
     }
 
 
-
     @Test
     public void testconvertStructureToMyStructureWithORGcovalentLigand() throws ParsingConfigFileException, IOException {
 
@@ -91,4 +90,88 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         assertTrue(Arrays.equals(myStructureORG.getThreeLetterCode(), "ORG".toCharArray()));
     }
 
+
+    @Test
+    public void testconvertStructureToMyStructureWithcovalentPSOLigandToNucleosides() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "203d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+        // PSO is integrated with cutoff bond distance 1.4but not at 1.6.
+        // It looks really tightly bound in the structure
+
+        Group mmcifPSO = mmcifStructure.getChain(0).getAtomGroup(8);
+        assertTrue(mmcifPSO.getPDBName().equals("PSO"));
+        GroupType type = mmcifPSO.getType();
+        assertTrue(type == GroupType.HETATM);
+        MyMonomerIfc myStructureORG = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(8);
+        assertTrue(Arrays.equals(myStructureORG.getThreeLetterCode(), "PSO".toCharArray()));
+    }
+
+
+    @Test
+    public void testconvertStructureToMyStructureWithThreeUMPcovalentToNucleosides() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "229d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+            assertTrue(false);
+        }
+
+        // PSO is integrated with cutoff bond distance 1.4but not at 1.6.
+        // It looks really tightly bound in the structure
+
+        Group mmcifUMP1 = mmcifStructure.getChain(0).getAtomGroup(6);
+        assertTrue(mmcifUMP1.getPDBName().equals("UMP"));
+        GroupType type = mmcifUMP1.getType();
+        assertTrue(type == GroupType.HETATM);
+
+        Group mmcifUMP2 = mmcifStructure.getChain(0).getAtomGroup(12);
+        assertTrue(mmcifUMP2.getPDBName().equals("UMP"));
+        type = mmcifUMP2.getType();
+        assertTrue(type == GroupType.HETATM);
+
+        Group mmcifUMP3 = mmcifStructure.getChain(0).getAtomGroup(14);
+        assertTrue(mmcifUMP3.getPDBName().equals("UMP"));
+        type = mmcifUMP3.getType();
+        assertTrue(type == GroupType.HETATM);
+
+        MyMonomerIfc myStructureUMP1 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(6);
+        assertTrue(Arrays.equals(myStructureUMP1.getThreeLetterCode(), "UMP".toCharArray()));
+
+        MyMonomerIfc myStructureUMP2 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(12);
+        assertTrue(Arrays.equals(myStructureUMP2.getThreeLetterCode(), "UMP".toCharArray()));
+
+        MyMonomerIfc myStructureUMP3 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(14);
+        assertTrue(Arrays.equals(myStructureUMP3.getThreeLetterCode(), "UMP".toCharArray()));
+    }
 }

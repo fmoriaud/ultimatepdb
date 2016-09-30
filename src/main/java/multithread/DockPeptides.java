@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
 
-import database.FinSequenceInDatabaseTools;
 import database.HitInSequenceDb;
 import fingerprint.CannotCompareDistributionException;
 import fingerprint.DistributionComparisonTools;
@@ -105,7 +104,7 @@ public class DockPeptides {
 
 		int rank=0;
 		for (String subSequence: subSequences){
-			List<HitInSequenceDb> hitsInDatabase = FinSequenceInDatabaseTools.find(minLength, maxLength, subSequence, useSimilarSequences);
+			List<HitInSequenceDb> hitsInDatabase = new ArrayList<>(); // need a db FinSequenceInDatabaseTools.find(minLength, maxLength, subSequence, useSimilarSequences);
 			rankedHitsInDatabase.put(rank, hitsInDatabase);
 			rank += 1;
 		}

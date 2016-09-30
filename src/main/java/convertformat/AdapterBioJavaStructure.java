@@ -31,8 +31,6 @@ public class AdapterBioJavaStructure {
     private boolean skipAllHydrogenAtoms = true;
 
 
-
-
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
@@ -204,10 +202,7 @@ public class AdapterBioJavaStructure {
 
         // loop on covalentbonds and build a unique list of MyMonomer from hetatm to insert
         List<MyMonomerIfc> monomersToInsert = new ArrayList<>();
-        for (
-                Map.Entry<MyAtomIfc, MyAtomIfc> covalentbond : covalentbonds.entrySet())
-
-        {
+        for (Map.Entry<MyAtomIfc, MyAtomIfc> covalentbond : covalentbonds.entrySet()) {
 
             MyAtomIfc hetatom = covalentbond.getKey();
             MyAtomIfc aminoatom = covalentbond.getValue();
@@ -221,18 +216,32 @@ public class AdapterBioJavaStructure {
         // and delete from hetchain
         for (MyMonomerIfc monomerToInsert : monomersToInsert) {
 
-            int residueIdToInsert = monomerToInsert.getResidueID();
             char[] chainId = monomerToInsert.getParent().getChainId();
-            MyChainIfc aminoChain = myStructure.getAminoMyChain(chainId);
+            MyChainIfc[] relevantChains = myStructure.getAllChainsRelevantForShapeBuilding();
+            MyChainIfc relevantChain = null;
+            for (MyChainIfc myChain : relevantChains) {
+                if (Arrays.equals(myChain.getChainId(), chainId)) {
+                    relevantChain = myChain;
+                    break;
+                }
+            }
+
+            if (relevantChain == null) {
+                System.out.println("failed to find chain to insert ");
+                continue;
+            }
+
+            int residueIdToInsert = monomerToInsert.getResidueID();
+
             // look if there is a gap
-            if (aminoChain.getMyMonomerFromResidueId(residueIdToInsert) == null) {
-                aminoChain.addAtCorrectRank(monomerToInsert);
+            if (relevantChain.getMyMonomerFromResidueId(residueIdToInsert) == null) {
+                relevantChain.addAtCorrectRank(monomerToInsert);
                 System.out.println("moved " + monomerToInsert);
                 monomerToInsert.getParent().removeMyMonomer(monomerToInsert);
 
             } else {
                 // add at the end
-                aminoChain.addLastRank(monomerToInsert);
+                relevantChain.addLastRank(monomerToInsert);
                 monomerToInsert.getParent().removeMyMonomer(monomerToInsert);
                 System.out.println("moved " + monomerToInsert);
             }

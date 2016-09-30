@@ -230,6 +230,7 @@ public class MyChain implements MyChainIfc {
                 return;
             }
             // find right position in between
+            int insertionRank = 0;
             for (int i = 0; i < this.getMyMonomers().length - 1; i++) {
                 int currentResidueId = this.getMyMonomers()[i].getResidueID();
                 int nextResidueId = this.getMyMonomers()[i + 1].getResidueID();
@@ -238,17 +239,25 @@ public class MyChain implements MyChainIfc {
 
                     // insert in between
                     MyMonomerIfc[] monomers = new MyMonomerIfc[this.getMyMonomers().length + 1];
-                    for (int j=0; j<= currentResidueId; j++){
-                        monomers[j] = this.getMyMonomers()[j];
-                    }
-                    monomers[currentResidueId+1] = monomer;
 
-                    for (int j=currentResidueId+2; j<monomers.length-1; j++){
-                        monomers[j] = this.getMyMonomers()[j-1];
+
+
+                    try {
+                        for (int j = 0; j <= insertionRank; j++) {
+                            monomers[j] = this.getMyMonomers()[j];
+                        }
+                        monomers[insertionRank + 1] = monomer;
+                    } catch (Exception e1) {
+                        System.out.println();
                     }
+
+                    for (int j = insertionRank + 2; j < monomers.length; j++) {
+                        monomers[j] = this.getMyMonomers()[j - 1];
+                    }
+                    this.setMyMonomers(monomers);
                     return;
                 }
-
+                insertionRank +=1;
             }
 
         }

@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import database.DatabaseTools;
-import database.FinSequenceInDatabaseTools;
+import database.SequenceTools;
 import parameters.AlgoParameters;
 import parameters.SmartTargetFileLineParser;
 import parameters.TargetDefinedByHetAtm;
@@ -23,7 +23,6 @@ import parameters.TargetsIfc;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
 import mystructure.EnumMyReaderBiojava;
@@ -111,7 +110,7 @@ public class CompareWithExecutor {
                         String threeLetterCode = smartTargetFileLineParser.getThreeLettercode();
                         String chainIdFromDB = smartTargetFileLineParser.getChainName();
 
-                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        String sequenceInDb = ""; // need a db SequenceTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
                         if (sequenceInDb == null) {
                             line = br.readLine();
                             continue;
@@ -190,7 +189,7 @@ public class CompareWithExecutor {
                         String chainIdFromDB = smartTargetFileLineParser.getChainName();
                         int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
 
-                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        String sequenceInDb = ""; // need a db FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
                         if (sequenceInDb == null) {
                             line = br.readLine();
                             continue;
@@ -366,7 +365,7 @@ public class CompareWithExecutor {
                         String chainIdFromDB = smartTargetFileLineParser.getChainName();
                         int chainLengthFromFile = smartTargetFileLineParser.getChainLengthFromFile();
 
-                        String sequenceInDb = FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
+                        String sequenceInDb = ""; // need a db FinSequenceInDatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(fourLetterCode, chainIdFromDB, connexion);
                         if (sequenceInDb == null) {
                             line = br.readLine();
                             continue;

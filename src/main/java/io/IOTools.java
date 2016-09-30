@@ -14,7 +14,7 @@ public class IOTools {
 
         Map<String, List<Path>> indexPDBFileInFolder = null;
         try {
-            FileListingVisitor fileListingVisitor = new FileListingVisitor(pathToDividedPDBFolder);
+            FileListingVisitorForCifGzFiles fileListingVisitor = new FileListingVisitorForCifGzFiles(pathToDividedPDBFolder);
             indexPDBFileInFolder = fileListingVisitor.getIndexFiles();
 
         } catch (IOException e) {
