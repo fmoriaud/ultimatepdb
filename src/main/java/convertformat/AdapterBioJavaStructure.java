@@ -408,8 +408,24 @@ public class AdapterBioJavaStructure {
                 Bonds:
                 for (Bond bond : atom.getBonds()) {
 
-                    Atom bondStartAtom = bond.getAtomA();
-                    Atom bondBondedAtom = bond.getAtomB();
+                    // Because not sure of the order in bond
+                    Atom bondBondedAtom = null;
+                    Atom bondStartAtom = null;
+                    Atom atomA = bond.getAtomA();
+                    Atom atomB = bond.getAtomB();
+                    if (atomA == atom){
+                        bondStartAtom = atomA;
+                        bondBondedAtom = atomB;
+                    }
+                    if (atomB == atom){
+                        bondStartAtom = atomB;
+                        bondBondedAtom = atomA;
+                    }
+
+                    if (bondBondedAtom.getGroup().getPDBName().equals("HOH")){
+                        System.out.println("Ignored a bond to water ");
+                        continue Bonds; // ignore bonds to water
+                    }
 
                     // if bonded atom in structure has alt Loc then only the chosen one for MyStructure will be found
                     char altLocOfBondedAtom = bondBondedAtom.getAltLoc();
@@ -433,7 +449,8 @@ public class AdapterBioJavaStructure {
 
                     if (bondStartAtom != atom && bondBondedAtom != atom) {
                         System.out.println("Fatal to help debugging : a bond is ill defined in Structure " + bondStartAtom.getName() + "  " + bondBondedAtom.getName());
-                        continue;
+
+                        continue Bonds;
                     }
 
                     sourceBondCount += 1;
@@ -447,7 +464,7 @@ public class AdapterBioJavaStructure {
                     }
                     if (bondedAtomMyStructure == null) {
                         System.out.println("Fatal to help debugging : unknown reason " + bondStartAtom.getName() + "  " + bondBondedAtom.getName());
-                        continue;
+                        continue Bonds;
                     }
                     int bondOrder = bond.getBondOrder();
                     MyBondIfc myBond;

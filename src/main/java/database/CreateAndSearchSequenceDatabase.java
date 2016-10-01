@@ -54,6 +54,7 @@ public class CreateAndSearchSequenceDatabase {
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
 
             for (Path path : entry.getValue()) {
+                System.out.println(path.toString());
                 Structure mmcifStructure;
                 try {
                     mmcifStructure = biojavaReader.read(path, pathToChemCompFolder.toString());
