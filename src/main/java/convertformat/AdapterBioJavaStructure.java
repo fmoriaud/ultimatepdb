@@ -140,14 +140,6 @@ public class AdapterBioJavaStructure {
         MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), expTechniqueUltimate, algoParameters);
         myStructure.setFourLetterCode(fourLetterCode);
 
-        if (countOfBonds > 0) {
-            addHydrogens();
-        } else {
-            System.out.println("countOfBonds = " + countOfBonds);
-            System.out.println("because bond orders not set in Structure from BioJava");
-            System.out.println("Terminating");
-            System.exit(0);
-        }
         moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(myStructure);
 
         return myStructure;
@@ -303,14 +295,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-    private void addHydrogens() {
-
-        // I dont have the bonded atoms by distance
-        // I use the atom name
-
-
-    }
-
 
     private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) throws ExceptionInConvertFormat {
 
@@ -348,7 +332,6 @@ public class AdapterBioJavaStructure {
                 }
 
                 char altLoc = atom.getAltLoc();
-                System.out.println(altLoc);
                 if (hasAltLoc == true && foundChosenAltGroupByBiojava == false && altLoc != altLocGroup) {
                     altLocGroup = altLoc;
                     foundChosenAltGroupByBiojava = true;
@@ -422,6 +405,7 @@ public class AdapterBioJavaStructure {
                 if (atom.getBonds() == null) {
                     continue; // that could happen that an atom has no bond e.g. N in Non polymeric NH2
                 }
+                Bonds:
                 for (Bond bond : atom.getBonds()) {
 
                     Atom bondStartAtom = bond.getAtomA();
@@ -430,6 +414,19 @@ public class AdapterBioJavaStructure {
                     // if bonded atom in structure has alt Loc then only the chosen one for MyStructure will be found
                     char altLocOfBondedAtom = bondBondedAtom.getAltLoc();
 
+                    if (altLocOfBondedAtom != " ".toCharArray()[0]) {
+
+                        MyMonomerIfc bondedMyMonomer = findBondedMyMonomer(bondBondedAtom);
+                        if (bondedMyMonomer == null) {
+                            System.out.println("Fatal: Corresponding alt loc residue not found ");
+                            System.exit(0);
+                        }
+                        if (bondedMyMonomer.getAltLocGroup() != altLocOfBondedAtom) {
+                            System.out.println("Safe to skip bond because it was to an alt loc not kept in MyStructure");
+                            continue Bonds;
+                        }
+
+                    }
                     if (bondStartAtom.getElement().equals(Element.H) || bondBondedAtom.getElement().equals(Element.H)) {
                         continue; // as I skiped Hydrogens I must skip as well bonds to hydrogens
                     }
@@ -521,6 +518,40 @@ public class AdapterBioJavaStructure {
         // It is very costly all atom to all atom
 
         return countOfBond;
+    }
+
+    private MyMonomerIfc findBondedMyMonomer(Atom bondBondedAtom) {
+
+        String chainIDToFind = bondBondedAtom.getGroup().getChainId();
+        String threeLetterCode = bondBondedAtom.getGroup().getPDBName();
+        int residueId = bondBondedAtom.getGroup().getResidueNumber().getSeqNum();
+
+
+        for (MyChainIfc myChain : aminoChains) {
+            if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
+                MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
+                    return candidate;
+                }
+            }
+        }
+        for (MyChainIfc myChain : nucleotidesChains) {
+            if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
+                MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
+                    return candidate;
+                }
+            }
+        }
+        for (MyChainIfc myChain : hetatmChains) {
+            if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
+                MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
+                    return candidate;
+                }
+            }
+        }
+        return null;
     }
 
 
