@@ -530,6 +530,9 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : aminoChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (candidate == null){
+                    continue;
+                }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
                     return candidate;
                 }
@@ -538,6 +541,9 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : nucleotidesChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (candidate == null){
+                    continue;
+                }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
                     return candidate;
                 }
@@ -546,6 +552,9 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : hetatmChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
+                if (candidate == null){
+                    continue;
+                }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
                     return candidate;
                 }
