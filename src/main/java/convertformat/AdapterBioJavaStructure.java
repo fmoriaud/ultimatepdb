@@ -422,7 +422,7 @@ public class AdapterBioJavaStructure {
                             System.exit(0);
                         }
                         if (bondedMyMonomer.getAltLocGroup() != altLocOfBondedAtom) {
-                            System.out.println("Safe to skip bond because it was to an alt loc not kept in MyStructure");
+                            //System.out.println("Safe to skip bond because it was to an alt loc not kept in MyStructure");
                             continue Bonds;
                         }
 
