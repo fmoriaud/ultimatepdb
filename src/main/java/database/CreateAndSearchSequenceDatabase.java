@@ -73,7 +73,7 @@ public class CreateAndSearchSequenceDatabase {
                 char[] fourLetterCode = myStructure.getFourLetterCode();
 
                 MyChainIfc[] chainsForShapeBuilding = myStructure.getAllChainsRelevantForShapeBuilding();
-                for (MyChainIfc chain : chainsForShapeBuilding) {
+                Chains:for (MyChainIfc chain : chainsForShapeBuilding) {
 
                     MyMonomerType monomerType = MyMonomerType.getEnumType(chain.getMyMonomers()[0].getType());
                     char[] chainType = "  ".toCharArray();
@@ -82,6 +82,9 @@ public class CreateAndSearchSequenceDatabase {
                     }
                     if (monomerType.equals(MyMonomerType.NUCLEOTIDE)) {
                         chainType = "NU".toCharArray();
+                    }
+                    if (monomerType.equals(MyMonomerType.HETATM)) {
+                        continue Chains;
                     }
                     char[] chainName = chain.getChainId();
                     String sequence = SequenceTools.generateSequence(chain);
