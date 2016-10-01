@@ -11,6 +11,7 @@ public interface MyMonomerIfc {
 	int getResidueID();
 	char[] getType();
 	char getInsertionLetter();
+	char getAltLocGroup();
 	MyChainIfc getParent();
 	void setParent(MyChainIfc parent);
 	MyAtomIfc getMyAtomFromMyAtomName(char[] atomName);

@@ -110,6 +110,7 @@ public class AdapterBioJavaStructure {
                 }
             }
         }
+        // N.B. all correspondance atom and MyAtom are stored now in the map
 
         if (aminoChains.size() == 0 && nucleotidesChains.size() == 0) {
             // then nothing to do, problem in the file
@@ -285,9 +286,6 @@ public class AdapterBioJavaStructure {
 
     private void cleanListOfGroup(List<Group> listGroups) {
 
-        // check alternate location in structure there is in 2FA1 GLN A 197
-        // I simply get rid of amino acids with alternate location
-
         // if there is only one atom in a residue I skip the monomer: lets see what happen for 1dgi
         // indirectly I have problems later on with atom with no bonds set
         // I prefer to fix the reason than the consequence
@@ -296,14 +294,8 @@ public class AdapterBioJavaStructure {
 
         while (it.hasNext()) {
             Group group = it.next();
-            if (group.hasAltLoc() == true) {
 
-
-                //it.remove();
-                //System.out.println(structure.getPDBCode() + "  " + group.getPDBName() + "  " + group.getResidueNumber() + " has alt loc so removed ");
-                //continue;
-            }
-            if (group.getAtoms().size() == 1 && (group.getPDBName().equals("HOH") || group.getPDBName().equals("CA"))) { // only CA and HOH
+            if (group.getAtoms().size() == 1 && (group.getPDBName().equals("HOH"))) { // HOH
                 it.remove();
                 //System.out.println(structure.getPDBCode() + "  " + group.getPDBName() + "  " + group.getResidueNumber() + " has only one atom so removed  " + group.getAtoms().get(0).getFullName());
             }
@@ -329,8 +321,12 @@ public class AdapterBioJavaStructure {
         for (int j = 0; j < countOfGroups; j++) {
 
             tempMyAtomList.clear();
+
+            // Biojava alredy select one altLoc Group
             currentGroup = listGroups.get(j);
             countOfAtoms = currentGroup.getAtoms().size();
+
+            boolean hasAltLoc = currentGroup.hasAltLoc();
 
             if (countOfAtoms == 1) {
                 if (currentGroup.getAtom(0).getName().equals("CA")) {
@@ -340,11 +336,22 @@ public class AdapterBioJavaStructure {
             }
             Atom atom = null;
             //System.out.println(countOfAtoms + " read atom");
+
+            char altLocGroup = " ".toCharArray()[0];
+            boolean foundChosenAltGroupByBiojava = false;
+
             for (int k = 0; k < countOfAtoms; k++) {
                 atom = currentGroup.getAtom(k);
 
                 if (skipAllHydrogenAtoms && atom.getElement().equals(Element.H)) {
                     continue;
+                }
+
+                char altLoc = atom.getAltLoc();
+                System.out.println(altLoc);
+                if (hasAltLoc == true && foundChosenAltGroupByBiojava == false && altLoc != altLocGroup) {
+                    altLocGroup = altLoc;
+                    foundChosenAltGroupByBiojava = true;
                 }
 
                 char[] atomElement = atom.getElement().toString().toCharArray();
@@ -379,7 +386,9 @@ public class AdapterBioJavaStructure {
             MyMonomerType monomerType = MyStructureTools.convertType(currentGroup.getType());
             MyMonomerIfc myMonomer;
             try {
-                myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, insertionLetter);
+                // TODO add altLocGroup that was chosen
+                // Useful when making bonds, then I would safely ignore bonds defined to alt group I didn' keep
+                myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, insertionLetter, altLocGroup);
             } catch (ExceptionInMyStructurePackage e) {
                 continue;
             }
@@ -415,33 +424,38 @@ public class AdapterBioJavaStructure {
                 }
                 for (Bond bond : atom.getBonds()) {
 
-                    Atom bondAtomA = bond.getAtomA();
-                    Atom bondAtomB = bond.getAtomB();
-                    if (bondAtomA.getElement().equals(Element.H) || bondAtomB.getElement().equals(Element.H)) {
+                    Atom bondStartAtom = bond.getAtomA();
+                    Atom bondBondedAtom = bond.getAtomB();
+
+                    // if bonded atom in structure has alt Loc then only the chosen one for MyStructure will be found
+                    char altLocOfBondedAtom = bondBondedAtom.getAltLoc();
+
+                    if (bondStartAtom.getElement().equals(Element.H) || bondBondedAtom.getElement().equals(Element.H)) {
                         continue; // as I skiped Hydrogens I must skip as well bonds to hydrogens
                     }
-                    if (bondAtomA != atom && bondAtomB != atom) {
-                        System.out.println("Fatal to help debugging : a bond is ill defined in Structure " + bondAtomA.getName() + "  " + bondAtomB.getName());
+
+                    if (bondStartAtom != atom && bondBondedAtom != atom) {
+                        System.out.println("Fatal to help debugging : a bond is ill defined in Structure " + bondStartAtom.getName() + "  " + bondBondedAtom.getName());
                         continue;
                     }
 
                     sourceBondCount += 1;
 
-                    MyAtomIfc bondedAtom = null;
-                    if (bondAtomA == atom) {
-                        bondedAtom = tempMapAtomToMyAtomAsHelperToBuildMyBond.get(bondAtomB);
+                    MyAtomIfc bondedAtomMyStructure = null;
+                    if (bondStartAtom == atom) {
+                        bondedAtomMyStructure = tempMapAtomToMyAtomAsHelperToBuildMyBond.get(bondBondedAtom);
                     }
-                    if (bondAtomB == atom) {
-                        bondedAtom = tempMapAtomToMyAtomAsHelperToBuildMyBond.get(bondAtomA);
+                    if (bondBondedAtom == atom) {
+                        bondedAtomMyStructure = tempMapAtomToMyAtomAsHelperToBuildMyBond.get(bondStartAtom);
                     }
-                    if (bondedAtom == null) {
-                        System.out.println("Fatal to help debugging : unknown reason " + bondAtomA.getName() + "  " + bondAtomB.getName());
+                    if (bondedAtomMyStructure == null) {
+                        System.out.println("Fatal to help debugging : unknown reason " + bondStartAtom.getName() + "  " + bondBondedAtom.getName());
                         continue;
                     }
                     int bondOrder = bond.getBondOrder();
                     MyBondIfc myBond;
                     try {
-                        myBond = new MyBond(bondedAtom, bondOrder);
+                        myBond = new MyBond(bondedAtomMyStructure, bondOrder);
                     } catch (ExceptionInMyStructurePackage e) {
                         continue;
                     }

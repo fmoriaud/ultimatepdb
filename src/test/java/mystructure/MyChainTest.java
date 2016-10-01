@@ -39,8 +39,8 @@ public class MyChainTest {
         char insertionLetter = 0;
 
         try {
-            monomer1 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter);
-            monomer2 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter);
+            monomer1 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter, " ".toCharArray()[0]);
+            monomer2 = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.HETATM, insertionLetter, " ".toCharArray()[0]);
         } catch (ExceptionInMyStructurePackage e) {
         }
     }

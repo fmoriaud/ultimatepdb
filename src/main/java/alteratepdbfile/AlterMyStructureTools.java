@@ -96,7 +96,7 @@ public class AlterMyStructureTools {
 
 		MyMonomerIfc newMyMonomer = null;
 		try {
-			newMyMonomer = new MyMonomer(myAtoms, newResidue3LetterCode, inputMonomer.getResidueID(), MyMonomerType.getEnumType(inputMonomer.getType()), inputMonomer.getInsertionLetter());
+			newMyMonomer = new MyMonomer(myAtoms, newResidue3LetterCode, inputMonomer.getResidueID(), MyMonomerType.getEnumType(inputMonomer.getType()), inputMonomer.getInsertionLetter(), inputMonomer.getAltLocGroup());
 		} catch (ExceptionInMyStructurePackage e1) {
 			String message ="convertMyMonomer failed because of unknown MyMonomerType";
 			AlteringMyStructureException e = new AlteringMyStructureException(message);

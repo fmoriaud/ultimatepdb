@@ -76,7 +76,7 @@ public class TestTools {
 		char[] threeLetterCode = "ASP".toCharArray();
 		char insertionLetter = 0;
 
-		MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueId, MyMonomerType.AMINOACID, insertionLetter);
+		MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueId, MyMonomerType.AMINOACID, insertionLetter, " ".toCharArray()[0]);
 
 		return monomer;
 	}

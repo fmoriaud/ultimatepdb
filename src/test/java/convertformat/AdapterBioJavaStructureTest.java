@@ -373,10 +373,39 @@ public class AdapterBioJavaStructureTest {
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
 
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException e) {
+        } catch (Exception e) {
+            assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
+        }
+    }
+
+
+    @Test
+    public void testconvertStructureToMyStructureNoBondBecauseDisulfideBond() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "2agg";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
             assertTrue(false);
-        } catch (ExceptionInConvertFormat e1){
-            assertTrue(e1.getMessage().equals("Amino residue with only Calpha so giveup"));
+        }
+
+        // HETATM 1692 CA CA  . CA  D 4 .   ? 22.071 47.084 17.265  1.00 11.97 ? ? ? ? ? ? 501 CA  X CA  1
+        // Weird Atom line with a chain with only one atom which is CA
+        // Biojava makes two chains with id X and A
+
+        assertTrue(mmcifStructure.getChains().size() == 2);
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+
+        } catch (Exception e) {
+            assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
         }
     }
 }

@@ -17,6 +17,8 @@ public class MyMonomer implements MyMonomerIfc{
 	private int residueID;
 	private char[] type;
 	private char insertionLetter;
+	private char altLocGroup;
+
 	private MyChainIfc parent;
 
 	private char[] secStruc;
@@ -35,7 +37,7 @@ public class MyMonomer implements MyMonomerIfc{
 	 * @param insertionLetter
 	 * @throws ExceptionInMyStructurePackage 
 	 */
-	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, char insertionLetter) throws ExceptionInMyStructurePackage{
+	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, char insertionLetter, char altLocGroup) throws ExceptionInMyStructurePackage{
 		this.myAtoms = myAtoms;
 		this.threeLetterCode = threeLetterCode;
 		this.residueID = residueID;
@@ -44,6 +46,7 @@ public class MyMonomer implements MyMonomerIfc{
 		}
 		this.type = myMonomerType.getType();
 		this.insertionLetter = insertionLetter;
+		this.altLocGroup = altLocGroup;
 		this.secStruc = secStruc;
 	}
 
@@ -59,7 +62,7 @@ public class MyMonomer implements MyMonomerIfc{
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("monomer: " + parent.toString() + " " + String.valueOf(threeLetterCode) + "  " + residueID);
+		sb.append("monomer: " + parent.toString() + " " + String.valueOf(threeLetterCode) + "  " + residueID + " altLoc = " + altLocGroup);
 		return sb.toString();
 	}
 
@@ -246,6 +249,10 @@ public class MyMonomer implements MyMonomerIfc{
 	}
 
 
+	@Override
+	public char getAltLocGroup() {
+		return altLocGroup;
+	}
 
 	@Override
 	public MyChainIfc getParent() {

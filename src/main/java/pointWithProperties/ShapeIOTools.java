@@ -29,7 +29,7 @@ public class ShapeIOTools{
 
 		MyAtomIfc[] myAtoms = listAtom.toArray(new MyAtomIfc[listAtom.size()]);
 
-		MyMonomerIfc myMonomer = new MyMonomer(myAtoms, "XXX".toCharArray(), 999, MyMonomerType.AMINOACID, " ".toCharArray()[0]);
+		MyMonomerIfc myMonomer = new MyMonomer(myAtoms, "XXX".toCharArray(), 999, MyMonomerType.AMINOACID, " ".toCharArray()[0], " ".toCharArray()[0]);
 		for (MyAtomIfc atom: myAtoms){
 			atom.setParent(myMonomer);
 		}
