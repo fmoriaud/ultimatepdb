@@ -434,4 +434,32 @@ public class AdapterBioJavaStructureTest {
             assertTrue(false);
         }
     }
+
+
+    @Test
+    public void testconvertStructureToMyStructureWhichHasProblemsInMmcif() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "3a0m";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+
+        // It cannot be fixed as it is already a Biojava problem
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            assertTrue(false); // because an exception should be thrown
+        } catch (Exception e) {
+            assertTrue(e.getMessage().equals("Corresponding alt loc residue not found so adapter fails"));
+        }
+    }
+
 }

@@ -397,7 +397,7 @@ public class AdapterBioJavaStructure {
     }
 
 
-    private int defineBonds(MyChainIfc myChain) {
+    private int defineBonds(MyChainIfc myChain) throws ExceptionInConvertFormat {
 
         int countOfBond = 0;
         for (MyMonomerIfc myMonomer : myChain.getMyMonomers()) {
@@ -439,8 +439,8 @@ public class AdapterBioJavaStructure {
 
                         MyMonomerIfc bondedMyMonomer = findBondedMyMonomer(bondBondedAtom);
                         if (bondedMyMonomer == null) {
-                            System.out.println("Fatal: Corresponding alt loc residue not found ");
-                            System.exit(0);
+                            ExceptionInConvertFormat exception = new ExceptionInConvertFormat("Corresponding alt loc residue not found so adapter fails");
+                            throw exception;
                         }
                         if (bondedMyMonomer.getAltLocGroup() != altLocOfBondedAtom) {
                             //System.out.println("Safe to skip bond because it was to an alt loc not kept in MyStructure");
