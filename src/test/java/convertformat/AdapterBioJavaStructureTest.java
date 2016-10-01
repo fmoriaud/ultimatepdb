@@ -403,12 +403,11 @@ public class AdapterBioJavaStructureTest {
         MyStructureIfc mystructure = null;
         try {
             mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-
+            assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
         }
     }
-
 
 
     @Test

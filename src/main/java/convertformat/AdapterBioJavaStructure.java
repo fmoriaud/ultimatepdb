@@ -9,6 +9,8 @@ import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 
 public class AdapterBioJavaStructure {
+
+
     private EnumMyReaderBiojava enumMyReaderBiojava;
 
     private AlgoParameters algoParameters;
@@ -19,6 +21,8 @@ public class AdapterBioJavaStructure {
 
     private List<MyMonomerIfc> tempMyMonomerList = new ArrayList<>();
     private List<MyAtomIfc> tempMyAtomList = new ArrayList<>();
+
+    private List<Group> excludedGroup = new ArrayList<>();
 
     private Map<MyAtomIfc, Atom> tempMapMyAtomToAtomAsHelperToBuildMyBond = new HashMap<>();
     private Map<Atom, MyAtomIfc> tempMapAtomToMyAtomAsHelperToBuildMyBond = new HashMap<>();
@@ -289,6 +293,7 @@ public class AdapterBioJavaStructure {
 
             if (group.getAtoms().size() == 1 && (group.getPDBName().equals("HOH"))) { // HOH
                 it.remove();
+                excludedGroup.add(group);
                 //System.out.println(structure.getPDBCode() + "  " + group.getPDBName() + "  " + group.getResidueNumber() + " has only one atom so removed  " + group.getAtoms().get(0).getFullName());
             }
         }
@@ -422,8 +427,8 @@ public class AdapterBioJavaStructure {
                         bondBondedAtom = atomA;
                     }
 
-                    if (bondBondedAtom.getGroup().getPDBName().equals("HOH")){
-                        System.out.println("Ignored a bond to water ");
+                    if (excludedGroup.contains(bondBondedAtom.getGroup())){
+                        System.out.println("Ignored a bond to excluded group ");
                         continue Bonds; // ignore bonds to water
                     }
 
