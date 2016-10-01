@@ -350,7 +350,8 @@ public class AdapterBioJavaStructure {
                 try {
                     myAtom = new MyAtom(atomElement, coords, atomName, originalAtomID);
                 } catch (ExceptionInMyStructurePackage e) {
-                    continue;
+                    ExceptionInConvertFormat exception = new ExceptionInConvertFormat("Not supported atom type found");
+                    throw exception;
                 }
                 tempMyAtomList.add(myAtom);
 

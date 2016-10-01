@@ -462,4 +462,31 @@ public class AdapterBioJavaStructureTest {
         }
     }
 
+
+    @Test
+    public void testconvertStructureToMyStructureWhichAnAtomIsNotSupportedInMyAtomItisCobaltInThatCase() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "212d";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException e) {
+            assertTrue(false);
+        }
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        // NCO Hetatm contains a Cobalt Atom
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            assertTrue(false); // because an exception should be thrown
+        } catch (Exception e) {
+            assertTrue(e.getMessage().equals("Not supported atom type found"));
+        }
+    }
+
 }
