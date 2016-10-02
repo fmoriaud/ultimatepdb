@@ -18,7 +18,13 @@ import static org.junit.Assert.assertNotNull;
  */
 public class UpdateSequenceDatabaseTest {
 
-    
+    /**
+     * Test is ignored to keep the sequqnce database built
+     *
+     * @throws IOException
+     * @throws ParsingConfigFileException
+     */
+    @Ignore
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
@@ -27,7 +33,7 @@ public class UpdateSequenceDatabaseTest {
         Path pathToPDBFolder = Paths.get(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         Path pathToChemCompFolderFolder = Paths.get(algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        //updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
@@ -40,6 +46,12 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
+    /**
+     * Test is ignored to keep the sequqnce database built
+     *
+     * @throws IOException
+     * @throws ParsingConfigFileException
+     */
     @Ignore
     @Test
     public void testBuildDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
@@ -50,8 +62,24 @@ public class UpdateSequenceDatabaseTest {
         Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
         Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        //updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
+        // Read an entry from it
+        String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
+
+        // Check sequence length
+        assertNotNull(sequence1di9);
+        assertEquals((sequence1di9.length() / 3), 348);
+
+        updateSequenceDatabase.shutdownDb();
+    }
+
+
+
+    @Test
+    public void testReadFromDB() throws IOException, ParsingConfigFileException {
+
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
 

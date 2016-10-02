@@ -9,4 +9,6 @@ public class CompareWithExecutorCallable {
 
     // Now I do directly the shapecontainer, should do them on the fly
 
+    // I need to know how to search the sequence DB
+
 }
