@@ -141,11 +141,31 @@ public class AdapterBioJavaStructure {
 
         Set<ExperimentalTechnique> expTechniqueBiojava = structure.getPDBHeader().getExperimentalTechniques();
         ExpTechniquesEnum expTechniqueUltimate = convertExpTechniques(expTechniqueBiojava);
-        MyStructureIfc myStructure = new MyStructure(MyStructureTools.makeArrayFromList(aminoChains), MyStructureTools.makeArrayFromList(hetatmChains), MyStructureTools.makeArrayFromList(nucleotidesChains), expTechniqueUltimate, algoParameters);
+
+        MyChainIfc[] aminoArray = MyStructureTools.makeArrayFromList(aminoChains);
+        MyChainIfc[] hetatmArray = MyStructureTools.makeArrayFromList(hetatmChains);
+        MyChainIfc[] nucleotidesArray = MyStructureTools.makeArrayFromList(nucleotidesChains);
+
+        // that computes the neighbors by representative distance
+        MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, aminoArray, hetatmArray, nucleotidesArray);
+
+        // move covalently bound heatm to respective amino and nucleosides chains
+        // Done one after the other
+        moveHetatmResiduesThatAreBoundCovalentlyToChains(hetatmArray, aminoArray);
+        moveHetatmResiduesThatAreBoundCovalentlyToChains(hetatmArray, nucleotidesArray);
+
+        // I move all content as there might be some hetatm as well that were moved so covalently bound wont work
+        moveNucleosidesIfTheyAreInAchainWithSameIdAsAminoChainAndCovalentlyBound(aminoArray, nucleotidesArray);
+
+        MyChainIfc[] cleanaminoArray = removeEmptychains(aminoArray);
+        MyChainIfc[] cleanhetatmArray = removeEmptychains(hetatmArray);
+        MyChainIfc[] cleannucleotidesArray = removeEmptychains(nucleotidesArray);
+
+        // TODO need to recompute neighbors by representative residues for moved residues
+
+        // TODO potential problem neighbors are computed there before moving some residues
+        MyStructureIfc myStructure = new MyStructure(cleanaminoArray, cleanhetatmArray, cleannucleotidesArray, expTechniqueUltimate, algoParameters);
         myStructure.setFourLetterCode(fourLetterCode);
-
-        moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(myStructure);
-
         return myStructure;
     }
 
@@ -153,8 +173,45 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private MyChainIfc[] removeEmptychains(MyChainIfc[] myChains){
 
-    private void moveHetatmResiduesThatAreBoundCovalentlyToAnAminoResidue(MyStructureIfc myStructure) throws ExceptionInMyStructurePackage {
+        List<MyChainIfc> keptMyChain = new ArrayList<>();
+        for (MyChainIfc myChain: myChains){
+            if (myChain.getMyMonomers().length > 0){
+                keptMyChain.add(myChain);
+            }
+        }
+        return MyStructureTools.makeArrayFromList(keptMyChain);
+    }
+
+
+    private void moveNucleosidesIfTheyAreInAchainWithSameIdAsAminoChainAndCovalentlyBound(MyChainIfc[] currentAminoChains, MyChainIfc[] currentNucleosidesChains) {
+
+        List<char[]> aminoChainIds = new ArrayList<>();
+        for (MyChainIfc chain : currentAminoChains) {
+            aminoChainIds.add(chain.getChainId());
+        }
+
+        for (MyChainIfc candidateChain : currentNucleosidesChains) {
+            for (char[] aminoChainId : aminoChainIds) {
+                if (Arrays.equals(aminoChainId, candidateChain.getChainId())) {
+                    System.out.println(" Nucleoside chain " + String.valueOf(aminoChainId) + " is a candidate ");
+
+                    List<MyMonomerIfc> monomersToInsert = Arrays.asList(candidateChain.getMyMonomers());
+                    insertAndDelete(currentAminoChains, monomersToInsert);
+                }
+            }
+        }
+    }
+
+
+    private void moveHetatmResiduesThatAreBoundCovalentlyToChains(MyChainIfc[] hetatmArray, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
+
+        move(hetatmArray, destinationChains);
+    }
+
+
+    private void move(MyChainIfc[] chainsWithMovingCandidates, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
 
         // look at hetatm residue if they can bind an amino
         float thresholdDistance = 2.0f;
@@ -163,8 +220,7 @@ public class AdapterBioJavaStructure {
         // I loop to find out covalent bonds between hetatm and amino
         Map<MyAtomIfc, MyAtomIfc> covalentbonds = new LinkedHashMap<>();
 
-        MyChainIfc[] hetatmChains = myStructure.getAllHetatmchains();
-        for (MyChainIfc hetatmChain : hetatmChains) {
+        for (MyChainIfc hetatmChain : chainsWithMovingCandidates) {
             MyMonomerIfc[] hetatmMonomers = hetatmChain.getMyMonomers();
             for (MyMonomerIfc hetatmMonomer : hetatmMonomers) {
 
@@ -189,6 +245,7 @@ public class AdapterBioJavaStructure {
         // create bonds
         for (Map.Entry<MyAtomIfc, MyAtomIfc> covalentbond : covalentbonds.entrySet()) {
 
+            // TODO should check if bond is not already existing ???
             MyAtomIfc hetatom = covalentbond.getKey();
             MyAtomIfc aminoatom = covalentbond.getValue();
             MyBondIfc newBond1 = new MyBond(aminoatom, 1);
@@ -209,14 +266,18 @@ public class AdapterBioJavaStructure {
             }
         }
 
+        insertAndDelete(destinationChains, monomersToInsert);
+    }
+
+
+    private void insertAndDelete(MyChainIfc[] destinationChains, List<MyMonomerIfc> monomersToInsert) {
         // insert them based on residue Id or add at the end
         // and delete from hetchain
         for (MyMonomerIfc monomerToInsert : monomersToInsert) {
 
             char[] chainId = monomerToInsert.getParent().getChainId();
-            MyChainIfc[] relevantChains = myStructure.getAllChainsRelevantForShapeBuilding();
             MyChainIfc relevantChain = null;
-            for (MyChainIfc myChain : relevantChains) {
+            for (MyChainIfc myChain : destinationChains) {
                 if (Arrays.equals(myChain.getChainId(), chainId)) {
                     relevantChain = myChain;
                     break;
@@ -243,7 +304,6 @@ public class AdapterBioJavaStructure {
                 System.out.println("moved " + monomerToInsert);
             }
         }
-
     }
 
 
@@ -298,7 +358,6 @@ public class AdapterBioJavaStructure {
             }
         }
     }
-
 
 
     private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) throws ExceptionInConvertFormat {
@@ -419,16 +478,16 @@ public class AdapterBioJavaStructure {
                     Atom bondStartAtom = null;
                     Atom atomA = bond.getAtomA();
                     Atom atomB = bond.getAtomB();
-                    if (atomA == atom){
+                    if (atomA == atom) {
                         bondStartAtom = atomA;
                         bondBondedAtom = atomB;
                     }
-                    if (atomB == atom){
+                    if (atomB == atom) {
                         bondStartAtom = atomB;
                         bondBondedAtom = atomA;
                     }
 
-                    if (excludedGroup.contains(bondBondedAtom.getGroup())){
+                    if (excludedGroup.contains(bondBondedAtom.getGroup())) {
                         System.out.println("Ignored a bond to excluded group ");
                         continue Bonds; // ignore bonds to water
                     }
@@ -553,7 +612,7 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : aminoChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
-                if (candidate == null){
+                if (candidate == null) {
                     continue;
                 }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
@@ -564,7 +623,7 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : nucleotidesChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
-                if (candidate == null){
+                if (candidate == null) {
                     continue;
                 }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {
@@ -575,7 +634,7 @@ public class AdapterBioJavaStructure {
         for (MyChainIfc myChain : hetatmChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
                 MyMonomerIfc candidate = myChain.getMyMonomerFromResidueId(residueId);
-                if (candidate == null){
+                if (candidate == null) {
                     continue;
                 }
                 if (Arrays.equals(candidate.getThreeLetterCode(), threeLetterCode.toCharArray())) {

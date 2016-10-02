@@ -169,21 +169,20 @@ public class AdapterBioJavaStructureTest {
         // check content
         MyChainIfc[] myChains = mystructure.getAllChains();
         int count = myChains.length;
-        assertTrue(count == 4);
+        assertTrue(count == 3); // On hetatm chain was emptied so was removed
 
         MyChainIfc[] aminoMyChains = mystructure.getAllAminochains();
         assertTrue(aminoMyChains.length == 2);
         MyChainIfc[] nucleosidesMyChains = mystructure.getAllNucleosidechains();
         assertTrue(nucleosidesMyChains.length == 0);
         MyChainIfc[] heteroMyChains = mystructure.getAllHetatmchains();
-        assertTrue(heteroMyChains.length == 2);
+        assertTrue(heteroMyChains.length == 1);
 
         // Yhat is how it is, don't know if it makes sense that the number is different in Structure ...
         assertTrue(aminoMyChains[0].getMyMonomers().length == 349); // with PLP integrated
         assertTrue(aminoMyChains[1].getMyMonomers().length == 366); // with PLP integrated
-        assertTrue(heteroMyChains[0].getMyMonomers().length == 0);
-        assertTrue(heteroMyChains[1].getMyMonomers().length == 1);
-        assertTrue(Arrays.equals(heteroMyChains[1].getMyMonomers()[0].getThreeLetterCode(), "EPE".toCharArray()));
+        assertTrue(heteroMyChains[0].getMyMonomers().length == 1);
+        assertTrue(Arrays.equals(heteroMyChains[0].getMyMonomers()[0].getThreeLetterCode(), "EPE".toCharArray()));
 
         // check bonds
 

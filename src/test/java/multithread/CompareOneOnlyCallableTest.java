@@ -1,7 +1,4 @@
-package shapeCompare;
-
-import java.io.IOException;
-import java.util.List;
+package multithread;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
@@ -10,6 +7,9 @@ import hits.Hit;
 import io.BiojavaReader;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -18,17 +18,23 @@ import protocols.ParsingConfigFileException;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
-import mystructure.ReadingStructurefileException;
+import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
+import shapeCompare.NullResultFromAComparisonException;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
-public class TestShapeCompare {
+/**
+ * Created by Fabrice on 02/10/16.
+ */
+public class CompareOneOnlyCallableTest {
 
     @Test
     public void testCompareTwoKinaseLigandShape() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
@@ -86,13 +92,15 @@ public class TestShapeCompare {
             e.printStackTrace();
         }
 
-        ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(shapeMSQ, shapeSB2, algoParameters);
         List<Hit> listBestHitForEachAndEverySeed = null;
+        CompareOneOnlyCallable callable = new CompareOneOnlyCallable(shapeMSQ, shapeSB2, algoParameters);
+        FutureTask<List<Hit>> future = new FutureTask(callable);
+        future.run();
         try {
-            listBestHitForEachAndEverySeed = comparatorShape.computeResults();
-
-        } catch (NullResultFromAComparisonException e) {
-            // TODO Auto-generated catch block
+            listBestHitForEachAndEverySeed = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
 

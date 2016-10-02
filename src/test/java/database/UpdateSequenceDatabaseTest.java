@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class UpdateSequenceDatabaseTest {
 
-
+    
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
@@ -39,7 +39,6 @@ public class UpdateSequenceDatabaseTest {
 
         updateSequenceDatabase.shutdownDb();
     }
-
 
 
     @Ignore

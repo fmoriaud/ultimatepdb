@@ -241,7 +241,7 @@ public class MyStructureToolsTest {
                 e.printStackTrace();
             }
 
-            GeneratorNeighboringMonomerUsedForShapeGeneration generator = new GeneratorNeighboringMonomerUsedForShapeGeneration(myStructureCloned, minDistanceToBeneighbor);
+            GeneratorNeighboringMonomer generator = new GeneratorNeighboringMonomer(minDistanceToBeneighbor, myStructureCloned.getAllChains());
 
             MyChainIfc[] aminoChains = myStructureCloned.getAllAminochains();
             for (MyChainIfc chain: aminoChains){

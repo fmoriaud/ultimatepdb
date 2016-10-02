@@ -6,16 +6,13 @@ import java.util.List;
 
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
-import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.ToolsMath;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
 import pointWithProperties.PointsTools;
-import shapeCompare.ResultsFromEvaluateCost;
 import mystructure.EnumResidues.HetatmResidues;
-import ultiJmol1462.MyJmol1462;
 
 public class MyStructureTools {
 
@@ -286,16 +283,24 @@ public class MyStructureTools {
      */
     public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(MyStructureIfc myStructure, AlgoParameters algoParameters) {
 
-        double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
-        GeneratorNeighboringMonomerUsedForShapeGeneration distancesBetweenResidues = new GeneratorNeighboringMonomerUsedForShapeGeneration(myStructure, minDistanceToBeNeighbors);
+        MyChainIfc[] allChains = myStructure.getAllChains();
+        computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, allChains);
+    }
 
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                monomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(distancesBetweenResidues.computeAminoNeighborsOfAGivenResidue(monomer));
+
+    public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyChainIfc[]... myChains) {
+
+        double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
+        GeneratorNeighboringMonomer distancesBetweenResidues = new GeneratorNeighboringMonomer(minDistanceToBeNeighbors, myChains);
+
+        for (MyChainIfc[] chains : myChains) {
+            for (MyChainIfc chain : chains) {
+                for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                    monomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(distancesBetweenResidues.computeAminoNeighborsOfAGivenResidue(monomer));
+                }
             }
         }
     }
-
 
     /**
      * Compute MyMonomer Neighbors using MyBonds. They are stored as a MyMonomer array in each and every MyMonomer.

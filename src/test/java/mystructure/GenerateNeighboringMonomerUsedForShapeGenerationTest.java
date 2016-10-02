@@ -56,7 +56,7 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
             }
 
 
-            GeneratorNeighboringMonomerUsedForShapeGeneration generator = new GeneratorNeighboringMonomerUsedForShapeGeneration(myStructureCloned, minDistanceToBeneighbor);
+            GeneratorNeighboringMonomer generator = new GeneratorNeighboringMonomer(minDistanceToBeneighbor, myStructureCloned.getAllChains());
 
             MyChainIfc[] aminoChains = myStructureCloned.getAllAminochains();
             int id = 0;
