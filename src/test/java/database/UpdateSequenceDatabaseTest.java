@@ -22,7 +22,6 @@ public class UpdateSequenceDatabaseTest {
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
-
         // Create Sequence DB
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         Path pathToPDBFolder = Paths.get(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());

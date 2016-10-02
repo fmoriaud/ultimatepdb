@@ -167,7 +167,7 @@ public class CreateAndSearchSequenceDatabase {
         try {
             Statement stmt = connexion.createStatement();
             //String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(1), sequenceString varchar(" + maxCharInVarchar + "), lastmodificationtime timestamp )";
-            String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(1), chainType varchar(2), "
+            String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(2), chainType varchar(2), "
                     + "sequenceString varchar(" + maxCharInVarchar + "), PRIMARY KEY (fourLettercode, chainId) ) ";
             //System.out.println(createTableSql);
             stmt.executeUpdate(createTableSql);
