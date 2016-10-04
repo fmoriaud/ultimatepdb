@@ -237,7 +237,7 @@ public class SequenceTools {
 
 				listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
 				listChainIdFromDB.add(resultFindEntry.getString(2));
-				listSequence.add(resultFindEntry.getString(3));
+				listSequence.add(resultFindEntry.getString(4));
 
 				if (listSequence.size() != listChainIdFromDB.size() ||
 						listSequence.size() != listFourLetterCodeFromDB.size() ||
@@ -276,6 +276,8 @@ public class SequenceTools {
 				hitsInSequenceDb.add(HitInSequenceDb);
 			}
 		}
+
+		DatabaseTools.shutdown();
 		return hitsInSequenceDb;
 	}
 

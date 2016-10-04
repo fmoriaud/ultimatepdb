@@ -25,8 +25,11 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+
 /**
- * Created by Fabrice on 05/09/16.
+ * When Tools is called then the PDB files in resources are copied to a test folder in home directory
+ * TODO delete it, run test, copy chemcomp to resources, add copy of chemcomp. Then delete folder in all cases.
+ * TODO Then Test should run off line
  */
 public class Tools {
 

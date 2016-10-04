@@ -110,5 +110,16 @@ public class UpdateSequenceDatabaseTest {
 
         updateSequenceDatabase.shutdownDb();
     }
+
+
+    @Test
+    public void testDumpToFile(){
+
+        // Write method to dump the sequence database to a text file
+        // Test it here
+
+        // Put this text file in the resources
+        // So I could rebuild the DB from this text file easily
+    }
 }
 
