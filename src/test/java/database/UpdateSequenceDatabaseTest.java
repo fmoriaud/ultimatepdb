@@ -77,6 +77,27 @@ public class UpdateSequenceDatabaseTest {
 
 
     @Test
+    public void testUpdateDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
+
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
+        Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
+        updateSequenceDatabase.updateDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+
+        // Read an entry from it
+        String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
+
+        // Check sequence length
+        assertNotNull(sequence1di9);
+        assertEquals((sequence1di9.length() / 3), 348);
+
+        updateSequenceDatabase.shutdownDb();
+    }
+
+
+    @Test
     public void testReadFromDB() throws IOException, ParsingConfigFileException {
 
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();

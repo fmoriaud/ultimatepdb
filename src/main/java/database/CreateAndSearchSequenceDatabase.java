@@ -8,7 +8,6 @@ import mystructure.*;
 import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.*;
@@ -44,77 +43,66 @@ public class CreateAndSearchSequenceDatabase {
     }
 
 
+
+    public void updateDatabase(Path pathToMMCIFFolder, Path pathToChemCompFolder, AlgoParameters algoParameters) {
+
+        this.pathToMMCIFFolder = pathToMMCIFFolder;
+        this.pathToChemCompFolder = pathToChemCompFolder;
+        this.algoParameters = algoParameters;
+
+        Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToMMCIFFolder.toString());
+
+        BiojavaReader biojavaReader = new BiojavaReader();
+        Structures:
+        for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
+            String fourLetterCode = entry.getKey();
+            try {
+
+                // Search if already in DB
+                Statement stmt = connexion.createStatement();
+                String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode.toUpperCase() + "'";
+
+
+                ResultSet resultFindEntry = stmt.executeQuery(findEntry);
+                int foundEntriesCount = 0;
+
+                if (resultFindEntry.next()) {
+                    foundEntriesCount += 1;
+                }
+
+                if (foundEntriesCount != 0) {
+                    continue Structures;
+                }
+
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                System.out.println("SQL Exception when searching for previous entries with a given PDB code : " + fourLetterCode);
+                // exception
+                //
+            }
+            generateMyStructureAndstoreSequenceInDB(entry.getValue(), biojavaReader);
+        }
+    }
+
+
     public void buildDatabase(Path pathToMMCIFFolder, Path pathToChemCompFolder, AlgoParameters algoParameters) {
         this.pathToMMCIFFolder = pathToMMCIFFolder;
         this.pathToChemCompFolder = pathToChemCompFolder;
+        this.algoParameters = algoParameters;
+
         createDBandTableSequence();
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToMMCIFFolder.toString());
 
         BiojavaReader biojavaReader = new BiojavaReader();
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
 
-            for (Path path : entry.getValue()) {
-                System.out.println(path.toString());
-                Structure mmcifStructure;
-                try {
-                    mmcifStructure = biojavaReader.read(path, pathToChemCompFolder.toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    continue;
-                }
-                AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-                MyStructureIfc myStructure = null;
-                try {
-                    myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-                } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat exception) {
-                    continue;
-                }
+            generateMyStructureAndstoreSequenceInDB(entry.getValue(), biojavaReader);
 
-                char[] fourLetterCode = myStructure.getFourLetterCode();
-
-                MyChainIfc[] chainsForShapeBuilding = myStructure.getAllChainsRelevantForShapeBuilding();
-                Chains:for (MyChainIfc chain : chainsForShapeBuilding) {
-
-                    MyMonomerType monomerType = MyMonomerType.getEnumType(chain.getMyMonomers()[0].getType());
-                    char[] chainType = "  ".toCharArray();
-                    if (monomerType.equals(MyMonomerType.AMINOACID)) {
-                        chainType = "AA".toCharArray();
-                    }
-                    if (monomerType.equals(MyMonomerType.NUCLEOTIDE)) {
-                        chainType = "NU".toCharArray();
-                    }
-                    if (monomerType.equals(MyMonomerType.HETATM)) {
-                        continue Chains;
-                    }
-                    char[] chainName = chain.getChainId();
-                    String sequence = SequenceTools.generateSequence(chain);
-
-                    if (sequence.length() > maxCharInVarchar) {
-                        String truncatedSequence = sequence.substring(0, maxCharInVarchar);
-                        sequence = truncatedSequence;
-                    }
-
-                    try {
-                        String insertTableSQL = "INSERT INTO sequence"
-                                + "(fourLettercode, chainId, chainType, sequenceString) VALUES"
-                                + "(?,?,?,?)";
-                        PreparedStatement preparedStatement = connexion.prepareStatement(insertTableSQL);
-                        preparedStatement.setString(1, String.valueOf(fourLetterCode));
-                        preparedStatement.setString(2, String.valueOf(chainName));
-                        preparedStatement.setString(3, String.valueOf(chainType));
-                        preparedStatement.setString(4, sequence);
-
-                        int ok = preparedStatement.executeUpdate();
-                        System.out.println(ok + " raw updated " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType) + " " + sequence);
-
-                    } catch (SQLException e1) {
-                        System.out.println("Failed to enter entry in sequence table ");
-                    }
-                }
-            }
         }
         System.out.println("Sequence database is created");
     }
+
 
 
     public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
@@ -151,6 +139,73 @@ public class CreateAndSearchSequenceDatabase {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private void generateMyStructureAndstoreSequenceInDB(List<Path> paths, BiojavaReader biojavaReader) {
+
+        for (Path path : paths) {
+            System.out.println(path.toString());
+
+            MyStructureIfc myStructure = null;
+            try {
+                myStructure = getMyStructure(biojavaReader, path);
+            } catch (IOException | ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat exception) {
+                continue;
+            }
+
+            char[] fourLetterCode = myStructure.getFourLetterCode();
+
+            MyChainIfc[] chainsForShapeBuilding = myStructure.getAllChainsRelevantForShapeBuilding();
+            Chains:
+            for (MyChainIfc chain : chainsForShapeBuilding) {
+
+                MyMonomerType monomerType = MyMonomerType.getEnumType(chain.getMyMonomers()[0].getType());
+                char[] chainType = "  ".toCharArray();
+                if (monomerType.equals(MyMonomerType.AMINOACID)) {
+                    chainType = "AA".toCharArray();
+                }
+                if (monomerType.equals(MyMonomerType.NUCLEOTIDE)) {
+                    chainType = "NU".toCharArray();
+                }
+                if (monomerType.equals(MyMonomerType.HETATM)) {
+                    continue Chains;
+                }
+                char[] chainName = chain.getChainId();
+                String sequence = SequenceTools.generateSequence(chain);
+
+                if (sequence.length() > maxCharInVarchar) {
+                    String truncatedSequence = sequence.substring(0, maxCharInVarchar);
+                    sequence = truncatedSequence;
+                }
+
+                try {
+                    String insertTableSQL = "INSERT INTO sequence"
+                            + "(fourLettercode, chainId, chainType, sequenceString) VALUES"
+                            + "(?,?,?,?)";
+                    PreparedStatement preparedStatement = connexion.prepareStatement(insertTableSQL);
+                    preparedStatement.setString(1, String.valueOf(fourLetterCode));
+                    preparedStatement.setString(2, String.valueOf(chainName));
+                    preparedStatement.setString(3, String.valueOf(chainType));
+                    preparedStatement.setString(4, sequence);
+
+                    int ok = preparedStatement.executeUpdate();
+                    System.out.println(ok + " raw updated " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType) + " " + sequence);
+
+                } catch (SQLException e1) {
+                    System.out.println("Failed to enter entry in sequence table ");
+                }
+            }
+        }
+    }
+
+
+    private MyStructureIfc getMyStructure(BiojavaReader biojavaReader, Path path) throws IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
+        Structure mmcifStructure = biojavaReader.read(path, pathToChemCompFolder.toString());
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        return myStructure;
+    }
+
+
     private void createDBandTableSequence() {
 
         try {
