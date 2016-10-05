@@ -60,7 +60,7 @@ public class CreateAndSearchSequenceDatabase {
 
                 // Search if already in DB
                 Statement stmt = connexion.createStatement();
-                String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode.toUpperCase() + "'";
+                String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "'";
 
 
                 ResultSet resultFindEntry = stmt.executeQuery(findEntry);
@@ -142,7 +142,7 @@ public class CreateAndSearchSequenceDatabase {
     private void generateMyStructureAndstoreSequenceInDB(List<Path> paths, BiojavaReader biojavaReader) {
 
         for (Path path : paths) {
-            System.out.println(path.toString());
+            //System.out.println(path.toString());
 
             MyStructureIfc myStructure = null;
             try {
@@ -187,7 +187,7 @@ public class CreateAndSearchSequenceDatabase {
                     preparedStatement.setString(4, sequence);
 
                     int ok = preparedStatement.executeUpdate();
-                    System.out.println(ok + " raw updated " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
+                    //System.out.println(ok + " raw updated " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
 
                 } catch (SQLException e1) {
                     System.out.println("Failed to enter entry in sequence table ");

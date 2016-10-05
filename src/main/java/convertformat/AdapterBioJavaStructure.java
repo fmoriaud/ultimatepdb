@@ -63,7 +63,8 @@ public class AdapterBioJavaStructure {
         hetatmChains.clear();
         nucleotidesChains.clear();
 
-        char[] fourLetterCode = structure.getPDBCode().toCharArray();
+        // then it is always upper case
+        char[] fourLetterCode = structure.getPDBCode().toUpperCase().toCharArray();
 
         int countOfChains = structure.getChains().size();
         Chain chain;

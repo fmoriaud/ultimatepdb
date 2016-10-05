@@ -70,8 +70,8 @@ public class ProtocolBindingVsFolding {
 
 
         // Find same sequence occurences in sequence DB
-        String sequenceToFind = "METPHESERILEASPASNILELEUALA";
-        //String sequenceToFind = "METPHESERILE";
+       // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
+        String sequenceToFind = "METPHESERILE";
 
         int peptideLength = sequenceToFind.length() / 3;
 
@@ -125,7 +125,7 @@ public class ProtocolBindingVsFolding {
                 try {
                     listBestHitForEachAndEverySeed = comparatorShape.computeResults();
                     for(Hit hit: listBestHitForEachAndEverySeed){
-                        System.out.println(hit.getHitScore() + " " + hit.getResultsFromEvaluateCost().getCoverage() + " " + hit.getResultsFromEvaluateCost().getCost() + " " + hit.getResultsFromEvaluateCost().getDistanceResidual());
+                        System.out.println(hit.toString());
                     }
 
                 } catch (NullResultFromAComparisonException e) {
@@ -145,7 +145,6 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     // Implementation
     // -------------------------------------------------------------------
-
     private ShapeContainerIfc buildQueryShape() {
 
         char[] chainId = peptideChainId.toCharArray();

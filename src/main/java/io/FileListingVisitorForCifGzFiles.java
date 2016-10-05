@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class FileListingVisitorForCifGzFiles {
         @Override
         public FileVisitResult visitFile(Path aFile, BasicFileAttributes aAttrs) throws IOException {
 
-            String fourLetterCode = makeFourLetterCodeFromFileNameForMmcifGzFiles(aFile.getFileName().toString());
+            String fourLetterCode = makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(aFile.getFileName().toString());
             if (fourLetterCode != null) {
                 AddToMap.addElementToAMapOfList(indexFiles, fourLetterCode, aFile);
             }
@@ -76,7 +75,7 @@ public class FileListingVisitorForCifGzFiles {
      * @param fileName
      * @return
      */
-    private String makeFourLetterCodeFromFileNameForMmcifGzFiles(String fileName) {
+    private String makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(String fileName) {
 
         String[] splitFileName = fileName.split("\\.");
 
@@ -95,6 +94,6 @@ public class FileListingVisitorForCifGzFiles {
         if (splitFileName[0].length() != 4) {
             return null;
         }
-        return splitFileName[0];
+        return splitFileName[0].toUpperCase();
     }
 }

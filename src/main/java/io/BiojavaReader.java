@@ -67,6 +67,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
     @Override
     public Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException {
 
+        fourLetterCode = fourLetterCode.toUpperCase(); // it can handle uppercase and lowercase
         // done only once
         if (indexPDBFileInFolder == null) {
             indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToDividedPDBFolder);
