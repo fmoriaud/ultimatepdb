@@ -187,7 +187,7 @@ public class CreateAndSearchSequenceDatabase {
                     preparedStatement.setString(4, sequence);
 
                     int ok = preparedStatement.executeUpdate();
-                    //System.out.println(ok + " raw updated " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
+                    System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
 
                 } catch (SQLException e1) {
                     System.out.println("Failed to enter entry in sequence table ");
