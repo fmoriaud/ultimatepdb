@@ -3,6 +3,7 @@ package pointWithProperties;
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
@@ -37,7 +38,7 @@ public class ComputePropertiesPocketTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -95,7 +96,7 @@ public class ComputePropertiesPocketTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

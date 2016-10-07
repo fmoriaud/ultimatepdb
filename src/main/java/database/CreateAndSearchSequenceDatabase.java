@@ -3,6 +3,7 @@ package database;
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.IOTools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
@@ -142,12 +143,12 @@ public class CreateAndSearchSequenceDatabase {
     private void generateMyStructureAndstoreSequenceInDB(List<Path> paths, BiojavaReader biojavaReader) {
 
         for (Path path : paths) {
-            //System.out.println(path.toString());
+            System.out.println(path.toString());
 
             MyStructureIfc myStructure = null;
             try {
                 myStructure = getMyStructure(biojavaReader, path);
-            } catch (IOException | ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat exception) {
+            } catch (IOException | ExceptionInIOPackage | ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat exception) {
                 continue;
             }
 
@@ -197,7 +198,7 @@ public class CreateAndSearchSequenceDatabase {
     }
 
 
-    private MyStructureIfc getMyStructure(BiojavaReader biojavaReader, Path path) throws IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
+    private MyStructureIfc getMyStructure(BiojavaReader biojavaReader, Path path) throws IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat, ExceptionInIOPackage {
         Structure mmcifStructure = biojavaReader.read(path, pathToChemCompFolder.toString());
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

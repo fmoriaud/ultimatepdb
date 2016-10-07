@@ -29,7 +29,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -47,7 +47,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -66,7 +66,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -85,7 +85,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -103,7 +103,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -120,7 +120,7 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

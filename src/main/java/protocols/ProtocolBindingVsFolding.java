@@ -8,6 +8,7 @@ import genericBuffer.GenericBuffer;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import math.ProcrustesAnalysisIfc;
 import math.ToolsMath;
 import mystructure.*;
@@ -102,7 +103,7 @@ public class ProtocolBindingVsFolding {
             Structure mmcifStructure = null;
             try {
                 mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-            } catch (IOException e) {
+            } catch (IOException | ExceptionInIOPackage e) {
 
             }
             AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -275,7 +276,7 @@ public class ProtocolBindingVsFolding {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(queryFourLetterCode, algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
 
         }
 

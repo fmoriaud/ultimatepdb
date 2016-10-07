@@ -3,6 +3,7 @@ package myjmol;
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class MyJmolTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

@@ -1,6 +1,7 @@
 package convertformat;
 
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Chain;
@@ -47,7 +48,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -112,7 +113,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -137,7 +138,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -222,7 +223,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -281,7 +282,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -321,7 +322,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -361,7 +362,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -386,7 +387,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -417,7 +418,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -443,7 +444,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -470,7 +471,7 @@ public class AdapterBioJavaStructureTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -488,4 +489,24 @@ public class AdapterBioJavaStructureTest {
         }
     }
 
+
+    @Test
+    public void testconvertStructureToMyStructureWhich() throws ParsingConfigFileException, IOException {
+
+        String fourLetterCode = "5dn6";
+        BiojavaReader reader = new BiojavaReader();
+
+        boolean thrown = false;
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+
+        } catch (ExceptionInIOPackage e) {
+            thrown = true;
+            assertTrue(e.getMessage().equals("NumberFormatException in mMCIFileReader.getStructure()"));
+
+        }
+        assertTrue(thrown == true);
+
+    }
 }

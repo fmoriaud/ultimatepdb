@@ -3,6 +3,7 @@ package shapebuilder;
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
@@ -39,7 +40,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

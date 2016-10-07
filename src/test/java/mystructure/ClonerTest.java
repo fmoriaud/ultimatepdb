@@ -2,10 +2,7 @@ package mystructure;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
-import io.BiojavaReader;
-import io.CdkTools;
-import io.Tools;
-import io.WriteTextFile;
+import io.*;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +31,7 @@ public class ClonerTest {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

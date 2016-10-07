@@ -65,7 +65,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException {
+    public Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
 
         fourLetterCode = fourLetterCode.toUpperCase(); // it can handle uppercase and lowercase
         // done only once
@@ -100,7 +100,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Structure read(Path pathToFile, String pathToChemcompFolder) throws IOException {
+    public Structure read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
 
         // done only once
         initializeOnceDowloadChemCompProvider(pathToChemcompFolder);
@@ -108,7 +108,13 @@ public class BiojavaReader implements BiojavaReaderIfc {
         FileParsingParameters params = getFileParsingParameters();
         mMCIFileReader.setFileParsingParameters(params);
 
-        Structure structure = mMCIFileReader.getStructure(pathToFile.toString());
+        Structure structure = null;
+        try {
+            structure = mMCIFileReader.getStructure(pathToFile.toString());
+        } catch (NumberFormatException e){ // This one can happen like in 5dn6
+            ExceptionInIOPackage exception = new ExceptionInIOPackage("NumberFormatException in mMCIFileReader.getStructure()");
+            throw exception;
+        }
 
         return structure;
     }

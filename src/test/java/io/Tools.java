@@ -98,7 +98,7 @@ public class Tools {
      * @throws ParsingConfigFileException
      * @throws IOException
      */
-    private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException {
+    private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException, ExceptionInIOPackage {
         Path path = null;
         try {
             path = Paths.get(url.toURI());

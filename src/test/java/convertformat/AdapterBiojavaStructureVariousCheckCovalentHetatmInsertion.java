@@ -1,6 +1,7 @@
 package convertformat;
 
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Group;
@@ -31,7 +32,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -62,7 +63,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -99,7 +100,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
@@ -133,7 +134,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 

@@ -8,6 +8,7 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import org.biojava.nbio.structure.Structure;
@@ -41,7 +42,7 @@ public class TestShapeCompare {
         Structure mmcifStructure1di9 = null;
         try {
             mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode1di9, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -57,7 +58,7 @@ public class TestShapeCompare {
         Structure mmcifStructure1a9u = null;
         try {
             mmcifStructure1a9u = reader2.readFromPDBFolder(fourLetterCode1a9u, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
         AdapterBioJavaStructure adapterBioJavaStructure2 = new AdapterBioJavaStructure(algoParameters);

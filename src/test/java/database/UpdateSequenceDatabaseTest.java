@@ -75,6 +75,7 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
+
     @Ignore
     @Test
     public void testUpdateDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {

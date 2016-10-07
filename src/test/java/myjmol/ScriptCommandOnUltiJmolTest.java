@@ -4,6 +4,7 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import io.Tools;
 import math.ToolsMath;
 import mystructure.*;
@@ -41,7 +42,7 @@ public class ScriptCommandOnUltiJmolTest {
         Structure mmcifStructure1di9 = null;
         try {
             mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException e) {
+        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
