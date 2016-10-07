@@ -75,7 +75,7 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
-
+    @Ignore
     @Test
     public void testUpdateDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
 
@@ -84,7 +84,7 @@ public class UpdateSequenceDatabaseTest {
         Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
         Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        updateSequenceDatabase.updateDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        //updateSequenceDatabase.updateDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
@@ -95,6 +95,7 @@ public class UpdateSequenceDatabaseTest {
 
         updateSequenceDatabase.shutdownDb();
     }
+
 
 
     @Test
@@ -111,9 +112,9 @@ public class UpdateSequenceDatabaseTest {
         updateSequenceDatabase.shutdownDb();
     }
 
-
+    @Ignore
     @Test
-    public void testDumpToFile(){
+    public void testDumpToFile() {
 
         // Write method to dump the sequence database to a text file
         // Test it here
