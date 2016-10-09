@@ -3,6 +3,7 @@ package ultiJmol1462;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
+import ultimatepdb.UltiJmol1462;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class GetEnergy {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        MyJmol1462 ultiJmol = null;
+        UltiJmol1462 ultiJmol = null;
         try {
             ultiJmol = algoParameters.ultiJMolBuffer.get();
         } catch (InterruptedException e) {
@@ -92,7 +93,7 @@ public class GetEnergy {
     }
 
 
-    private Float waitMinimizationEnergyAvailable( MyJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    private Float waitMinimizationEnergyAvailable(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
         int countIteration = 0;

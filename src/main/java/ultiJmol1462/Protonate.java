@@ -5,6 +5,7 @@ import math.AddToMap;
 import mystructure.*;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
+import ultimatepdb.UltiJmol1462;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class Protonate {
     private MyStructureIfc myStructure;
     private AlgoParameters algoParameters;
 
-    private MyJmol1462 ultiJmol;
+    private UltiJmol1462 ultiJmol;
 
     private MyStructureIfc protonatedMyStructure;
 
@@ -151,7 +152,7 @@ public class Protonate {
     }
 
 
-    private Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    private Float getEnergyBiojavaJmolNewCode(UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         Float energy = waitMinimizationEnergyAvailable(2, ultiJMol);
         if (energy == null) {
@@ -163,7 +164,7 @@ public class Protonate {
     }
 
 
-    private Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    private Float waitMinimizationEnergyAvailable(int waitTimeSeconds, UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
         int countIteration = 0;

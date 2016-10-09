@@ -12,7 +12,7 @@ import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
 import shapeCompare.ProcrustesAnalysis;
 import mystructure.EnumMyReaderBiojava;
-import ultiJmol1462.MyJmol1462;
+import ultimatepdb.UltiJmol1462;
 
 public class RunCalibrationProtocol {
 
@@ -21,7 +21,7 @@ public class RunCalibrationProtocol {
 		EnumMyReaderBiojava enumMyReaderBiojava = EnumMyReaderBiojava.BioJava_MMCIFF;
 
 		AlgoParameters algoParameters = CommandLineTools.analyzeArgs(args, enumMyReaderBiojava);
-		algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+		algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 		algoParameters.myStructureBuffer = new MyStructureBuffer(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
 
@@ -35,7 +35,7 @@ public class RunCalibrationProtocol {
 			}
 		}
 		for (int i=0; i<algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++){
-			MyJmol1462 ultiJMol = new MyJmol1462();
+			UltiJmol1462 ultiJMol = new UltiJmol1462();
 			try {
 				algoParameters.ultiJMolBuffer.put(ultiJMol);
 			} catch (InterruptedException e) {

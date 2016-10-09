@@ -26,10 +26,10 @@ import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
 import shapeCompare.ProcrustesAnalysis;
-import ultiJmol1462.MyJmol1462;
 import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
+import ultimatepdb.UltiJmol1462;
 
 import java.io.IOException;
 import java.net.URL;
@@ -302,7 +302,7 @@ public class ProtocolBindingVsFolding {
     private void prepareAlgoParameters() throws ParsingConfigFileException {
         URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
         algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-        algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
         algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
         for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
             ProcrustesAnalysisIfc procrustesAnalysis = new ProcrustesAnalysis(algoParameters);
@@ -314,7 +314,7 @@ public class ProtocolBindingVsFolding {
             }
         }
         for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
-            MyJmol1462 ultiJMol = new MyJmol1462();
+            UltiJmol1462 ultiJMol = new UltiJmol1462();
             try {
                 algoParameters.ultiJMolBuffer.put(ultiJMol);
             } catch (InterruptedException e) {

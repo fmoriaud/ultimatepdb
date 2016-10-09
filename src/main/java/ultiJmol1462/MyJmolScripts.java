@@ -11,8 +11,8 @@ import java.util.List;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import parameters.AlgoParameters;
-import ultiJmol1462.MyJmol1462;
 import ultiJmol1462.MyJmolTools;
+import ultimatepdb.UltiJmol1462;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MyJmolScripts {
 
-    public static Float getEnergyBiojavaJmolNewCode(MyJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    public static Float getEnergyBiojavaJmolNewCode(UltiJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         Float energy = MyJmolTools.waitMinimizationEnergyAvailable(2, ultiJMol);
         if (energy == null) {

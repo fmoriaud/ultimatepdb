@@ -9,7 +9,7 @@ import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import mystructure.EnumMyReaderBiojava;
 import shapeCompare.ProcrustesAnalysis;
-import ultiJmol1462.MyJmol1462;
+import ultimatepdb.UltiJmol1462;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,8 +117,8 @@ public class Tools {
 
         AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
         // add a ultiJmol which is needed in the ShapeBuilder
-        algoParameters.ultiJMolBuffer = new GenericBuffer<MyJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
-        MyJmol1462 ultiJMol = new MyJmol1462();
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        UltiJmol1462 ultiJMol = new UltiJmol1462();
         try {
             algoParameters.ultiJMolBuffer.put(ultiJMol);
         } catch (InterruptedException e) {

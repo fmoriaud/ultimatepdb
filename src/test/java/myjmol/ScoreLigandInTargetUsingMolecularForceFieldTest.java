@@ -12,7 +12,6 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.MyJmol1462;
 import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ScoreLigandInTargetUsingMolecularForceField;
 

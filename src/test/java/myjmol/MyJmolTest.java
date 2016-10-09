@@ -16,7 +16,7 @@ import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import ultiJmol1462.MyJmol1462;
+import ultimatepdb.UltiJmol1462;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class MyJmolTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
 
-        MyJmol1462 ultiJmol = new MyJmol1462();
+        UltiJmol1462 ultiJmol = new UltiJmol1462();
         String myStructureV3000 = myStructure.toV3000();
         try {
             Thread.sleep(4 * 1000);

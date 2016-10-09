@@ -9,6 +9,7 @@ import mystructure.*;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
+import ultimatepdb.UltiJmol1462;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -114,7 +115,7 @@ public class MyJmolTools {
 
 
 
-    public static boolean putBackUltiJmolInBufferAndIfFailsPutNewOne(MyJmol1462 ultiJmol, AlgoParameters algoParameters) {
+    public static boolean putBackUltiJmolInBufferAndIfFailsPutNewOne(UltiJmol1462 ultiJmol, AlgoParameters algoParameters) {
 
         int sizeBefore = algoParameters.ultiJMolBuffer.getSize();
         boolean successPutingItBack = false;
@@ -137,7 +138,7 @@ public class MyJmolTools {
         if (successPutingItBack == false) {
             ultiJmol.frame.dispose();
             try {
-                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
+                algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
             } catch (InterruptedException e) {
             }
             int sizeAfter = algoParameters.ultiJMolBuffer.getSize();
@@ -301,7 +302,7 @@ public class MyJmolTools {
             e2.printStackTrace();
         }
 
-        MyJmol1462 ultiJMol = null;
+        UltiJmol1462 ultiJMol = null;
         String readV3000;
         try {
             ultiJMol = algoParameters.ultiJMolBuffer.get();
@@ -320,7 +321,7 @@ public class MyJmolTools {
             System.out.println("Exception in protonation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
             try {
-                algoParameters.ultiJMolBuffer.put(new MyJmol1462());
+                algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
             } catch (InterruptedException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -358,7 +359,7 @@ public class MyJmolTools {
     }
 
 
-    private static void addHydrogensInJMolUsingUFF(MyJmol1462 ultiJmol, MyStructureIfc myStructure, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    private static void addHydrogensInJMolUsingUFF(UltiJmol1462 ultiJmol, MyStructureIfc myStructure, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         try {
             String v3000 = myStructure.toV3000();
@@ -602,7 +603,7 @@ public class MyJmolTools {
 
 
 
-    public static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, MyJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
+    public static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
         int countIteration = 0;
