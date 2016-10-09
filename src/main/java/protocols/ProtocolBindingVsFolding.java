@@ -86,7 +86,7 @@ public class ProtocolBindingVsFolding {
 
         //int minLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMinLength();
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
-        boolean useSimilarSequences = false;
+        boolean useSimilarSequences = true;
 
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
 
