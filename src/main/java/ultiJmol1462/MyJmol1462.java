@@ -2,6 +2,8 @@ package ultiJmol1462;
 
 import org.openscience.jmol.app.JmolApp;
 import org.openscience.jmol.app.jmolpanel.Splash;
+import ultimatepdb.JmolPanel;
+import ultimatepdb.RasmolCommandListener;
 
 import javax.swing.*;
 import java.awt.*;
