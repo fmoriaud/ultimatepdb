@@ -75,7 +75,6 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
-
     @Ignore
     @Test
     public void testUpdateDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
@@ -99,6 +98,7 @@ public class UpdateSequenceDatabaseTest {
 
 
 
+    @Ignore
     @Test
     public void testReadFromDB() throws IOException, ParsingConfigFileException {
 
