@@ -16,8 +16,9 @@ public class ResultsFromEvaluateCost {
 	private RealVector translationVector;
 	private RealVector translationVectorToTranslateShape2ToOrigin;
 	private PairingAndNullSpaces pairingAndNullSpaces;
-	private float coverage;
+	private float ratioPairedPointInQuery;
 	private AlgoParameters algoParameters;
+
 
 
 
@@ -25,14 +26,14 @@ public class ResultsFromEvaluateCost {
 	// Constructor
 	// -------------------------------------------------------------------
 	public ResultsFromEvaluateCost(double cost, double distanceResidual, RealMatrix rotationMatrix, RealVector translationVector, RealVector translationVectorToTranslateShape2ToOrigin, 
-			PairingAndNullSpaces pairingAndNullSpaces, float coverage, AlgoParameters algoParameters){
+			PairingAndNullSpaces pairingAndNullSpaces, float ratioPairedPointInQuery, AlgoParameters algoParameters){
 		this.cost = cost;
 		this.distanceResidual = distanceResidual;
 		this.rotationMatrix = rotationMatrix;
 		this.translationVector = translationVector;
 		this.translationVectorToTranslateShape2ToOrigin = translationVectorToTranslateShape2ToOrigin;
 		this.pairingAndNullSpaces = pairingAndNullSpaces;
-		this.coverage = coverage;
+		this.ratioPairedPointInQuery = ratioPairedPointInQuery;
 		this.algoParameters = algoParameters;
 	}
 
@@ -203,7 +204,9 @@ public class ResultsFromEvaluateCost {
 	public PairingAndNullSpaces getPairingAndNullSpaces() {
 		return pairingAndNullSpaces;
 	}
-	public float getCoverage() {
-		return coverage;
+
+	public float getRatioPairedPointInQuery() {
+		return ratioPairedPointInQuery;
 	}
+
 }

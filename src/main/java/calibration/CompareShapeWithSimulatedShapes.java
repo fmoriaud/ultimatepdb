@@ -181,12 +181,12 @@ public class CompareShapeWithSimulatedShapes {
 				}
 				ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getHitScore();
 				double cost = hit.getResultsFromEvaluateCost().getCost();
-				float coverage = hit.getResultsFromEvaluateCost().getCoverage();
+				float ratioPairedPointInQuery = hit.getResultsFromEvaluateCost().getRatioPairedPointInQuery();
 				double rmsdLigand = hitScore.getRmsdLigand();
 
 				// TODO Log it!
 				String message = "Results alter Residue. From " + String.valueOf(monomerToMutateChainId) + " " + String.valueOf(monomerToMutateThreeLetterCode) + " " + monomerToMutateResidueId 
-						+ " to " + eqRes + " : cost = " + cost + " coverage = " + coverage + " rmsdLigand " + rmsdLigand  + " strained energy = " + strainedEnergy;
+						+ " to " + eqRes + " : cost = " + cost + " ratioPairedPointInQuery = " + ratioPairedPointInQuery + " rmsdLigand " + rmsdLigand  + " strained energy = " + strainedEnergy;
 				ControllerLoger.logger.log(Level.INFO, message.toString());
 
 				//WriteTextFile.writeTextFile(alteredProteinInV3000, "//Users//Fabrice//Documents//ultimate//alteredProt.mol");

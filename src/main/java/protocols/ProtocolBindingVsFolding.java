@@ -224,6 +224,9 @@ public class ProtocolBindingVsFolding {
                         exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
                     }
 
+                    // handle coverage of query into hit
+                    
+
                     if (hitScore != null) {
                         System.out.println("InteractionEFinal = " + hitScore.getInteractionEFinal());
                         System.out.println("rmsd ligand = " + hitScore.getRmsdLigand());

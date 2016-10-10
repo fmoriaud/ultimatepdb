@@ -138,12 +138,12 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 		while (it.hasNext()){
 
 			ResultsFromEvaluateCost nextResult = it.next();
-			float fractionNeededOnHit = algoParameters.getFRACTION_NEEDED_ON_HIT();
-			float coverage = nextResult.getCoverage();
+			float fractionNeededOnHit = algoParameters.getFRACTION_NEEDED_ON_QUERY();
+			float ratioPairedPointInQuery = nextResult.getRatioPairedPointInQuery();
 
 			boolean isDistanceToOutsideOk = checkDistanceToOutside(nextResult, shapeContainerQuery, shapeContainerAnyShape);
 
-			if (coverage < fractionNeededOnHit || isDistanceToOutsideOk == false){
+			if (ratioPairedPointInQuery < fractionNeededOnHit || isDistanceToOutsideOk == false){
 				it.remove();
 				continue;
 			}

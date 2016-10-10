@@ -55,24 +55,24 @@ public class ScorePairingTools {
 		double cost = resultFromScorePairing.getCost();
 
 		double distanceResidual = resultFromScorePairing.getDistanceResidual();
-		float ratioPairedPointToHitPoints = computeHitPairingCoverage(pairingAndNullSpacesToBeScored, algoParameters);
+		float ratioPairedPointInQuery = computeQueryPairingCoverage(pairingAndNullSpacesToBeScored, algoParameters);
 		
 		ResultsFromEvaluateCost resultsFromEvaluateCost = new ResultsFromEvaluateCost(cost, distanceResidual, rotationMatrix, 
-				translationVector, translationVectorToTranslateShape2ToOrigin, pairingAndNullSpacesToBeScored, ratioPairedPointToHitPoints, algoParameters);
+				translationVector, translationVectorToTranslateShape2ToOrigin, pairingAndNullSpacesToBeScored, ratioPairedPointInQuery, algoParameters);
 
 		return resultsFromEvaluateCost;
 	}
 
 
 
-	private static float computeHitPairingCoverage(PairingAndNullSpaces pairingAndNullSpacesToBeScored, AlgoParameters algoParameters){
+	private static float computeQueryPairingCoverage(PairingAndNullSpaces pairingAndNullSpacesToBeScored, AlgoParameters algoParameters){
 
 		int pairedPointCount = pairingAndNullSpacesToBeScored.getPairing().size();
-		int unpairedPointHit = pairingAndNullSpacesToBeScored.getNullSpaceOfMap2().size();
+		int unpairedPointQuery = pairingAndNullSpacesToBeScored.getNullSpaceOfMap1().size();
 
-		float ratioPairedPointToHitPoints = (float) pairedPointCount / ((float) pairedPointCount + (float) unpairedPointHit);
+		float ratioPairedPointInQuery = (float) pairedPointCount / ((float) pairedPointCount + (float) unpairedPointQuery);
 
-		return ratioPairedPointToHitPoints;
+		return ratioPairedPointInQuery;
 	}
 
 

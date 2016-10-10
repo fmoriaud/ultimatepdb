@@ -398,15 +398,15 @@ public class PairingTools {
 
 
 
-	public static class HighestCoverageHitComparator implements Comparator<Hit>{
+	public static class HighestCoverageQueryComparator implements Comparator<Hit>{
 
 		@Override
 		public int compare(Hit hit1, Hit hit2) {
 
-			if (hit1.getResultsFromEvaluateCost().getCoverage() < hit2.getResultsFromEvaluateCost().getCoverage()){
+			if (hit1.getResultsFromEvaluateCost().getRatioPairedPointInQuery() < hit2.getResultsFromEvaluateCost().getRatioPairedPointInQuery()){
 				return 1;
 			}
-			if (hit1.getResultsFromEvaluateCost().getCoverage() > hit2.getResultsFromEvaluateCost().getCoverage()){
+			if (hit1.getResultsFromEvaluateCost().getRatioPairedPointInQuery() > hit2.getResultsFromEvaluateCost().getRatioPairedPointInQuery()){
 				return -1;
 			}
 			return 0;
