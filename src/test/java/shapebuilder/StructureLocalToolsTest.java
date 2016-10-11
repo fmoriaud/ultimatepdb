@@ -92,7 +92,7 @@ public class StructureLocalToolsTest {
         int startingRankId = 0;
         int peptideLength = 4;
         int tipMonoMerDistance = 2;
-        List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
+        //List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
 
 
     }
