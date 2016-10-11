@@ -32,7 +32,7 @@ public class AlteredResiduesCoordinates {
     private Map<String, List<String>> templateBonds;
 
 
-    //-------------------------------------------------------------
+//-------------------------------------------------------------
 // Constructor
 //-------------------------------------------------------------
     public AlteredResiduesCoordinates() {
