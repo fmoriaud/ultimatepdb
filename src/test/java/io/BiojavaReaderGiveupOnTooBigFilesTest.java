@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Fabrice on 12/10/16.
  */
-public class BiojavaReaderGiveupOnTooBigFiles {
+public class BiojavaReaderGiveupOnTooBigFilesTest {
 
     // The file 3j3y cant be pushed to github
     // But if added locally to the test resources it can be run
