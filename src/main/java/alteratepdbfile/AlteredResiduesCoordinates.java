@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AlteredResiduesCoordinates {
-    //-------------------------------------------------------------
+//-------------------------------------------------------------
 // Class members
 //-------------------------------------------------------------
     private Map<String, Map<String, float[]>> templateCoords;
@@ -84,8 +84,10 @@ public class AlteredResiduesCoordinates {
     }
 
 
+
+
 //-------------------------------------------------------------
-// Public methods
+// Public & Override methods
 //-------------------------------------------------------------
     public List<String> getGlyBondInfos() {
 
@@ -929,7 +931,7 @@ public class AlteredResiduesCoordinates {
 
 
 //-------------------------------------------------------------
-// Getters and Setters
+// Getters & Setters
 //-------------------------------------------------------------
     public Map<String, Map<String, float[]>> getTemplateCoords() {
         return templateCoords;
