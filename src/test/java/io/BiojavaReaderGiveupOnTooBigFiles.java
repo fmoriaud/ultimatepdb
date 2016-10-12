@@ -1,6 +1,7 @@
 package io;
 
 import org.biojava.nbio.structure.Structure;
+import org.junit.Ignore;
 import org.junit.Test;
 import protocols.ParsingConfigFileException;
 
@@ -13,7 +14,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class BiojavaReaderGiveupOnTooBigFiles {
 
-
+    // The file 3j3y cant be pushed to github
+    // But if added locally to the test resources it can be run
+    @Ignore
     @Test
     public void testReadFromPDBFolderProtein() throws ParsingConfigFileException {
 

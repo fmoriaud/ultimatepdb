@@ -78,11 +78,17 @@ public class BiojavaReader implements BiojavaReaderIfc {
         FileParsingParameters params = getFileParsingParameters();
 
         Path actualPathToFileInPDBFolder = null;
-        if (indexPDBFileInFolder.containsKey(fourLetterCode)){
+        if (indexPDBFileInFolder.containsKey(fourLetterCode)) {
             // TODO Currently takes the first one found, if more than one the a filter would be needed
             actualPathToFileInPDBFolder = indexPDBFileInFolder.get(fourLetterCode).get(0);
         }
 
+        File file = actualPathToFileInPDBFolder.toFile();
+        long fileLength = file.length();
+        if (fileLength > 20000000) {
+            ExceptionInIOPackage exception = new ExceptionInIOPackage("File too big to be handled. Size = " + (fileLength / 1000000) + " MB and max is 20 MB");
+            throw exception;
+        }
         Structure cifStructure = read(actualPathToFileInPDBFolder, pathToChemcompFolder);
         return cifStructure;
     }
@@ -111,7 +117,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
         Structure structure = null;
         try {
             structure = mMCIFileReader.getStructure(pathToFile.toString());
-        } catch (NumberFormatException e){ // This one can happen like in 5dn6
+        } catch (NumberFormatException e) { // This one can happen like in 5dn6
             ExceptionInIOPackage exception = new ExceptionInIOPackage("NumberFormatException in mMCIFileReader.getStructure()");
             throw exception;
         }
@@ -142,7 +148,6 @@ public class BiojavaReader implements BiojavaReaderIfc {
         params.setCreateAtomBonds(true);
         return params;
     }
-
 
 
     private static boolean isDirEmpty(final Path directory) throws IOException {
