@@ -52,7 +52,7 @@ public class StructureLocalToolsTest {
 
         int rankIdinChain = 0;
         int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegmentOutOfAChainUsingBondingInformation(inputChain, rankIdinChain, peptideLength);
+        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegmentOutOfAChainUsingBondingInformation(inputChain, rankIdinChain, peptideLength, algoParameters);
         assertTrue(segmentOfChain.getMyMonomers().length == 3);
         // In this chain the monomers id goes from 0 to 12 so easy to test
         for (int i = 0; i < segmentOfChain.getMyMonomers().length; i++) {
@@ -65,7 +65,6 @@ public class StructureLocalToolsTest {
     @Test
     public void testMethodfindTipsSegmentOfChain() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
@@ -87,13 +86,14 @@ public class StructureLocalToolsTest {
         }
 
         // Chain C is a peptide bound and has 13 monomers
-        MyChainIfc wholeChain = null;
+        char[] chainId = "C".toCharArray();
+        MyChainIfc wholeChain = mystructure.getAminoMyChain(chainId);
         MyChainIfc ligand = null;
         int startingRankId = 0;
         int peptideLength = 4;
         int tipMonoMerDistance = 2;
-        //List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
-
+       // List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
+        System.out.println();
 
     }
 

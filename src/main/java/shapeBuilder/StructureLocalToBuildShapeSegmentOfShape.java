@@ -57,7 +57,7 @@ public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalT
 			ShapeBuildingException exception = new ShapeBuildingException("bug ask for startingRankId > chain length");
 			throw exception;
 		}
-		ligand = StructureLocalTools.makeChainSegmentOutOfAChainUsingBondingInformation(wholeChain, startingRankId, peptideLength);
+		ligand = StructureLocalTools.makeChainSegmentOutOfAChainUsingBondingInformation(wholeChain, startingRankId, peptideLength, algoParameters);
 		if (ligand.getMyMonomers().length != peptideLength){
 			ShapeBuildingException exception = new ShapeBuildingException("makeChainSegmentOutOfAChainUsingBondingInformation failed to return a peptide of the right length. Could be due to PDB parsing missing residues");
 			throw exception;

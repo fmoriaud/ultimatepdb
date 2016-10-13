@@ -44,14 +44,14 @@ public class MyMonomerTest {
         char insertionLetter = 0;
 
         try {
-            MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.AMINOACID, insertionLetter, " ".toCharArray()[0]);
+            MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.AMINOACID, false, insertionLetter, " ".toCharArray()[0]);
 
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(false);
         }
 
         try {
-            MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, null, insertionLetter, " ".toCharArray()[0]);
+            MyMonomer monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, null, false, insertionLetter, " ".toCharArray()[0]);
 
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
@@ -83,7 +83,7 @@ public class MyMonomerTest {
 
         MyMonomer monomer = null;
         try {
-            monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.AMINOACID, insertionLetter, " ".toCharArray()[0]);
+            monomer = new MyMonomer(myAtoms, threeLetterCode, residueID, MyMonomerType.AMINOACID, false, insertionLetter, " ".toCharArray()[0]);
 
         } catch (ExceptionInMyStructurePackage e) {
         }

@@ -57,5 +57,7 @@ public class AdapterBiojavaStructureNucleosideCovalentlyBoundTest {
 
         MyMonomerIfc myStructureGDP = mystructure.getAminoChain(0).getMyMonomerByRank(395);
         assertTrue(Arrays.equals(myStructureGDP.getThreeLetterCode(), "GDP".toCharArray()));
+        assertTrue(Arrays.equals(myStructureGDP.getType(), MyMonomerType.NUCLEOTIDE.getType()));
+        assertTrue(myStructureGDP.isWasHetatm() == false);
     }
 }

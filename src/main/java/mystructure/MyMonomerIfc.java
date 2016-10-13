@@ -10,6 +10,9 @@ public interface MyMonomerIfc {
 	char[] getThreeLetterCode();
 	int getResidueID();
 	char[] getType();
+	void setType(char[] type);
+	boolean isWasHetatm();
+	void setWasHetatm(boolean wasHetatm);
 	char getInsertionLetter();
 	char getAltLocGroup();
 	MyChainIfc getParent();

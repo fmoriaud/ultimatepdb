@@ -622,7 +622,7 @@ public class MyStructure implements MyStructureIfc {
                 continue;
             }
         }
-        MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.getInsertionLetter(), monomer.getAltLocGroup());
+        MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.isWasHetatm(), monomer.getInsertionLetter(), monomer.getAltLocGroup());
         myMonomerCloned.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
         MyStructureTools.setAtomParentReference(myMonomerCloned);
 
@@ -701,7 +701,7 @@ public class MyStructure implements MyStructureIfc {
         MyAtomIfc[] atoms = listAtoms.toArray(new MyAtomIfc[listAtoms.size()]);
 
         MyMonomer[] monomers = new MyMonomer[1];
-        monomers[0] = new MyMonomer(atoms, "XXX".toCharArray(), 0, MyMonomerType.AMINOACID, insertionLetter, " ".toCharArray()[0]);
+        monomers[0] = new MyMonomer(atoms, "XXX".toCharArray(), 0, MyMonomerType.AMINOACID, false, insertionLetter, " ".toCharArray()[0]);
 
         // As the only one monomer is built I can add bonds
         Map<MyAtomIfc, List<MyBondIfc>> mapBonds = new HashMap<>();
