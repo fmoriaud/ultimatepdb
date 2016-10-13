@@ -16,6 +16,8 @@ public class MyMonomer implements MyMonomerIfc{
 
 	private int residueID;
 	private char[] type;
+
+	private boolean wasHetatm = false;
 	private char insertionLetter;
 	private char altLocGroup;
 
@@ -37,7 +39,7 @@ public class MyMonomer implements MyMonomerIfc{
 	 * @param insertionLetter
 	 * @throws ExceptionInMyStructurePackage 
 	 */
-	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, char insertionLetter, char altLocGroup) throws ExceptionInMyStructurePackage{
+	public MyMonomer(MyAtomIfc[] myAtoms, char[] threeLetterCode, int residueID, MyMonomerType myMonomerType, boolean wasHetatm, char insertionLetter, char altLocGroup) throws ExceptionInMyStructurePackage{
 		this.myAtoms = myAtoms;
 		this.threeLetterCode = threeLetterCode;
 		this.residueID = residueID;
@@ -45,6 +47,7 @@ public class MyMonomer implements MyMonomerIfc{
 			throw new ExceptionInMyStructurePackage("MyMonomer cannot be built with null MyMonomerType");
 		}
 		this.type = myMonomerType.getType();
+		this.wasHetatm = wasHetatm;
 		this.insertionLetter = insertionLetter;
 		this.altLocGroup = altLocGroup;
 		this.secStruc = secStruc;
@@ -238,13 +241,26 @@ public class MyMonomer implements MyMonomerIfc{
 	}
 
 
-
 	@Override
 	public char[] getType() {
 		return type;
 	}
 
 
+	@Override
+	public void setType(char[] type) {
+		this.type = type;
+	}
+
+	@Override
+	public boolean isWasHetatm() {
+		return wasHetatm;
+	}
+
+	@Override
+	public void setWasHetatm(boolean wasHetatm) {
+		this.wasHetatm = wasHetatm;
+	}
 
 	@Override
 	public char getInsertionLetter() {

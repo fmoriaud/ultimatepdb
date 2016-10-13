@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
     // PTR is L-Peptide so already integrated by Biojava
-
     @Test
     public void testconvertStructureToMyStructureWithPTRcovalentLigand() throws ParsingConfigFileException, IOException {
 
@@ -52,6 +51,8 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         assertTrue(type == GroupType.AMINOACID);
         MyMonomerIfc myStructurePTR = mystructure.getAminoMyChain("B".toCharArray()).getMyMonomerByRank(3);
         assertTrue(Arrays.equals(myStructurePTR.getThreeLetterCode(), "PTR".toCharArray()));
+        assertTrue(Arrays.equals(myStructurePTR.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructurePTR.isWasHetatm() == false);
     }
 
 
@@ -89,6 +90,9 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         assertTrue(type == GroupType.HETATM);
         MyMonomerIfc myStructureORG = mystructure.getAminoMyChain("A".toCharArray()).getMyMonomerByRank(215);
         assertTrue(Arrays.equals(myStructureORG.getThreeLetterCode(), "ORG".toCharArray()));
+        // ORG is moved, changed to AminoAcid type and the was Hetatm is set to true
+        assertTrue(Arrays.equals(myStructureORG.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructureORG.isWasHetatm() == true);
     }
 
 
@@ -121,8 +125,11 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         assertTrue(mmcifPSO.getPDBName().equals("PSO"));
         GroupType type = mmcifPSO.getType();
         assertTrue(type == GroupType.HETATM);
-        MyMonomerIfc myStructureORG = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(8);
-        assertTrue(Arrays.equals(myStructureORG.getThreeLetterCode(), "PSO".toCharArray()));
+        MyMonomerIfc myStructurePSO = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(8);
+        assertTrue(Arrays.equals(myStructurePSO.getThreeLetterCode(), "PSO".toCharArray()));
+        // PSO is moved, changed to AminoAcid type and the was Hetatm is set to true
+        assertTrue(Arrays.equals(myStructurePSO.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructurePSO.isWasHetatm() == true);
     }
 
 
@@ -168,11 +175,18 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
         MyMonomerIfc myStructureUMP1 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(6);
         assertTrue(Arrays.equals(myStructureUMP1.getThreeLetterCode(), "UMP".toCharArray()));
+        assertTrue(Arrays.equals(myStructureUMP1.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructureUMP1.isWasHetatm() == true);
 
         MyMonomerIfc myStructureUMP2 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(12);
         assertTrue(Arrays.equals(myStructureUMP2.getThreeLetterCode(), "UMP".toCharArray()));
+        assertTrue(Arrays.equals(myStructureUMP2.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructureUMP2.isWasHetatm() == true);
 
         MyMonomerIfc myStructureUMP3 = mystructure.getNucleosideChain(("A").toCharArray()).getMyMonomerByRank(14);
         assertTrue(Arrays.equals(myStructureUMP3.getThreeLetterCode(), "UMP".toCharArray()));
+        assertTrue(Arrays.equals(myStructureUMP3.getType(), MyMonomerType.AMINOACID.getType()));
+        assertTrue(myStructureUMP3.isWasHetatm() == true);
+
     }
 }

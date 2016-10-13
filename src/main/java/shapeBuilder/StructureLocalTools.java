@@ -3,6 +3,7 @@ package shapeBuilder;
 import java.util.*;
 
 import mystructure.*;
+import parameters.AlgoParameters;
 
 public class StructureLocalTools {
 	/**
@@ -17,7 +18,7 @@ public class StructureLocalTools {
 	 * But monomers were not cloned so some bonds disappears in the inputChain
 	 * TODO Do a proper cloning ?
 	 */
-	public static MyChainIfc makeChainSegmentOutOfAChainUsingBondingInformation(MyChainIfc inputChain, int rankIdinChain, int peptideLength){
+	public static MyChainIfc makeChainSegmentOutOfAChainUsingBondingInformation(MyChainIfc inputChain, int rankIdinChain, int peptideLength, AlgoParameters algoParameters){
 
 		Set<MyMonomerIfc> tempSetPeptide = new HashSet<>();
 
@@ -40,6 +41,10 @@ public class StructureLocalTools {
 		Collections.sort(tempListAMyMonomerIfc, new MyMonomerIfcComparatorIncreasingResidueId());
 		MyMonomerIfc[] myMonomers = tempListAMyMonomerIfc.toArray(new MyMonomerIfc[tempListAMyMonomerIfc.size()]);
 		MyChainIfc myChain = new MyChain(myMonomers, inputChain.getChainId());
+
+		// Need to clone it
+		Cloner cloner = new Cloner(myChain, algoParameters);
+		MyStructureIfc clone = cloner.getClone();
 
 		// from list of monomer I want a clean MyStructure
 		MyStructureTools.removeBondsToNonExistingAtoms(myChain);

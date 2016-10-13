@@ -263,6 +263,8 @@ public class AdapterBioJavaStructure {
             MyAtomIfc aminoatom = covalentbond.getValue();
 
             if (!monomersToInsert.contains(hetatom.getParent())) {
+                hetatom.getParent().setType(MyMonomerType.AMINOACID.getType());
+                hetatom.getParent().setWasHetatm(true);
                 monomersToInsert.add(hetatom.getParent());
             }
         }
@@ -437,7 +439,8 @@ public class AdapterBioJavaStructure {
             try {
                 // TODO add altLocGroup that was chosen
                 // Useful when making bonds, then I would safely ignore bonds defined to alt group I didn' keep
-                myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, insertionLetter, altLocGroup);
+                boolean wasHetatm = false;
+                myMonomer = new MyMonomer(myAtoms, threeLetterCode, residueId, monomerType, wasHetatm, insertionLetter, altLocGroup);
             } catch (ExceptionInMyStructurePackage e) {
                 continue;
             }
