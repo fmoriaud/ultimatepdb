@@ -114,6 +114,13 @@ public class BiojavaReader implements BiojavaReaderIfc {
         FileParsingParameters params = getFileParsingParameters();
         mMCIFileReader.setFileParsingParameters(params);
 
+        File file = pathToFile.toFile();
+        long fileLength = file.length();
+        if (fileLength > 20000000) {
+            ExceptionInIOPackage exception = new ExceptionInIOPackage("File too big to be handled. Size = " + (fileLength / 1000000) + " MB and max is 20 MB");
+            throw exception;
+        }
+
         Structure structure = null;
         try {
             structure = mMCIFileReader.getStructure(pathToFile.toString());
