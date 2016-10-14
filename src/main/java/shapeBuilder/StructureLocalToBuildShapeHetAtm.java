@@ -53,9 +53,7 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
 		}
 		ligand = new MyChain(hetAtomsGroup, hetAtomsGroup.getParent().getChainId());
 
-		// Would be nice to refactor but I dont know how
-		List<MyMonomerIfc> tipMyMonomersToRemove = new ArrayList<>();
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand, tipMyMonomersToRemove); // to skip some monomers at tip is not implemented
+		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand);
 
 	}
 

@@ -13,7 +13,6 @@ import protocols.ParsingConfigFileException;
 import shapeBuilder.StructureLocalTools;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class StructureLocalToolsTest {
 
     @Test
-    public void testMethodMakeChainSegmentOutOfAChainUsingBondingInformation() throws IOException, ParsingConfigFileException {
+    public void testMethodMakeChainSegment() throws IOException, ParsingConfigFileException {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
@@ -52,7 +51,7 @@ public class StructureLocalToolsTest {
 
         int rankIdinChain = 0;
         int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegmentOutOfAChainUsingBondingInformation(inputChain, rankIdinChain, peptideLength, algoParameters);
+        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegment(inputChain, rankIdinChain, peptideLength, algoParameters);
         assertTrue(segmentOfChain.getMyMonomers().length == 3);
         // In this chain the monomers id goes from 0 to 12 so easy to test
         for (int i = 0; i < segmentOfChain.getMyMonomers().length; i++) {

@@ -43,9 +43,7 @@ public class StructureLocalToBuildShapeWholeChain implements StructureLocalToBui
 
 		ligand = myStructureGlobalBrut.getAminoMyChain(chainId);
 
-		// Would be nice to refactor but I dont know how
-		List<MyMonomerIfc> tipMyMonomersToRemove = new ArrayList<>();
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand, tipMyMonomersToRemove); // to skip some monomers at tip is not implemented
+		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand); // to skip some monomers at tip is not implemented
 
 		if (myStructureLocal.getAllAminochains().length == 0){
 			ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");
