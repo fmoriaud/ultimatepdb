@@ -88,7 +88,9 @@ public class FindMatchingTriangleWithOrderedMatchingPointsMultithread extends Re
 					for (int[] listIds: listMatchingWithIds){
 
 						PairingAndNullSpaces pairingAndNullSpaces = generatePairingAndNullSpaceFromTwoMatchingTriangle(triangle1, triangle2, listIds);
-						listPairingFromMatchingTriangle.add(pairingAndNullSpaces);
+						if (listPairingFromMatchingTriangle.size() < 100000) {
+							listPairingFromMatchingTriangle.add(pairingAndNullSpaces);
+						}
 					}
 				}
 			}
