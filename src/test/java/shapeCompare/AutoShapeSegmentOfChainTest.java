@@ -21,6 +21,8 @@ import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
+import ultiJmol1462.MyJmolTools;
+import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
 import java.io.IOException;
 import java.util.List;
@@ -96,8 +98,21 @@ public class AutoShapeSegmentOfChainTest {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        // first hit
+        // InteractionEFinal = 6.20062255859375
+        // rmsd ligand = 0.9117103815078735 // rmsdLigand = 4.2638924E-16
+        // ligand stained energy = 133.43154907226562
+        // count longer than 2A change = 4
         try {
-            HitTools.minimizeHitInQuery(listBestHitForEachAndEverySeed.get(0), shapeQuery, shapeTarget, algoParameters);
+            Hit hit = listBestHitForEachAndEverySeed.get(0);
+            HitTools.minimizeHitInQuery(hit, shapeQuery, shapeTarget, algoParameters);
+            ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getHitScore();
+            assertTrue(hitScore != null);
+            assertTrue(Math.abs(hitScore.getInteractionEFinal()) > 5 && Math.abs(hitScore.getInteractionEFinal()) < 7);
+            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 130 && Math.abs(hitScore.getLigandStrainedEnergy()) < 135);
+            assertTrue(hitScore.getRmsdLigand() < 0.1);
+            assertTrue(hitScore.getCountOfLongDistanceChange() == 4);
+
         } catch (NullResultFromAComparisonException e) {
             e.printStackTrace();
         }

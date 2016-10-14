@@ -157,10 +157,10 @@ public class MyJmolScripts {
         sb.append("select {" + selectStringTargetToFix + "}\n");
         sb.append("spacefill 50\n");
         sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
+        sb.append("spacefill 200\n");
         if (selectStringTargetNotToFix != null) {
             sb.append("select {" + selectStringTargetNotToFix + "}\n");
-            sb.append("spacefill 400\n");
+            sb.append("spacefill 100\n");
         }
         sb.append("minimize FIX {" + selectStringTargetToFix + "} select {*}\n");
 
