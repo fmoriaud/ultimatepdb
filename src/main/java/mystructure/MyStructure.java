@@ -270,7 +270,7 @@ public class MyStructure implements MyStructureIfc {
             }
         }
 
-        this.myAminoChains = MyStructureTools.makeArrayFromList(tempChainList);
+        this.myAminoChains = MyStructureTools.makeArrayFromListMyChains(tempChainList);
     }
 
 
@@ -317,7 +317,7 @@ public class MyStructure implements MyStructureIfc {
                 tempChainList.set(i, myNewChain);
             }
         }
-        this.myAminoChains = MyStructureTools.makeArrayFromList(tempChainList);
+        this.myAminoChains = MyStructureTools.makeArrayFromListMyChains(tempChainList);
     }
 
 
@@ -458,7 +458,7 @@ public class MyStructure implements MyStructureIfc {
             }
         }
 
-        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromList(clonedAminoChains), MyStructureTools.makeArrayFromList(clonedHetChains), MyStructureTools.makeArrayFromList(clonedNucleosidesChains), this.expTechnique, algoParameters);
+        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromListMyChains(clonedAminoChains), MyStructureTools.makeArrayFromListMyChains(clonedHetChains), MyStructureTools.makeArrayFromListMyChains(clonedNucleosidesChains), this.expTechnique, algoParameters);
 
         myStructureCloned.setFourLetterCode(this.getFourLetterCode());
 
@@ -508,7 +508,7 @@ public class MyStructure implements MyStructureIfc {
             }
         }
 
-        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromList(clonedAminoChains), MyStructureTools.makeArrayFromList(clonedHetChains), MyStructureTools.makeArrayFromList(clonedNucleosidesChains), this.expTechnique, algoParameters);
+        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromListMyChains(clonedAminoChains), MyStructureTools.makeArrayFromListMyChains(clonedHetChains), MyStructureTools.makeArrayFromListMyChains(clonedNucleosidesChains), this.expTechnique, algoParameters);
 
         myStructureCloned.setFourLetterCode(this.getFourLetterCode());
 
@@ -743,7 +743,7 @@ public class MyStructure implements MyStructureIfc {
 
         List<MyChainIfc> chains = new ArrayList<>();
         chains.add(newChain);
-        this.myAminoChains = MyStructureTools.makeArrayFromList(chains);
+        this.myAminoChains = MyStructureTools.makeArrayFromListMyChains(chains);
 
         this.myHetatmChains = new MyChainIfc[0];
         this.myNucleotideChains = new MyChainIfc[0];

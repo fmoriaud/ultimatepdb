@@ -143,9 +143,9 @@ public class AdapterBioJavaStructure {
         Set<ExperimentalTechnique> expTechniqueBiojava = structure.getPDBHeader().getExperimentalTechniques();
         ExpTechniquesEnum expTechniqueUltimate = convertExpTechniques(expTechniqueBiojava);
 
-        MyChainIfc[] aminoArray = MyStructureTools.makeArrayFromList(aminoChains);
-        MyChainIfc[] hetatmArray = MyStructureTools.makeArrayFromList(hetatmChains);
-        MyChainIfc[] nucleotidesArray = MyStructureTools.makeArrayFromList(nucleotidesChains);
+        MyChainIfc[] aminoArray = MyStructureTools.makeArrayFromListMyChains(aminoChains);
+        MyChainIfc[] hetatmArray = MyStructureTools.makeArrayFromListMyChains(hetatmChains);
+        MyChainIfc[] nucleotidesArray = MyStructureTools.makeArrayFromListMyChains(nucleotidesChains);
 
         // that computes the neighbors by representative distance
         MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, aminoArray, hetatmArray, nucleotidesArray);
@@ -182,7 +182,7 @@ public class AdapterBioJavaStructure {
                 keptMyChain.add(myChain);
             }
         }
-        return MyStructureTools.makeArrayFromList(keptMyChain);
+        return MyStructureTools.makeArrayFromListMyChains(keptMyChain);
     }
 
 

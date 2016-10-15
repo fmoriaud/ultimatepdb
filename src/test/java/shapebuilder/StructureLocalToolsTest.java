@@ -81,6 +81,8 @@ public class StructureLocalToolsTest {
             }
         }
 
+
+        // Check bonds
         MyMonomerIfc firstMonomer = segmentOfChain.getMyMonomers()[0];
         MyMonomerIfc lastMonomer = segmentOfChain.getMyMonomers()[segmentOfChain.getMyMonomers().length - 1];
         MyAtomIfc nTerminal = firstMonomer.getMyAtomFromMyAtomName("N".toCharArray());
@@ -106,6 +108,16 @@ public class StructureLocalToolsTest {
         }
         assertTrue(caFound);
         assertTrue(oFound);
+
+        List<MyMonomerIfc> monomersInSegment = MyStructureTools.makeListFromArray(segmentOfChain.getMyMonomers());
+        // Check neighbors
+        for (MyMonomerIfc monomer: segmentOfChain.getMyMonomers()){
+            for (MyChainIfc neighborsByDistance: monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance()){
+                for (MyMonomerIfc neighborByDistance: neighborsByDistance.getMyMonomers()){
+                    assertTrue(monomersInSegment.contains(neighborByDistance));
+                }
+            }
+        }
     }
 
 

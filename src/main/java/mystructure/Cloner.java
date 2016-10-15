@@ -141,7 +141,11 @@ public class Cloner {
         }
 
         updateAllMyAtomReference(clonedMyChain);
+        MyStructureTools.removeBondsToNonExistingAtoms(myChain);
+        // TODO with bonds in removeNonExistingMyMonomerNeighbors
+        MyStructureTools.removeNonExistingMyMonomerNeighbors(myChain);
 
+        // TODO clean monomer by bond and by distance
 
         MyChainIfc[] chains = new MyChainIfc[1];
         chains[0] = clonedMyChain;

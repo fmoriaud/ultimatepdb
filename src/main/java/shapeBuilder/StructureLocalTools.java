@@ -47,10 +47,6 @@ public class StructureLocalTools {
         Cloner cloner = new Cloner(myChain, algoParameters);
         MyStructureIfc clone = cloner.getClone();
 
-        // TODO Revove CO and NH at tips if it
-        // from list of monomer I want a clean MyStructure
-        MyStructureTools.removeBondsToNonExistingAtoms(myChain);
-
         // TODO fix bonds
         return myChain;
     }

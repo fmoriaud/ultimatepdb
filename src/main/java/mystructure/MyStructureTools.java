@@ -255,6 +255,39 @@ public class MyStructureTools {
     }
 
 
+
+    public static void removeNonExistingMyMonomerNeighbors(MyChainIfc myChain) {
+
+        List<MyMonomerIfc> myMonomersInChain = makeListFromArray(myChain.getMyMonomers());
+
+        for (MyMonomerIfc monomerInchain : myMonomersInChain) {
+
+            MyChainIfc[] neighbors = monomerInchain.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+            List<List<MyMonomerIfc>> originalNeighbors = putNeighborsInList(neighbors);
+
+            List<MyChainIfc> newChains = new ArrayList<>();
+
+            for (MyChainIfc originalNeighborChain : neighbors) {
+
+                List<MyMonomerIfc> cleanNeighborInChain = new ArrayList<>();
+                for (MyMonomerIfc originalNeighbor : originalNeighborChain.getMyMonomers()) {
+                    if (myMonomersInChain.contains(originalNeighbor)) {
+                        cleanNeighborInChain.add(originalNeighbor);
+                    }
+                }
+                if (!cleanNeighborInChain.isEmpty()) {
+                    MyChainIfc chainWithNeighbors = new MyChain(makeArrayFromListMyMonomers(cleanNeighborInChain), originalNeighborChain.getChainId());
+                    newChains.add(chainWithNeighbors);
+                }
+            }
+
+            MyChainIfc[] cleanNeighbors = makeArrayFromListMyChains(newChains);
+            monomerInchain.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(cleanNeighbors);
+        }
+    }
+
+
+
     /**
      * Return a specific MyAtom from each and every MyMonomer. It is a backbone atom for Chains.
      *
@@ -427,7 +460,7 @@ public class MyStructureTools {
     }
 
 
-    public static MyChainIfc[] makeArrayFromList(List<MyChainIfc> myChains) {
+    public static MyChainIfc[] makeArrayFromListMyChains(List<MyChainIfc> myChains) {
 
         int countOfChains = myChains.size();
         MyChainIfc[] myChainsArray = new MyChainIfc[countOfChains];
@@ -435,6 +468,23 @@ public class MyStructureTools {
             myChainsArray[i] = myChains.get(i);
         }
         return myChainsArray;
+    }
+
+
+    public static MyMonomerIfc[] makeArrayFromListMyMonomers(List<MyMonomerIfc> myMonomers) {
+
+        int countOfMyMonomer = myMonomers.size();
+        MyMonomerIfc[] myMonomersArray = new MyMonomerIfc[countOfMyMonomer];
+        for (int i = 0; i < countOfMyMonomer; i++) {
+            myMonomersArray[i] = myMonomers.get(i);
+        }
+        return myMonomersArray;
+    }
+
+
+    public static List<MyMonomerIfc> makeListFromArray(MyMonomerIfc[] monomers) {
+
+        return new ArrayList<MyMonomerIfc>(Arrays.asList(monomers));
     }
 
 
@@ -792,5 +842,15 @@ public class MyStructureTools {
         }
 
         return tempListMyAtomIfc;
+    }
+
+
+    private static List<List<MyMonomerIfc>> putNeighborsInList(MyChainIfc[] neighbors) {
+        List<List<MyMonomerIfc>> neighborsInList = new ArrayList<>();
+        for (MyChainIfc chain : neighbors) {
+            List<MyMonomerIfc> neighborInAchain = makeListFromArray(chain.getMyMonomers());
+            neighborsInList.add(neighborInAchain);
+        }
+        return neighborsInList;
     }
 }
