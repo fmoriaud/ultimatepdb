@@ -5,19 +5,18 @@ import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.EnumMyReaderBiojava;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
-import mystructure.ReadingStructurefileException;
+import mystructure.*;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
+import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
+import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
 
 import java.io.IOException;
 
@@ -64,7 +63,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
 
         // don't know if it is good, it is as it is now.
         // especially because ACE and NH2 were moved...
-        assertTrue(shape.getShape().getSize() ==  942);
+        assertTrue(shape.getShape().getSize() == 942);
         assertTrue(shape.getMiniShape().size() == 70);
 
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
@@ -75,5 +74,20 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
+
+        // Check ligand peptide bonds
+        ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) shape;
+        MyChainIfc ligand = shapeContainerWithPeptide.getPeptide();
+
+        // Check peptide bonds
+        MyAtomIfc n1 = ligand.getMyMonomers()[1].getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = ligand.getMyMonomers()[0].getMyAtomFromMyAtomName("C".toCharArray());
+        boolean foundPeptideBond = false;
+        for (MyBondIfc bond : n1.getBonds()) {
+            if (bond.getBondedAtom() == c0) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
     }
 }
