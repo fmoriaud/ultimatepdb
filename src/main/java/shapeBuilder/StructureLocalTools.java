@@ -48,7 +48,7 @@ public class StructureLocalTools {
         MyStructureIfc clone = cloner.getClone();
 
         // TODO fix bonds
-        return myChain;
+        return clone.getAllChains()[0];
     }
 
 

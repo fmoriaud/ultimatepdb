@@ -40,7 +40,13 @@ public class Cloner {
 
     }
 
-
+    /**
+     * Returns a clone of input MyChain. All objects are different but with the same data.
+     * Bonds to MyAtom not in MyChain are removed
+     * Neighbors by distance to representative atoms are cleaned to be only from the cloned chain.
+     * @param myChain
+     * @param algoParameters
+     */
     public Cloner(MyChainIfc myChain, AlgoParameters algoParameters) {
 
         this.myChain = myChain;
@@ -141,11 +147,10 @@ public class Cloner {
         }
 
         updateAllMyAtomReference(clonedMyChain);
-        MyStructureTools.removeBondsToNonExistingAtoms(myChain);
+        MyStructureTools.removeBondsToNonExistingAtoms(clonedMyChain);
         // TODO with bonds in removeNonExistingMyMonomerNeighbors
-        MyStructureTools.removeNonExistingMyMonomerNeighbors(myChain);
+        MyStructureTools.removeNonExistingMyMonomerNeighbors(clonedMyChain);
 
-        // TODO clean monomer by bond and by distance
 
         MyChainIfc[] chains = new MyChainIfc[1];
         chains[0] = clonedMyChain;
