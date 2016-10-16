@@ -108,10 +108,10 @@ public class AutoShapeSegmentOfChainTest {
             HitTools.minimizeHitInQuery(hit, shapeQuery, shapeTarget, algoParameters);
             ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getHitScore();
             assertTrue(hitScore != null);
-            assertTrue(Math.abs(hitScore.getInteractionEFinal()) > 45 && Math.abs(hitScore.getInteractionEFinal()) < 47);
-            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 130 && Math.abs(hitScore.getLigandStrainedEnergy()) < 135);
-            assertTrue(hitScore.getRmsdLigand() < 1.0);
-            assertTrue(hitScore.getCountOfLongDistanceChange() == 7);
+            assertTrue(Math.abs(hitScore.getInteractionEFinal()) > 0 && Math.abs(hitScore.getInteractionEFinal()) < 1);
+            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 147 && Math.abs(hitScore.getLigandStrainedEnergy()) < 149);
+            assertTrue(hitScore.getRmsdLigand() < 0.1);
+            assertTrue(hitScore.getCountOfLongDistanceChange() == 3);
 
         } catch (NullResultFromAComparisonException e) {
             e.printStackTrace();

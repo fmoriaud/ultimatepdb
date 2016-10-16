@@ -1,10 +1,6 @@
 package shapeBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 
 
@@ -43,7 +39,7 @@ public class StructureLocalToBuildShapeWholeChain implements StructureLocalToBui
 
 		ligand = myStructureGlobalBrut.getAminoMyChain(chainId);
 
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand); // to skip some monomers at tip is not implemented
+		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, ligand); // to skip some monomers at tip is not implemented
 
 		if (myStructureLocal.getAllAminochains().length == 0){
 			ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");

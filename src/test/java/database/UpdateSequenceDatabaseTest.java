@@ -33,7 +33,7 @@ public class UpdateSequenceDatabaseTest {
         Path pathToPDBFolder = Paths.get(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         Path pathToChemCompFolderFolder = Paths.get(algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        //updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");

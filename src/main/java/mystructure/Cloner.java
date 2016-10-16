@@ -146,7 +146,7 @@ public class Cloner {
             exceptionInMyStructurePackage.printStackTrace();
         }
 
-        updateAllMyAtomReference(clonedMyChain);
+        fixBondedAtomReference(clonedMyChain);
         MyStructureTools.removeBondsToNonExistingAtoms(clonedMyChain);
         // TODO with bonds in removeNonExistingMyMonomerNeighbors
         MyStructureTools.removeNonExistingMyMonomerNeighbors(clonedMyChain);
@@ -295,7 +295,7 @@ public class Cloner {
 
     private void updateAllMyAtomReference(MyMonomerIfc myMonomer) {
 
-        fixBondedAtom(myMonomer);
+        fixBondedAtomReference(myMonomer);
 
     }
 
@@ -303,36 +303,31 @@ public class Cloner {
     private void updateAllMyAtomReference(MyChainIfc[] myChains) {
 
         for (MyChainIfc myChain : myChains) {
-            fixBondedAtom(myChain);
+            fixBondedAtomReference(myChain);
         }
         MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myChains);
     }
 
-    private void updateAllMyAtomReference(MyChainIfc myChain) {
 
-        fixBondedAtom(myChain);
 
-    }
-
-    private void fixBondedAtom(MyStructureIfc myStructure) {
+    private void fixBondedAtomReference(MyStructureIfc myStructure) {
 
         for (MyChainIfc myChain : myStructure.getAllChains()) {
-            fixBondedAtom(myChain);
+            fixBondedAtomReference(myChain);
         }
         MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myStructure);
     }
 
 
-    private void fixBondedAtom(MyChainIfc myChain) {
+    private void fixBondedAtomReference(MyChainIfc myChain) {
 
         for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
-            fixBondedAtom(monomer);
+            fixBondedAtomReference(monomer);
         }
-        MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myChain);
     }
 
 
-    private void fixBondedAtom(MyMonomerIfc myMonomer) {
+    private void fixBondedAtomReference(MyMonomerIfc myMonomer) {
 
         for (MyAtomIfc atom : myMonomer.getMyAtoms()) {
             MyBondIfc[] bonds = atom.getBonds();
@@ -343,7 +338,6 @@ public class Cloner {
                 }
             }
         }
-        MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myMonomer);
     }
 
 

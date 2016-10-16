@@ -137,12 +137,25 @@ public class StructureLocalToolsTest {
         for (MyAtomIfc atom : atomsInSEgment) {
             assertTrue(atom.getBonds() != null && atom.getBonds().length != 0);
             for (MyBondIfc bond : atom.getBonds()) {
+                if (atomsInSEgment.contains(bond.getBondedAtom()) == false){
+                    System.out.println();
+                }
                 assertTrue(atomsInSEgment.contains(bond.getBondedAtom()));
             }
         }
 
+        // Check peptide bonds
+        MyAtomIfc n1 = segmentOfChain.getMyMonomers()[1].getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = segmentOfChain.getMyMonomers()[0].getMyAtomFromMyAtomName("C".toCharArray());
+        boolean foundPeptideBond = false;
+        for (MyBondIfc bond : n1.getBonds()) {
+            if (bond.getBondedAtom() == c0) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
 
-        // Check bonds
+        // Check bonds at tip
         MyAtomIfc nTerminal = MyStructureTools.getNterminal(segmentOfChain);
         assertTrue(nTerminal == null); // there is no Nterminal in segment
         MyAtomIfc caNTerminal = MyStructureTools.getCaNterminal(segmentOfChain);

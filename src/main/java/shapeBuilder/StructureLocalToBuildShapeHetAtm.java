@@ -1,8 +1,6 @@
 package shapeBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import mystructure.MyChain;
 import mystructure.MyChainIfc;
@@ -53,7 +51,7 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
 		}
 		ligand = new MyChain(hetAtomsGroup, hetAtomsGroup.getParent().getChainId());
 
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(myStructureGlobalBrut, ligand);
+		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, ligand);
 
 	}
 

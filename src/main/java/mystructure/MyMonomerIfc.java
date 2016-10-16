@@ -21,4 +21,5 @@ public interface MyMonomerIfc {
 	MyAtomIfc getAtomById(int atomId);
 	void addAtom(MyAtomIfc atom);
 	void setMyAtoms(MyAtomIfc[] myAtoms);
+	void deleteAtomAndbonds(MyAtomIfc atom);
 }

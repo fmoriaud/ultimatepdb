@@ -414,6 +414,31 @@ public class MyStructureTools {
     }
 
 
+
+    public static MyAtomIfc getCterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
+        return lastMonomer.getMyAtomFromMyAtomName("C".toCharArray());
+    }
+
+
+
+    public static MyAtomIfc getNterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];
+        return firstMonomer.getMyAtomFromMyAtomName("N".toCharArray());
+    }
+
+
+
+    public static MyAtomIfc getCaNterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];
+        return firstMonomer.getMyAtomFromMyAtomName("CA".toCharArray());
+    }
+
+
+
     public static float computeDistance(MyMonomerIfc monomer1, MyMonomerIfc monomer2) {
 
         float mindistance = Float.MAX_VALUE;

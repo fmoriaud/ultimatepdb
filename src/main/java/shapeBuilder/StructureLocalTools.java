@@ -9,6 +9,7 @@ public class StructureLocalTools {
 //-------------------------------------------------------------
 // Public & Override methods
 //-------------------------------------------------------------
+
     /**
      * Extract the MyMonomers that form the segment. It is meant to build the local structure around the segment for a Shape built from segment of chain.
      * It uses the Monomer at rankIdinChains, then search monomers among bonded monomers, keeps the ones with higher rankid
@@ -43,12 +44,32 @@ public class StructureLocalTools {
 
         MyChainIfc myChain = extractSubChainByBond(inputChain, rankIdinChain, peptideLength);
 
-        // Need to clone it
+        // Need to clone it because I remove some atoms so the original chain should not be changed
         Cloner cloner = new Cloner(myChain, algoParameters);
         MyStructureIfc clone = cloner.getClone();
+        MyChainIfc clonedSegment = clone.getAllChains()[0];
+        makeCaOnBothSideWithNoBoundAtoms(clonedSegment);
 
-        // TODO fix bonds
-        return clone.getAllChains()[0];
+        return clonedSegment;
+    }
+
+    private static void makeCaOnBothSideWithNoBoundAtoms(MyChainIfc clonedSegment) {
+
+        // delete some atoms from tip
+        // only when CO-Ca and Ca-N
+        // Wont work for weird ends like ACE I guess
+        MyAtomIfc nTerminal = MyStructureTools.getNterminal(clonedSegment);
+        MyAtomIfc cTerminal = MyStructureTools.getCterminal(clonedSegment);
+
+        // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
+        int bondCount = nTerminal.getBonds().length;
+        boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
+        boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
+
+        if (bondCount == 1 && bondToCaSameMonomer && bondToCa){
+
+            nTerminal.getParent().deleteAtomAndbonds(nTerminal);
+        }
     }
 
 
@@ -84,7 +105,7 @@ public class StructureLocalTools {
     }
 
 
-    public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChainAndTips(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain) {
+    public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain) {
 
         Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(myChain);
 
@@ -121,9 +142,7 @@ public class StructureLocalTools {
     }
 
 
-
-
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
 // Implementation
 //-------------------------------------------------------------
     private static MyChainIfc extractSubChainByBond(MyChainIfc inputChain, int rankIdinChain, int peptideLength) {
