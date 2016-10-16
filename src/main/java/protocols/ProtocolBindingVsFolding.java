@@ -81,6 +81,8 @@ public class ProtocolBindingVsFolding {
 
         // Find same sequence occurences in sequence DB
         String sequenceToFind = "METPHESERILEASPASNILELEUALA";
+       // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
+        // And it is a hit which not fit in the target following minimization
         //String sequenceToFind = "METPHESERILE";
 
         int peptideLength = sequenceToFind.length() / 3;
@@ -90,6 +92,9 @@ public class ProtocolBindingVsFolding {
         boolean useSimilarSequences = true;
 
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
+        //List<HitInSequenceDb> hitsInDatabaseMod = new ArrayList<>();
+        // hitsInDatabaseMod.add(hitsInDatabase.get(2));
+        // hitsInDatabase = hitsInDatabaseMod;
 
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
         String fourLetterCodeTarget;
