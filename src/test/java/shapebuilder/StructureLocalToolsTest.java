@@ -137,7 +137,7 @@ public class StructureLocalToolsTest {
         for (MyAtomIfc atom : atomsInSEgment) {
             assertTrue(atom.getBonds() != null && atom.getBonds().length != 0);
             for (MyBondIfc bond : atom.getBonds()) {
-                if (atomsInSEgment.contains(bond.getBondedAtom()) == false){
+                if (atomsInSEgment.contains(bond.getBondedAtom()) == false) {
                     System.out.println();
                 }
                 assertTrue(atomsInSEgment.contains(bond.getBondedAtom()));
@@ -159,7 +159,7 @@ public class StructureLocalToolsTest {
         MyAtomIfc nTerminal = MyStructureTools.getNterminal(segmentOfChain);
         assertTrue(nTerminal == null); // there is no Nterminal in segment
         MyAtomIfc caNTerminal = MyStructureTools.getCaNterminal(segmentOfChain);
-        MyAtomIfc cTerminal = MyStructureTools.getCterminal(segmentOfChain);
+
 
         // caNterminal has two bonds to C and CB
         assertTrue(caNTerminal.getBonds().length == 2);
@@ -176,24 +176,28 @@ public class StructureLocalToolsTest {
         assertTrue(cFound);
         assertTrue(cbFound);
 
+        MyAtomIfc cTerminal = MyStructureTools.getCterminal(segmentOfChain);
+        assertTrue(cTerminal == null); // there is no Cterminal in segment
+        MyAtomIfc oTerminal = MyStructureTools.getOterminal(segmentOfChain);
+        assertTrue(oTerminal == null); // there is no Cterminal in segment
 
-        // Cterminal has two bonds: to O and to CA of the same monomer
-        assertTrue(cTerminal.getBonds().length == 2);
-        MyBondIfc[] bonds = cTerminal.getBonds();
-        boolean caFound = false;
-        boolean oFound = false;
+        MyAtomIfc caCTerminal = MyStructureTools.getCaCterminal(segmentOfChain);
+
+        // caCTerminal has two bonds: to N and to CB of the same monomer
+        assertTrue(caCTerminal.getBonds().length == 2);
+        MyBondIfc[] bonds = caCTerminal.getBonds();
+        cbFound = false;
+        boolean nFound = false;
         for (MyBondIfc bond : bonds) {
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CA".toCharArray())) {
-                caFound = true;
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "N".toCharArray())) {
+                nFound = true;
             }
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "O".toCharArray())) {
-                if (bond.getBondOrder() == 2) {
-                    oFound = true;
-                }
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CB".toCharArray())) {
+                cbFound = true;
             }
         }
-        assertTrue(caFound);
-        assertTrue(oFound);
+        assertTrue(cbFound);
+        assertTrue(nFound);
 
         List<MyMonomerIfc> monomersInSegment = MyStructureTools.makeListFromArray(segmentOfChain.getMyMonomers());
         // Check neighbors

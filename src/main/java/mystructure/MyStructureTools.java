@@ -415,14 +415,6 @@ public class MyStructureTools {
 
 
 
-    public static MyAtomIfc getCterminal(MyChainIfc myChain) {
-
-        MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
-        return lastMonomer.getMyAtomFromMyAtomName("C".toCharArray());
-    }
-
-
-
     public static MyAtomIfc getNterminal(MyChainIfc myChain) {
 
         MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];
@@ -435,6 +427,30 @@ public class MyStructureTools {
 
         MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];
         return firstMonomer.getMyAtomFromMyAtomName("CA".toCharArray());
+    }
+
+
+
+    public static MyAtomIfc getCaCterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
+        return lastMonomer.getMyAtomFromMyAtomName("CA".toCharArray());
+    }
+
+
+
+    public static MyAtomIfc getCterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
+        return lastMonomer.getMyAtomFromMyAtomName("C".toCharArray());
+    }
+
+
+
+    public static MyAtomIfc getOterminal(MyChainIfc myChain) {
+
+        MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
+        return lastMonomer.getMyAtomFromMyAtomName("O".toCharArray());
     }
 
 

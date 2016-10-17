@@ -58,17 +58,47 @@ public class StructureLocalTools {
         // delete some atoms from tip
         // only when CO-Ca and Ca-N
         // Wont work for weird ends like ACE I guess
+
+        // Nterminal
         MyAtomIfc nTerminal = MyStructureTools.getNterminal(clonedSegment);
-        MyAtomIfc cTerminal = MyStructureTools.getCterminal(clonedSegment);
 
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
-        int bondCount = nTerminal.getBonds().length;
+        int bondCountNterminal = nTerminal.getBonds().length;
         boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
         boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
 
-        if (bondCount == 1 && bondToCaSameMonomer && bondToCa){
-
+        if (bondCountNterminal == 1 && bondToCaSameMonomer && bondToCa) {
             nTerminal.getParent().deleteAtomAndbonds(nTerminal);
+        }
+
+        // CO Cterminal
+        MyAtomIfc cTerminal = MyStructureTools.getCterminal(clonedSegment);
+        MyAtomIfc oTerminal = MyStructureTools.getOterminal(clonedSegment);
+
+        int bondCountCterminal = cTerminal.getBonds().length;
+        MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
+        boolean bondCountCterminalSameMonomer = true;
+        for (MyBondIfc bond : bondsToCTerminal) {
+            if (!(bond.getBondedAtom().getParent() == cTerminal.getParent())) {
+                bondCountCterminalSameMonomer = false;
+            }
+        }
+        boolean oFound = false;
+        boolean caFound = false;
+        for (MyBondIfc bond : bondsToCTerminal) {
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "O".toCharArray())) {
+                oFound = true;
+            }
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CA".toCharArray())) {
+                caFound = true;
+            }
+        }
+
+        if (bondCountCterminal == 2 && bondCountCterminalSameMonomer == true && oFound == true && caFound == true) {
+
+            oTerminal.getParent().deleteAtomAndbonds(oTerminal);
+            cTerminal.getParent().deleteAtomAndbonds(cTerminal);
+            System.out.println();
         }
     }
 
