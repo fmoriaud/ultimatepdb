@@ -13,6 +13,9 @@ public interface MyStructureIfc {
 	public void setLastModificationTime(FileTime lastModificationTime);
 	
 	MyChainIfc getAminoChain(int i);
+	MyChainIfc getNucleosideChain(int i);
+	MyChainIfc getHetatmChain(int i);
+
 	void setAminoChain(char[] chainId, MyChainIfc myNewChain);
 	MyChainIfc[] getAllAminochains();
 	MyChainIfc[] getAllHetatmchains();
@@ -47,4 +50,6 @@ public interface MyStructureIfc {
 	
 	void removeChain(char[] chainId);
 	MyStructureIfc cloneWithSameObjectsRotatedCoords(ResultsFromEvaluateCost result) throws ExceptionInMyStructurePackage;
+
+	ExpTechniquesEnum getExpTechnique();
 }

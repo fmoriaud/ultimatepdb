@@ -58,7 +58,7 @@ public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalT
 			throw exception;
 		}
 
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, extractedSegment);
+		myStructureLocal = StructureLocalTools.makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, extractedSegment, algoParameters);
 
 	}
 

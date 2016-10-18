@@ -66,9 +66,7 @@ public class MyMonomer implements MyMonomerIfc {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("monomer: " + parent.toString() + " " + String.valueOf(threeLetterCode) + "  " + residueID);
-        if (altLocGroup != " ".toCharArray()[0]) {
-            sb.append(" altLoc = " + altLocGroup);
-        }
+        sb.append(" altLoc = " + altLocGroup);
         return sb.toString();
     }
 

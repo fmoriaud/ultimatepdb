@@ -135,20 +135,27 @@ public class StructureLocalTools {
     }
 
 
-    public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain) {
+
+    public static MyStructureIfc makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain, AlgoParameters algoParameters) {
 
         Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(myChain);
 
-        MyStructureIfc myStructureLocal;
-        try {
-            myStructureLocal = myStructureGlobalBrut.cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(queryMonomers);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        }
+        Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
+        MyStructureIfc clonedMyStructure = cloner.getClone();
 
-        return myStructureLocal;
+        return clonedMyStructure;
+    }
+
+
+
+    public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain, AlgoParameters algoParameters) {
+
+        Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(myChain);
+
+        Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
+        MyStructureIfc clonedMyStructure = cloner.getClone();
+
+        return clonedMyStructure;
     }
 
 

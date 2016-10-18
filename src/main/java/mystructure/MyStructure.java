@@ -48,6 +48,24 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
 
     /**
+     * Constructor for Cloner. It doesn't do anything
+     * @param expTechnique
+     * @param algoParameters
+     * @throws ExceptionInMyStructurePackage
+     */
+    public MyStructure(ExpTechniquesEnum expTechnique, AlgoParameters algoParameters, MyChainIfc[] myAminoChains, MyChainIfc[] myHetatmChains, MyChainIfc[] myNucleotideChains) throws ExceptionInMyStructurePackage {
+
+        if (algoParameters == null) {
+            throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
+        }
+        this.algoParameters = algoParameters;
+        this.expTechnique = expTechnique;
+        this.myAminoChains = myAminoChains;
+        this.myHetatmChains = myHetatmChains;
+        this.myNucleotideChains = myNucleotideChains;
+    }
+
+    /**
      * Constructor with all chains well defined as input
      * All needed structural information is computed in the constructors: MyMonomers neighbors by distance
      * and by bonds
@@ -170,6 +188,16 @@ public class MyStructure implements MyStructureIfc {
     @Override
     public MyChainIfc getAminoChain(int i) {
         return myAminoChains[i];
+    }
+
+    @Override
+    public MyChainIfc getNucleosideChain(int i) {
+        return myNucleotideChains[i];
+    }
+
+    @Override
+    public MyChainIfc getHetatmChain(int i) {
+        return myHetatmChains[i];
     }
 
 
@@ -810,4 +838,8 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
     // Getters and Setters
     //-------------------------------------------------------------
+    public ExpTechniquesEnum getExpTechnique() {
+        return expTechnique;
+    }
+
 }

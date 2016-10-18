@@ -2,65 +2,62 @@ package shapeBuilder;
 
 import mystructure.MyChainIfc;
 import mystructure.MyStructureIfc;
+import parameters.AlgoParameters;
 
 
-public class StructureLocalToBuildShapeWholeChain implements StructureLocalToBuildShapeIfc{
-	//-------------------------------------------------------------
-	// Class variables
-	//-------------------------------------------------------------
-	private MyStructureIfc myStructureGlobalBrut;
+public class StructureLocalToBuildShapeWholeChain implements StructureLocalToBuildShapeIfc {
+    //-------------------------------------------------------------
+    // Class variables
+    //-------------------------------------------------------------
+    private MyStructureIfc myStructureGlobalBrut;
 
-	private char[] chainId;
+    private char[] chainId;
 
-	private MyChainIfc ligand;
-	private MyStructureIfc myStructureLocal;
+    private MyChainIfc ligand;
+    private MyStructureIfc myStructureLocal;
 
-
-
-
-	//-------------------------------------------------------------
-	// Constructor
-	//-------------------------------------------------------------
-	public StructureLocalToBuildShapeWholeChain(MyStructureIfc myStructureGlobalBrut,
-			char[] chainId){
-
-		this.myStructureGlobalBrut = myStructureGlobalBrut;
-
-		this.chainId = chainId;
-	}
+    private AlgoParameters algoParameters;
 
 
+    //-------------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------------
+    public StructureLocalToBuildShapeWholeChain(MyStructureIfc myStructureGlobalBrut,
+                                                char[] chainId, AlgoParameters algoParameters) {
+
+        this.myStructureGlobalBrut = myStructureGlobalBrut;
+
+        this.chainId = chainId;
+        this.algoParameters = algoParameters;
+    }
 
 
-	//-------------------------------------------------------------
-	// Interface & Public methods
-	//-------------------------------------------------------------
-	public void compute() throws ShapeBuildingException{
+    //-------------------------------------------------------------
+    // Interface & Public methods
+    //-------------------------------------------------------------
+    public void compute() throws ShapeBuildingException {
 
-		ligand = myStructureGlobalBrut.getAminoMyChain(chainId);
+        ligand = myStructureGlobalBrut.getAminoMyChain(chainId);
 
-		myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, ligand); // to skip some monomers at tip is not implemented
+        myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, ligand, algoParameters); // to skip some monomers at tip is not implemented
 
-		if (myStructureLocal.getAllAminochains().length == 0){
-			ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");
-			throw exception;
-		}
-	}
-
-
+        if (myStructureLocal.getAllAminochains().length == 0) {
+            ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");
+            throw exception;
+        }
+    }
 
 
-	//-------------------------------------------------------------
-	// Getters & Setters
-	//-------------------------------------------------------------
-	public MyChainIfc getLigand() {
-		return ligand;
-	}
+    //-------------------------------------------------------------
+    // Getters & Setters
+    //-------------------------------------------------------------
+    public MyChainIfc getLigand() {
+        return ligand;
+    }
 
 
-
-	@Override
-	public MyStructureIfc getMyStructureLocal() {
-		return myStructureLocal;
-	}
+    @Override
+    public MyStructureIfc getMyStructureLocal() {
+        return myStructureLocal;
+    }
 }
