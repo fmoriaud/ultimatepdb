@@ -188,6 +188,7 @@ public class Cloner {
                         }
                     }
                     MyChainIfc newNeighborchains = new MyChain(tmpMonomers);
+                    newNeighborchains.setChainId(neighborchains[i].getChainId());
                     // TODO there could be empty neighbor chain
                     newneighborchains[i] = newNeighborchains;
                 }
