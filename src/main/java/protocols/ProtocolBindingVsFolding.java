@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 /**
  * Created by Fabrice on 02/10/16.
@@ -65,7 +67,7 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("2ce8", "X");
+        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("4c2c", "C");
         // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
 
         protocol.run();
@@ -75,12 +77,28 @@ public class ProtocolBindingVsFolding {
     public void run() throws ParsingConfigFileException {
 
         prepareAlgoParameters();
+
+        FileHandler fh = null;
+        try {
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        fh.setFormatter(new OptimizerFormater());
+        ControllerLoger.logger.addHandler(fh);
+
+
         // build the query
         ShapeContainerIfc queryShape = buildQueryShape();
 
 
         // Find same sequence occurences in sequence DB
-        String sequenceToFind = "METPHESERILEASPASNILELEUALA";
+        String sequenceToFind = "ALAVALPROALA";
+       // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
        // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
         // And it is a hit which not fit in the target following minimization
         //String sequenceToFind = "METPHESERILE";
@@ -89,7 +107,7 @@ public class ProtocolBindingVsFolding {
 
         //int minLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMinLength();
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
-        boolean useSimilarSequences = true;
+        boolean useSimilarSequences = false;
 
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
         //List<HitInSequenceDb> hitsInDatabaseMod = new ArrayList<>();
@@ -142,6 +160,9 @@ public class ProtocolBindingVsFolding {
                     for (Hit hit : listBestHitForEachAndEverySeed) {
                         System.out.println("Minimizing ... " + hit.toString());
                         HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
+
+                        String message = hit.toString();
+                        ControllerLoger.logger.log(Level.INFO, message);
                     }
 
                 } catch (NullResultFromAComparisonException e) {
