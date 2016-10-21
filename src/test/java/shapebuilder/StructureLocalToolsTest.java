@@ -28,9 +28,51 @@ import static org.junit.Assert.assertTrue;
 public class StructureLocalToolsTest {
 
     @Test
+    public void testMethodMakeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+
+        String fourLetterCode = "2ce8";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        MyChainIfc inputChain = myStructureGlobalBrut.getAminoMyChain("X".toCharArray());
+
+        int rankIdinChain = 2;
+        int peptideLength = 3;
+        MyChainIfc segmentOfChain = StructureLocalTools.extractSubChain(inputChain, rankIdinChain, peptideLength, algoParameters);
+
+
+        MyStructureIfc structureLocal = StructureLocalTools.makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, segmentOfChain, algoParameters);
+        MyMonomerIfc monomerOnLeft = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(2);
+        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        MyMonomerIfc monomerOnRight = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(6);
+        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+    }
+
+
+    @Test
     public void testMethodExtractSubChain() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
