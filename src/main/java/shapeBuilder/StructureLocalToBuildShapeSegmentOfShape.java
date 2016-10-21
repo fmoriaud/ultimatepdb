@@ -53,6 +53,7 @@ public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalT
 		// Then Structure local can be built
 		ligand = StructureLocalTools.makeChainSegment(wholeChain, startingRankId, peptideLength, algoParameters);
 		MyChainIfc extractedSegment = StructureLocalTools.extractSubChain(wholeChain, startingRankId, peptideLength, algoParameters);
+
 		if (ligand.getMyMonomers().length != peptideLength){
 			ShapeBuildingException exception = new ShapeBuildingException("makeChainSegment failed to return a peptide of the right length. Could be due to PDB parsing missing residues");
 			throw exception;

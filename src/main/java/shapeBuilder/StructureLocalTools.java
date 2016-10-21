@@ -3,6 +3,7 @@ package shapeBuilder;
 import java.util.*;
 
 import mystructure.*;
+import org.biojava.nbio.structure.io.mmcif.chem.ResidueType;
 import parameters.AlgoParameters;
 
 public class StructureLocalTools {
@@ -61,19 +62,53 @@ public class StructureLocalTools {
 
         // Nterminal
         MyAtomIfc nTerminal = MyStructureTools.getNterminal(clonedSegment);
+        doDeletionAtNTerminalSegment(nTerminal);
 
-        // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
-        int bondCountNterminal = nTerminal.getBonds().length;
-        boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
-        boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
-
-        if (bondCountNterminal == 1 && bondToCaSameMonomer && bondToCa) {
-            nTerminal.getParent().deleteAtomAndbonds(nTerminal);
-        }
 
         // CO Cterminal
         MyAtomIfc cTerminal = MyStructureTools.getCterminal(clonedSegment);
         MyAtomIfc oTerminal = MyStructureTools.getOterminal(clonedSegment);
+
+        doDeletionAtCTerminalSegment(cTerminal, oTerminal);
+    }
+
+
+    private static void doDeletionAtCTerminalSegment(MyAtomIfc cTerminal, MyAtomIfc oTerminal) {
+
+        if (applySegmentCterminal(cTerminal)) {
+            oTerminal.getParent().deleteAtomAndbonds(oTerminal);
+            cTerminal.getParent().deleteAtomAndbonds(cTerminal);
+            //System.out.println();
+        }
+    }
+
+
+    private static void doDeletionAtNTerminalSegment(MyAtomIfc nTerminal) {
+
+        if (applySegmentNterminal(nTerminal)) {
+            nTerminal.getParent().deleteAtomAndbonds(nTerminal);
+        }
+    }
+
+
+    private static void doDeletionAtCTerminalStructureLocal(MyAtomIfc cTerminal, MyAtomIfc oTerminal) {
+
+        if (applyStructureLocalCterminal(cTerminal)) {
+            oTerminal.getParent().deleteAtomAndbonds(oTerminal);
+            cTerminal.getParent().deleteAtomAndbonds(cTerminal);
+            //System.out.println();
+        }
+    }
+
+
+    private static void doDeletionAtNTerminalStructureLocal(MyAtomIfc nTerminal) {
+
+        if (applyStructureLocalNterminal(nTerminal)) {
+            nTerminal.getParent().deleteAtomAndbonds(nTerminal);
+        }
+    }
+
+    private static boolean applySegmentCterminal(MyAtomIfc cTerminal) {
 
         int bondCountCterminal = cTerminal.getBonds().length;
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
@@ -94,14 +129,74 @@ public class StructureLocalTools {
             }
         }
 
-        if (bondCountCterminal == 2 && bondCountCterminalSameMonomer == true && oFound == true && caFound == true) {
 
-            oTerminal.getParent().deleteAtomAndbonds(oTerminal);
-            cTerminal.getParent().deleteAtomAndbonds(cTerminal);
-            System.out.println();
+        if (bondCountCterminal == 2 && bondCountCterminalSameMonomer == true && oFound == true && caFound == true) {
+            return true;
         }
+        return false;
     }
 
+
+    private static boolean applySegmentNterminal(MyAtomIfc nTerminal) {
+
+        // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
+        int bondCountNterminal = nTerminal.getBonds().length;
+        boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
+        boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
+
+        if (bondCountNterminal == 1 && bondToCaSameMonomer && bondToCa) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private static boolean applyStructureLocalCterminal(MyAtomIfc cTerminal) {
+
+        int bondCountCterminal = cTerminal.getBonds().length;
+        MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
+
+        boolean oFound = false;
+        boolean caFound = false;
+        for (MyBondIfc bond : bondsToCTerminal) {
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "O".toCharArray())) {
+                oFound = true;
+            }
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CA".toCharArray())) {
+                caFound = true;
+            }
+        }
+
+
+        if (bondCountCterminal == 2 && oFound == true && caFound == true) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private static boolean applyStructureLocalNterminal(MyAtomIfc nTerminal) {
+
+        // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
+        int bondCountNterminal = nTerminal.getBonds().length;
+        boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
+        boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
+        MyBondIfc[] bondsToNTerminal = nTerminal.getBonds();
+
+
+        boolean caFound = false;
+        for (MyBondIfc bond : bondsToNTerminal) {
+
+            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CA".toCharArray())) {
+                caFound = true;
+            }
+        }
+
+        if (bondCountNterminal == 1 && caFound) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Returns the neighboring monomers of a segement of chain
@@ -135,17 +230,149 @@ public class StructureLocalTools {
     }
 
 
+    public static MyStructureIfc makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc extractedSegment, AlgoParameters algoParameters) {
 
-    public static MyStructureIfc makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain, AlgoParameters algoParameters) {
-
-        Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(myChain);
+        Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(extractedSegment);
 
         Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
         MyStructureIfc clonedMyStructure = cloner.getClone();
 
+
+        makeCaOnBothSideWithNoBoundAtomsStructureLocal(extractedSegment, clonedMyStructure, myStructureGlobalBrut);
+
         return clonedMyStructure;
     }
 
+    private static void makeCaOnBothSideWithNoBoundAtomsStructureLocal(MyChainIfc extractedSegment, MyStructureIfc clonedMyStructure, MyStructureIfc myStructureGlobalBrut) {
+
+        MyAtomIfc nTerminalSegment = MyStructureTools.getNterminal(extractedSegment);
+        int residueIdNterminalSegment = nTerminalSegment.getParent().getResidueID();
+        MyAtomIfc cTerminalSegment = MyStructureTools.getCterminal(extractedSegment);
+        int residueIdCterminalSegment = cTerminalSegment.getParent().getResidueID();
+
+
+        // Find residue neighbor of Nterminal in Structurelocal
+        char[] type = extractedSegment.getMyMonomers()[0].getType();
+        char[] chainId = extractedSegment.getChainId();
+        MyChainIfc segmentChainInStructureGlobalBrut = findChain(myStructureGlobalBrut, type, chainId);
+        if (segmentChainInStructureGlobalBrut == null) {
+            return;
+        }
+
+        List<Integer> residueIdToModifyOnNTerminal = findResidueIdToModifyNterminal(segmentChainInStructureGlobalBrut, residueIdCterminalSegment, extractedSegment);
+        List<Integer> residueIdToModifyOnCTerminal = findResidueIdToModifyCterminal(segmentChainInStructureGlobalBrut, residueIdNterminalSegment, extractedSegment);
+
+        MyChainIfc segmentChainInStructureLocal = findChain(clonedMyStructure, type, chainId);
+        for (Integer residueId: residueIdToModifyOnNTerminal){
+            MyMonomerIfc monomerToModifyOnNTerminal = segmentChainInStructureLocal.getMyMonomerFromResidueId(residueId);
+            MyAtomIfc nTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("N".toCharArray());
+            doDeletionAtNTerminalStructureLocal(nTerminalAtom);
+        }
+        for (Integer residueId: residueIdToModifyOnCTerminal){
+            MyMonomerIfc monomerToModifyOnNTerminal = segmentChainInStructureLocal.getMyMonomerFromResidueId(residueId);
+            MyAtomIfc cTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("C".toCharArray());
+            MyAtomIfc oTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("O".toCharArray());
+            doDeletionAtCTerminalStructureLocal(cTerminalAtom, oTerminalAtom);
+        }
+    }
+
+    private static MyChainIfc findChain(MyStructureIfc myStructureGlobalBrut, char[] type, char[] chainId) {
+        MyChainIfc segmentChainInStructureGlobalBrut = null; // this structure is used because there are still the bonds
+        // between segment and structure local
+        if (Arrays.equals(type, MyMonomerType.AMINOACID.getType())) {
+            segmentChainInStructureGlobalBrut = myStructureGlobalBrut.getAminoMyChain(chainId);
+        }
+        if (Arrays.equals(type, MyMonomerType.NUCLEOTIDE.getType())) {
+            segmentChainInStructureGlobalBrut = myStructureGlobalBrut.getNucleosideChain(chainId);
+        }
+        return segmentChainInStructureGlobalBrut;
+    }
+
+    /*
+    private static List<Integer> getMonomerToModifyOnStructureLocal(MyChainIfc extractedSegment) {
+
+        List<Integer> residueIds = new ArrayList<>();
+
+        List<MyMonomerIfc> neighbors = new ArrayList<>();
+        for (MyMonomerIfc monomer: extractedSegment.getMyMonomers()){
+            MyMonomerIfc[] neighborsByBond = monomer.getNeighboringMyMonomerByBond();
+            for (MyMonomerIfc neighbor: neighborsByBond){
+                if (!neighbors.contains(neighbor)){
+                    neighbors.add(neighbor);
+                }
+            }
+        }
+        neighbors.removeAll(MyStructureTools.makeListFromArray(extractedSegment.getMyMonomers()));
+
+        MyMonomerIfc monomerOfAtomFromSegment = atomFromSegment.getParent();
+        MyMonomerIfc[] neighborsByBond = monomerOfAtomFromSegment.getNeighboringMyMonomerByBond();
+        List<MyMonomerIfc> monomerStructureLocalOnNterminalSideOfSegment = new ArrayList<>();
+        monomerStructureLocalOnNterminalSideOfSegment.addAll(MyStructureTools.makeListFromArray(neighborsByBond));
+        monomerStructureLocalOnNterminalSideOfSegment.removeAll(MyStructureTools.makeListFromArray(extractedSegment.getMyMonomers()));
+        for (MyMonomerIfc monomer : monomerStructureLocalOnNterminalSideOfSegment) {
+            residueIds.add(monomer.getResidueID());
+        }
+
+        return residueIds;
+    }
+*/
+
+    private static List<Integer> findResidueIdToModifyNterminal(MyChainIfc segmentChainInStructureGlobalBrut, int residueIdCterminalSegment, MyChainIfc extractedSegment) {
+
+        List<Integer> residueIds = new ArrayList<>();
+        List<MyMonomerIfc> monomerToModifyTheNterminal = new ArrayList<>();
+
+        for (MyMonomerIfc monomer : segmentChainInStructureGlobalBrut.getMyMonomers()) {
+            MyMonomerIfc[] neighborsByBond = monomer.getNeighboringMyMonomerByBond();
+            for (MyMonomerIfc neighborByBond : neighborsByBond) {
+                if (neighborByBond.getResidueID() == residueIdCterminalSegment) {
+                    if (!monomerToModifyTheNterminal.contains(monomer)) {
+                        if (!isInSegment(extractedSegment, monomer)) {
+                            monomerToModifyTheNterminal.add(monomer);
+                        }
+                    }
+                }
+            }
+        }
+        for (MyMonomerIfc monomer : monomerToModifyTheNterminal) {
+            residueIds.add(monomer.getResidueID());
+        }
+        return residueIds;
+    }
+
+
+
+    private static List<Integer> findResidueIdToModifyCterminal(MyChainIfc segmentChainInStructureGlobalBrut, int residueIdNterminalSegment, MyChainIfc extractedSegment) {
+
+        List<Integer> residueIds = new ArrayList<>();
+        List<MyMonomerIfc> monomerToModifyTheCterminal = new ArrayList<>();
+
+        for (MyMonomerIfc monomer : segmentChainInStructureGlobalBrut.getMyMonomers()) {
+            MyMonomerIfc[] neighborsByBond = monomer.getNeighboringMyMonomerByBond();
+            for (MyMonomerIfc neighborByBond : neighborsByBond) {
+                if (neighborByBond.getResidueID() == residueIdNterminalSegment) {
+                    if (!monomerToModifyTheCterminal.contains(monomer)) {
+                        if (!isInSegment(extractedSegment, monomer)) {
+                            monomerToModifyTheCterminal.add(monomer);
+                        }
+                    }
+                }
+            }
+        }
+        for (MyMonomerIfc monomer : monomerToModifyTheCterminal) {
+            residueIds.add(monomer.getResidueID());
+        }
+        return residueIds;
+    }
+
+    private static boolean isInSegment(MyChainIfc extractedSegment, MyMonomerIfc monomer) {
+        for (MyMonomerIfc inExtractedSegment : extractedSegment.getMyMonomers()) {
+            if (inExtractedSegment.getResidueID() == monomer.getResidueID()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain, AlgoParameters algoParameters) {

@@ -28,6 +28,53 @@ import static org.junit.Assert.assertTrue;
 public class ShapeBuilderConstructorSegmentOfChainTest {
 
     @Test
+    public void testShapeBuilderConstructorLinearPeptide() throws IOException, ParsingConfigFileException {
+
+        char[] chainId = "X".toCharArray();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+
+        String fourLetterCode = "2ce8";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        int startingRankId = 2;
+        int peptideLength = 4;
+        ShapeContainerIfc shape = null;
+        try {
+            shape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, startingRankId, peptideLength);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(shape.getShape().getSize() == 663);
+        assertTrue(shape.getMiniShape().size() == 34);
+
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        try {
+            algoParameters.ultiJMolBuffer.get().frame.dispose();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
+    }
+
+
+    @Test
     public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
         char[] chainId = "C".toCharArray();
@@ -63,8 +110,8 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
 
         // don't know if it is good, it is as it is now.
         // especially because ACE and NH2 were moved...
-        assertTrue(shape.getShape().getSize() == 813);
-        assertTrue(shape.getMiniShape().size() == 71);
+        assertTrue(shape.getShape().getSize() == 752);
+        assertTrue(shape.getMiniShape().size() == 70);
 
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
         try {
