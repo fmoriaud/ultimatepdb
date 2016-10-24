@@ -50,20 +50,19 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     }
 
 
-
     // -------------------------------------------------------------------
     // Public && Interface method
     // -------------------------------------------------------------------
-    public void run() {
-
+    public void run() throws ExceptionInScoringUsingBioJavaJMolGUI {
         doMolecularForcefieldTasks();
+
     }
 
 
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private void doMolecularForcefieldTasks() {
+    private void doMolecularForcefieldTasks() throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         MyStructureIfc mergedMyStructure = MyStructureTools.mergeTwoV3000FileReturnIdOfFirstAtomMyStructure2AndLoadInViewer(protonatedTarget.toV3000(), protonatedLigand.toV3000(), algoParameters);
         int atomCountTarget = MyStructureTools.getAtomCount(protonatedTarget);
@@ -117,6 +116,8 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             getEnergyComplex.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+            throw exceptionInScoringUsingBioJavaJMolGUI;
+            // this happens for instance for too many iterations
         }
         results = getEnergyComplex.getResults();
         float complexFromMinimizedComplexEnergy = (float) results.get("initial energy");

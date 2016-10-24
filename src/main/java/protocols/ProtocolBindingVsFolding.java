@@ -98,8 +98,8 @@ public class ProtocolBindingVsFolding {
 
         // Find same sequence occurences in sequence DB
         String sequenceToFind = "ALAVALPROALA";
-       // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
-       // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
+        // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
+        // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
         // And it is a hit which not fit in the target following minimization
         //String sequenceToFind = "METPHESERILE";
 
@@ -140,7 +140,7 @@ public class ProtocolBindingVsFolding {
 
             char[] chainId = chainIdFromDB.toCharArray();
 
-            for (int i = 0; i < listRankIds.size(); i++) {
+            B: for (int i = 0; i < listRankIds.size(); i++) {
 
                 Integer matchingRankId = listRankIds.get(i);
 
@@ -155,19 +155,29 @@ public class ProtocolBindingVsFolding {
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
                 ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
                 List<Hit> listBestHitForEachAndEverySeed = null;
+
                 try {
                     listBestHitForEachAndEverySeed = comparatorShape.computeResults();
-                    for (Hit hit : listBestHitForEachAndEverySeed) {
-                        System.out.println("Minimizing ... " + hit.toString());
+                } catch (NullResultFromAComparisonException e) {
+                    e.printStackTrace();
+                    continue B;
+                }
+                int hitRank = -1;
+                A:
+                for (Hit hit : listBestHitForEachAndEverySeed) {
+                    hitRank += 1;
+                    try {
+                        //System.out.println("Minimizing ... " + hit.toString());
                         HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
-
-                        String message = hit.toString();
-                        ControllerLoger.logger.log(Level.INFO, message);
+                    } catch (NullResultFromAComparisonException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        continue A;
                     }
 
-                } catch (NullResultFromAComparisonException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    String message = hit.toString() + " Rank = " + hitRank;
+                    ControllerLoger.logger.log(Level.INFO, message);
+
                 }
 
             }

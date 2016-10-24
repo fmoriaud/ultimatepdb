@@ -9,6 +9,7 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	private float ligandStrainedEnergy;
 	private float rmsdLigand = Float.MAX_VALUE;
 
+
 	// it is actually only working if query is a peptide. In other cases this value stays to DoubleMax
 	private float ratioPairedPointToHitPoints = Float.MAX_VALUE;
 
@@ -17,11 +18,11 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	// Constructor
 	// -------------------------------------------------------------------
 	public ResultsUltiJMolMinimizedHitLigandOnTarget(int countOfLongDistanceChange,
-			float interactionEFinal, float eCorrectedStrained, float rmsdLigand){
+			float interactionEFinal, float strainedEnergyLigand, float rmsdLigand){
 
 		this.countOfLongDistanceChange = countOfLongDistanceChange;
 		this.interactionEFinal = interactionEFinal;
-		this.ligandStrainedEnergy = eCorrectedStrained;
+		this.ligandStrainedEnergy = strainedEnergyLigand;
 		this.rmsdLigand = rmsdLigand;
 	}
 

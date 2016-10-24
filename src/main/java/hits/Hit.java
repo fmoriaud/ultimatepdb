@@ -52,6 +52,8 @@ public class Hit {
 			result.append(" chain id = " + String.valueOf(shapeContainerWithPeptide.getPeptide().getChainId()));
 			result.append(" index = " + String.valueOf(shapeContainerWithPeptide.getStartingRankId()));
 			result.append(" sequence = " + listResSeq.toString());
+
+
 		}
 		if (shapeContainer instanceof ShapeContainerWithLigand){
 
@@ -63,6 +65,12 @@ public class Hit {
 		result.append(" cost = " + this.getResultsFromEvaluateCost().getCost() +
 				" minishape size = " + this.getShapeContainer().getMiniShape().size() + " shape size = " + this.getShapeContainer().getShape().getSize()
 				+ NEW_LINE);
+
+		result.append("RatioPairedPointToHitPoints = " + hitScore.getRatioPairedPointToHitPoints());
+		result.append(" CountOfLongDistanceChange = " + hitScore.getCountOfLongDistanceChange());
+		result.append(" InteractionEFinal = " + hitScore.getInteractionEFinal());
+		result.append(" RmsdLigand = " + hitScore.getRmsdLigand());
+		result.append(" LigandStrainedEnergy = " + hitScore.getLigandStrainedEnergy() + NEW_LINE);
 
 		return result.toString();
 	}

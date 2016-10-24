@@ -2,6 +2,7 @@ package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
@@ -101,7 +102,12 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(protonatedTarget, protonatedLigand, algoParameters);
-        score.run();
+        try {
+            score.run();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+            assertTrue(false);
+        }
 
         assertTrue(score.isConvergenReached());
         // 0.101012625
@@ -193,7 +199,12 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(protonatedTarget, protonatedLigand, algoParameters);
-        score.run();
+        try {
+            score.run();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+            assertTrue(false);
+        }
 
         assertTrue(score.isConvergenReached());
 
