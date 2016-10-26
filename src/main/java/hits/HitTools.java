@@ -44,7 +44,7 @@ public class HitTools {
         if (targetShape instanceof ShapeContainerWithLigand || (rmsdLigand != null && rmsdLigand < 100.0)) {
             // scoring with Jmol forcefield
 
-            ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
+            ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget = null;
             if (algoParameters.isOPTIMIZE_HIT_GEOMETRY() == true) {
 
                 MyChainIfc peptideOrLigand = null;
@@ -93,7 +93,7 @@ public class HitTools {
                 MyStructureIfc preparedQuery = protonate2.getProtonatedMyStructure();
 
                 try{
-                    hitScore = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
+                    resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
                 } catch (Exception e){
                     System.out.println();
@@ -102,26 +102,27 @@ public class HitTools {
                 // handle coverage of query into hit
 
 
-                if (hitScore != null) {
-                    System.out.println("InteractionEFinal = " + hitScore.getInteractionEFinal());
-                    System.out.println("rmsd ligand = " + hitScore.getRmsdLigand());
-                    System.out.println("ligand stained energy = " + hitScore.getLigandStrainedEnergy());
-                    System.out.println("count longer than 2A change = " + hitScore.getCountOfLongDistanceChange());
+                if (resultsUltiJMolMinimizedHitLigandOnTarget != null) {
+                    System.out.println("InteractionEFinal = " + resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal());
+                    System.out.println("rmsd ligand = " + resultsUltiJMolMinimizedHitLigandOnTarget.getRmsdLigand());
+                    System.out.println("ligand stained energy = " + resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy());
+                    System.out.println("count longer than 2A change = " + resultsUltiJMolMinimizedHitLigandOnTarget.getCountOfLongDistanceChange());
+                    System.out.println("All convergence reached = " + resultsUltiJMolMinimizedHitLigandOnTarget.isAllconvergenceReached());
                 }
 
-                if (hitScore == null) {
+                if (resultsUltiJMolMinimizedHitLigandOnTarget == null) {
                     String message = "hitscore is null";
                     NullResultFromAComparisonException ex = new NullResultFromAComparisonException(message);
                     throw ex;
                 }
             } else {
 
-                hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, 0.0f, 0f, 0.0f);
+                resultsUltiJMolMinimizedHitLigandOnTarget = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, 0.0f, 0f, 0.0f, false);
             }
 
             if (rmsdLigand != null) {
                 System.out.println("rmsdLigand = " + rmsdLigand);
-                hitScore.setRmsdLigand(rmsdLigand);
+                resultsUltiJMolMinimizedHitLigandOnTarget.setRmsdLigand(rmsdLigand);
             }
 
             //				boolean isShapeOverlapOK = checkIfQuerySignificantlyCovered(currentBestHit.getResultsFromEvaluateCost(), hitScore);
@@ -130,7 +131,7 @@ public class HitTools {
             //					return false;
             //				}
 
-            hit.setHitScore(hitScore);
+            hit.setResultsUltiJMolMinimizedHitLigandOnTarget(resultsUltiJMolMinimizedHitLigandOnTarget);
         }
     }
 

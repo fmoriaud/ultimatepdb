@@ -22,10 +22,11 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     private AlgoParameters algoParameters;
 
     private float interactionEnergy;
-    private boolean convergenReached;
     private float rmsdOfLigandBeforeAndAfterMinimization;
     private int countOfLongDistanceChange;
     private float strainedEnergy;
+
+    private boolean allconvergenceReached = true;
 
     // -------------------------------------------------------------------
     // Constructors
@@ -79,8 +80,11 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         }
         Map<String, Object> results = scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.getResults();
-        convergenReached = (boolean) results.get("convergence reached");
+        boolean convergenReached = (boolean) results.get("convergence reached");
 
+        if (convergenReached == false){
+            allconvergenceReached = false;
+        }
         System.out.println("Convergence reached : " + convergenReached);
         String ligandFromMinimizedComplex = (String) results.get("ligand");
         String targetFromMinimizedComplex = (String) results.get("target");
@@ -98,6 +102,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         getEnergyTarget.execute();
 
+        if (getEnergyTarget.isConvergenceReached() == false){
+            allconvergenceReached = false;
+        }
         results = getEnergyTarget.getResults();
         float targetFromMinimizedComplexEnergy = (float) results.get("initial energy");
         System.out.println("targetFromMinimizedComplexEnergy = " + targetFromMinimizedComplexEnergy);
@@ -113,6 +120,10 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         getEnergyComplex.execute();
 
+        if (getEnergyComplex.isConvergenceReached() == false){
+            allconvergenceReached = false;
+        }
+
         results = getEnergyComplex.getResults();
         float complexFromMinimizedComplexEnergy = (float) results.get("initial energy");
         System.out.println("complexFromMinimizedComplexEnergy = " + complexFromMinimizedComplexEnergy);
@@ -127,6 +138,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         GetEnergy getEnergy = new GetEnergy(script, ligandFromMinimizedComplex, algoParameters);
 
         getEnergy.execute();
+        if (getEnergy.isConvergenceReached() == false){
+            allconvergenceReached = false;
+        }
 
         results = getEnergy.getResults();
         float ligandFromMinimizedComplexEnergy = (float) results.get("initial energy");
@@ -157,6 +171,12 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         }
         results = scriptCommandOnUltiJmolLigand.getResults();
+
+
+        boolean convergenceReached = (Boolean) results.get("convergence reached");
+        if (convergenceReached == false){
+            allconvergenceReached = false;
+        }
         String ligandFullyRelaxedV3000 = (String) results.get("structureV3000");
 
         try {
@@ -171,6 +191,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             getEnergy2.execute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+        }
+        if (getEnergy2.isConvergenceReached() == false){
+            allconvergenceReached = false;
         }
         results = getEnergy2.getResults();
         float ligandFullyRelaxedEnergy = (float) results.get("initial energy");
@@ -230,11 +253,6 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     }
 
 
-    public boolean isConvergenReached() {
-        return convergenReached;
-    }
-
-
     public float getRmsdOfLigandBeforeAndAfterMinimization() {
         return rmsdOfLigandBeforeAndAfterMinimization;
     }
@@ -247,4 +265,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     public float getStrainedEnergy() {
         return strainedEnergy;
     }
+
+    public boolean isAllconvergenceReached() {
+        return allconvergenceReached;
+    }
+
 }

@@ -109,7 +109,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        assertTrue(score.isConvergenReached());
+        assertTrue(score.isAllconvergenceReached());
         // 0.101012625
         float rmsd = score.getRmsdOfLigandBeforeAndAfterMinimization();
         assertTrue(rmsd < 0.15 && rmsd > 0.05);
@@ -206,7 +206,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        assertTrue(score.isConvergenReached());
+        assertTrue(score.isAllconvergenceReached());
 
         //0.21654312
         float rmsd = score.getRmsdOfLigandBeforeAndAfterMinimization();

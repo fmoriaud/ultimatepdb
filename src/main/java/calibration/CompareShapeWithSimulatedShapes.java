@@ -179,7 +179,7 @@ public class CompareShapeWithSimulatedShapes {
 					ControllerLoger.logger.log(Level.INFO, message.toString());
 					continue;
 				}
-				ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getHitScore();
+				ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getResultsUltiJMolMinimizedHitLigandOnTarget();
 				double cost = hit.getResultsFromEvaluateCost().getCost();
 				float ratioPairedPointInQuery = hit.getResultsFromEvaluateCost().getRatioPairedPointInQuery();
 				double rmsdLigand = hitScore.getRmsdLigand();

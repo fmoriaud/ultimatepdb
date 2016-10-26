@@ -26,6 +26,7 @@ public class ScriptCommandOnUltiJmol {
 
     private boolean scriptIsMinimizing = false;
 
+
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------

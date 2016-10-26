@@ -21,7 +21,6 @@ import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
 import java.io.IOException;
@@ -106,7 +105,7 @@ public class AutoShapeSegmentOfChainTest {
         try {
             Hit hit = listBestHitForEachAndEverySeed.get(0);
             HitTools.minimizeHitInQuery(hit, shapeQuery, shapeTarget, algoParameters);
-            ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getHitScore();
+            ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getResultsUltiJMolMinimizedHitLigandOnTarget();
             assertTrue(hitScore != null);
             assertTrue(hitScore.getInteractionEFinal() > -20 && hitScore.getInteractionEFinal() < -19);
             assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 130 && Math.abs(hitScore.getLigandStrainedEnergy()) < 132);

@@ -21,26 +21,27 @@ public class GetEnergy {
     private String script;
 
     private Map<String, Object> results = new LinkedHashMap<>();
+    private boolean convergenceReached = true;
 
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
 
-   /*
-    public GetEnergy(String script, String moleculeV3000, MyJmol1462 ultiJmol) {
+    /*
+     public GetEnergy(String script, String moleculeV3000, MyJmol1462 ultiJmol) {
+
+         this.script = script;
+         this.moleculeV3000 = moleculeV3000;
+         this.ultiJmol = ultiJmol;
+         ultiJmol.jmolPanel.evalString("zap");
+     }
+ */
+    public GetEnergy(String script, String moleculeV3000, AlgoParameters algoParameters) {
 
         this.script = script;
         this.moleculeV3000 = moleculeV3000;
-        this.ultiJmol = ultiJmol;
-        ultiJmol.jmolPanel.evalString("zap");
+        this.algoParameters = algoParameters;
     }
-*/
-   public GetEnergy(String script, String moleculeV3000, AlgoParameters algoParameters) {
-
-       this.script = script;
-       this.moleculeV3000 = moleculeV3000;
-       this.algoParameters = algoParameters;
-   }
 
 
     // -------------------------------------------------------------------
@@ -73,13 +74,14 @@ public class GetEnergy {
 
         ultiJmol.jmolPanel.evalString(newScript);
 
-
-
         if (!script.contains("minimize")) {
             return;
         }
 
         Float energyAsInitialAsPossible = waitMinimizationEnergyAvailable(ultiJmol);
+        if (energyAsInitialAsPossible == null) {
+            convergenceReached = false;
+        }
         results.put("initial energy", energyAsInitialAsPossible);
         // Whatever is the minimize script which contains what to fix and that matters for the energy
         ultiJmol.jmolPanel.evalString("minimize clear");
@@ -102,21 +104,17 @@ public class GetEnergy {
         Minimizer minimizer = ultiJmol.jmolPanel.getViewer().getMinimizer(true);
 
         // if not ok jmol returns 0.0 which is very unlikely
-        while (minimizer == null || minimizer.getMinimizationEnergy() == null || Math.abs(minimizer.getMinimizationEnergy()) < 0.01 ) {
+        while (minimizer == null || minimizer.getMinimizationEnergy() == null || Math.abs(minimizer.getMinimizationEnergy()) < 0.01) {
             try {
                 Thread.sleep(waitTimeMillisecond);
                 countIteration += 1;
                 //System.out.println(countIteration);
                 //System.out.println(countIteration);
                 if (countIteration > maxIteration) {
-                    String message = "Wait for Minimization Energy to be available failed because too many iterations :  ";
-                    ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-                    throw exception;
+                    return null;
                 }
             } catch (InterruptedException e) {
-                String message = "Wait for Minimization Energy to be available failed because of Exception";
-                ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-                throw exception;
+                return null;
             }
             minimizer = ultiJmol.jmolPanel.getViewer().getMinimizer(true);
         }
@@ -128,5 +126,9 @@ public class GetEnergy {
     //------------------------
     public Map<String, Object> getResults() {
         return results;
+    }
+
+    public boolean isConvergenceReached() {
+        return convergenceReached;
     }
 }

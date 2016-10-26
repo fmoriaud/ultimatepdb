@@ -8,6 +8,7 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	private float interactionEFinal;
 	private float ligandStrainedEnergy;
 	private float rmsdLigand = Float.MAX_VALUE;
+	private boolean allconvergenceReached;
 
 
 
@@ -15,12 +16,13 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 	// Constructor
 	// -------------------------------------------------------------------
 	public ResultsUltiJMolMinimizedHitLigandOnTarget(int countOfLongDistanceChange,
-			float interactionEFinal, float strainedEnergyLigand, float rmsdLigand){
+			float interactionEFinal, float strainedEnergyLigand, float rmsdLigand, boolean allconvergenceReached){
 
 		this.countOfLongDistanceChange = countOfLongDistanceChange;
 		this.interactionEFinal = interactionEFinal;
 		this.ligandStrainedEnergy = strainedEnergyLigand;
 		this.rmsdLigand = rmsdLigand;
+		this.allconvergenceReached = allconvergenceReached;
 	}
 
 
@@ -65,6 +67,10 @@ public class ResultsUltiJMolMinimizedHitLigandOnTarget {
 
 	public void setRmsdLigand(float rmsdLigand) {
 		this.rmsdLigand = rmsdLigand;
+	}
+
+	public boolean isAllconvergenceReached() {
+		return allconvergenceReached;
 	}
 
 }

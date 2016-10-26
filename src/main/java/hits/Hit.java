@@ -16,7 +16,7 @@ public class Hit {
 	//------------------------
 	private ShapeContainerIfc shapeContainer;
 	private ResultsFromEvaluateCost resultsFromEvaluateCost;
-	private ResultsUltiJMolMinimizedHitLigandOnTarget hitScore;
+	private ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget;
 
 
 
@@ -67,11 +67,11 @@ public class Hit {
 				+ NEW_LINE);
 
 		result.append("RatioPairedPointToHitPoints = " + resultsFromEvaluateCost.getRatioPairedPointInQuery());
-		result.append(" CountOfLongDistanceChange = " + hitScore.getCountOfLongDistanceChange());
-		result.append(" InteractionEFinal = " + hitScore.getInteractionEFinal());
-		result.append(" RmsdLigand = " + hitScore.getRmsdLigand());
-		result.append(" LigandStrainedEnergy = " + hitScore.getLigandStrainedEnergy() + NEW_LINE);
-
+		result.append(" CountOfLongDistanceChange = " + resultsUltiJMolMinimizedHitLigandOnTarget.getCountOfLongDistanceChange());
+		result.append(" InteractionEFinal = " + resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal());
+		result.append(" RmsdLigand = " + resultsUltiJMolMinimizedHitLigandOnTarget.getRmsdLigand());
+		result.append(" LigandStrainedEnergy = " + resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy() + NEW_LINE);
+		result.append(" all convergence reached " + resultsUltiJMolMinimizedHitLigandOnTarget.isAllconvergenceReached());
 		return result.toString();
 	}
 
@@ -86,11 +86,11 @@ public class Hit {
 		return resultsFromEvaluateCost;
 	}
 	
-	public ResultsUltiJMolMinimizedHitLigandOnTarget getHitScore() {
-		return hitScore;
+	public ResultsUltiJMolMinimizedHitLigandOnTarget getResultsUltiJMolMinimizedHitLigandOnTarget() {
+		return resultsUltiJMolMinimizedHitLigandOnTarget;
 	}
 	
-	public void setHitScore(ResultsUltiJMolMinimizedHitLigandOnTarget hitScore) {
-		this.hitScore = hitScore;
+	public void setResultsUltiJMolMinimizedHitLigandOnTarget(ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget) {
+		this.resultsUltiJMolMinimizedHitLigandOnTarget = resultsUltiJMolMinimizedHitLigandOnTarget;
 	}
 }

@@ -89,7 +89,7 @@ public class MyJmolTools {
     public static ResultsUltiJMolMinimizedHitLigandOnTarget scoreByMinimizingLigandOnFixedReceptor(
             AlgoParameters algoParameters, MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
-                ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
+                ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget = null;
 
         try {
             ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(target, peptide, algoParameters);
@@ -99,8 +99,8 @@ public class MyJmolTools {
             int longDistanceChangeCount = score.getCountOfLongDistanceChange();
             float strainedEnergy = score.getStrainedEnergy();
             float interactionEnergy = score.getInteractionEnergy();
-
-            hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(longDistanceChangeCount, interactionEnergy, strainedEnergy, rmsd);
+            boolean convergenceReached = score.isAllconvergenceReached();
+            resultsUltiJMolMinimizedHitLigandOnTarget = new ResultsUltiJMolMinimizedHitLigandOnTarget(longDistanceChangeCount, interactionEnergy, strainedEnergy, rmsd, convergenceReached);
 
         } catch (Exception e) {
 
@@ -111,7 +111,7 @@ public class MyJmolTools {
             throw exception;
         }
 
-        return hitScore;
+        return resultsUltiJMolMinimizedHitLigandOnTarget;
     }
 
 

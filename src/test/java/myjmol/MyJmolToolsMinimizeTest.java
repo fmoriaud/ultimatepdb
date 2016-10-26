@@ -75,19 +75,19 @@ public class MyJmolToolsMinimizeTest {
         // notcmodifying ligand coordinates
 
         // minimze ligand in original structure
-        ResultsUltiJMolMinimizedHitLigandOnTarget results = null;
+        ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget = null;
         try {
-            results = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, protonatedLigand, protonatedTarget);
+            resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, protonatedLigand, protonatedTarget);
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
            assertTrue(false);
         }
-        assertTrue(results != null);
-        assertTrue(results.getCountOfLongDistanceChange() == 0);
-        assertTrue(results.getInteractionEFinal() < 0);
-        assertTrue(Math.abs(results.getInteractionEFinal()) > 20 && Math.abs(results.getInteractionEFinal()) < 30);
-        assertTrue(results.getLigandStrainedEnergy() > 0);
-        assertTrue(Math.abs(results.getLigandStrainedEnergy()) > 20 && Math.abs(results.getLigandStrainedEnergy()) < 40);
-        assertTrue(results.getRmsdLigand() > 0.1 && results.getRmsdLigand() < 0.3);
+        assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget != null);
+        assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget.getCountOfLongDistanceChange() == 0);
+        assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal() < 0);
+        assertTrue(Math.abs(resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal()) > 20 && Math.abs(resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal()) < 30);
+        assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy() > 0);
+        assertTrue(Math.abs(resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy()) > 20 && Math.abs(resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy()) < 40);
+        assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget.getRmsdLigand() > 0.1 && resultsUltiJMolMinimizedHitLigandOnTarget.getRmsdLigand() < 0.3);
 
         // interactionEnergy = 222.08408
         // ligandFullyRelaxedEnergy = 13.304225
