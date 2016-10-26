@@ -4,12 +4,12 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
+import jmolgui.UltiJmol1462;
 import math.AddToMap;
 import mystructure.*;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
-import ultimatepdb.UltiJmol1462;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -88,7 +88,8 @@ public class MyJmolTools {
      */
     public static ResultsUltiJMolMinimizedHitLigandOnTarget scoreByMinimizingLigandOnFixedReceptor(
             AlgoParameters algoParameters, MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
-        ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
+
+                ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = null;
 
         try {
             ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(target, peptide, algoParameters);

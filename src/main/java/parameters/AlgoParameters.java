@@ -4,8 +4,8 @@ import java.util.List;
 
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
+import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
-import ultimatepdb.UltiJmol1462;
 
 public class AlgoParameters {
 

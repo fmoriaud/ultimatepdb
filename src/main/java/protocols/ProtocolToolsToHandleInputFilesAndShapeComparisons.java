@@ -201,8 +201,6 @@ public class ProtocolToolsToHandleInputFilesAndShapeComparisons {
 					hitScore = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, 0.0f, 0.0f, 0.0f);
 				}
 
-				hitScore.setRatioPairedPointToHitPoints(ratioPairedPointToHitPoints);
-
 				if (rmsdLigand != null){
 					System.out.println("rmsdLigand = " + rmsdLigand);
 					hitScore.setRmsdLigand((float) rmsdLigand.doubleValue());

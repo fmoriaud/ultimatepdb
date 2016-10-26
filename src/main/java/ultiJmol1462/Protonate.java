@@ -1,11 +1,11 @@
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
+import jmolgui.UltiJmol1462;
 import math.AddToMap;
 import mystructure.*;
 import org.jmol.minimize.Minimizer;
 import parameters.AlgoParameters;
-import ultimatepdb.UltiJmol1462;
 
 import java.util.*;
 

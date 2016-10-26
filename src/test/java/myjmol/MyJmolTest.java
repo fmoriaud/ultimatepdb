@@ -5,6 +5,7 @@ import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
+import jmolgui.UltiJmol1462;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,7 +17,6 @@ import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import ultimatepdb.UltiJmol1462;
 
 import java.io.File;
 import java.io.IOException;

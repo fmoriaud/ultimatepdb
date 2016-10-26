@@ -156,6 +156,9 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 //		for (Hit hit: hitsExtendedPairing){
 //			System.out.println(hit.getResultsFromEvaluateCost().getCoverage());
 //		}
+		if (hitsExtendedPairing.size() > 0){
+			System.out.println();
+		}
 		return hitsExtendedPairing;
 	}
 

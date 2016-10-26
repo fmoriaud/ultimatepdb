@@ -95,11 +95,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         script = MyJmolScripts.getScriptMinimizationAll();
 
         GetEnergy getEnergyTarget = new GetEnergy(script, targetFromMinimizedComplex, algoParameters);
-        try {
-            getEnergyTarget.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-        }
+
+        getEnergyTarget.execute();
+
         results = getEnergyTarget.getResults();
         float targetFromMinimizedComplexEnergy = (float) results.get("initial energy");
         System.out.println("targetFromMinimizedComplexEnergy = " + targetFromMinimizedComplexEnergy);
@@ -112,13 +110,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         script = MyJmolScripts.getScriptMinimizationAll();
         GetEnergy getEnergyComplex = new GetEnergy(script, complexFromMinimizedComplex, algoParameters);
-        try {
-            getEnergyComplex.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-            throw exceptionInScoringUsingBioJavaJMolGUI;
-            // this happens for instance for too many iterations
-        }
+
+        getEnergyComplex.execute();
+
         results = getEnergyComplex.getResults();
         float complexFromMinimizedComplexEnergy = (float) results.get("initial energy");
         System.out.println("complexFromMinimizedComplexEnergy = " + complexFromMinimizedComplexEnergy);
@@ -131,11 +125,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         script = MyJmolScripts.getScriptMinimizationAll();
         GetEnergy getEnergy = new GetEnergy(script, ligandFromMinimizedComplex, algoParameters);
-        try {
-            getEnergy.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-        }
+
+        getEnergy.execute();
+
         results = getEnergy.getResults();
         float ligandFromMinimizedComplexEnergy = (float) results.get("initial energy");
         System.out.println("ligandFromMinimizedComplexEnergy = " + ligandFromMinimizedComplexEnergy);

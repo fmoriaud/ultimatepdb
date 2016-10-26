@@ -10,6 +10,7 @@ import hits.Hit;
 import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import math.ToolsMath;
 import mystructure.*;
@@ -30,7 +31,6 @@ import shapeCompare.ProcrustesAnalysis;
 import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
-import ultimatepdb.UltiJmol1462;
 
 import java.io.IOException;
 import java.net.URL;
@@ -140,7 +140,8 @@ public class ProtocolBindingVsFolding {
 
             char[] chainId = chainIdFromDB.toCharArray();
 
-            B: for (int i = 0; i < listRankIds.size(); i++) {
+            B:
+            for (int i = 0; i < listRankIds.size(); i++) {
 
                 Integer matchingRankId = listRankIds.get(i);
 
@@ -166,14 +167,17 @@ public class ProtocolBindingVsFolding {
                 A:
                 for (Hit hit : listBestHitForEachAndEverySeed) {
                     hitRank += 1;
+
+                    //System.out.println("Minimizing ... " + hit.toString());
                     try {
-                        //System.out.println("Minimizing ... " + hit.toString());
                         HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
                     } catch (NullResultFromAComparisonException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
+                    } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+                        exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
                         continue A;
                     }
+
 
                     String message = hit.toString() + " Rank = " + hitRank;
                     ControllerLoger.logger.log(Level.INFO, message);

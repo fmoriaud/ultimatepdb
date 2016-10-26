@@ -5,6 +5,7 @@ package ultiJmol1462;
  */
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
+import jmolgui.UltiJmol1462;
 import parameters.AlgoParameters;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import parameters.AlgoParameters;
 import ultiJmol1462.MyJmolTools;
-import ultimatepdb.UltiJmol1462;
 
 import java.util.List;
 

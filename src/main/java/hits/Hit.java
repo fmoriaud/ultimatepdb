@@ -66,7 +66,7 @@ public class Hit {
 				" minishape size = " + this.getShapeContainer().getMiniShape().size() + " shape size = " + this.getShapeContainer().getShape().getSize()
 				+ NEW_LINE);
 
-		result.append("RatioPairedPointToHitPoints = " + hitScore.getRatioPairedPointToHitPoints());
+		result.append("RatioPairedPointToHitPoints = " + resultsFromEvaluateCost.getRatioPairedPointInQuery());
 		result.append(" CountOfLongDistanceChange = " + hitScore.getCountOfLongDistanceChange());
 		result.append(" InteractionEFinal = " + hitScore.getInteractionEFinal());
 		result.append(" RmsdLigand = " + hitScore.getRmsdLigand());

@@ -7,12 +7,12 @@ import calibration.CompareShapeWithSimulatedShapes;
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
+import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import parameters.AlgoParameters;
 import shapeBuilder.ShapeBuildingException;
 import shapeCompare.ProcrustesAnalysis;
 import mystructure.EnumMyReaderBiojava;
-import ultimatepdb.UltiJmol1462;
 
 public class RunCalibrationProtocol {
 

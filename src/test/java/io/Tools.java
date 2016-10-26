@@ -1,6 +1,7 @@
 package io;
 
 import genericBuffer.GenericBuffer;
+import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import org.apache.commons.io.FileUtils;
 import org.biojava.nbio.structure.*;
@@ -9,7 +10,6 @@ import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
 import mystructure.EnumMyReaderBiojava;
 import shapeCompare.ProcrustesAnalysis;
-import ultimatepdb.UltiJmol1462;
 
 import java.io.File;
 import java.io.IOException;

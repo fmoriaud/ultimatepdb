@@ -79,7 +79,7 @@ public class MyJmolToolsMinimizeTest {
         try {
             results = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, protonatedLigand, protonatedTarget);
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+           assertTrue(false);
         }
         assertTrue(results != null);
         assertTrue(results.getCountOfLongDistanceChange() == 0);
