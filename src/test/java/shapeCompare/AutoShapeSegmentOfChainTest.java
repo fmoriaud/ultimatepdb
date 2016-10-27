@@ -4,6 +4,7 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
+import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
@@ -19,6 +20,7 @@ import protocols.CommandLineException;
 import protocols.ParsingConfigFileException;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
+import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
@@ -109,8 +111,10 @@ public class AutoShapeSegmentOfChainTest {
             assertTrue(hitScore != null);
             assertTrue(hitScore.getInteractionEFinal() > -20 && hitScore.getInteractionEFinal() < -19);
             assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 130 && Math.abs(hitScore.getLigandStrainedEnergy()) < 132);
-            assertTrue(hitScore.getRmsdLigand() < 0.1);
+            assertTrue(hitScore.getRmsdLigand() < 0.7 && hitScore.getRmsdLigand() > 0.6);
             assertTrue(hitScore.getCountOfLongDistanceChange() == 0);
+            HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
+            assertTrue(hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() < 0.001);
 
         } catch (NullResultFromAComparisonException e) {
             e.printStackTrace();

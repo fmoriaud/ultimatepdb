@@ -7,6 +7,7 @@ import database.SequenceTools;
 import genericBuffer.GenericBuffer;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
+import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
@@ -178,8 +179,8 @@ public class ProtocolBindingVsFolding {
                         continue A;
                     }
 
-
-                    String message = hit.toString() + " Rank = " + hitRank;
+                    HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
+                    String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
                     ControllerLoger.logger.log(Level.INFO, message);
 
                 }

@@ -149,7 +149,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 			}
 		}
 
-		List<Hit> hitsExtendedPairing = PairingTools.generateHitsListFromResultList(resultsExtendedPairing, shapeContainerAnyShape);
+		List<Hit> hitsExtendedPairing = PairingTools.generateHitsListFromResultList(resultsExtendedPairing, shapeContainerAnyShape, shapeContainerQuery, algoParameters);
 		Collections.sort(hitsExtendedPairing, new PairingTools.LowestCostHitComparator());
 
 //		System.out.println("hits : ");

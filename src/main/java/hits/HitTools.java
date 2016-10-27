@@ -23,6 +23,7 @@ import pointWithProperties.PointWithPropertiesIfc;
 import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
+import shape.ShapeContainerWithPeptide;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
 import shapeCompare.ResultsFromEvaluateCost;
@@ -38,10 +39,7 @@ public class HitTools {
         System.out.println("distance residual = " + hit.getResultsFromEvaluateCost().getDistanceResidual());
         System.out.println("currentBestHit.getResultsFromEvaluateCost().getCost() = " + cost);
 
-        //if (cost < 1.00 || (rmsdLigand != null && rmsdLigand < 5.0)){
-        Float rmsdLigand = computeRmsdBackboneAtomBetweenHitPeptideAndQueryLigandDefinigQuery(hit, queryShape, algoParameters);
-
-        if (targetShape instanceof ShapeContainerWithLigand || (rmsdLigand != null && rmsdLigand < 100.0)) {
+        if (targetShape instanceof ShapeContainerWithLigand || targetShape instanceof ShapeContainerWithPeptide) {
             // scoring with Jmol forcefield
 
             ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget = null;
@@ -92,10 +90,10 @@ public class HitTools {
 
                 MyStructureIfc preparedQuery = protonate2.getProtonatedMyStructure();
 
-                try{
+                try {
                     resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println();
                 }
 
@@ -119,17 +117,6 @@ public class HitTools {
 
                 resultsUltiJMolMinimizedHitLigandOnTarget = new ResultsUltiJMolMinimizedHitLigandOnTarget(0, 0.0f, 0f, 0.0f, false);
             }
-
-            if (rmsdLigand != null) {
-                System.out.println("rmsdLigand = " + rmsdLigand);
-                resultsUltiJMolMinimizedHitLigandOnTarget.setRmsdLigand(rmsdLigand);
-            }
-
-            //				boolean isShapeOverlapOK = checkIfQuerySignificantlyCovered(currentBestHit.getResultsFromEvaluateCost(), hitScore);
-            //
-            //				if (isShapeOverlapOK == false){
-            //					return false;
-            //				}
 
             hit.setResultsUltiJMolMinimizedHitLigandOnTarget(resultsUltiJMolMinimizedHitLigandOnTarget);
         }
@@ -234,10 +221,10 @@ public class HitTools {
     }
 
 
-    private static Float computeRmsdBackboneAtomBetweenHitPeptideAndQueryLigandDefinigQuery(Hit currentBestHit, ShapeContainerIfc queryShape, AlgoParameters algoParameters) {
+    public static Float computeRmsdBackboneAtomBetweenHitPeptideAndQueryLigandDefinigQuery(ShapeContainerIfc targetShape, ResultsFromEvaluateCost result, ShapeContainerIfc queryShape, AlgoParameters algoParameters) {
 
         boolean isQueryShapeContainerHasPeptideIfc = queryShape instanceof HasPeptideIfc;
-        boolean isHitShapeContainerHasPeptideIfc = currentBestHit.getShapeContainer() instanceof HasPeptideIfc;
+        boolean isHitShapeContainerHasPeptideIfc = targetShape instanceof HasPeptideIfc;
 
         boolean canBeComputed = isQueryShapeContainerHasPeptideIfc && isHitShapeContainerHasPeptideIfc;
         if (!canBeComputed) {
@@ -247,8 +234,7 @@ public class HitTools {
         HasPeptideIfc queryShapeWithPeptide = (HasPeptideIfc) queryShape;
         MyChainIfc peptideUsedToBuiltTheQuery = queryShapeWithPeptide.getPeptide();
 
-        ShapeContainerIfc targetshape = currentBestHit.getShapeContainer();
-        HasPeptideIfc currentBestHitWithPeptide = (HasPeptideIfc) targetshape;
+        HasPeptideIfc currentBestHitWithPeptide = (HasPeptideIfc) targetShape;
         MyChainIfc peptideCurrentBestHit = currentBestHitWithPeptide.getPeptide();
 
         if (peptideUsedToBuiltTheQuery != null) {
@@ -258,7 +244,7 @@ public class HitTools {
             // put hit in ref frame of query
             List<double[]> coordinatesHit = new ArrayList<>();
             for (MyAtomIfc atomHit : backboneAtomPeptideHit) {
-                RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(currentBestHit.getResultsFromEvaluateCost(), new ArrayRealVector(ToolsMath.convertToDoubleArray(atomHit.getCoords())));
+                RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, new ArrayRealVector(ToolsMath.convertToDoubleArray(atomHit.getCoords())));
                 coordinatesHit.add(newPointCoords.toArray());
             }
             List<double[]> coordinatesQuery = new ArrayList<>();
