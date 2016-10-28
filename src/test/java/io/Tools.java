@@ -97,7 +97,7 @@ public class Tools {
             URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("chemcomp/0DY.cif.gz");
             File  chemcomp0DY = new File(url.toURI());
             resourcesChemcompFolder = chemcomp0DY.getParent();
-            Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(new File(resourcesChemcompFolder).toString());
+            Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexChemcompFileInFolder(new File(resourcesChemcompFolder).toString());
             for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
                 try {
                     FileUtils.copyFileToDirectory(new File(entry.getValue().get(0).toString()), new File(builttestChemcompFolder));

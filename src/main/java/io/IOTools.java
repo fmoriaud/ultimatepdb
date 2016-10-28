@@ -14,7 +14,22 @@ public class IOTools {
 
         Map<String, List<Path>> indexPDBFileInFolder = null;
         try {
-            FileListingVisitorForCifGzFiles fileListingVisitor = new FileListingVisitorForCifGzFiles(pathToDividedPDBFolder);
+            FileListingVisitorForPDBCifGzFiles fileListingVisitor = new FileListingVisitorForPDBCifGzFiles(pathToDividedPDBFolder);
+            indexPDBFileInFolder = fileListingVisitor.getIndexFiles();
+
+        } catch (IOException e) {
+            System.out.println("FAILURE: in makeAListOfInputPDBFilesRecursivelyFromInputControllerFolder");
+            //e.printStackTrace();
+        }
+        return indexPDBFileInFolder;
+    }
+
+
+    public static Map<String, List<Path>> indexChemcompFileInFolder(String pathToDividedPDBFolder) {
+
+        Map<String, List<Path>> indexPDBFileInFolder = null;
+        try {
+            FileListingVisitorForChemcompCifGzFiles fileListingVisitor = new FileListingVisitorForChemcompCifGzFiles(pathToDividedPDBFolder);
             indexPDBFileInFolder = fileListingVisitor.getIndexFiles();
 
         } catch (IOException e) {
