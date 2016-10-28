@@ -545,7 +545,7 @@ public class MyStructureTools {
 
         MyStructureIfc myStructureFile1 = null;
         try {
-            myStructureFile1 = new MyStructure(structureV3000, algoParameters);
+            myStructureFile1 = new MyStructure(structureV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -553,7 +553,7 @@ public class MyStructureTools {
 
         MyStructureIfc myStructureFile2 = null;
         try {
-            myStructureFile2 = new MyStructure(peptideV3000, algoParameters);
+            myStructureFile2 = new MyStructure(peptideV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

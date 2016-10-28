@@ -62,12 +62,8 @@ public class Protonate {
 
     public void compute() throws ExceptionInScoringUsingBioJavaJMolGUI {
 
-        try {
-            protonatedMyStructure = myStructure.cloneWithSameObjects();
-        } catch (ExceptionInMyStructurePackage e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
+        Cloner cloner = new Cloner(myStructure, algoParameters);
+        protonatedMyStructure = cloner.getClone();
 
         try {
             Thread.sleep(1000L);
@@ -138,7 +134,7 @@ public class Protonate {
 
         MyStructureIfc myStructureWithBondsAndHydrogenAtoms = null;
         try {
-            myStructureWithBondsAndHydrogenAtoms = new MyStructure(readV3000, algoParameters);
+            myStructureWithBondsAndHydrogenAtoms = new MyStructure(readV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

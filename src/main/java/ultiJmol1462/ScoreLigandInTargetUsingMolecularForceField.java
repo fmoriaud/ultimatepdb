@@ -208,7 +208,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         MyStructureIfc myStructureFile1 = null;
         try {
-            myStructureFile1 = new MyStructure(protonatedTarget.toV3000(), algoParameters);
+            myStructureFile1 = new MyStructure(protonatedTarget.toV3000());
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -216,7 +216,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         MyStructureIfc myStructureFile2 = null;
         try {
-            myStructureFile2 = new MyStructure(protonatedLigand.toV3000(), algoParameters);
+            myStructureFile2 = new MyStructure(protonatedLigand.toV3000());
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

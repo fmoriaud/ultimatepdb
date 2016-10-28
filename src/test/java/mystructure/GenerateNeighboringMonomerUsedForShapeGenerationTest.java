@@ -1,7 +1,11 @@
 package mystructure;
 
+import io.Tools;
 import org.junit.Test;
+import parameters.AlgoParameters;
+import protocols.ParsingConfigFileException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +17,9 @@ import static org.junit.Assert.assertTrue;
 public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
 
     @Test
-    public void testMonomersAreNeighbors() {
+    public void testMonomersAreNeighbors() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         MyStructureIfc myStructure = null;
         try {
             // currently two chains with two monomers each with three atom each
@@ -48,13 +53,8 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
             }
 
             // clone in order that neighbors are computed (coordinates were changed so neighbors are wrong)
-            MyStructureIfc myStructureCloned = null;
-            try {
-                myStructureCloned = myStructure.cloneWithSameObjects();
-            } catch (ExceptionInMyStructurePackage e) {
-                e.printStackTrace();
-            }
-
+            Cloner cloner = new Cloner(myStructure, algoParameters);
+            MyStructureIfc myStructureCloned = cloner.getClone();
 
             GeneratorNeighboringMonomer generator = new GeneratorNeighboringMonomer(minDistanceToBeneighbor, myStructureCloned.getAllChains());
 

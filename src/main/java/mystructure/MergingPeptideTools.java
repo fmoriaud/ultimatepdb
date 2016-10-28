@@ -52,7 +52,7 @@ public class MergingPeptideTools {
 		MyChainIfc mergedPeptide = new MyChain(monomersMergePeptides);
 		MyStructureIfc myStructure = new MyStructure(mergedPeptide, algoParameters);
 
-		MyStructureIfc myStructureCloned = myStructure.cloneWithSameObjects();
+		//MyStructureIfc myStructureCloned = myStructure.cloneWithSameObjects();
 
 
 		// comment retrouver la bond en question comme ca a ete clone ???

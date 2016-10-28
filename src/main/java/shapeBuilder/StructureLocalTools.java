@@ -237,7 +237,6 @@ public class StructureLocalTools {
         Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
         MyStructureIfc clonedMyStructure = cloner.getClone();
 
-
         makeCaOnBothSideWithNoBoundAtomsStructureLocal(extractedSegment, clonedMyStructure, myStructureGlobalBrut);
 
         return clonedMyStructure;

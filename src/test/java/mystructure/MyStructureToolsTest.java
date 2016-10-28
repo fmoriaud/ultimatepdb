@@ -28,7 +28,6 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
     public void testIsHydrogen() {
 
@@ -44,7 +43,6 @@ public class MyStructureToolsTest {
         }
         assertTrue(MyStructureTools.isHydrogen(myAtomValid));
     }
-
 
 
     @Test
@@ -64,7 +62,6 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
     public void testGenerateHydrogenAtomName() {
 
@@ -73,16 +70,15 @@ public class MyStructureToolsTest {
         assertTrue(hydrogenNames.size() == 1);
         assertTrue(Arrays.equals(hydrogenNames.get(0), "H1CA".toCharArray()));
 
-        heavyAtomName="N";
+        heavyAtomName = "N";
         hydrogenNames = MyStructureTools.generateHydrogenAtomName(heavyAtomName);
         assertTrue(hydrogenNames.size() == 1);
         assertTrue(Arrays.equals(hydrogenNames.get(0), "H1N".toCharArray()));
 
-        heavyAtomName="O";
+        heavyAtomName = "O";
         hydrogenNames = MyStructureTools.generateHydrogenAtomName(heavyAtomName);
         assertTrue(hydrogenNames.size() == 0);
     }
-
 
 
     @Test
@@ -100,7 +96,7 @@ public class MyStructureToolsTest {
 
 
     @Test
-    public void testRenumberAllAtomIds(){
+    public void testRenumberAllAtomIds() {
 
         MyStructureIfc myStructure = null;
         try {
@@ -112,9 +108,9 @@ public class MyStructureToolsTest {
         MyStructureTools.renumberAllAtomIds(myStructure);
         MyChainIfc[] aminoChains = myStructure.getAllAminochains();
         int atomId = 1;
-        for (MyChainIfc chain: aminoChains){
-            for (MyMonomerIfc monomer: chain.getMyMonomers()){
-                for (MyAtomIfc atom: monomer.getMyAtoms()){
+        for (MyChainIfc chain : aminoChains) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
                     int currentAtomId = atom.getOriginalAtomId();
                     assertTrue(currentAtomId == atomId);
                     atomId += 1;
@@ -124,9 +120,8 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
-    public void testCountBonds(){
+    public void testCountBonds() {
 
         MyStructureIfc myStructure = null;
         try {
@@ -147,9 +142,8 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
-    public void testRemoveBondsToNonExistingAtoms(){
+    public void testRemoveBondsToNonExistingAtoms() {
 
         MyStructureIfc myStructure = null;
         try {
@@ -179,9 +173,8 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
-    public void testGetRepresentativeMyAtom(){
+    public void testGetRepresentativeMyAtom() {
 
         MyMonomer myMonomerAmino = null;
         try {
@@ -192,7 +185,6 @@ public class MyStructureToolsTest {
         MyAtomIfc repAtom = MyStructureTools.getRepresentativeMyAtom(myMonomerAmino);
         assertTrue(Arrays.equals(repAtom.getAtomName(), "CA".toCharArray()));
     }
-
 
 
     @Test
@@ -210,7 +202,7 @@ public class MyStructureToolsTest {
         // needed as it is the distance used in MyStructure
 
         float minDistanceToBeneighbor = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
-        for (int i=1; i<10; i++){
+        for (int i = 1; i < 10; i++) {
 
             float y = 0f;
             float z = 0f;
@@ -219,8 +211,8 @@ public class MyStructureToolsTest {
             // set coordinates to representative myAtom
             // set their x,y,z on a x axis, so distance is 1D and therefore easy to check
             List<Float> xCoordinates = new ArrayList<>();
-            for (MyChainIfc chain: myStructure.getAllChains()){
-                for (MyMonomerIfc monomer: chain.getMyMonomers()){
+            for (MyChainIfc chain : myStructure.getAllChains()) {
+                for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                     MyAtomIfc repAtom = MyStructureTools.getRepresentativeMyAtom(monomer);
 
                     x += minDistanceToBeneighbor * 2 / i;
@@ -233,38 +225,33 @@ public class MyStructureToolsTest {
                 }
             }
 
-            // clone in order that neighbors are computed (coordinates were changed so neighbors are wrong)
-            MyStructureIfc myStructureCloned = null;
-            try {
-                myStructureCloned = myStructure.cloneWithSameObjects();
-            } catch (ExceptionInMyStructurePackage e) {
-                e.printStackTrace();
-            }
+            MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(myStructure, algoParameters);
 
-            GeneratorNeighboringMonomer generator = new GeneratorNeighboringMonomer(minDistanceToBeneighbor, myStructureCloned.getAllChains());
+            GeneratorNeighboringMonomer generator = new GeneratorNeighboringMonomer(minDistanceToBeneighbor, myStructure.getAllChains());
 
-            MyChainIfc[] aminoChains = myStructureCloned.getAllAminochains();
-            for (MyChainIfc chain: aminoChains){
-                A: for (MyMonomerIfc startingMonomer: chain.getMyMonomers()){
+            MyChainIfc[] aminoChains = myStructure.getAllAminochains();
+            for (MyChainIfc chain : aminoChains) {
+                A:
+                for (MyMonomerIfc startingMonomer : chain.getMyMonomers()) {
                     MyChainIfc[] neighborsRecomputed = generator.computeAminoNeighborsOfAGivenResidue(startingMonomer);
 
-                    for (MyChainIfc chainOriginal: myStructureCloned.getAllAminochains()){
-                        for (MyMonomerIfc monomer: chainOriginal.getMyMonomers()){
-                            if (monomer == startingMonomer){ // found momomer
+                    for (MyChainIfc chainOriginal : myStructure.getAllAminochains()) {
+                        for (MyMonomerIfc monomer : chainOriginal.getMyMonomers()) {
+                            if (monomer == startingMonomer) { // found momomer
 
                                 MyChainIfc[] neighborsOriginal = monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
 
                                 //System.out.println(neighborsOriginal.length + " " + neighborsRecomputed.length);
                                 assertTrue(neighborsOriginal.length == neighborsRecomputed.length);
 
-                                for (int j=0; j<neighborsOriginal.length; j++){
+                                for (int j = 0; j < neighborsOriginal.length; j++) {
                                     MyChainIfc recomp = neighborsRecomputed[j];
                                     MyMonomerIfc[] recompMono = recomp.getMyMonomers();
                                     MyChainIfc orig = neighborsOriginal[j];
                                     MyMonomerIfc[] origMono = orig.getMyMonomers();
                                     //System.out.println(recompMono.length + " " + origMono.length);
                                     assertTrue(recompMono.length == origMono.length);
-                                    for (int k=0; k<recompMono.length; k++){
+                                    for (int k = 0; k < recompMono.length; k++) {
                                         assertTrue(recompMono[k] == origMono[k]);
                                     }
                                 }
@@ -277,9 +264,8 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
-    public void testcomputeAndStoreNeighboringMonomersByBond(){
+    public void testcomputeAndStoreNeighboringMonomersByBond() {
 
         MyStructureIfc myStructure = null;
         try {
@@ -289,16 +275,16 @@ public class MyStructureToolsTest {
         }
 
         // check if good when build from TestTools
-        for (MyChainIfc chainOriginal: myStructure.getAllAminochains()){
-            for (MyMonomerIfc monomer: chainOriginal.getMyMonomers()){
+        for (MyChainIfc chainOriginal : myStructure.getAllAminochains()) {
+            for (MyMonomerIfc monomer : chainOriginal.getMyMonomers()) {
                 MyMonomerIfc[] neighbors = monomer.getNeighboringMyMonomerByBond();
                 assertTrue(neighbors.length == 1);
             }
         }
 
         // removing the neighbors by bond
-        for (MyChainIfc chainOriginal: myStructure.getAllAminochains()){
-            for (MyMonomerIfc monomer: chainOriginal.getMyMonomers()){
+        for (MyChainIfc chainOriginal : myStructure.getAllAminochains()) {
+            for (MyMonomerIfc monomer : chainOriginal.getMyMonomers()) {
                 MyMonomerIfc[] neighbors = null;
                 monomer.setNeighboringMyMonomerByBond(neighbors);
             }
@@ -306,8 +292,8 @@ public class MyStructureToolsTest {
 
         MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
 
-        for (MyChainIfc chainOriginal: myStructure.getAllAminochains()){
-            for (MyMonomerIfc monomer: chainOriginal.getMyMonomers()){
+        for (MyChainIfc chainOriginal : myStructure.getAllAminochains()) {
+            for (MyMonomerIfc monomer : chainOriginal.getMyMonomers()) {
                 MyMonomerIfc[] neighbors = monomer.getNeighboringMyMonomerByBond();
                 // Because the test MyStructure has 2 chains of 2 linked mymonomer so each has one neighboring monomer by bond
                 assertTrue(neighbors.length == 1);
@@ -316,9 +302,8 @@ public class MyStructureToolsTest {
     }
 
 
-
     @Test
-    public void testRemoveAllExplicitHydrogensd(){
+    public void testRemoveAllExplicitHydrogensd() {
 
         // Make a MyStructure test then add some explicit h
         // use the method to remove

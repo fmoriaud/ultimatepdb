@@ -36,11 +36,8 @@ public class MyStructure implements MyStructureIfc {
     private List<MyChainIfc> tempChainList = new ArrayList<>();
     private List<MyMonomerIfc> tempMonomerList = new ArrayList<>();
 
-    private Map<MyAtomIfc, MyAtomIfc> mapToStoreAtomCorrespondanceNeededToFixBondsReference = new HashMap<>();
-
     private FileTime lastModificationTime;
 
-    private AlgoParameters algoParameters;
 
 
     //-------------------------------------------------------------
@@ -58,7 +55,6 @@ public class MyStructure implements MyStructureIfc {
         if (algoParameters == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
         }
-        this.algoParameters = algoParameters;
         this.expTechnique = expTechnique;
         this.myAminoChains = myAminoChains;
         this.myHetatmChains = myHetatmChains;
@@ -80,7 +76,6 @@ public class MyStructure implements MyStructureIfc {
         if (algoParameters == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
         }
-        this.algoParameters = algoParameters;
 
         if (myAminoChains == null || myHetatmChains == null || myNucleotideChains == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null MyChain[]");
@@ -135,7 +130,6 @@ public class MyStructure implements MyStructureIfc {
     @Deprecated
     public MyStructure(MyChainIfc chain, AlgoParameters algoParameters) {
 
-        this.algoParameters = algoParameters;
         // I keep them all in the same chain as it could be a peptide already clean with polymeric hetatm inserted
 
         MyChainIfc[] emptyArray = new MyChainIfc[0];
@@ -155,7 +149,6 @@ public class MyStructure implements MyStructureIfc {
 
     public MyStructure(MyChainIfc chain1, MyChainIfc chain2, AlgoParameters algoParameters) {
 
-        this.algoParameters = algoParameters;
         // I keep them all in the same chain as it could be a peptide already clean with polymeric hetatm inserted
 
         MyChainIfc[] emptyArray = new MyChainIfc[0];
@@ -173,8 +166,8 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-    public MyStructure(String readV3000, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage {
-        this.algoParameters = algoParameters;
+    public MyStructure(String readV3000) throws ExceptionInMyStructurePackage {
+
         makeStructureFromV3000(readV3000);
 
         // need removeHydrogenAndcomputeStructuralInformations(algoParameters); ?
@@ -433,141 +426,6 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-    @Override
-    public MyStructureIfc cloneWithSameObjectsRotatedCoords(ResultsFromEvaluateCost result) throws ExceptionInMyStructurePackage {
-
-        MyStructureIfc myStructureCloned = cloneWithSameObjects();
-        for (MyChainIfc chain : myStructureCloned.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
-                    RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
-                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
-                }
-            }
-        }
-        return myStructureCloned;
-    }
-
-
-    @Override
-    public synchronized MyStructureIfc cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(Set<MyMonomerIfc> myMonomerToKeep) throws ExceptionInMyStructurePackage {
-
-        mapToStoreAtomCorrespondanceNeededToFixBondsReference.clear();
-
-        List<MyChainIfc> clonedAminoChains = new ArrayList<>();
-        MyChainIfc[] aminoChains = getAllAminochains();
-        for (MyChainIfc chain : aminoChains) {
-            MyChainIfc newChain = cloneMychainWithSameObjects(chain, myMonomerToKeep);
-            if (newChain != null) {
-                clonedAminoChains.add(newChain);
-            }
-        }
-
-        List<MyChainIfc> clonedHetChains = new ArrayList<>();
-        MyChainIfc[] hetChains = getAllHetatmchains();
-        if (hetChains != null) {
-            for (MyChainIfc chain : hetChains) {
-                MyChainIfc newChain = cloneMychainWithSameObjects(chain, myMonomerToKeep);
-                if (newChain != null) {
-                    clonedHetChains.add(newChain);
-                }
-            }
-        }
-
-        List<MyChainIfc> clonedNucleosidesChains = new ArrayList<>();
-        MyChainIfc[] nucleosidesChains = getAllNucleosidechains();
-        if (nucleosidesChains != null) {
-            for (MyChainIfc chain : nucleosidesChains) {
-                MyChainIfc newChain = cloneMychainWithSameObjects(chain, myMonomerToKeep);
-                if (newChain != null) {
-                    clonedNucleosidesChains.add(newChain);
-                }
-            }
-        }
-
-        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromListMyChains(clonedAminoChains), MyStructureTools.makeArrayFromListMyChains(clonedHetChains), MyStructureTools.makeArrayFromListMyChains(clonedNucleosidesChains), this.expTechnique, algoParameters);
-
-        myStructureCloned.setFourLetterCode(this.getFourLetterCode());
-
-        fixBondedAtom(myStructureCloned);
-
-        computeStructuralInformation(myStructureCloned, algoParameters);
-
-        return myStructureCloned;
-    }
-
-
-    // A cloner should be used instead
-    @Override
-    @Deprecated
-    public synchronized MyStructureIfc cloneWithSameObjects() throws ExceptionInMyStructurePackage { // synchronized because of the tempList that should not be in use by another thread
-
-        mapToStoreAtomCorrespondanceNeededToFixBondsReference.clear();
-
-        List<MyChainIfc> clonedAminoChains = new ArrayList<>();
-        MyChainIfc[] aminoChains = getAllAminochains();
-        for (MyChainIfc chain : aminoChains) {
-            MyChainIfc newChain = cloneMychainWithSameObjects(chain);
-            if (newChain != null) {
-                clonedAminoChains.add(newChain);
-            }
-        }
-
-        List<MyChainIfc> clonedHetChains = new ArrayList<>();
-        MyChainIfc[] hetChains = getAllHetatmchains();
-        if (hetChains != null) {
-            for (MyChainIfc chain : hetChains) {
-                MyChainIfc newChain = cloneMychainWithSameObjects(chain);
-                if (newChain != null) {
-                    clonedHetChains.add(newChain);
-                }
-            }
-        }
-
-        List<MyChainIfc> clonedNucleosidesChains = new ArrayList<>();
-        MyChainIfc[] nucleosidesChains = getAllNucleosidechains();
-        if (nucleosidesChains != null) {
-            for (MyChainIfc chain : nucleosidesChains) {
-                MyChainIfc newChain = cloneMychainWithSameObjects(chain);
-                if (newChain != null) {
-                    clonedNucleosidesChains.add(newChain);
-                }
-            }
-        }
-
-        MyStructureIfc myStructureCloned = new MyStructure(MyStructureTools.makeArrayFromListMyChains(clonedAminoChains), MyStructureTools.makeArrayFromListMyChains(clonedHetChains), MyStructureTools.makeArrayFromListMyChains(clonedNucleosidesChains), this.expTechnique, algoParameters);
-
-        myStructureCloned.setFourLetterCode(this.getFourLetterCode());
-
-        //MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myStructureCloned);
-
-        fixBondedAtom(myStructureCloned);
-        computeStructuralInformation(myStructureCloned, algoParameters);
-
-
-        return myStructureCloned;
-    }
-
-    //	@Override
-    //	public void removeMonomer(MyMonomerIfc myMonomer) {
-    //
-    //		char[] type = myMonomer.getType();
-    //		if (String.valueOf(type).equals("amino")){
-    //			MyChainIfc[] aminochains = this.getAllAminochains();
-    //			removeMonomer(aminochains, myMonomer);
-    //		}
-    //
-    //		if (String.valueOf(type).equals("nucleotide")){
-    //			MyChainIfc[] nucleosidesChains = this.getAllNucleosidechains();
-    //			removeMonomer(nucleosidesChains, myMonomer);
-    //		}
-    //
-    //		if (String.valueOf(type).equals("hetatm")){
-    //			MyChainIfc[] hetatmChains = this.getAllHetatmchains();
-    //			removeMonomer(hetatmChains, myMonomer);
-    //		}
-    //	}
 
 
     //-------------------------------------------------------------
@@ -598,88 +456,6 @@ public class MyStructure implements MyStructureIfc {
         MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
     }
 
-
-    private MyChainIfc cloneMychainWithSameObjects(MyChainIfc chain, Set<MyMonomerIfc> myMonomerToKeep) throws ExceptionInMyStructurePackage {
-
-        int countMyMonomerToKeep = 0;
-        for (MyMonomerIfc myMonomer : chain.getMyMonomers()) {
-            if (myMonomerToKeep.contains(myMonomer)) {
-                countMyMonomerToKeep += 1;
-            }
-        }
-        if (countMyMonomerToKeep == 0) {
-            return null;
-        }
-
-        MyMonomerIfc[] myMonomersCloned = new MyMonomerIfc[countMyMonomerToKeep];
-
-        int currentMyMonomerToKeep = 0;
-        for (MyMonomerIfc myMonomer : chain.getMyMonomers()) {
-            if (myMonomerToKeep.contains(myMonomer)) {
-                myMonomersCloned[currentMyMonomerToKeep] = cloneMyMonomer(myMonomer);
-                currentMyMonomerToKeep += 1;
-            }
-        }
-        MyChainIfc myChainCloned = new MyChain(myMonomersCloned, chain.getChainId());
-
-        return myChainCloned;
-    }
-
-
-    private MyChainIfc cloneMychainWithSameObjects(MyChainIfc chain) throws ExceptionInMyStructurePackage {
-
-        MyMonomerIfc[] myMonomersCloned = new MyMonomerIfc[chain.getMyMonomers().length];
-
-        for (int i = 0; i < chain.getMyMonomers().length; i++) {
-            myMonomersCloned[i] = cloneMyMonomer(chain.getMyMonomers()[i]);
-        }
-        MyChainIfc myChainCloned = new MyChain(myMonomersCloned, chain.getChainId());
-
-        return myChainCloned;
-    }
-
-
-    private MyMonomerIfc cloneMyMonomer(MyMonomerIfc monomer) throws ExceptionInMyStructurePackage {
-
-        MyAtomIfc[] myAtomsCloned = new MyAtomIfc[monomer.getMyAtoms().length];
-
-        for (int i = 0; i < monomer.getMyAtoms().length; i++) {
-            try {
-                myAtomsCloned[i] = cloneMyAtom(monomer.getMyAtoms()[i]);
-            } catch (ExceptionInMyStructurePackage e) {
-                continue;
-            }
-        }
-        MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.isWasHetatm(), monomer.getInsertionLetter(), monomer.getAltLocGroup());
-        myMonomerCloned.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
-        MyStructureTools.setAtomParentReference(myMonomerCloned);
-
-        return myMonomerCloned;
-    }
-
-
-    private MyAtomIfc cloneMyAtom(MyAtomIfc atom) throws ExceptionInMyStructurePackage {
-        MyAtomIfc myatomCloned = null;
-
-        float[] newCoords = new float[3];
-        for (int i = 0; i < 3; i++) {
-            newCoords[i] = atom.getCoords()[i];
-        }
-        myatomCloned = new MyAtom(atom.getElement(), newCoords, atom.getAtomName(), atom.getOriginalAtomId());
-
-        if (atom.getBonds() != null) {
-            MyBondIfc[] newBonds = new MyBondIfc[atom.getBonds().length];
-            int bondCount = 0;
-            for (MyBondIfc bond : atom.getBonds()) {
-                MyBondIfc newBond = new MyBond(bond.getBondedAtom(), bond.getBondOrder());
-                newBonds[bondCount] = newBond;
-                bondCount += 1;
-            }
-            myatomCloned.setBonds(newBonds);
-        }
-        mapToStoreAtomCorrespondanceNeededToFixBondsReference.put(atom, myatomCloned);
-        return myatomCloned;
-    }
 
 
     private void makeStructureFromV3000(String readV3000) throws ExceptionInMyStructurePackage {
@@ -794,24 +570,6 @@ public class MyStructure implements MyStructureIfc {
         return newAtom;
     }
 
-
-    private void fixBondedAtom(MyStructureIfc myStructureCloned) {
-        for (MyChainIfc chain : myStructureCloned.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    MyBondIfc[] bonds = atom.getBonds();
-                    if (bonds != null && bonds.length > 0) {
-                        for (MyBondIfc bond : bonds) {
-                            MyAtomIfc bondedAtom = bond.getBondedAtom();
-                            bond.setBondedAtom(mapToStoreAtomCorrespondanceNeededToFixBondsReference.get(bondedAtom));
-                        }
-                    }
-                }
-            }
-        }
-
-        MyStructureTools.removeBondsToMyAtomsNotInMyStructure(myStructureCloned);
-    }
 
 
     private void removeMonomer(MyChainIfc[] chains, MyMonomerIfc monomerToRemove) {

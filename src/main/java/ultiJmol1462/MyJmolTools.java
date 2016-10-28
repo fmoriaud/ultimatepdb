@@ -66,7 +66,7 @@ public class MyJmolTools {
 
         MyStructureIfc inputStructure = null;
         try {
-            inputStructure = new MyStructure(inputStructureV3000, algoParameters);
+            inputStructure = new MyStructure(inputStructureV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -293,73 +293,6 @@ public class MyJmolTools {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private static MyStructureIfc protonateStructureUsingJMolUFF(MyStructureIfc myStructureInput, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
-
-        MyStructureIfc clonedMyStructureThatCouldHaveHydrogens = null;
-        try {
-            clonedMyStructureThatCouldHaveHydrogens = myStructureInput.cloneWithSameObjects();
-        } catch (ExceptionInMyStructurePackage e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
-
-        UltiJmol1462 ultiJMol = null;
-        String readV3000;
-        try {
-            ultiJMol = algoParameters.ultiJMolBuffer.get();
-            //(ultiJMol, myStructure, algoParameters, filenameV3000);
-
-
-            //deleteFileIfExist(outputFileName);
-            addHydrogensInJMolUsingUFF(ultiJMol, clonedMyStructureThatCouldHaveHydrogens, algoParameters);
-            readV3000 = ultiJMol.jmolPanel.getViewer().getData("*", "V3000");
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-
-            }
-        } catch (Exception e) {
-            System.out.println("Exception in protonation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            ultiJMol.frame.dispose(); // it is destroyed so not returned to factory
-            try {
-                algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-            String message = "Exception in protonation";
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
-        }
-        try {
-            ultiJMol.jmolPanel.evalString("zap");
-            try {
-                Thread.sleep(2000L);
-            } catch (InterruptedException e) {
-
-            }
-            algoParameters.ultiJMolBuffer.put(ultiJMol);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-        MyStructureIfc myStructureWithBondsAndHydrogenAtoms = null;
-        try {
-            myStructureWithBondsAndHydrogenAtoms = new MyStructure(readV3000, algoParameters);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        myStructureWithBondsAndHydrogenAtoms.setFourLetterCode(myStructureInput.getFourLetterCode());
-        addHydrogenInformation(clonedMyStructureThatCouldHaveHydrogens, myStructureWithBondsAndHydrogenAtoms);
-
-        return clonedMyStructureThatCouldHaveHydrogens;
-    }
-
-
     private static void addHydrogensInJMolUsingUFF(UltiJmol1462 ultiJmol, MyStructureIfc myStructure, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         try {
@@ -639,7 +572,7 @@ public class MyJmolTools {
         List<Integer> atomIds = new ArrayList<>();
         MyStructure mystructureFromV3000 = null;
         try {
-            mystructureFromV3000 = new MyStructure(structureV3000, algoParameters);
+            mystructureFromV3000 = new MyStructure(structureV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -662,7 +595,7 @@ public class MyJmolTools {
         List<Integer> atomIds = new ArrayList<>();
         MyStructure mystructureFromV3000 = null;
         try {
-            mystructureFromV3000 = new MyStructure(structureV3000, algoParameters);
+            mystructureFromV3000 = new MyStructure(structureV3000);
         } catch (ExceptionInMyStructurePackage e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

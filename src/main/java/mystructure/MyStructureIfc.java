@@ -44,12 +44,8 @@ public interface MyStructureIfc {
 	PairOfMyAtomWithMyMonomerAndMychainReferences[] getDisulfideBridges();
 	void setDisulfideBridges(PairOfMyAtomWithMyMonomerAndMychainReferences[] disulfideBridges);
 	String toV3000();
-	
-	MyStructureIfc cloneWithSameObjects() throws ExceptionInMyStructurePackage;
-	MyStructureIfc cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(Set<MyMonomerIfc> myMonomerToKeep) throws ExceptionInMyStructurePackage;
-	
+
 	void removeChain(char[] chainId);
-	MyStructureIfc cloneWithSameObjectsRotatedCoords(ResultsFromEvaluateCost result) throws ExceptionInMyStructurePackage;
 
 	ExpTechniquesEnum getExpTechnique();
 }

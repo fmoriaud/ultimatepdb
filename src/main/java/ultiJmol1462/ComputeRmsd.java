@@ -50,14 +50,14 @@ public class ComputeRmsd {
 		// there should be the same except the coodinates
 		MyStructureIfc ligandAfter = null;
 		try {
-			ligandAfter = new MyStructure(ligandAfterV3000, algoParameters);
+			ligandAfter = new MyStructure(ligandAfterV3000);
 		} catch (ExceptionInMyStructurePackage e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		MyStructureIfc ligandBefore = null;
 		try {
-			ligandBefore = new MyStructure(ligandBeforeV3000, algoParameters);
+			ligandBefore = new MyStructure(ligandBeforeV3000);
 		} catch (ExceptionInMyStructurePackage e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

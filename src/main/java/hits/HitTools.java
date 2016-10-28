@@ -67,25 +67,12 @@ public class HitTools {
 
                 MyStructureIfc preparedPeptide = protonate.getProtonatedMyStructure();
 
-
-                MyStructureIfc clonedRotatedPeptide = null;
-                try {
-                    clonedRotatedPeptide = preparedPeptide.cloneWithSameObjectsRotatedCoords(hit.getResultsFromEvaluateCost());
-                } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-                    exceptionInMyStructurePackage.printStackTrace();
-                }
+                Cloner cloner = new Cloner(preparedPeptide, algoParameters);
+                MyStructureIfc clonedRotatedPeptide = cloner.getRotatedClone(hit.getResultsFromEvaluateCost());
 
                 MyStructureIfc structureQueryComputeshape = queryShape.getMyStructureUsedToComputeShape();
 
-                Protonate protonate2 = null;
-
-                try {
-                    protonate2 = new Protonate(structureQueryComputeshape.cloneWithSameObjects(), algoParameters);
-                } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-                    exceptionInMyStructurePackage.printStackTrace();
-                }
-
-
+                Protonate protonate2 = new Protonate(structureQueryComputeshape, algoParameters);
                 protonate2.compute();
 
                 MyStructureIfc preparedQuery = protonate2.getProtonatedMyStructure();
@@ -132,6 +119,7 @@ public class HitTools {
     }
 
 
+    /*
     public static MyStructureIfc restrictNeighbors(MyStructureIfc myStructureUsedToComputeShape, MyStructureIfc peptide, AlgoParameters algoParameters) {
 
         Set<MyMonomerIfc> myMonomerToKeep = new HashSet<>();
@@ -167,7 +155,7 @@ public class HitTools {
 
         return restrictedToNeighbors;
     }
-
+*/
 
     public static Map<Integer, PointWithPropertiesIfc> returnCloneRotatedMiniShape(Map<Integer, PointWithPropertiesIfc> miniShape, ResultsFromEvaluateCost result) {
 
@@ -208,16 +196,10 @@ public class HitTools {
     public static MyChainIfc returnCloneRotatedPeptide(MyChainIfc inputchain, ResultsFromEvaluateCost result, AlgoParameters algoParameters) {
 
 
-        MyStructureIfc myStructure = new MyStructure(inputchain, algoParameters);
-        MyStructureIfc myStructureRotated = null;
-        try {
-            myStructureRotated = myStructure.cloneWithSameObjectsRotatedCoords(result);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return myStructureRotated.getAminoChain(0);
-        }
-        return null;
+        Cloner cloner = new Cloner(inputchain, algoParameters);
+        MyStructureIfc myStructureRotated = cloner.getRotatedClone(result);
+
+        return myStructureRotated.getAllChains()[0];
     }
 
 

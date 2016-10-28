@@ -14,6 +14,7 @@ import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import io.WriteTextFile;
 import math.ToolsDistance;
+import mystructure.*;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.PointIfc;
@@ -25,13 +26,6 @@ import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
-import mystructure.EnumMyReaderBiojava;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyAtomIfc;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
 import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizeSideChain;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
@@ -127,13 +121,8 @@ public class CompareShapeWithSimulatedShapes {
 			int subCount = 0;
 			for (String eqRes: replacementResidues){
 
-				MyStructureIfc clonedStructure;
-				try {
-					clonedStructure = myStructureGlobalBrut.cloneWithSameObjects();
-				} catch (ExceptionInMyStructurePackage e1) {
-					e1.printStackTrace();
-					continue;
-				}
+				Cloner cloner = new Cloner(myStructureGlobalBrut, algoParameters);
+				MyStructureIfc clonedStructure = cloner.getClone();
 
 				subCount +=1;
 				try {

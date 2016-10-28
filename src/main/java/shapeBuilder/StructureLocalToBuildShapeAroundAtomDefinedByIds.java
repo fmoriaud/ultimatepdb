@@ -5,14 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import mystructure.*;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyAtomIfc;
-import mystructure.MyChain;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureIfc;
 
 public class StructureLocalToBuildShapeAroundAtomDefinedByIds implements StructureLocalToBuildShapeIfc {
     //-------------------------------------------------------------
@@ -59,14 +54,9 @@ public class StructureLocalToBuildShapeAroundAtomDefinedByIds implements Structu
     private MyStructureIfc makeStructureLocalAroundAndWithChain(MyChainIfc myChain, List<String> chainToIgnore) {
 
         Set<MyMonomerIfc> queryMonomers = StructureLocalTools.makeMyMonomersLocalAroundAndWithChain(myChain);
-        MyStructureIfc myStructureLocal;
-        try {
-            myStructureLocal = myStructureGlobalBrut.cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(queryMonomers);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        }
+
+        Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
+        MyStructureIfc myStructureLocal = cloner.getClone();
 
         ShapeBuildingTools.deleteChains(chainToIgnore, myStructureLocal);
 

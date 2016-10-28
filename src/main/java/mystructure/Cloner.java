@@ -15,7 +15,7 @@ import java.util.*;
 public class Cloner {
 
     private MyStructureIfc myStructure;
-    private Set<MyMonomerIfc> queryMonomers = new HashSet<>();
+    private Set<MyMonomerIfc> queryMonomers = null;
     private MyMonomerIfc myMonomer;
     private MyChainIfc myChain;
     private MyChainIfc[] myChains;
@@ -101,6 +101,39 @@ public class Cloner {
 
 
     public MyStructureIfc getRotatedClone(ResultsFromEvaluateCost result) {
+
+        if (myMonomer != null) {
+            MyStructureIfc rotatedClone = getRotatedCloneMyMonomer(result);
+            return rotatedClone;
+        }
+
+        if (myStructure != null) {
+            MyStructureIfc rotatedClone = getRotatedCloneMyStructure(result);
+            return rotatedClone;
+        }
+        return null;
+    }
+
+
+    private MyStructureIfc getRotatedCloneMyStructure(ResultsFromEvaluateCost result) {
+
+        MyStructureIfc rotatedClone = makeClone(myStructure, algoParameters);
+
+        for (MyChainIfc chain : rotatedClone.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
+                    RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
+                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
+                }
+            }
+        }
+
+        return rotatedClone;
+    }
+
+
+    public MyStructureIfc getRotatedCloneMyMonomer(ResultsFromEvaluateCost result) {
 
         MyStructureIfc rotatedClone = makeClone(myMonomer, algoParameters);
 
@@ -221,10 +254,12 @@ public class Cloner {
     private MyChainIfc cloneAtomAndMonomersInMyChain(MyChainIfc myChain) {
 
         int countExcluded = 0;
-        for (int i = 0; i < myChain.getMyMonomers().length; i++) {
-            if (!queryMonomers.contains(myChain.getMyMonomers()[i])) {
-                countExcluded += 1;
-                continue;
+        if (queryMonomers != null) { // then none excluded
+            for (int i = 0; i < myChain.getMyMonomers().length; i++) {
+                if (!queryMonomers.contains(myChain.getMyMonomers()[i])) {
+                    countExcluded += 1;
+                    continue;
+                }
             }
         }
         MyMonomerIfc[] myMonomersCloned = new MyMonomerIfc[myChain.getMyMonomers().length - countExcluded];
@@ -232,7 +267,7 @@ public class Cloner {
         int idIncludingExclusion = 0;
         for (int i = 0; i < myChain.getMyMonomers().length; i++) {
 
-            if (!queryMonomers.contains(myChain.getMyMonomers()[i])) {
+            if (queryMonomers != null && !queryMonomers.contains(myChain.getMyMonomers()[i])) {
                 continue;
             }
             try {
