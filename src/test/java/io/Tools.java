@@ -48,8 +48,8 @@ public class Tools {
     public static String createPermanentTestFolder() {
 
         String d = System.getProperty("user.home");
-        String builttestChemcompFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb";
-        final File baseDir = new File(builttestChemcompFolder);
+        String builtTestFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb";
+        final File baseDir = new File(builtTestFolder);
 
         // if baseDir already exists then empty it
         /*
@@ -61,11 +61,16 @@ public class Tools {
             }
         }
         */
-        String builttestPDBFolder = builttestChemcompFolder + File.separator + "pdb";
+        String builttestPDBFolder = builtTestFolder + File.separator + "pdb";
         baseDir.mkdirs();
         final File pdbDir = new File(builttestPDBFolder);
         pdbDir.mkdir();
-        testChemcompFolder = builttestChemcompFolder;
+        String builttestChemcompFolder = builtTestFolder + File.separator + "chemcomp";
+        final File chemcompDir = new File(builttestChemcompFolder);
+        chemcompDir.mkdirs();
+
+        pdbDir.mkdir();
+        testChemcompFolder = builtTestFolder;
         testPDBFolder = builttestPDBFolder;
 
         //URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
@@ -87,6 +92,23 @@ public class Tools {
             e.printStackTrace();
         }
 
+        String resourcesChemcompFolder = null;
+        try {
+            URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("chemcomp/0DY.cif.gz");
+            File  chemcomp0DY = new File(url.toURI());
+            resourcesChemcompFolder = chemcomp0DY.getParent();
+            Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(new File(resourcesChemcompFolder).toString());
+            for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
+                try {
+                    FileUtils.copyFileToDirectory(new File(entry.getValue().get(0).toString()), new File(builttestChemcompFolder));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         return testChemcompFolder;
     }
 
