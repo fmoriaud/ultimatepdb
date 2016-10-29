@@ -56,7 +56,10 @@ public class HitTools {
                     peptideOrLigand = new MyChain(shapeContainerWithLigand.getHetatmLigand(), shapeContainerWithLigand.getHetatmLigand().getParent().getChainId()); // returnCloneRotatedPeptide(hetAtomInChain, hit.getResultsFromEvaluateCost());
                 }
 
-                MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
+                Cloner cloner2 = new Cloner(peptideOrLigand, algoParameters);
+                MyStructureIfc myStructurePeptide = cloner2.getClone();
+
+               // MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
 
                 Protonate protonate = new Protonate(myStructurePeptide, algoParameters);
                 try {

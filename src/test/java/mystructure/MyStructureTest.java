@@ -164,9 +164,9 @@ public class MyStructureTest {
         MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
 
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+        Cloner cloner = new Cloner(neighbors, algoParameters);
+        MyStructureIfc myStructureFromNeighbors = cloner.getClone();
 
-
-        MyStructureIfc myStructureFromNeighbors = new MyStructure(neighbors[0], algoParameters);
         MyStructureIfc protonatedTarget = null;
         try {
             protonatedTarget = MyJmolTools.protonateStructure(myStructureFromNeighbors, algoParameters);

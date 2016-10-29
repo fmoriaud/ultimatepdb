@@ -50,7 +50,7 @@ public class MergingPeptideTools {
 			monomersMergePeptides.add(monomer);
 		}
 		MyChainIfc mergedPeptide = new MyChain(monomersMergePeptides);
-		MyStructureIfc myStructure = new MyStructure(mergedPeptide, algoParameters);
+		//MyStructureIfc myStructure = new MyStructure(mergedPeptide, algoParameters);
 
 		//MyStructureIfc myStructureCloned = myStructure.cloneWithSameObjects();
 

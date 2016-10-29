@@ -18,6 +18,7 @@ public class Cloner {
     private Set<MyMonomerIfc> queryMonomers = null;
     private MyMonomerIfc myMonomer;
     private MyChainIfc myChain;
+    private MyChainIfc[] myChains;
     private AlgoParameters algoParameters;
 
 
@@ -68,6 +69,23 @@ public class Cloner {
     }
 
 
+    /**
+     * This Cloner will clone an array of MyChainIfc keeping all MyMonomer therein.
+     * It is used to make a MyStructure from the neighbors by distance of a MyMonomer
+     * The grouping is based on the type of the first MyMonomer in each and every MyChain
+     * MyMonomer neighbors by distance and by bond are updated to cloned MyMonomer
+     * The MyAtom, MyMonomer parents are updated to cloned MyMonomer and cloned MyChain
+     * MyBond bonded atom are updated to cloned MyAtom. If bonded atom is coned because MyAtom is not found in MyMonomers
+     * then MyBond is removed.
+     * @param myChains
+     * @param algoParameters
+     */
+    public Cloner(MyChainIfc[] myChains, AlgoParameters algoParameters) {
+
+        this.myChains = myChains;
+        this.algoParameters = algoParameters;
+    }
+
 
     /**
      * This Cloner will clone a MyChain into a cloned MyStructure keeping all MyMonomer therein.
@@ -84,6 +102,14 @@ public class Cloner {
     }
 
 
+
+    /**
+     * This Cloner will clone a MyMonomer into a cloned MyStructure
+     * The cloned MyMonomer is found in a MyChain Amino, Nucleoside, Hetatm based on the type of the input MyMonomer
+     * Cloned MyMonomer is obtained by cloner.getClone().getAllChains()[0].getMyMonomers()[0]
+     * @param myMonomer
+     * @param algoParameters
+     */
     public Cloner(MyMonomerIfc myMonomer, AlgoParameters algoParameters) {
 
         this.myMonomer = myMonomer;
@@ -100,6 +126,11 @@ public class Cloner {
 
         if (myStructure != null) {
             MyStructureIfc clone = makeClone(myStructure, algoParameters);
+            return clone;
+        }
+
+        if (myChains != null){
+            MyStructureIfc clone = makeClone(myChains, algoParameters);
             return clone;
         }
 
@@ -171,6 +202,49 @@ public class Cloner {
     // -------------------------------------------------------------------
     // Implementation
     // -------------------------------------------------------------------
+    private MyStructureIfc makeClone(MyChainIfc[] myChains, AlgoParameters algoParameters){
+
+        List<MyChainIfc> tmpChainsAmino = new ArrayList<>();
+        List<MyChainIfc> tmpChainsNucleoside = new ArrayList<>();
+        List<MyChainIfc> tmpChainsHetatm = new ArrayList<>();
+
+        for (MyChainIfc myChain: myChains){
+
+            MyChainIfc clonedChain = cloneAtomAndMonomersInMyChain(myChain);
+            if (clonedChain.getMyMonomers().length > 0) {
+                String type = String.valueOf(myChain.getMyMonomers()[0].getType());
+                if (type.equals("amino")) {
+                    tmpChainsAmino.add(clonedChain);
+                }
+                if (type.equals("nucleotide")) {
+                    tmpChainsNucleoside.add(clonedChain);
+                }
+                if (type.equals("hetatm")) {
+                    tmpChainsHetatm.add(clonedChain);
+                }
+            }
+        }
+        MyChainIfc[] myAminoChains = MyStructureTools.makeArrayFromListMyChains(tmpChainsAmino);
+        MyChainIfc[] myNucleotideChains = MyStructureTools.makeArrayFromListMyChains(tmpChainsNucleoside);
+        MyChainIfc[] myHetatmChains = MyStructureTools.makeArrayFromListMyChains(tmpChainsHetatm);
+
+        ExpTechniquesEnum expTechnique = ExpTechniquesEnum.UNDEFINED;
+        MyStructureIfc clone = null;
+        try {
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
+            exceptionInMyStructurePackage.printStackTrace();
+        }
+        clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
+        updateMyMonomerToClonedOneInNeighbors(clone);
+        fixParents(clone);
+        fixBondedAtomReference(clone);
+
+        return clone;
+    }
+
+
+
     private MyStructureIfc makeClone(MyStructureIfc myStructure, AlgoParameters algoParameters) {
 
         List<MyChainIfc> tmpChains = new ArrayList<>();
@@ -274,6 +348,66 @@ public class Cloner {
 
 
 
+    private MyStructureIfc makeClone(MyMonomerIfc myMonomer, AlgoParameters algoParameters) {
+
+        MyMonomerIfc cloneMyMonomer = null;
+        try {
+            cloneMyMonomer = simplyCloneMyMonomer(myMonomer);
+        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
+            exceptionInMyStructurePackage.printStackTrace();
+            // TODO abort cloning if one atom is not clonable ???
+
+        }
+
+        MyChainIfc[] chains = new MyChainIfc[1];
+        chains[0] = new MyChain(cloneMyMonomer, MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray());
+        MyChainIfc[] myAminoChains = new MyChainIfc[0];
+        MyChainIfc[] myHetatmChains = new MyChainIfc[0];
+        MyChainIfc[] myNucleotideChains = new MyChainIfc[0];
+        String type = String.valueOf(myMonomer.getType());
+        if (type.equals("amino")) {
+            myAminoChains = chains;
+            MyChainIfc[] other1 = new MyChainIfc[0];
+            myNucleotideChains = other1;
+            MyChainIfc[] other2 = new MyChainIfc[0];
+            myHetatmChains = other2;
+        }
+        if (type.equals("nucleotide")) {
+            myNucleotideChains = chains;
+            MyChainIfc[] other1 = new MyChainIfc[0];
+            myAminoChains = other1;
+            MyChainIfc[] other2 = new MyChainIfc[0];
+            myHetatmChains = other2;
+        }
+        if (type.equals("hetatm")) {
+            myHetatmChains = chains;
+            MyChainIfc[] other1 = new MyChainIfc[0];
+            myNucleotideChains = other1;
+            MyChainIfc[] other2 = new MyChainIfc[0];
+            myAminoChains = other2;
+        }
+
+        ExpTechniquesEnum expTechnique = ExpTechniquesEnum.UNDEFINED;
+        MyStructureIfc clone = null;
+        try {
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
+            exceptionInMyStructurePackage.printStackTrace();
+        }
+        clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
+
+        MyMonomerIfc[] emptyNeighborsByBond = new MyMonomerIfc[0];
+        cloneMyMonomer.setNeighboringMyMonomerByBond(emptyNeighborsByBond);
+        MyChainIfc[] emptyNeighborsByDistance = new MyChainIfc[0];
+        cloneMyMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(emptyNeighborsByDistance);
+        fixParents(clone);
+        fixBondedAtomReference(clone);
+
+        return clone;
+    }
+
+
+
     private ExpTechniquesEnum determineExperimentalTechnique(MyStructureIfc myStructure) {
         ExpTechniquesEnum expTechnique = myStructure.getExpTechnique();
         if (expTechnique == null) {
@@ -346,6 +480,7 @@ public class Cloner {
     }
 
 
+
     private void updateMyMonomerToClonedOneInNeighbors(MyStructureIfc clone) {
         // Fix neighbors references
         List<MyMonomerIfc> tmpMonomers = new ArrayList<>();
@@ -388,70 +523,6 @@ public class Cloner {
     }
 
 
-    private MyStructureIfc makeClone(MyMonomerIfc myMonomer, AlgoParameters algoParameters) {
-        MyMonomerIfc clonedMyMonomer = null;
-        try {
-            clonedMyMonomer = cloneMyMonomer(myMonomer);
-
-        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-            exceptionInMyStructurePackage.printStackTrace();
-        }
-
-        updateAllMyAtomReference(clonedMyMonomer);
-
-        MyChainIfc[] myAminoChains = new MyChainIfc[0];
-        MyChainIfc[] myHetatmChains = new MyChainIfc[0];
-        MyChainIfc[] myNucleotideChains = new MyChainIfc[0];
-
-        // then put it cleanly in a MyStructure and return it
-        char[] parentChainId = null;
-        if (myMonomer.getParent() != null) {
-            parentChainId = myMonomer.getParent().getChainId();
-        } else {
-            parentChainId = MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray();
-        }
-        MyChainIfc newChain = new MyChain(clonedMyMonomer, parentChainId);
-
-        MyChainIfc[] chains = new MyChainIfc[1];
-        chains[0] = newChain;
-
-        if (String.valueOf(myMonomer.getType()).equals("amino")) {
-            myAminoChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myNucleotideChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myHetatmChains = other2;
-        }
-        if (String.valueOf(myMonomer.getType()).equals("nucleotide")) {
-            myNucleotideChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myAminoChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myHetatmChains = other2;
-        }
-        if (String.valueOf(myMonomer.getType()).equals("hetatm")) {
-            myHetatmChains = chains;
-            MyChainIfc[] other1 = new MyChainIfc[0];
-            myNucleotideChains = other1;
-            MyChainIfc[] other2 = new MyChainIfc[0];
-            myAminoChains = other2;
-        }
-
-
-        MyStructureIfc clone = null;
-        try {
-            clone = new MyStructure(myAminoChains, myHetatmChains, myNucleotideChains,
-                    ExpTechniquesEnum.UNDEFINED, algoParameters);
-        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-            exceptionInMyStructurePackage.printStackTrace();
-        }
-        clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
-
-        fixParents(clone);
-        return clone;
-    }
-
-
 
     private void fixParents(MyStructureIfc myStructure) {
         for (MyChainIfc chain : myStructure.getAllChains()) {
@@ -466,14 +537,6 @@ public class Cloner {
 
 
 
-    private void updateAllMyAtomReference(MyMonomerIfc myMonomer) {
-
-        fixBondedAtomReference(myMonomer);
-
-    }
-
-
-
     private void fixBondedAtomReference(MyStructureIfc myStructure) {
 
         for (MyChainIfc myChain : myStructure.getAllChains()) {
@@ -483,12 +546,14 @@ public class Cloner {
     }
 
 
+
     private void fixBondedAtomReference(MyChainIfc myChain) {
 
         for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
             fixBondedAtomReference(monomer);
         }
     }
+
 
 
     private void fixBondedAtomReference(MyMonomerIfc myMonomer) {
@@ -504,25 +569,6 @@ public class Cloner {
         }
     }
 
-
-
-    private MyMonomerIfc cloneMyMonomer(MyMonomerIfc monomer) throws ExceptionInMyStructurePackage {
-
-        MyAtomIfc[] myAtomsCloned = new MyAtomIfc[monomer.getMyAtoms().length];
-
-        for (int i = 0; i < monomer.getMyAtoms().length; i++) {
-            try {
-                myAtomsCloned[i] = cloneMyAtom(monomer.getMyAtoms()[i]);
-            } catch (ExceptionInMyStructurePackage e) {
-                continue;
-            }
-        }
-        MyMonomerIfc myMonomerCloned = new MyMonomer(myAtomsCloned, monomer.getThreeLetterCode(), monomer.getResidueID(), MyMonomerType.getEnumType(monomer.getType()), monomer.isWasHetatm(), monomer.getInsertionLetter(), monomer.getAltLocGroup());
-        myMonomerCloned.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance());
-        MyStructureTools.setAtomParentReference(myMonomerCloned);
-
-        return myMonomerCloned;
-    }
 
 
     private MyAtomIfc cloneMyAtom(MyAtomIfc atom) throws ExceptionInMyStructurePackage {

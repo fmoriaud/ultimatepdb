@@ -120,32 +120,6 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-    /**
-     * A cloner should be created instead
-     * As some bonds must be deleted so the original cannot be modified
-     * Typically used to make MyStructure for Jmol V3000
-     * @param chain
-     * @param algoParameters
-     */
-    @Deprecated
-    public MyStructure(MyChainIfc chain, AlgoParameters algoParameters) {
-
-        // I keep them all in the same chain as it could be a peptide already clean with polymeric hetatm inserted
-
-        MyChainIfc[] emptyArray = new MyChainIfc[0];
-        myHetatmChains = emptyArray;
-        MyChainIfc[] emptyArray2 = new MyChainIfc[0];
-        myNucleotideChains = emptyArray2;
-
-        this.myAminoChains = new MyChainIfc[1];
-        this.myAminoChains[0] = chain;
-        this.fourLetterCode = "XXXX".toCharArray();
-
-        computeStructuralInformation(this, algoParameters);
-        fixParents(this);
-
-    }
-
 
     public MyStructure(MyChainIfc chain1, MyChainIfc chain2, AlgoParameters algoParameters) {
 

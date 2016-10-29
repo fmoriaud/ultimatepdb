@@ -86,7 +86,9 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
-        MyStructureIfc target = new MyStructure(neighbors[0], algoParameters);
+        Cloner cloner2 = new Cloner(neighbors, algoParameters);
+        MyStructureIfc target = cloner2.getClone();
+
         MyStructureIfc protonatedTarget = null;
         try {
             protonatedTarget = MyJmolTools.protonateStructure(target, algoParameters);
@@ -183,7 +185,10 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
-        MyStructureIfc target = new MyStructure(neighbors[0], algoParameters);
+
+        Cloner cloner2 = new Cloner(neighbors, algoParameters);
+        MyStructureIfc target = cloner2.getClone();
+
         MyStructureIfc protonatedTarget = null;
         try {
             protonatedTarget = MyJmolTools.protonateStructure(target, algoParameters);
