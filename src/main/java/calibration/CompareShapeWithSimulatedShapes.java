@@ -19,13 +19,14 @@ import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.PointIfc;
 import protocols.ControllerLoger;
-import protocols.ProtocolToolsToHandleInputFilesAndShapeComparisons;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerAtomIdsWithinShapeWithPeptide;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.ShapeBuildingTools;
+import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
+import shapeCompare.NullResultFromAComparisonException;
 import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.ResultsUltiJMolMinimizeSideChain;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
@@ -159,8 +160,17 @@ public class CompareShapeWithSimulatedShapes {
 				//WriteTextFile.writeTextFile(alteredLocalProteinInV3000, "C://Users//fabrice//Documents//ultimate//alteredStructure//alteredProt" + countResidueModified + "_" + subCount + ".mol");
 				WriteTextFile.writeTextFile(alteredLocalProteinInV3000, "//Users//fabrice//Documents//ultimate//alteredStructure//alteredProt" + countResidueModified + "_" + subCount + ".mol");
 
+				ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
+				List<Hit> listBestHitForEachAndEverySeed = null;
 
-				Hit hit = ProtocolToolsToHandleInputFilesAndShapeComparisons.compareQueryToOneShape(queryShape, targetShape, algoParameters);
+				try {
+					listBestHitForEachAndEverySeed = comparatorShape.computeResults();
+				} catch (NullResultFromAComparisonException e) {
+					e.printStackTrace();
+
+				}
+
+				Hit hit = listBestHitForEachAndEverySeed.get(0);
 				System.out.println(targetShape);
 				if (hit == null){
 					String message = "Results alter Residue. From " + String.valueOf(monomerToMutateChainId) + " " + String.valueOf(monomerToMutateThreeLetterCode) + " " + monomerToMutateResidueId + " to " 
