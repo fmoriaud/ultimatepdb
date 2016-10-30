@@ -126,13 +126,15 @@ public class TestTools {
 		mychains[1] = myChainB;
 
 		AlgoParameters algoParameters = new AlgoParameters();
-		MyStructureIfc myStructure = MyStructure.getMyStructure(mychains, myMonomerType, ExpTechniquesEnum.UNDEFINED, algoParameters);
-
+		Cloner cloner = new Cloner(mychains, algoParameters); // used to make the MyStructure
+		MyStructureIfc myStructure = cloner.getClone();
+		MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(myStructure, algoParameters);
+		MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
 		// set parent atom
-		MyStructureTools.setAtomParentReference(myMonomerA1);
-		MyStructureTools.setAtomParentReference(myMonomerA2);
-		MyStructureTools.setAtomParentReference(myMonomerB1);
-		MyStructureTools.setAtomParentReference(myMonomerB2);
+		//MyStructureTools.setAtomParentReference(myMonomerA1);
+		//MyStructureTools.setAtomParentReference(myMonomerA2);
+		//MyStructureTools.setAtomParentReference(myMonomerB1);
+		//MyStructureTools.setAtomParentReference(myMonomerB2);
 		
 		return myStructure;
 	}

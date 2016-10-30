@@ -93,33 +93,6 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-    /**
-     * Factory method for convenience building when only chains with a given MyMonomerType
-     *
-     * @param mychains
-     * @param myMonomerType
-     * @param algoParameters
-     * @return
-     * @throws ExceptionInMyStructurePackage
-     */
-    public static MyStructure getMyStructure(MyChainIfc[] mychains, MyMonomerType myMonomerType, ExpTechniquesEnum expTechnique, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage {
-
-        MyChainIfc[] mychainsEmpty1 = new MyChainIfc[0];
-        MyChainIfc[] mychainsEmpty2 = new MyChainIfc[0];
-
-        switch (myMonomerType) {
-            case AMINOACID:
-                return new MyStructure(mychains, mychainsEmpty1, mychainsEmpty2, expTechnique, algoParameters);
-            case HETATM:
-                return new MyStructure(mychainsEmpty1, mychains, mychainsEmpty2, expTechnique, algoParameters);
-            case NUCLEOTIDE:
-                return new MyStructure(mychainsEmpty1, mychainsEmpty2, mychains, expTechnique, algoParameters);
-            default:
-                return null;
-        }
-    }
-
-
 
     public MyStructure(MyChainIfc chain1, MyChainIfc chain2, AlgoParameters algoParameters) {
 

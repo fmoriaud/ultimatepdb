@@ -7,7 +7,7 @@ import java.util.concurrent.ForkJoinPool;
 import fingerprint.ShapeFingerprint;
 import math.ToolsDistance;
 import math.ToolsMath;
-import multithread.ComputeLennardJonesMultiThread;
+import multithread.ComputeLennardJonesRecursiveTask;
 import multithread.ComputeShapePointsMultiThread;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
@@ -210,7 +210,7 @@ public class ShapeBuilder {
         // Multithreaded computation of LJ grid
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
         ForkJoinPool pool = new ForkJoinPool();
-        ComputeLennardJonesMultiThread computeLennardJonesMultiThread = new ComputeLennardJonesMultiThread(listPositions, 0, listPositions.size() - 1, listPositions.size() / countOfSubpacket, localMyStructure, algoParameters);
+        ComputeLennardJonesRecursiveTask computeLennardJonesMultiThread = new ComputeLennardJonesRecursiveTask(listPositions, 0, listPositions.size() - 1, listPositions.size() / countOfSubpacket, localMyStructure, algoParameters);
         listOfPointsWithLennardJones = pool.invoke(computeLennardJonesMultiThread);
         pool.shutdownNow();
 

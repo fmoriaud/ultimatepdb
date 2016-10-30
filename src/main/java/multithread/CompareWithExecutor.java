@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import database.DatabaseTools;
-import database.SequenceTools;
 import parameters.AlgoParameters;
 import parameters.SmartTargetFileLineParser;
 import parameters.TargetDefinedByHetAtm;
@@ -20,6 +19,7 @@ import parameters.TargetDefinedBySegmentOfChainBasedOnSegmentLength;
 import parameters.TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
 import parameters.TargetDefinedByWholeChain;
 import parameters.TargetsIfc;
+import protocols.DockPeptides;
 import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;

@@ -18,12 +18,9 @@ public class Merger {
         aminoChains[0] = myChain1;
         aminoChains[1] = myChain2;
 
-        try {
-            merge = MyStructure.getMyStructure(aminoChains, MyMonomerType.AMINOACID, ExpTechniquesEnum.UNDEFINED, algoParameters);
-            merge.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
-        } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
-            exceptionInMyStructurePackage.printStackTrace();
-        }
+        Cloner cloner = new Cloner(aminoChains, algoParameters);
+        merge = cloner.getClone();
+
     }
 
 
