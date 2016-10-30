@@ -15,7 +15,7 @@ import fingerprint.DistributionComparisonTools;
 import hits.Hit;
 import math.ToolsMath;
 import multithread.ExtendPairingRecursiveTask;
-import multithread.FindMatchingTriangleWithOrderedMatchingPointsCallable;
+import multithread.FindMatchingTriangleRecursiveTask;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithPropertiesIfc;
 import scorePairing.ScorePairing;
@@ -78,20 +78,11 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
         List<TriangleInteger> listTriangleShape2 = shapeContainerAnyShape.getListTriangleOfPointsFromMinishape();
         System.out.println("compairing " + listTriangleShape1.size() + " triangles from query to " + listTriangleShape2.size() + " from potential hit");
         System.out.println(shapeContainerAnyShape.getMiniShape().size() + " objects");
-        ExecutorService poolExecutor = Executors.newFixedThreadPool(1);
-        Callable<List<PairingAndNullSpaces>> callable = new FindMatchingTriangleWithOrderedMatchingPointsCallable(algoParameters, listTriangleShape1, listTriangleShape2, shapeContainerQuery, shapeContainerAnyShape);
-        Future<List<PairingAndNullSpaces>> listPairingTriangleSeedCallable = poolExecutor.submit(callable);
-        List<PairingAndNullSpaces> listPairingTriangleSeed = null;
 
-        try {
-            listPairingTriangleSeed = listPairingTriangleSeedCallable.get();
-        } catch (InterruptedException | ExecutionException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+
+        List<PairingAndNullSpaces> listPairingTriangleSeed = getTrianglePairingAndNullSpaces(listTriangleShape1, listTriangleShape2);
 
         System.out.println("scoring " + listPairingTriangleSeed.size() + " pairs of triangles");
-        poolExecutor.shutdownNow();
 
         ScorePairing scorePairingBasedOnMinishape = new ScorePairing(shapeContainerQuery.getMiniShape(), shapeContainerAnyShape.getMiniShape(), algoParameters);
         List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = null;
@@ -153,6 +144,19 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
             System.out.println();
         }
         return hitsExtendedPairing;
+    }
+
+    private List<PairingAndNullSpaces> getTrianglePairingAndNullSpaces(List<TriangleInteger> listTriangleShape1, List<TriangleInteger> listTriangleShape2) {
+        int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
+        int threshold = listTriangleShape1.size() / countOfSubpacket + 1;
+        if (threshold < 2){
+            threshold = 2;
+        }
+        ForkJoinPool pool = new ForkJoinPool();
+        FindMatchingTriangleRecursiveTask computeTriangleSeedExtentions = new FindMatchingTriangleRecursiveTask(0, listTriangleShape1.size() - 1, threshold, listTriangleShape1, listTriangleShape2, shapeContainerQuery, shapeContainerAnyShape, algoParameters);
+        List<PairingAndNullSpaces> listPairingTriangleSeed = pool.invoke(computeTriangleSeedExtentions);
+        pool.shutdownNow();
+        return listPairingTriangleSeed;
     }
 
 
