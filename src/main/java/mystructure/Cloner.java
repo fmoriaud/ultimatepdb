@@ -396,10 +396,7 @@ public class Cloner {
         }
         clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
 
-        MyMonomerIfc[] emptyNeighborsByBond = new MyMonomerIfc[0];
-        cloneMyMonomer.setNeighboringMyMonomerByBond(emptyNeighborsByBond);
-        MyChainIfc[] emptyNeighborsByDistance = new MyChainIfc[0];
-        cloneMyMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(emptyNeighborsByDistance);
+        MyStructureTools.setEmptyNeighbors(cloneMyMonomer);
         MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 

@@ -430,6 +430,16 @@ public class MyStructureTools {
     }
 
 
+
+    public static void setEmptyNeighbors(MyMonomerIfc cloneMyMonomer) {
+        MyMonomerIfc[] emptyNeighborsByBond = new MyMonomerIfc[0];
+        cloneMyMonomer.setNeighboringMyMonomerByBond(emptyNeighborsByBond);
+        MyChainIfc[] emptyNeighborsByDistance = new MyChainIfc[0];
+        cloneMyMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(emptyNeighborsByDistance);
+    }
+
+
+
     public static MyAtomIfc getNterminal(MyChainIfc myChain) {
 
         MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];

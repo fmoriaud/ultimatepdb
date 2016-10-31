@@ -45,7 +45,10 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
 
     /**
-     * Constructor for Cloner class only. It doesn't give a valid MyStructureIfc.
+     * Constructor for Cloner class.
+     * Parents are assumed to be already set correctlty.
+     * Neighbors by Distance are assumed to be set already correctly.
+     * Neighbors by Bond are assumed to be set correctly.
      * @param expTechnique
      * @param algoParameters
      * @throws ExceptionInMyStructurePackage
@@ -61,10 +64,11 @@ public class MyStructure implements MyStructureIfc {
         this.myNucleotideChains = myNucleotideChains;
     }
 
+
+
     /**
      * Constructor with all chains well defined as input.
      * It is used when adapting a BioJava Structure to a MyStructureIfc.
-     * It gives a valid MyStructureIfc.
      * Parents are assumed to be already set correctlty.
      * Neighbors by Distance are assumed to be set already correctly.
      * Neighbors by Bond are assumed to be set correctly.
@@ -96,32 +100,20 @@ public class MyStructure implements MyStructureIfc {
 
 
 
-    public MyStructure(MyChainIfc chain1, MyChainIfc chain2, AlgoParameters algoParameters) {
-
-        // I keep them all in the same chain as it could be a peptide already clean with polymeric hetatm inserted
-
-        MyChainIfc[] emptyArray = new MyChainIfc[0];
-        myHetatmChains = emptyArray;
-        MyChainIfc[] emptyArray2 = new MyChainIfc[0];
-        myNucleotideChains = emptyArray2;
-
-        this.myAminoChains = new MyChainIfc[2];
-        this.myAminoChains[0] = chain1;
-        this.myAminoChains[1] = chain2;
-        this.fourLetterCode = "XXXX".toCharArray();
-
-        computeStructuralInformation(this, algoParameters);
-        MyStructureTools.fixParents(this);
-    }
-
-
+    /**
+     * Generate a MyStructureIfc from a V3000 molecular file
+     * MyAtoms are all put in the same MyMonomer of type Amino.
+     * @param readV3000
+     * @throws ExceptionInMyStructurePackage
+     */
     public MyStructure(String readV3000) throws ExceptionInMyStructurePackage {
 
         makeStructureFromV3000(readV3000);
-
-        // need removeHydrogenAndcomputeStructuralInformations(algoParameters); ?
         MyStructureTools.fixParents(this);
+        MyStructureTools.setEmptyNeighbors(this.getAllAminochains()[0].getMyMonomers()[0]);
     }
+
+
 
 
     //-------------------------------------------------------------
@@ -380,14 +372,6 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private void computeStructuralInformation(MyStructureIfc myStructure, AlgoParameters algoParameters) {
-        MyStructureTools.fixParents(myStructure);
-        MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(myStructure, algoParameters);
-        MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
-    }
-
-
-
     private void makeStructureFromV3000(String readV3000) throws ExceptionInMyStructurePackage {
 
         String lines[] = readV3000.split("\\r?\\n");
@@ -473,7 +457,7 @@ public class MyStructure implements MyStructureIfc {
             entry.getKey().setBonds(bonds);
         }
 
-        MyChainIfc newChain = new MyChain(monomers, "X".toCharArray());
+        MyChainIfc newChain = new MyChain(monomers, MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray());
 
         List<MyChainIfc> chains = new ArrayList<>();
         chains.add(newChain);
