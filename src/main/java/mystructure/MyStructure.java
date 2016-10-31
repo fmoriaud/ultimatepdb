@@ -45,7 +45,7 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
 
     /**
-     * Constructor for Cloner. It doesn't do anything
+     * Constructor for Cloner class only. It doesn't give a valid MyStructureIfc.
      * @param expTechnique
      * @param algoParameters
      * @throws ExceptionInMyStructurePackage
@@ -62,9 +62,12 @@ public class MyStructure implements MyStructureIfc {
     }
 
     /**
-     * Constructor with all chains well defined as input
-     * All needed structural information is computed in the constructors: MyMonomers neighbors by distance
-     * and by bonds
+     * Constructor with all chains well defined as input.
+     * It is used when adapting a BioJava Structure to a MyStructureIfc.
+     * It gives a valid MyStructureIfc.
+     * Parents are assumed to be already set correctlty.
+     * Neighbors by Distance are assumed to be set already correctly.
+     * Neighbors by Bond are assumed to be set correctly.
      *
      * @param myAminoChains
      * @param myHetatmChains
@@ -80,6 +83,7 @@ public class MyStructure implements MyStructureIfc {
         if (myAminoChains == null || myHetatmChains == null || myNucleotideChains == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null MyChain[]");
         }
+
         if (myAminoChains.length == 0 && myNucleotideChains.length == 0 && myHetatmChains.length == 0) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built if all MyChain[] are empty");
         }
@@ -88,8 +92,6 @@ public class MyStructure implements MyStructureIfc {
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
         this.expTechnique = expTechnique;
-        computeStructuralInformation(this, algoParameters);
-        fixParents(this);
     }
 
 
@@ -109,7 +111,7 @@ public class MyStructure implements MyStructureIfc {
         this.fourLetterCode = "XXXX".toCharArray();
 
         computeStructuralInformation(this, algoParameters);
-        fixParents(this);
+        MyStructureTools.fixParents(this);
     }
 
 
@@ -118,7 +120,7 @@ public class MyStructure implements MyStructureIfc {
         makeStructureFromV3000(readV3000);
 
         // need removeHydrogenAndcomputeStructuralInformations(algoParameters); ?
-        fixParents(this);
+        MyStructureTools.fixParents(this);
     }
 
 
@@ -378,27 +380,8 @@ public class MyStructure implements MyStructureIfc {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-
-    /**
-     * Make sure all parents are set correctly
-     *
-     * @param myStructure
-     */
-    private void fixParents(MyStructureIfc myStructure) {
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                monomer.setParent(chain);
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    atom.setParent(monomer);
-                }
-            }
-        }
-    }
-
-
-
     private void computeStructuralInformation(MyStructureIfc myStructure, AlgoParameters algoParameters) {
-        fixParents(myStructure);
+        MyStructureTools.fixParents(myStructure);
         MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(myStructure, algoParameters);
         MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
     }

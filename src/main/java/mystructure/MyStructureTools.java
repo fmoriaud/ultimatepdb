@@ -414,6 +414,21 @@ public class MyStructureTools {
     }
 
 
+    /**
+     * Set parents of MyAtom to parent MyMonomer. set Parents of MyMonomer to parent MyChain.
+     * @param myStructure
+     */
+    public static void fixParents(MyStructureIfc myStructure) {
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                monomer.setParent(chain);
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                    atom.setParent(monomer);
+                }
+            }
+        }
+    }
+
 
     public static MyAtomIfc getNterminal(MyChainIfc myChain) {
 

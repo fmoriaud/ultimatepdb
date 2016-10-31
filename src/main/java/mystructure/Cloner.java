@@ -237,7 +237,7 @@ public class Cloner {
         }
         clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
         updateMyMonomerToClonedOneInNeighbors(clone);
-        fixParents(clone);
+        MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 
         return clone;
@@ -289,7 +289,7 @@ public class Cloner {
         clone.setFourLetterCode(determineFourLetterCode(myStructure));
 
         updateMyMonomerToClonedOneInNeighbors(clone);
-        fixParents(clone);
+        MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 
         return clone;
@@ -340,7 +340,7 @@ public class Cloner {
         clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
 
         updateMyMonomerToClonedOneInNeighbors(clone);
-        fixParents(clone);
+        MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 
         return clone;
@@ -400,7 +400,7 @@ public class Cloner {
         cloneMyMonomer.setNeighboringMyMonomerByBond(emptyNeighborsByBond);
         MyChainIfc[] emptyNeighborsByDistance = new MyChainIfc[0];
         cloneMyMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(emptyNeighborsByDistance);
-        fixParents(clone);
+        MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 
         return clone;
@@ -518,19 +518,6 @@ public class Cloner {
                 }
                 MyMonomerIfc[] newneighborsByBond = MyStructureTools.makeArrayFromListMyMonomers(tmpMonomers);
                 monomer.setNeighboringMyMonomerByBond(newneighborsByBond);
-            }
-        }
-    }
-
-
-
-    private void fixParents(MyStructureIfc myStructure) {
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
-                monomer.setParent(chain);
-                for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    atom.setParent(monomer);
-                }
             }
         }
     }

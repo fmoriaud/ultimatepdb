@@ -148,6 +148,7 @@ public class AdapterBioJavaStructure {
         MyChainIfc[] nucleotidesArray = MyStructureTools.makeArrayFromListMyChains(nucleotidesChains);
 
         // that computes the neighbors by representative distance
+        // needed by moveHetatmResiduesThatAreBoundCovalentlyToChains
         MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, aminoArray, hetatmArray, nucleotidesArray);
 
         // move covalently bound heatm to respective amino and nucleosides chains
@@ -162,11 +163,13 @@ public class AdapterBioJavaStructure {
         MyChainIfc[] cleanhetatmArray = removeEmptychains(hetatmArray);
         MyChainIfc[] cleannucleotidesArray = removeEmptychains(nucleotidesArray);
 
-        // TODO need to recompute neighbors by representative residues for moved residues
-
-        // TODO potential problem neighbors are computed there before moving some residues
         MyStructureIfc myStructure = new MyStructure(cleanaminoArray, cleanhetatmArray, cleannucleotidesArray, expTechniqueUltimate, algoParameters);
         myStructure.setFourLetterCode(fourLetterCode);
+
+        // Must redo neighbors by distance. They are the same but some MyMonomer Hetatm moved to Amino or Nucleosides chains.
+        MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, aminoArray, hetatmArray, nucleotidesArray);
+        // Do the neighbors by Bond here. So they include the new bonds created by moving MyMonomer from Hetatm to Amino or Nucleosides chains.
+        MyStructureTools.computeAndStoreNeighboringMonomersByBond(myStructure);
         return myStructure;
     }
 
