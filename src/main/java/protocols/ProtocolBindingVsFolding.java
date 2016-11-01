@@ -49,7 +49,6 @@ public class ProtocolBindingVsFolding {
     //------------------------
     private String queryFourLetterCode;
     private String peptideChainId;
-
     private AlgoParameters algoParameters;
 
 
@@ -77,7 +76,7 @@ public class ProtocolBindingVsFolding {
 
     public void run() throws ParsingConfigFileException {
 
-        prepareAlgoParameters();
+        algoParameters = ProtocolTools.prepareAlgoParameters();
 
         FileHandler fh = null;
         try {
@@ -153,37 +152,9 @@ public class ProtocolBindingVsFolding {
                 } catch (ShapeBuildingException e) {
                     e.printStackTrace();
                 }
-
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
-                ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
-                List<Hit> listBestHitForEachAndEverySeed = null;
 
-                try {
-                    listBestHitForEachAndEverySeed = comparatorShape.computeResults();
-                } catch (NullResultFromAComparisonException e) {
-                    e.printStackTrace();
-                    continue B;
-                }
-                int hitRank = -1;
-                A:
-                for (Hit hit : listBestHitForEachAndEverySeed) {
-                    hitRank += 1;
-
-                    //System.out.println("Minimizing ... " + hit.toString());
-                    try {
-                        HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
-                    } catch (NullResultFromAComparisonException e) {
-                        e.printStackTrace();
-                    } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                        exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-                        continue A;
-                    }
-
-                    HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
-                    String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
-                    ControllerLoger.logger.log(Level.INFO, message);
-
-                }
+                ProtocolTools.compareAndWriteToResultFolder(queryShape, targetShape, algoParameters);
 
             }
             // Put in a callable the shape building and comparison
@@ -192,6 +163,8 @@ public class ProtocolBindingVsFolding {
 
         }
     }
+
+
 
 
     // -------------------------------------------------------------------
@@ -225,31 +198,5 @@ public class ProtocolBindingVsFolding {
         }
 
         return shapecontainer;
-    }
-
-
-    private void prepareAlgoParameters() throws ParsingConfigFileException {
-        URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
-        algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
-        algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
-        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
-            ProcrustesAnalysisIfc procrustesAnalysis = new ProcrustesAnalysis(algoParameters);
-            try {
-                algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysis);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
-            UltiJmol1462 ultiJMol = new UltiJmol1462();
-            try {
-                algoParameters.ultiJMolBuffer.put(ultiJMol);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
     }
 }

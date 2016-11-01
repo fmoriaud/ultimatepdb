@@ -37,21 +37,7 @@ public class ShapeBuilderConstructorWholeChainTest {
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        MyStructureIfc mystructure = getMyStructureIfc(algoParameters, fourLetterCode);
 
         ShapeContainerIfc shapecontainer = null;
         try {
@@ -72,5 +58,25 @@ public class ShapeBuilderConstructorWholeChainTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
+    }
+
+
+    private MyStructureIfc getMyStructureIfc(AlgoParameters algoParameters, String fourLetterCode) {
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+        return mystructure;
     }
 }

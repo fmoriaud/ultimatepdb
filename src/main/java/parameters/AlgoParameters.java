@@ -69,10 +69,6 @@ public class AlgoParameters {
 	// ATOMIDS_WITHIN_SHAPE
 	private List<QueryAtomDefinedByIds> QUERY_ATOMS_DEFINED_BY_IDS;
 
-	private List<TargetDefinedByWholeChain> LIST_TargetDefinedByWholeChain;
-	private List<TargetDefinedBySegmentOfChainBasedOnSegmentLength> LIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength;
-	private List<TargetDefinedBySegmentOfChainBasedOnSequenceMotif> LIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
-	private List<TargetDefinedByHetAtm> LIST_TargetDefinedByHetAtm;
 
 	// Getters only
 	public boolean isOPTIMIZE_HIT_GEOMETRY() {
@@ -120,19 +116,6 @@ public class AlgoParameters {
 	public List<QueryAtomDefinedByIds> getQUERY_ATOMS_DEFINED_BY_IDS() {
 		return QUERY_ATOMS_DEFINED_BY_IDS;
 	}
-	public List<TargetDefinedByWholeChain> getLIST_TargetDefinedByWholeChain() {
-		return LIST_TargetDefinedByWholeChain;
-	}
-	public List<TargetDefinedBySegmentOfChainBasedOnSegmentLength> getLIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength() {
-		return LIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength;
-	}
-	public List<TargetDefinedBySegmentOfChainBasedOnSequenceMotif> getLIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif() {
-		return LIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
-	}
-	public List<TargetDefinedByHetAtm> getLIST_TargetDefinedByHetAtm() {
-		return LIST_TargetDefinedByHetAtm;
-	}
-
 
 	// Setters only
 	public void setOPTIMIZE_HIT_GEOMETRY(boolean oPTIMIZE_HIT_GEOMETRY) {
@@ -181,22 +164,6 @@ public class AlgoParameters {
 	public void setQUERY_ATOMS_DEFINED_BY_IDS(
 			List<QueryAtomDefinedByIds> qUERY_ATOMS_DEFINED_BY_IDS) {
 		QUERY_ATOMS_DEFINED_BY_IDS = qUERY_ATOMS_DEFINED_BY_IDS;
-	}
-	public void setLIST_TargetDefinedByWholeChain(
-			List<TargetDefinedByWholeChain> lIST_TargetDefinedByWholeChain) {
-		LIST_TargetDefinedByWholeChain = lIST_TargetDefinedByWholeChain;
-	}
-	public void setLIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength(
-			List<TargetDefinedBySegmentOfChainBasedOnSegmentLength> lIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength) {
-		LIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength = lIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength;
-	}
-	public void setLIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif(
-			List<TargetDefinedBySegmentOfChainBasedOnSequenceMotif> lIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif) {
-		LIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif = lIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
-	}
-	public void setLIST_TargetDefinedByHetAtm(
-			List<TargetDefinedByHetAtm> lIST_TargetDefinedByHetAtm) {
-		LIST_TargetDefinedByHetAtm = lIST_TargetDefinedByHetAtm;
 	}
 
 	// ****************************

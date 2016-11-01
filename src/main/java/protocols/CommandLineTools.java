@@ -11,10 +11,6 @@ import org.dom4j.io.SAXReader;
 
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
-import parameters.TargetDefinedByHetAtm;
-import parameters.TargetDefinedBySegmentOfChainBasedOnSegmentLength;
-import parameters.TargetDefinedBySegmentOfChainBasedOnSequenceMotif;
-import parameters.TargetDefinedByWholeChain;
 import mystructure.EnumMyReaderBiojava;
 
 public class CommandLineTools {
@@ -172,67 +168,6 @@ public class CommandLineTools {
 		}
 		algoParameters.setCHAIN_TO_IGNORE(chainsToDelete);
 
-		List<TargetDefinedByWholeChain> listTargetDefinedByWholeChain = new ArrayList<>();
-		List<TargetDefinedBySegmentOfChainBasedOnSequenceMotif> listTargetDefinedBySequenceOfChainUsingSequence = new ArrayList<>();
-		List<TargetDefinedBySegmentOfChainBasedOnSegmentLength> listTargetDefinedBySequenceOfChainUsingLength = new ArrayList<>();
-		List<TargetDefinedByHetAtm> listTargetHetAtm = new ArrayList<>();
-
-
-		List<Element> targetsWholechain = rootElement.elements("TARGETS").get(0).elements("TARGET");
-
-		for (int i=0; i<targetsWholechain.size(); i++){
-			Element targetElement = targetsWholechain.get(i);
-			String targetType = targetElement.elements("TARGET_TYPE").get(0).getText();
-
-			String active = targetElement.elements("ACTIVE").get(0).getText();
-			if (active.equals("TRUE")){
-				String pathToFile = targetElement.elements("PATH_TO_TARGET_LIST_FILE_TO_BE_PROCESSED").get(0).getText();
-
-				switch (targetType) {
-				case "WHOLE_CHAIN":  
-
-					int minLength = Integer.valueOf(targetElement.elements("MIN_LENGTH").get(0).getText());
-					int maxLength = Integer.valueOf(targetElement.elements("MAX_LENGTH").get(0).getText());
-					TargetDefinedByWholeChain targetWholeChain = new TargetDefinedByWholeChain(pathToFile, minLength, maxLength);
-					listTargetDefinedByWholeChain.add(targetWholeChain);
-					;
-					break;
-				case "SEGMENT_OF_CHAIN_BASED_ON_SEQUENCE_MOTIF": 
-
-					String sequence = targetElement.elements("AMINO_SEQUENCE_3_LETTER_CODE").get(0).getText();
-					String useSimilarSequenceString = targetElement.elements("USE_SIMILAR_SEQUENCE").get(0).getText();
-					int minLengtha = Integer.valueOf(targetElement.elements("MIN_LENGTH").get(0).getText());
-					int maxLengtha = Integer.valueOf(targetElement.elements("MAX_LENGTH").get(0).getText());
-					Boolean useSimilarSequences = null;
-					if (useSimilarSequenceString.equals("TRUE")){
-						useSimilarSequences = true;
-					}
-					if (useSimilarSequenceString.equals("FALSE")){
-						useSimilarSequences = false;
-					}
-					TargetDefinedBySegmentOfChainBasedOnSequenceMotif targetSequence = new TargetDefinedBySegmentOfChainBasedOnSequenceMotif(pathToFile, sequence, useSimilarSequences, minLengtha, maxLengtha);
-					listTargetDefinedBySequenceOfChainUsingSequence.add(targetSequence);
-					break;
-				case "SEGMENT_OF_CHAIN_BASED_ON_SEGMENT_LENGTH": 
-					int peptideLength = Integer.valueOf(targetElement.elements("PEPTIDE_LENGTH").get(0).getText());
-					int minLengthb = Integer.valueOf(targetElement.elements("MIN_LENGTH").get(0).getText());
-					int maxLengthb = Integer.valueOf(targetElement.elements("MAX_LENGTH").get(0).getText());
-					TargetDefinedBySegmentOfChainBasedOnSegmentLength targetLength = new TargetDefinedBySegmentOfChainBasedOnSegmentLength(pathToFile, peptideLength, minLengthb, maxLengthb);
-					listTargetDefinedBySequenceOfChainUsingLength.add(targetLength);
-					break;
-				case "HETATM": 
-					int minMw = Integer.valueOf(targetElement.elements("MIN_MW").get(0).getText());
-					int maxMw = Integer.valueOf(targetElement.elements("MAX_MW").get(0).getText());
-					TargetDefinedByHetAtm targetHetatm = new TargetDefinedByHetAtm(pathToFile, minMw, maxMw);
-					listTargetHetAtm.add(targetHetatm);
-					break;
-				}
-			}
-		}
-		algoParameters.setLIST_TargetDefinedByWholeChain(listTargetDefinedByWholeChain);
-		algoParameters.setLIST_TargetDefinedBySegmentOfChainBasedOnSequenceMotif(listTargetDefinedBySequenceOfChainUsingSequence);
-		algoParameters.setLIST_TargetDefinedBySegmentOfChainBasedOnSegmentLength(listTargetDefinedBySequenceOfChainUsingLength);
-		algoParameters.setLIST_TargetDefinedByHetAtm(listTargetHetAtm);
 		return algoParameters;
 	}  
 

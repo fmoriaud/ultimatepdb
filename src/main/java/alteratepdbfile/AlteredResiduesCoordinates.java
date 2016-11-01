@@ -25,16 +25,16 @@ import java.util.List;
 import java.util.Map;
 
 public class AlteredResiduesCoordinates {
-//-------------------------------------------------------------
-// Class members
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
+    // Class members
+    //-------------------------------------------------------------
     private Map<String, Map<String, float[]>> templateCoords;
     private Map<String, List<String>> templateBonds;
 
 
-//-------------------------------------------------------------
-// Constructor
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------------
     public AlteredResiduesCoordinates() {
 
         templateCoords = new LinkedHashMap<>();
@@ -86,9 +86,9 @@ public class AlteredResiduesCoordinates {
 
 
 
-//-------------------------------------------------------------
-// Public & Override methods
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
+    // Public & Override methods
+    //-------------------------------------------------------------
     public List<String> getGlyBondInfos() {
 
         List<String> bonds = new ArrayList<>();
@@ -930,9 +930,9 @@ public class AlteredResiduesCoordinates {
 
 
 
-//-------------------------------------------------------------
-// Getters & Setters
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
+    // Getters & Setters
+    //-------------------------------------------------------------
     public Map<String, Map<String, float[]>> getTemplateCoords() {
         return templateCoords;
     }
