@@ -98,22 +98,10 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 
         selectResultsByDiversityOfTransAndRotUsingHashSet(resultsPairingTriangleSeed);
 
-        int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
-        int threshold = resultsPairingTriangleSeed.size() / countOfSubpacket + 1;
-        if (threshold < 2) {
-            threshold = 2;
-        }
-
-        ForkJoinPool pool = new ForkJoinPool();
-        ExtendPairingRecursiveTask computeExtendedPairings = new ExtendPairingRecursiveTask(resultsPairingTriangleSeed, 0, resultsPairingTriangleSeed.size() - 1, threshold, shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
-        List<PairingAndNullSpaces> listExtendedPair = pool.invoke(computeExtendedPairings);
-        pool.shutdownNow();
+        List<PairingAndNullSpaces> listExtendedPair = getExtendedPairingAndNullSpaces(resultsPairingTriangleSeed);
 
         ScorePairing scorePairingBasedOnShape = new ScorePairing(shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
-        List<ResultsFromEvaluateCost> resultsExtendedPairing = null;
-
-        List<PairingAndNullSpaces> currentExtendedPairing = listExtendedPair;
-        resultsExtendedPairing = scorePairingBasedOnShape.getCostOfaListOfPairing(currentExtendedPairing);
+        List<ResultsFromEvaluateCost> resultsExtendedPairing = scorePairingBasedOnShape.getCostOfaListOfPairing(listExtendedPair);
 
 
         // Remove hit where hit is not enough matching query based on covergage
@@ -146,7 +134,25 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
         return hitsExtendedPairing;
     }
 
+    private List<PairingAndNullSpaces> getExtendedPairingAndNullSpaces(List<ResultsFromEvaluateCost> resultsPairingTriangleSeed) {
+
+        int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
+        int threshold = resultsPairingTriangleSeed.size() / countOfSubpacket + 1;
+        if (threshold < 2) {
+            threshold = 2;
+        }
+
+        ForkJoinPool pool = new ForkJoinPool();
+        ExtendPairingRecursiveTask computeExtendedPairings = new ExtendPairingRecursiveTask(resultsPairingTriangleSeed, 0, resultsPairingTriangleSeed.size() - 1, threshold, shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
+        List<PairingAndNullSpaces> listExtendedPair = pool.invoke(computeExtendedPairings);
+        pool.shutdownNow();
+        return listExtendedPair;
+    }
+
+
+
     private List<PairingAndNullSpaces> getTrianglePairingAndNullSpaces(List<TriangleInteger> listTriangleShape1, List<TriangleInteger> listTriangleShape2) {
+
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
         int threshold = listTriangleShape1.size() / countOfSubpacket + 1;
         if (threshold < 2){

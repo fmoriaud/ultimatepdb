@@ -48,7 +48,7 @@ public class Tools {
     public static String createPermanentTestFolder() {
 
         String d = System.getProperty("user.home");
-        String builtTestFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb";
+        String builtTestFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb" + File.separator;
         final File baseDir = new File(builtTestFolder);
 
         // if baseDir already exists then empty it
@@ -95,7 +95,7 @@ public class Tools {
         String resourcesChemcompFolder = null;
         try {
             URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("chemcomp/0DY.cif.gz");
-            File  chemcomp0DY = new File(url.toURI());
+            File chemcomp0DY = new File(url.toURI());
             resourcesChemcompFolder = chemcomp0DY.getParent();
             Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexChemcompFileInFolder(new File(resourcesChemcompFolder).toString());
             for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
@@ -165,7 +165,7 @@ public class Tools {
 
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
         algoParameters.setPATH_TO_CHEMCOMP_FOLDER(testChemcompFolder);
-
+        algoParameters.setPATH_TO_RESULT_FILES(testChemcompFolder);
         return algoParameters;
     }
 

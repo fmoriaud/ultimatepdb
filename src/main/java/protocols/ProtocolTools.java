@@ -38,12 +38,13 @@ public class ProtocolTools {
             e.printStackTrace();
             return;
         }
+        System.out.println("listBestHitForEachAndEverySeed size in Tools = " + listBestHitForEachAndEverySeed.size());
         int hitRank = -1;
         A:
         for (Hit hit : listBestHitForEachAndEverySeed) {
             hitRank += 1;
 
-            //System.out.println("Minimizing ... " + hit.toString());
+            System.out.println("Minimizing ... " + hit.toString());
             try {
                 HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
             } catch (NullResultFromAComparisonException e) {

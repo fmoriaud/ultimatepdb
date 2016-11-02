@@ -75,8 +75,8 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         for (ShapeContainerDefined target : targets) {
 
-            ShapeContainerIfc targetShape = target.getShapecontainer();
-            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, targetShape, algoParameters);
+
+            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, target, algoParameters);
 
             try {
                 executorService.execute(compare);
@@ -119,9 +119,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 Integer startingRankId = listRankIds.get(i);
                 ShapeContainerDefined target = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget.toCharArray(), chainIdFromDB.toCharArray(), startingRankId, peptideLength, algoParameters);
                 targets.add(target);
-                if (targets.size() > 0){
-                    return targets;
-                }
+
             }
         }
         return targets;

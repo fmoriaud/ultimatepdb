@@ -2,6 +2,7 @@ package multithread;
 
 import parameters.AlgoParameters;
 import protocols.ProtocolTools;
+import protocols.ShapeContainerDefined;
 import shape.ShapeContainerIfc;
 
 /**
@@ -12,17 +13,17 @@ public class CompareOneOnlyRunnable implements Runnable{
     // Class members
     //-------------------------------------------------------------
     private final ShapeContainerIfc shapeContainerQuery;
-    private final ShapeContainerIfc shapeContainerAnyShape;
+    private final ShapeContainerDefined shapeContainerDefined;
     private final AlgoParameters algoParameters;
 
 
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public CompareOneOnlyRunnable(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
+    public CompareOneOnlyRunnable(ShapeContainerIfc shapeContainerQuery, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
-        this.shapeContainerAnyShape = shapeContainerAnyShape;
+        this.shapeContainerDefined = shapeContainerDefined;
         this.algoParameters = algoParameters;
     }
 
@@ -34,6 +35,7 @@ public class CompareOneOnlyRunnable implements Runnable{
     @Override
     public void run() {
 
-        ProtocolTools.compareAndWriteToResultFolder(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
+        ShapeContainerIfc targetShape = shapeContainerDefined.getShapecontainer();
+        ProtocolTools.compareAndWriteToResultFolder(shapeContainerQuery, targetShape, algoParameters);
     }
 }
