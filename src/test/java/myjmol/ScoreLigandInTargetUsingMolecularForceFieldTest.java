@@ -38,7 +38,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -130,9 +130,12 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) < 0.1);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -154,7 +157,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -340,9 +343,12 @@ ligandFullyRelaxedEnergy = 93.1085
         assertTrue(interactionEnergy < 0);
         assertTrue(Math.abs(interactionEnergy) > 15 && Math.abs(interactionEnergy) < 25);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

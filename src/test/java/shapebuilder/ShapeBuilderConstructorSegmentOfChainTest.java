@@ -32,7 +32,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
 
         char[] chainId = "X".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2ce8";
         BiojavaReader reader = new BiojavaReader();
@@ -63,9 +63,12 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         assertTrue(shape.getShape().getSize() == 663);
         assertTrue(shape.getMiniShape().size() == 34);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -79,7 +82,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -113,15 +116,6 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         assertTrue(shape.getShape().getSize() == 752);
         assertTrue(shape.getMiniShape().size() == 70);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
-        try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-
-
         // Check ligand peptide bonds
         ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) shape;
         MyChainIfc ligand = shapeContainerWithPeptide.getPeptide();
@@ -136,5 +130,16 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
             }
         }
         assertTrue(foundPeptideBond);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

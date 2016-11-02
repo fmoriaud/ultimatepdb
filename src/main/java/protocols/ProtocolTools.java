@@ -92,6 +92,7 @@ public class ProtocolTools {
 
 
 
+
     public static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
         int corePoolSize = 0; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that

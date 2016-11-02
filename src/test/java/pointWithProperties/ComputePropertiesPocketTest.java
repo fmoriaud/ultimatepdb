@@ -31,7 +31,7 @@ public class ComputePropertiesPocketTest {
     public void testWithDC_HDonor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2kh4";
         BiojavaReader reader = new BiojavaReader();
@@ -73,9 +73,12 @@ public class ComputePropertiesPocketTest {
         assertTrue(atomClosestWithDistanceLessThanFwhm);
         assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -89,7 +92,7 @@ public class ComputePropertiesPocketTest {
     public void testWithDG_HDonor() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "394d";
         BiojavaReader reader = new BiojavaReader();
@@ -131,9 +134,12 @@ public class ComputePropertiesPocketTest {
         assertTrue(atomClosestWithDistanceLessThanFwhm);
         assertEquals(computeProperties.gethDonnor(), 0.25, 0.0001);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

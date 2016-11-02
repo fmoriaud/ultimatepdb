@@ -31,7 +31,7 @@ public class StructureLocalToolsTest {
     public void testMethodMakeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2ce8";
         BiojavaReader reader = new BiojavaReader();
@@ -67,6 +67,17 @@ public class StructureLocalToolsTest {
         assertTrue(monomerOnRight.getMyAtomFromMyAtomName("C".toCharArray()) != null);
         assertTrue(monomerOnRight.getMyAtomFromMyAtomName("O".toCharArray()) != null);
         assertTrue(monomerOnRight.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -74,7 +85,7 @@ public class StructureLocalToolsTest {
     public void testMethodExtractSubChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2ce8";
         BiojavaReader reader = new BiojavaReader();
@@ -125,6 +136,17 @@ public class StructureLocalToolsTest {
             }
         }
         assertTrue(foundPeptideBond);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -133,7 +155,7 @@ public class StructureLocalToolsTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2ce8";
         BiojavaReader reader = new BiojavaReader();
@@ -250,6 +272,17 @@ public class StructureLocalToolsTest {
                 }
             }
         }
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -259,7 +292,7 @@ public class StructureLocalToolsTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -321,6 +354,17 @@ public class StructureLocalToolsTest {
         assertTrue(cTerminal.getBonds().length == 2);
         MyBondIfc[] bonds = cTerminal.getBonds();
 
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -328,7 +372,7 @@ public class StructureLocalToolsTest {
     public void testMethodfindTipsSegmentOfChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -355,7 +399,17 @@ public class StructureLocalToolsTest {
         int peptideLength = 4;
         int tipMonoMerDistance = 2;
         // List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
-        System.out.println();
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
     }
 

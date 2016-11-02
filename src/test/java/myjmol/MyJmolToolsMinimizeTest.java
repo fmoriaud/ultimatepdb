@@ -41,7 +41,7 @@ public class MyJmolToolsMinimizeTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -81,7 +81,7 @@ public class MyJmolToolsMinimizeTest {
         try {
             resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, protonatedLigand, protonatedTarget);
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-           assertTrue(false);
+            assertTrue(false);
         }
         assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget != null);
         assertTrue(resultsUltiJMolMinimizedHitLigandOnTarget.getCountOfLongDistanceChange() == 0);
@@ -97,9 +97,12 @@ public class MyJmolToolsMinimizeTest {
         //interactionEnergy = -26.642128
         //ligandFullyRelaxedEnergy = 13.304225
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

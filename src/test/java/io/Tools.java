@@ -139,20 +139,29 @@ public class Tools {
 
         AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
         // add a ultiJmol which is needed in the ShapeBuilder
+
         algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
-        UltiJmol1462 ultiJMol = new UltiJmol1462();
-        try {
-            algoParameters.ultiJMolBuffer.put(ultiJMol);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
+
+            UltiJmol1462 ultiJMol = new UltiJmol1462();
+            try {
+                algoParameters.ultiJMolBuffer.put(ultiJMol);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
-        ProcrustesAnalysisIfc procrustesAnalysisIfc = new ProcrustesAnalysis();
-        try {
-            algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysisIfc);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
+
+            ProcrustesAnalysisIfc procrustesAnalysisIfc = new ProcrustesAnalysis();
+            try {
+                algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysisIfc);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return algoParameters;
     }

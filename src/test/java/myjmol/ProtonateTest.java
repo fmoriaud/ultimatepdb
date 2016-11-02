@@ -36,7 +36,8 @@ public class ProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -54,14 +55,6 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
-        try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-
         MyChainIfc chainBeforeProtonation = mystructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc gln23BeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(23);
         assertTrue(gln23BeforeProtonation.getMyAtoms().length == 9);
@@ -69,6 +62,17 @@ public class ProtonateTest {
         MyChainIfc chainAfterProtonation = protonatedMyStructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc gln23AfterProtonation = chainAfterProtonation.getMyMonomerFromResidueId(23);
         assertTrue(gln23AfterProtonation.getMyAtoms().length == 18);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
     }
 
@@ -87,7 +91,7 @@ public class ProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -105,14 +109,6 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
-        try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-
         MyChainIfc chainBeforeProtonation = mystructure.getNucleosideChain("B".toCharArray());
         MyMonomerIfc dc11BBeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(11);
         assertTrue(dc11BBeforeProtonation.getMyAtoms().length == 16);
@@ -120,6 +116,17 @@ public class ProtonateTest {
         MyChainIfc chainAfterProtonation = protonatedMyStructure.getNucleosideChain("B".toCharArray());
         MyMonomerIfc dc11BAfterProtonation = chainAfterProtonation.getMyMonomerFromResidueId(11);
         assertTrue(dc11BAfterProtonation.getMyAtoms().length == 29);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
     }
 
@@ -138,7 +145,7 @@ public class ProtonateTest {
         }
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -156,14 +163,6 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
-        try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-
         MyChainIfc chainBeforeProtonation = mystructure.getAminoMyChain("A".toCharArray());
         MyMonomerIfc kto201BeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(201);
         assertTrue(kto201BeforeProtonation.getMyAtoms().length == 26);
@@ -177,5 +176,17 @@ public class ProtonateTest {
         MyAtomIfc atomH2C15 = kto201AfterProtonation.getMyAtomFromMyAtomName("H2C15".toCharArray());
         assertTrue(atomH1C15 != null);
         assertTrue(atomH2C15 != null);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

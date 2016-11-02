@@ -41,6 +41,7 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         FileHandler fh = null;
         try {
@@ -108,7 +109,16 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
 
         ProtocolTools.compareAndWriteToResultFolder(shapeQuery, shapeTarget, algoParameters);
 
-        // Look at the result file
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
     }
 }

@@ -34,34 +34,9 @@ public class ShapeBuilderConstructorWholeChainTest {
 
         char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
-        MyStructureIfc mystructure = getMyStructureIfc(algoParameters, fourLetterCode);
-
-        ShapeContainerIfc shapecontainer = null;
-        try {
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-        // don't know if it is good, it is as it is now.
-        assertTrue(shapecontainer.getShape().getSize() == 687);
-        assertTrue(shapecontainer.getMiniShape().size() == 68);
-
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
-        try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-
-    }
-
-
-    private MyStructureIfc getMyStructureIfc(AlgoParameters algoParameters, String fourLetterCode) {
         BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
@@ -77,6 +52,28 @@ public class ShapeBuilderConstructorWholeChainTest {
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
-        return mystructure;
+
+        ShapeContainerIfc shapecontainer = null;
+        try {
+            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+
+        // don't know if it is good, it is as it is now.
+        assertTrue(shapecontainer.getShape().getSize() == 687);
+        assertTrue(shapecontainer.getMiniShape().size() == 68);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 }

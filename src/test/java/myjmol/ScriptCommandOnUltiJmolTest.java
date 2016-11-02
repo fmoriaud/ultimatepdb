@@ -34,7 +34,7 @@ public class ScriptCommandOnUltiJmolTest {
     public void computeHydrogensEnergyAfterHydrogenMinimization() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         // Prepare input as environment of MSQ in 1di9
         String fourLetterCode = "1di9";
@@ -92,9 +92,12 @@ public class ScriptCommandOnUltiJmolTest {
         // also possible finalEnergy = 5460.785
         //assertEquals(finalEnergy, 597.0f, 50.0f);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

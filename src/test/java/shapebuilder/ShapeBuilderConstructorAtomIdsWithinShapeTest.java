@@ -35,7 +35,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
     public void testShapeBuilderConstructorProtein() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
@@ -73,9 +73,12 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         assertTrue(shape.getShape().getSize() == 2335);
         assertTrue(shape.getMiniShape().size() == 43);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -88,7 +91,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
     public void testShapeBuilderConstructorDNARNA() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "394d";
         BiojavaReader reader = new BiojavaReader();
@@ -126,9 +129,12 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         assertTrue(shape.getShape().getSize() == 1424);
         assertTrue(shape.getMiniShape().size() == 12);
 
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            algoParameters.ultiJMolBuffer.get().frame.dispose();
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
