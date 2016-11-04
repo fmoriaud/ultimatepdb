@@ -49,4 +49,9 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
 
         return shapecontainer;
     }
+
+    @Override
+    public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) {
+        return null;
+    }
 }

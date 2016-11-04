@@ -5,6 +5,7 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
@@ -21,8 +22,7 @@ import shapeBuilder.ShapeBuildingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.*;
 import java.util.logging.FileHandler;
 
 import static org.junit.Assert.assertTrue;
@@ -52,26 +52,42 @@ public class CompareWithExecutorTest {
         ControllerLoger.logger.addHandler(fh);
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
-        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
+        final ExecutorService executorService = getExecutorServiceForComparisons(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         ShapeContainerIfc queryShape = generateQueryShape(algoParameters);
         // prepare a few compareRunnable
         List<ShapeContainerDefined> targets = new ArrayList<>();
-        char[] chainId = "C".toCharArray();
-        char[] fourLetterCode = "2yjd".toCharArray();
+        char[] chainId1 = "C".toCharArray();
+        char[] fourLetterCode1 = "2yjd".toCharArray();
+        ShapeContainerDefined shapeContainerDefined1 = new ShapecontainerDefinedByWholeChain(fourLetterCode1, chainId1, algoParameters);
+        targets.add(shapeContainerDefined1);
 
-        ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedByWholeChain(fourLetterCode, chainId, algoParameters);
-        for (int i=0; i<2; i++){
-            targets.add(shapeContainerDefined);
+        char[] chainId2 = "X".toCharArray();
+        char[] fourLetterCode2 = "2ce8".toCharArray();
+        ShapeContainerDefined shapeContainerDefined2 = new ShapecontainerDefinedByWholeChain(fourLetterCode2, chainId2, algoParameters);
+        targets.add(shapeContainerDefined2);
+        /*
+        targets.add(shapeContainerDefined1);
+        targets.add(shapeContainerDefined2);
+        targets.add(shapeContainerDefined1);
+        targets.add(shapeContainerDefined2);
+        targets.add(shapeContainerDefined1);
+        targets.add(shapeContainerDefined2);
+*/
+        List<CompareOneOnlyRunnable> runnablesToLauch = new ArrayList<>();
+        for (ShapeContainerDefined target : targets) {
+            //ShapecontainerDefinedByWholeChain targetWholechain = (ShapecontainerDefinedByWholeChain) target;
+            //MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, targetWholechain.getFourLetterCode());
+            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, target, algoParameters);
+            runnablesToLauch.add(compare);
         }
 
-        for (ShapeContainerDefined target : targets) {
-
-            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, target, algoParameters);
-
+        for (CompareOneOnlyRunnable runnableToLauch : runnablesToLauch) {
             try {
-                executorService.execute(compare);
+
+                // Problem is the executor service waits to finish the task before adding a new one
+                executorService.execute(runnableToLauch);
             } catch (RejectedExecutionException e) {
 
                 try {
@@ -82,14 +98,11 @@ public class CompareWithExecutorTest {
                 }
             }
         }
-
-        while(true){
-            try {
-                Thread.sleep(100000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(5, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
@@ -125,5 +138,28 @@ public class CompareWithExecutorTest {
         }
 
         return shapecontainer;
+    }
+
+
+
+    private static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
+        int corePoolSize = 0; // no need to keep idle ones
+        long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
+        // could happen when searching database for a potetial hit, that could last as long
+        // as the time to search the whole system
+        int maxCountRunnableInBoundQueue = 10000; // 10000;
+
+        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(1);
+
+        /*
+                new ThreadPoolExecutor(
+                        corePoolSize,
+                        consumersCount,
+                        keepAliveTime,
+                        TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<Runnable>(maxCountRunnableInBoundQueue)
+                );
+*/
+        return threadPoolExecutor;
     }
 }

@@ -1,5 +1,6 @@
 package protocols;
 
+import mystructure.MyStructureIfc;
 import shape.ShapeContainerIfc;
 
 /**
@@ -9,4 +10,6 @@ public interface ShapeContainerDefined {
 
 
     ShapeContainerIfc getShapecontainer();
+    ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget);
+
 }
