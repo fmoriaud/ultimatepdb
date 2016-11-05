@@ -5,14 +5,12 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
-import io.IOTools;
 import io.Tools;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.*;
@@ -35,7 +33,6 @@ import static org.junit.Assert.assertTrue;
 public class CompareWithExecutorTest {
 
 
-    @Ignore
     @Test
     public void testCompareSeveral() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
@@ -44,7 +41,7 @@ public class CompareWithExecutorTest {
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project_2timesTheQueryAsTargetOneThread.txt");
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -89,15 +86,17 @@ public class CompareWithExecutorTest {
             callablesToLauch.add(compare);
         }
 
-        Future<Boolean> lastFuture = null;
+        List<Future<Boolean>> allFuture = new ArrayList<>();
         for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
 
                 // Problem is the executor service waits to finish the task before adding a new one
+
                 Future<Boolean> future = executorService.submit(callableToLauch);
-                if (callableToLauch == callablesToLauch.get(callablesToLauch.size() - 1)) {
-                    lastFuture = future;
-                }
+                allFuture.add(future);
+                //if (callableToLauch == callablesToLauch.get(callablesToLauch.size() - 1)) {
+                  //  lastFuture = future;
+                //}
 
                 ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
 
@@ -121,10 +120,14 @@ public class CompareWithExecutorTest {
 
             try {
                 Thread.sleep(100000);
-                Boolean stopCriteria = lastFuture.get();
-                if (stopCriteria != null && stopCriteria == true) {
-                    notFinished = false;
+                for (Future<Boolean> future: allFuture){
+                    future.get();
                 }
+                notFinished = false;
+                //Boolean stopCriteria = lastFuture.get();
+               // if (stopCriteria != null && stopCriteria == true) {
+               //     notFinished = false;
+               // }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

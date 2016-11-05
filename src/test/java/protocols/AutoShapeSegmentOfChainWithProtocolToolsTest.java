@@ -45,7 +45,7 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project_2timesTheQueryAsTargetOneThread.txt");
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
