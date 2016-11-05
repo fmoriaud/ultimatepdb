@@ -28,9 +28,11 @@ import java.util.logging.Level;
 public class ProtocolTools {
 
 
-    public static void compareAndWriteToResultFolder(ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
+    public static void compareAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
         ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
         List<Hit> listBestHitForEachAndEverySeed = null;
+
+        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
 
         try {
             listBestHitForEachAndEverySeed = comparatorShape.computeResults();
@@ -38,13 +40,14 @@ public class ProtocolTools {
             e.printStackTrace();
             return;
         }
-        System.out.println("listBestHitForEachAndEverySeed size in Tools = " + listBestHitForEachAndEverySeed.size());
+        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + listBestHitForEachAndEverySeed.size() + " hits to minimize");
+
         int hitRank = -1;
         A:
         for (Hit hit : listBestHitForEachAndEverySeed) {
             hitRank += 1;
+            ControllerLoger.logger.log(Level.INFO,"&&&&&& Minimizing " + String.valueOf(targetShape.getFourLetterCode()) + " rankId = " + hitRank);
 
-            System.out.println("Minimizing ... " + hit.toString());
             try {
                 HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
             } catch (NullResultFromAComparisonException e) {
@@ -57,6 +60,10 @@ public class ProtocolTools {
             HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
             String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
             ControllerLoger.logger.log(Level.INFO, message);
+
+            if (minimizeAllIfTrueOrOnlyOneIfFalse == false){
+                break;
+            }
         }
     }
 

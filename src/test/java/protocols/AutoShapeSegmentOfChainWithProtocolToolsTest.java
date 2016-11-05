@@ -107,7 +107,8 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
             e.printStackTrace();
         }
 
-        ProtocolTools.compareAndWriteToResultFolder(shapeQuery, shapeTarget, algoParameters);
+        boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+        ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeQuery, shapeTarget, algoParameters);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

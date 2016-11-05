@@ -20,13 +20,10 @@ import protocols.ShapeContainerFactory;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
-import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
-import shapeCompare.NullResultFromAComparisonException;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import static org.junit.Assert.assertEquals;
@@ -94,7 +91,7 @@ public class CompareOneOnlyCallableTest {
         }
 
         List<Hit> listBestHitForEachAndEverySeed = null;
-        CompareOneOnlyCallable callable = new CompareOneOnlyCallable(shapeMSQ, shapeSB2, algoParameters);
+        CompareOneOnlyCallableOld callable = new CompareOneOnlyCallableOld(shapeMSQ, shapeSB2, algoParameters);
         FutureTask<List<Hit>> future = new FutureTask(callable);
         future.run();
         try {

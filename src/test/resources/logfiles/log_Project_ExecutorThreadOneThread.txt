@@ -1,0 +1,22 @@
+&&&&&& Added to Executor 
+&&&&& Start Read 2yjd 15207714510235
+&&&&&& Added to Executor 
+&&&&&& Finished Read 2yjd 15207714510235
+&&&&&& Start shape container 2yjd 15207714510235
+&&&&&& Made shape container 2yjd 15207714510235
+&&&&&& Comparing starts 2YJD
+&&&&&& Comparing ends 2YJD found 52 hits to minimize
+&&&&&& Minimizing 2YJD rankId = 0
+PDB = 2YJD chain id = C index = 0 sequence = [ACE, HIS, MK8, ILE, LEU, HIS, MK8, LEU, LEU, GLN, ASP, SER, NH2] cost = 0.0 minishape size = 68 shape size = 687
+RatioPairedPointToHitPoints = 1.0 CountOfLongDistanceChange = 0 InteractionEFinal = -28.4608154296875 RmsdLigand = 0.17493247985839844 LigandStrainedEnergy = 47.65283203125
+ all convergence reached true RmsdBackbone = 2.8989753E-15 Rank = 0
+&&&&& Start Read 2ce8 15454728377036
+&&&&&& Finished Read 2ce8 15454728377036
+&&&&&& Start shape container 2ce8 15454728377036
+&&&&&& Made shape container 2ce8 15454728377036
+&&&&&& Comparing starts 2CE8
+&&&&&& Comparing ends 2CE8 found 52 hits to minimize
+&&&&&& Minimizing 2CE8 rankId = 0
+PDB = 2CE8 chain id = X index = 0 sequence = [MET, PHE, SER, ILE, ASP, ASN, ILE, LEU, ALA] cost = 0.10508127996845851 minishape size = 47 shape size = 1080
+RatioPairedPointToHitPoints = 0.65502185 CountOfLongDistanceChange = 0 InteractionEFinal = 47.8143310546875 RmsdLigand = 0.5820083618164062 LigandStrainedEnergy = 191.19406127929688
+ all convergence reached true RmsdBackbone = 3.123154 Rank = 0

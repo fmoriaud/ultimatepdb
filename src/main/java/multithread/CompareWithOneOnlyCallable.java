@@ -6,10 +6,13 @@ import protocols.ProtocolTools;
 import protocols.ShapeContainerDefined;
 import shape.ShapeContainerIfc;
 
+import java.util.concurrent.Callable;
+
+
 /**
  * Created by Fabrice on 31/10/16.
  */
-public class CompareOneOnlyRunnable implements Runnable {
+public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
@@ -22,7 +25,7 @@ public class CompareOneOnlyRunnable implements Runnable {
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public CompareOneOnlyRunnable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
+    public CompareWithOneOnlyCallable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
         this.shapeContainerDefined = shapeContainerDefined;
@@ -32,7 +35,7 @@ public class CompareOneOnlyRunnable implements Runnable {
     }
 
 
-    public CompareOneOnlyRunnable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, MyStructureIfc myStructureTarget, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
+    public CompareWithOneOnlyCallable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, MyStructureIfc myStructureTarget, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
         this.shapeContainerDefined = shapeContainerDefined;
@@ -45,17 +48,20 @@ public class CompareOneOnlyRunnable implements Runnable {
     //-------------------------------------------------------------
     // Public & Override methods
     //-------------------------------------------------------------
+
     @Override
-    public void run() {
+    public Boolean call() throws Exception {
 
         ShapeContainerIfc targetShape = null;
-        if (myStructureTarget != null){
+        if (myStructureTarget != null) {
             targetShape = shapeContainerDefined.getShapecontainer(myStructureTarget);
-        } else{
+        } else {
             targetShape = shapeContainerDefined.getShapecontainer();
         }
 
         System.out.println("Finish Built a shape container");
         ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeContainerQuery, targetShape, algoParameters);
+
+        return true;
     }
 }

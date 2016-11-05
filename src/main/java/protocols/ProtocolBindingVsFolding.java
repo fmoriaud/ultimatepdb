@@ -154,7 +154,8 @@ public class ProtocolBindingVsFolding {
                 }
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
 
-                ProtocolTools.compareAndWriteToResultFolder(queryShape, targetShape, algoParameters);
+                boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+                ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
 
             }
             // Put in a callable the shape building and comparison

@@ -12,6 +12,7 @@ import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.*;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 import static org.junit.Assert.assertTrue;
 
@@ -33,10 +35,12 @@ import static org.junit.Assert.assertTrue;
 public class CompareWithExecutorTest {
 
 
+    @Ignore
     @Test
     public void testCompareSeveral() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         FileHandler fh = null;
         try {
@@ -62,11 +66,12 @@ public class CompareWithExecutorTest {
         char[] fourLetterCode1 = "2yjd".toCharArray();
         ShapeContainerDefined shapeContainerDefined1 = new ShapecontainerDefinedByWholeChain(fourLetterCode1, chainId1, algoParameters);
         targets.add(shapeContainerDefined1);
+        targets.add(shapeContainerDefined1);
 
         char[] chainId2 = "X".toCharArray();
         char[] fourLetterCode2 = "2ce8".toCharArray();
         ShapeContainerDefined shapeContainerDefined2 = new ShapecontainerDefinedByWholeChain(fourLetterCode2, chainId2, algoParameters);
-        targets.add(shapeContainerDefined2);
+        //targets.add(shapeContainerDefined2);
         /*
         targets.add(shapeContainerDefined1);
         targets.add(shapeContainerDefined2);
@@ -75,19 +80,27 @@ public class CompareWithExecutorTest {
         targets.add(shapeContainerDefined1);
         targets.add(shapeContainerDefined2);
 */
-        List<CompareOneOnlyRunnable> runnablesToLauch = new ArrayList<>();
+        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
             //ShapecontainerDefinedByWholeChain targetWholechain = (ShapecontainerDefinedByWholeChain) target;
             //MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, targetWholechain.getFourLetterCode());
-            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, target, algoParameters);
-            runnablesToLauch.add(compare);
+            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
+            callablesToLauch.add(compare);
         }
 
-        for (CompareOneOnlyRunnable runnableToLauch : runnablesToLauch) {
+        Future<Boolean> lastFuture = null;
+        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
 
                 // Problem is the executor service waits to finish the task before adding a new one
-                executorService.execute(runnableToLauch);
+                Future<Boolean> future = executorService.submit(callableToLauch);
+                if (callableToLauch == callablesToLauch.get(callablesToLauch.size() - 1)) {
+                    lastFuture = future;
+                }
+
+                ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
+
             } catch (RejectedExecutionException e) {
 
                 try {
@@ -97,26 +110,37 @@ public class CompareWithExecutorTest {
                     e1.printStackTrace();
                 }
             }
+
         }
 
-        while(true){
+        // test if last added is done
+
+
+        boolean notFinished = true;
+        while (true && notFinished) {
+
             try {
                 Thread.sleep(100000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
+                Boolean stopCriteria = lastFuture.get();
+                if (stopCriteria != null && stopCriteria == true) {
+                    notFinished = false;
+                }
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
-
-        /*
         executorService.shutdown();
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
         try {
-            executorService.awaitTermination(5, TimeUnit.MINUTES);
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
-
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -153,7 +177,6 @@ public class CompareWithExecutorTest {
     }
 
 
-
     private static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
         int corePoolSize = 0; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
@@ -161,7 +184,7 @@ public class CompareWithExecutorTest {
         // as the time to search the whole system
         int maxCountRunnableInBoundQueue = 10000; // 10000;
 
-        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(1);
+        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
 
         /*
                 new ThreadPoolExecutor(

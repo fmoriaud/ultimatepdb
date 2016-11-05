@@ -75,8 +75,8 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         for (ShapeContainerDefined target : targets) {
 
-
-            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(queryShape, target, algoParameters);
+            boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
 
             try {
                 executorService.execute(compare);

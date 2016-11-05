@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 /**
  * Do a shape comparison within a Callable
  */
-public class CompareOneOnlyCallable implements Callable<List<Hit>> {
+public class CompareOneOnlyCallableOld implements Callable<List<Hit>> {
     //------------------------
     // Class variables
     //------------------------
@@ -28,7 +28,7 @@ public class CompareOneOnlyCallable implements Callable<List<Hit>> {
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public CompareOneOnlyCallable(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
+    public CompareOneOnlyCallableOld(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
         this.shapeContainerAnyShape = shapeContainerAnyShape;
