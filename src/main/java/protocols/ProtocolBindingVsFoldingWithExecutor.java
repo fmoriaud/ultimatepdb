@@ -3,15 +3,19 @@ package protocols;
 import database.HitInSequenceDb;
 import database.SequenceTools;
 import multithread.CompareOneOnlyRunnable;
+import multithread.CompareWithOneOnlyCallable;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 /**
  * Created by Fabrice on 31/10/16.
@@ -73,13 +77,24 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         ShapeContainerIfc queryShape = query.getShapecontainer();
 
+        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
+            //ShapecontainerDefinedByWholeChain targetWholechain = (ShapecontainerDefinedByWholeChain) target;
+            //MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, targetWholechain.getFourLetterCode());
+            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
+            callablesToLauch.add(compare);
+        }
 
-            boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
-            CompareOneOnlyRunnable compare = new CompareOneOnlyRunnable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
-
+        List<Future<Boolean>> allFuture = new ArrayList<>();
+        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
-                executorService.execute(compare);
+
+                Future<Boolean> future = executorService.submit(callableToLauch);
+                allFuture.add(future);
+
+                ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
+
             } catch (RejectedExecutionException e) {
 
                 try {
@@ -91,15 +106,22 @@ public class ProtocolBindingVsFoldingWithExecutor {
             }
         }
 
-        while(true){
+        boolean notFinished = true;
+        while (true && notFinished) {
+
             try {
                 Thread.sleep(100000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
+                for (Future<Boolean> future : allFuture) {
+                    future.get();
+                }
+                notFinished = false;
+
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
-        //executorService.shutdown();
+        executorService.shutdown();
+
 
     }
 

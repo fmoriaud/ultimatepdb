@@ -16,10 +16,7 @@ import shapeCompare.ProcrustesAnalysis;
 
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 
 /**
@@ -99,7 +96,14 @@ public class ProtocolTools {
 
 
 
+    public static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
 
+        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
+        return threadPoolExecutor;
+    }
+
+
+/*
     public static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
         int corePoolSize = 0; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
@@ -118,5 +122,5 @@ public class ProtocolTools {
 
         return threadPoolExecutor;
     }
-
+*/
 }

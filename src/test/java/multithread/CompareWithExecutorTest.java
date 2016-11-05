@@ -53,7 +53,7 @@ public class CompareWithExecutorTest {
         ControllerLoger.logger.addHandler(fh);
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
-        final ExecutorService executorService = getExecutorServiceForComparisons(consumersCount);
+        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         ShapeContainerIfc queryShape = generateQueryShape(algoParameters);
@@ -90,13 +90,8 @@ public class CompareWithExecutorTest {
         for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
 
-                // Problem is the executor service waits to finish the task before adding a new one
-
                 Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
-                //if (callableToLauch == callablesToLauch.get(callablesToLauch.size() - 1)) {
-                  //  lastFuture = future;
-                //}
 
                 ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
 
@@ -109,11 +104,7 @@ public class CompareWithExecutorTest {
                     e1.printStackTrace();
                 }
             }
-
         }
-
-        // test if last added is done
-
 
         boolean notFinished = true;
         while (true && notFinished) {
@@ -124,10 +115,7 @@ public class CompareWithExecutorTest {
                     future.get();
                 }
                 notFinished = false;
-                //Boolean stopCriteria = lastFuture.get();
-               // if (stopCriteria != null && stopCriteria == true) {
-               //     notFinished = false;
-               // }
+
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -177,27 +165,5 @@ public class CompareWithExecutorTest {
         }
 
         return shapecontainer;
-    }
-
-
-    private static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
-        int corePoolSize = 0; // no need to keep idle ones
-        long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
-        // could happen when searching database for a potetial hit, that could last as long
-        // as the time to search the whole system
-        int maxCountRunnableInBoundQueue = 10000; // 10000;
-
-        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
-
-        /*
-                new ThreadPoolExecutor(
-                        corePoolSize,
-                        consumersCount,
-                        keepAliveTime,
-                        TimeUnit.MILLISECONDS,
-                        new LinkedBlockingQueue<Runnable>(maxCountRunnableInBoundQueue)
-                );
-*/
-        return threadPoolExecutor;
     }
 }
