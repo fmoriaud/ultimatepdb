@@ -19,12 +19,10 @@ public class ScriptCommandOnUltiJmol {
     private String moleculeV3000;
     private AlgoParameters algoParameters;
 
-    private UltiJmol1462 ultiJmol;
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
 
     private Integer atomCountTarget;
 
-    private boolean scriptIsMinimizing = false;
 
 
     // -------------------------------------------------------------------
@@ -68,7 +66,7 @@ public class ScriptCommandOnUltiJmol {
     //------------------------
     // Getter and Setter
     //------------------------
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

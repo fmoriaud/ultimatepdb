@@ -19,7 +19,7 @@ public class Protonate {
     private MyStructureIfc myStructure;
     private AlgoParameters algoParameters;
 
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
     private MyStructureIfc protonatedMyStructure;
 
 
@@ -53,7 +53,7 @@ public class Protonate {
         safeUltiJmolUsage.run();
         results = safeUltiJmolUsage.getResults();
 
-        protonatedMyStructure = (MyStructureIfc) results.get("protonatedMyStructure");
+        protonatedMyStructure = (MyStructureIfc) results.get(Results.PROTONATED_STRUCTURE);
 
     }
 
@@ -65,7 +65,7 @@ public class Protonate {
         return protonatedMyStructure;
     }
 
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 }

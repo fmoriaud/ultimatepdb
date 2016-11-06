@@ -41,7 +41,7 @@ public class CompareWithExecutorTest {
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project_2timesTheQueryAsTargetOneThread.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -56,19 +56,26 @@ public class CompareWithExecutorTest {
         final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
-        ShapeContainerIfc queryShape = generateQueryShape(algoParameters);
-        // prepare a few compareRunnable
-        List<ShapeContainerDefined> targets = new ArrayList<>();
         char[] chainId1 = "C".toCharArray();
         char[] fourLetterCode1 = "2yjd".toCharArray();
+        ShapeContainerDefined queryShapeDefined = new ShapecontainerDefinedByWholeChain(fourLetterCode1, chainId1, algoParameters);
+        ShapeContainerIfc queryShape = queryShapeDefined.getShapecontainer();
+
+        // prepare a few compareRunnable
+        List<ShapeContainerDefined> targets = new ArrayList<>();
+
+        chainId1 = "C".toCharArray();
+        fourLetterCode1 = "2yjd".toCharArray();
         ShapeContainerDefined shapeContainerDefined1 = new ShapecontainerDefinedByWholeChain(fourLetterCode1, chainId1, algoParameters);
-        targets.add(shapeContainerDefined1);
-        targets.add(shapeContainerDefined1);
+
+
+        //targets.add(shapeContainerDefined1);
 
         char[] chainId2 = "X".toCharArray();
         char[] fourLetterCode2 = "2ce8".toCharArray();
         ShapeContainerDefined shapeContainerDefined2 = new ShapecontainerDefinedByWholeChain(fourLetterCode2, chainId2, algoParameters);
-        //targets.add(shapeContainerDefined2);
+        targets.add(shapeContainerDefined1);
+        targets.add(shapeContainerDefined1);
         /*
         targets.add(shapeContainerDefined1);
         targets.add(shapeContainerDefined2);
@@ -132,38 +139,5 @@ public class CompareWithExecutorTest {
             e.printStackTrace();
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-    }
-
-
-    private ShapeContainerIfc generateQueryShape(AlgoParameters algoParameters) throws IOException, ParsingConfigFileException {
-
-        char[] chainId = "C".toCharArray();
-
-
-        String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        ShapeContainerIfc shapecontainer = null;
-        try {
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-        return shapecontainer;
     }
 }

@@ -19,7 +19,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
     private String moleculeV3000;
     private String script;
 
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
 
 
 
@@ -68,7 +68,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
         if (energyAsInitialAsPossible == null) {
             return false;
         }
-        results.put("initial energy", energyAsInitialAsPossible);
+        results.put(Results.INITIAL_ENERGY, energyAsInitialAsPossible);
         // Whatever is the minimize script which contains what to fix and that matters for the energy
         ultiJmol.jmolPanel.evalString("minimize clear");
 
@@ -97,7 +97,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
     }
 
     @Override
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

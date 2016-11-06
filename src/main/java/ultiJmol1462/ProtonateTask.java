@@ -19,7 +19,7 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
     private MyStructureIfc myStructure;
     private AlgoParameters algoParameters;
     private MyStructureIfc protonatedMyStructure;
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
 
 
 
@@ -120,14 +120,14 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         myStructureWithBondsAndHydrogenAtoms.setFourLetterCode(myStructure.getFourLetterCode());
         addHydrogenInformation(protonatedMyStructure, myStructureWithBondsAndHydrogenAtoms);
 
-        results.put("protonatedMyStructure", protonatedMyStructure);
+        results.put(Results.PROTONATED_STRUCTURE, protonatedMyStructure);
         return true;
     }
 
 
 
     @Override
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

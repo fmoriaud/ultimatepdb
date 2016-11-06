@@ -20,7 +20,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
     private Integer atomCountTarget;
 
     private boolean scriptIsMinimizing = false;
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
 
     // -------------------------------------------------------------------
     // Constructors
@@ -62,7 +62,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
 
             Float energy = 1E8f;
             int countIteration = 0;
-            int maxIteration = 20;
+            int maxIteration = 50;
             boolean goAhead = true;
             while (countIteration <= maxIteration && goAhead == true) {
 
@@ -127,18 +127,11 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
                 return false;
             }
 
-            results.put("convergence reached", convergenceReached);
-            //results.put("final energy", energy);
-
-
-            // ?????????????????
-            //ultiJmol.jmolPanel.evalString("minimize energy");
-
-            //System.out.println("final energy = " + finalEnergy);
-            results.put("final energy", finalEnergy);
+            results.put(Results.CONVERGENCE_REACHED, convergenceReached);
+            results.put(Results.FINAL_ENERGY, finalEnergy);
 
             String structureV3000 = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
-            results.put("structureV3000", structureV3000);
+            results.put(Results.STRUCTURE_V3000, structureV3000);
 
             ultiJmol.jmolPanel.evalString("minimize clear");
 
@@ -156,7 +149,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
                     //e.printStackTrace();
                 }
                 String ligand = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
-                results.put("ligand", ligand);
+                results.put(Results.LIGAND, ligand);
 
                 ultiJmol.jmolPanel.openStringInline(moleculeV3000);
 
@@ -171,14 +164,14 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
                     //e.printStackTrace();
                 }
                 String target = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
-                results.put("target", target);
+                results.put(Results.TARGET, target);
             }
         }
         return true;
     }
 
     @Override
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

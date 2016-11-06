@@ -31,18 +31,6 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
-    /*
-    public ScoreLigandInTargetUsingMolecularForceField(MyJmol1462 ultiJmol, MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
-
-        this.ultiJmol = ultiJmol;
-        this.protonatedTarget = protonatedTarget;
-        this.protonatedLigand = protonatedLigand;
-        this.algoParameters = algoParameters;
-
-    }
-*/
-
-
     public ScoreLigandInTargetUsingMolecularForceField(MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
 
         this.algoParameters = algoParameters;
@@ -79,16 +67,16 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
 
         }
-        Map<String, Object> results = scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.getResults();
-        boolean convergenReached = (boolean) results.get("convergence reached");
+        Map<Results, Object> results = scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.getResults();
+        boolean convergenReached = (boolean) results.get(Results.CONVERGENCE_REACHED);
 
         if (convergenReached == false){
             allconvergenceReached = false;
         }
         System.out.println("Convergence reached : " + convergenReached);
-        String ligandFromMinimizedComplex = (String) results.get("ligand");
-        String targetFromMinimizedComplex = (String) results.get("target");
-        String complexFromMinimizedComplex = (String) results.get("structureV3000");
+        String ligandFromMinimizedComplex = (String) results.get(Results.LIGAND);
+        String targetFromMinimizedComplex = (String) results.get(Results.TARGET);
+        String complexFromMinimizedComplex = (String) results.get(Results.STRUCTURE_V3000);
 
         try {
             Thread.sleep(1000L);
@@ -106,7 +94,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             allconvergenceReached = false;
         }
         results = getEnergyTarget.getResults();
-        float targetFromMinimizedComplexEnergy = (float) results.get("initial energy");
+        float targetFromMinimizedComplexEnergy = (float) results.get(Results.INITIAL_ENERGY);
         System.out.println("targetFromMinimizedComplexEnergy = " + targetFromMinimizedComplexEnergy);
 
         try {
@@ -125,7 +113,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         results = getEnergyComplex.getResults();
-        float complexFromMinimizedComplexEnergy = (float) results.get("initial energy");
+        float complexFromMinimizedComplexEnergy = (float) results.get(Results.INITIAL_ENERGY);
         System.out.println("complexFromMinimizedComplexEnergy = " + complexFromMinimizedComplexEnergy);
 
         try {
@@ -143,7 +131,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         results = getEnergy.getResults();
-        float ligandFromMinimizedComplexEnergy = (float) results.get("initial energy");
+        float ligandFromMinimizedComplexEnergy = (float) results.get(Results.INITIAL_ENERGY);
         System.out.println("ligandFromMinimizedComplexEnergy = " + ligandFromMinimizedComplexEnergy);
 
 
@@ -173,11 +161,11 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         results = scriptCommandOnUltiJmolLigand.getResults();
 
 
-        boolean convergenceReached = (Boolean) results.get("convergence reached");
+        boolean convergenceReached = (Boolean) results.get(Results.CONVERGENCE_REACHED);
         if (convergenceReached == false){
             allconvergenceReached = false;
         }
-        String ligandFullyRelaxedV3000 = (String) results.get("structureV3000");
+        String ligandFullyRelaxedV3000 = (String) results.get(Results.STRUCTURE_V3000);
 
         try {
             Thread.sleep(1000L);
@@ -196,12 +184,13 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             allconvergenceReached = false;
         }
         results = getEnergy2.getResults();
-        float ligandFullyRelaxedEnergy = (float) results.get("initial energy");
+        float ligandFullyRelaxedEnergy = (float) results.get(Results.INITIAL_ENERGY);
         System.out.println("ligandFullyRelaxedEnergy = " + ligandFullyRelaxedEnergy);
 
         strainedEnergy = ligandFromMinimizedComplexEnergy - ligandFullyRelaxedEnergy;
 
     }
+
 
 
     private List<Integer> atomIdsTargetCloseToLigand(MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {

@@ -20,7 +20,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     private final ShapeContainerDefined shapeContainerDefined;
     private final AlgoParameters algoParameters;
     private MyStructureIfc myStructureTarget;
-    private boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+    private final boolean minimizeAllIfTrueOrOnlyOneIfFalse;
 
     // -------------------------------------------------------------------
     // Constructor
@@ -31,7 +31,6 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
         this.shapeContainerDefined = shapeContainerDefined;
         this.algoParameters = algoParameters;
         this.minimizeAllIfTrueOrOnlyOneIfFalse = minimizeAllIfTrueOrOnlyOneIfFalse;
-
     }
 
 

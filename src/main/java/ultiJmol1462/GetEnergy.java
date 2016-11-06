@@ -20,7 +20,7 @@ public class GetEnergy {
     private AlgoParameters algoParameters;
     private String script;
 
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
     private boolean convergenceReached = true;
 
     // -------------------------------------------------------------------
@@ -61,7 +61,7 @@ public class GetEnergy {
     //------------------------
     // Getter and Setter
     //------------------------
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

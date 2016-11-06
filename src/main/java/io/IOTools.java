@@ -19,7 +19,12 @@ import java.util.Map;
  */
 public class IOTools {
 
-
+    /**
+     *
+     * @param algoParameters
+     * @param fourLetterCode that must be lower case
+     * @return Can return null
+     */
     public static MyStructureIfc getMyStructureIfc(AlgoParameters algoParameters, char[] fourLetterCode) {
         BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;

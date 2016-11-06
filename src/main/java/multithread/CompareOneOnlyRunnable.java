@@ -5,6 +5,7 @@ import parameters.AlgoParameters;
 import protocols.ProtocolTools;
 import protocols.ShapeContainerDefined;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
 
 /**
  * Created by Fabrice on 31/10/16.
@@ -50,9 +51,17 @@ public class CompareOneOnlyRunnable implements Runnable {
 
         ShapeContainerIfc targetShape = null;
         if (myStructureTarget != null){
-            targetShape = shapeContainerDefined.getShapecontainer(myStructureTarget);
+            try {
+                targetShape = shapeContainerDefined.getShapecontainer(myStructureTarget);
+            } catch (ShapeBuildingException e) {
+                return;
+            }
         } else{
-            targetShape = shapeContainerDefined.getShapecontainer();
+            try {
+                targetShape = shapeContainerDefined.getShapecontainer();
+            } catch (ShapeBuildingException e) {
+                return;
+            }
         }
 
         System.out.println("Finish Built a shape container");

@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 
-public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined{
+public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined {
 
 
     //-------------------------------------------------------------
@@ -22,12 +22,10 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined{
     private AlgoParameters algoParameters;
 
 
-
-
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ShapecontainerDefinedByWholeChain(char[] fourLetterCode, char[] chainId, AlgoParameters algoParameters){
+    public ShapecontainerDefinedByWholeChain(char[] fourLetterCode, char[] chainId, AlgoParameters algoParameters) {
         this.fourLetterCode = fourLetterCode;
         this.chainId = chainId;
         this.algoParameters = algoParameters;
@@ -35,44 +33,39 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined{
     }
 
 
-
-
     //-------------------------------------------------------------
     // Public & Override methods
     //-------------------------------------------------------------
     @Override
-    public ShapeContainerIfc getShapecontainer() {
+    public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
 
         long t = System.nanoTime();
         ControllerLoger.logger.log(Level.INFO, "&&&&& Start Read " + String.valueOf(fourLetterCode) + " " + t);
         MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
 
+        if (myStructure == null) {
+            ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
+            throw exception;
+        }
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Finished Read " + String.valueOf(fourLetterCode) + " " + t);
         ShapeContainerIfc shapecontainer = null;
-        try {
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
+
+        ControllerLoger.logger.log(Level.INFO, "&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
+        shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
+        ControllerLoger.logger.log(Level.INFO, "&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
 
         return shapecontainer;
     }
 
     @Override
-    public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructure) {
+    public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructure) throws ShapeBuildingException {
 
         long t = System.nanoTime();
 
-        ShapeContainerIfc shapecontainer = null;
-        try {
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
+        ControllerLoger.logger.log(Level.INFO, "&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
+        ControllerLoger.logger.log(Level.INFO, "&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
+
         return shapecontainer;
     }
 

@@ -15,7 +15,7 @@ public class SafeUltiJmolUsage {
     // -------------------------------------------------------------------
 
     private DoMyJmolTaskIfc doMyJmolTaskIfc;
-    private Map<String, Object> results = new LinkedHashMap<>();
+    private Map<Results, Object> results = new LinkedHashMap<>();
     private AlgoParameters algoParameters;
 
     private boolean convergenceReached = true;
@@ -38,12 +38,12 @@ public class SafeUltiJmolUsage {
 
             Boolean convergenceStatus = doMyJmolTaskIfc.doAndReturnConvergenceStatus(ultiJmol);
             results.putAll(doMyJmolTaskIfc.getResults());
-            results.put("convergenceStatus", convergenceStatus);
+            results.put(Results.CONVERGENCE_REACHED, convergenceStatus);
 
                     //results.put("status", "success");
         } catch (Exception e) {
 
-            results.put("status", "ultiJmol crash");
+            results.put(Results.STATUS, "ultiJmol crash");
             // If exception then ultijmol is disposed and a new one is put in the buffer
             System.out.println("Exception in  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
@@ -77,7 +77,7 @@ public class SafeUltiJmolUsage {
         this.doMyJmolTaskIfc = doMyJmolTaskIfc;
     }
 
-    public Map<String, Object> getResults() {
+    public Map<Results, Object> getResults() {
         return results;
     }
 

@@ -80,11 +80,11 @@ public class ScriptCommandOnUltiJmolTest {
         } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false); // Should not happen. Only if energy during minimization failed to be obtained
         }
-        Map<String, Object> results = scriptCommandOnUltiJmol.getResults();
+        Map<Results, Object> results = scriptCommandOnUltiJmol.getResults();
 
 
-        boolean convergenceReached = (boolean) results.get("convergence reached");
-        Float finalEnergy = (Float) results.get("final energy");
+        boolean convergenceReached = (boolean) results.get(Results.CONVERGENCE_REACHED);
+        Float finalEnergy = (Float) results.get(Results.FINAL_ENERGY);
 
         assertTrue(convergenceReached);
         // not reproducible

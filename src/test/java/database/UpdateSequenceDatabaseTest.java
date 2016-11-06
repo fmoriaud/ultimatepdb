@@ -24,16 +24,13 @@ public class UpdateSequenceDatabaseTest {
      * @throws IOException
      * @throws ParsingConfigFileException
      */
-    @Ignore
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
         // Create Sequence DB
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        Path pathToPDBFolder = Paths.get(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
-        Path pathToChemCompFolderFolder = Paths.get(algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        updateSequenceDatabase.buildDatabase(algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");

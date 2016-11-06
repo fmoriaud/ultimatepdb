@@ -115,7 +115,6 @@ public class MyJmolTools {
     }
 
 
-
     public static boolean putBackUltiJmolInBufferAndIfFailsPutNewOne(UltiJmol1462 ultiJmol, AlgoParameters algoParameters) {
 
         int sizeBefore = algoParameters.ultiJMolBuffer.getSize();
@@ -536,7 +535,6 @@ public class MyJmolTools {
     }
 
 
-
     public static Float waitMinimizationEnergyAvailable(int waitTimeSeconds, UltiJmol1462 ultiJMol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         int maxIteration = 20;
@@ -564,7 +562,6 @@ public class MyJmolTools {
         }
         return minimizer.getMinimizationEnergy();
     }
-
 
 
     public static List<Integer> findAtomIds(String structureV3000, List<MyAtomIfc> atomsToFindIdsOf, AlgoParameters algoParameters) {

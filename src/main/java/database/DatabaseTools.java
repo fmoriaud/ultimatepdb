@@ -1,10 +1,13 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DatabaseTools {
+
+
+	public static final int maxCharInVarchar = 30000;
+
+
 	//-------------------------------------------------------------
 	// Class variables
 	//-------------------------------------------------------------
@@ -95,5 +98,64 @@ public class DatabaseTools {
 		catch (SQLException sqlExcept){
 			//sqlExcept.printStackTrace();
 		}
+	}
+
+
+	public static void createDBandTableSequence(Connection connection) {
+
+		try {
+			Statement stmt = connection.createStatement();
+			String sql = "DROP TABLE sequence";
+			stmt.execute(sql);
+			System.out.println("Drop all tables from myDB !");
+			stmt.close();
+		} catch (SQLException e1) {
+			System.out.println("Table sequence is not existing so cannot be droped");
+		}
+
+		// check if table exists if not create it
+		try {
+			Statement stmt = connection.createStatement();
+			//String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(1), sequenceString varchar(" + maxCharInVarchar + "), lastmodificationtime timestamp )";
+			String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(2), chainType varchar(2), "
+					+ "sequenceString varchar(" + maxCharInVarchar + "), PRIMARY KEY (fourLettercode, chainId) ) ";
+			//System.out.println(createTableSql);
+			stmt.executeUpdate(createTableSql);
+			System.out.println("created table sequence in myDB !");
+			stmt.close();
+		} catch (SQLException e1) {
+			System.out.println("Table sequence already exists in myDB !");
+		}
+	}
+
+
+	public static String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(Connection connection, String fourLetterCode, String chainName) {
+
+		String sequenceInDb = null;
+		try {
+			Statement stmt = connection.createStatement();
+			String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "' and chainId = '" + chainName + "'";
+			ResultSet resultFindEntry = stmt.executeQuery(findEntry);
+			int foundEntriesCount = 0;
+			String fourLetterCodeFromDB;
+			String chainIdFromDB;
+			if (resultFindEntry.next()) {
+				foundEntriesCount += 1;
+
+				fourLetterCodeFromDB = resultFindEntry.getString(1);
+				chainIdFromDB = resultFindEntry.getString(2);
+				sequenceInDb = resultFindEntry.getString(4);
+			}
+
+			if (foundEntriesCount != 1) {
+				System.out.println("problem isFourLetterCodeAndChainfoundInDatabase " + fourLetterCode + "  " + chainName + "  " + foundEntriesCount);
+				return null;
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+		return sequenceInDb;
 	}
 }

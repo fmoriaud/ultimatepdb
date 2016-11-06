@@ -2,6 +2,7 @@ package protocols;
 
 import mystructure.MyStructureIfc;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
 
 /**
  * Created by Fabrice on 31/10/16.
@@ -9,7 +10,7 @@ import shape.ShapeContainerIfc;
 public interface ShapeContainerDefined {
 
 
-    ShapeContainerIfc getShapecontainer();
-    ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget);
+    ShapeContainerIfc getShapecontainer() throws ShapeBuildingException;
+    ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException;
 
 }

@@ -6,6 +6,7 @@ import multithread.CompareOneOnlyRunnable;
 import multithread.CompareWithOneOnlyCallable;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,7 +76,13 @@ public class ProtocolBindingVsFoldingWithExecutor {
         final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
-        ShapeContainerIfc queryShape = query.getShapecontainer();
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = query.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
 
         List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
