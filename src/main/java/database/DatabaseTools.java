@@ -93,6 +93,7 @@ public class DatabaseTools {
 				//DriverManager.getConnection(dbURL + ";shutdown=true");
 				DriverManager.getConnection(dbURL);
 				connection.close();
+				connection = null;
 			}           
 		}
 		catch (SQLException sqlExcept){

@@ -62,9 +62,6 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
             try {
 
                 Future<Boolean> future = executorService.submit(callableToLauch);
-                if (future == null){
-                    System.out.println();
-                }
                 allFuture.add(future);
 
             } catch (RejectedExecutionException e) {
