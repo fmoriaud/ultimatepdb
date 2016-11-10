@@ -60,7 +60,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
         fh.setFormatter(new OptimizerFormater());
         ControllerLoger.logger.addHandler(fh);
 
-        ShapeContainerDefined query = new ShapecontainerDefinedByWholeChain("4c2c".toCharArray(), "C".toCharArray(), algoParameters);
+        ShapeContainerDefined query = new ShapecontainerDefinedByWholeChain("1be9".toCharArray(), "B".toCharArray(), algoParameters);
         List<ShapeContainerDefined> targets = buildTargets();
 
         ProtocolBindingVsFoldingWithExecutor protocol = new ProtocolBindingVsFoldingWithExecutor(query, targets);
@@ -137,7 +137,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         List<ShapeContainerDefined> targets = new ArrayList<>();
 
-        String sequenceToFind = "ALAVALPROALA";
+        String sequenceToFind = "LYSGLNTHRSERVAL";
         int peptideLength = sequenceToFind.length() / 3;
 
         boolean useSimilarSequences = false;

@@ -58,6 +58,7 @@ public class CreateAndSearchSequenceDatabase {
 
 
                 ResultSet resultFindEntry = stmt.executeQuery(findEntry);
+                stmt.close();
                 int foundEntriesCount = 0;
 
                 if (resultFindEntry.next()) {
@@ -147,8 +148,9 @@ public class CreateAndSearchSequenceDatabase {
                 preparedStatement.setString(2, String.valueOf(chainName));
                 preparedStatement.setString(3, String.valueOf(chainType));
                 preparedStatement.setString(4, sequence);
-
+                preparedStatement.close();
                 int ok = preparedStatement.executeUpdate();
+
                 System.out.println(ok + " raw created " + fourLetterCode + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
 
             } catch (SQLException e1) {

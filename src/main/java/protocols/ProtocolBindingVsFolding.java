@@ -23,6 +23,7 @@ import parameters.AlgoParameters;
 import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
+import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
@@ -110,6 +111,17 @@ public class ProtocolBindingVsFolding {
         boolean useSimilarSequences = false;
 
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
+
+
+        if (queryShape instanceof ShapeContainerWithPeptide) {
+
+            ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
+            MyChainIfc ligand = query.getPeptide();
+            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
+
+        }
+
+
         //List<HitInSequenceDb> hitsInDatabaseMod = new ArrayList<>();
         // hitsInDatabaseMod.add(hitsInDatabase.get(2));
         // hitsInDatabase = hitsInDatabaseMod;

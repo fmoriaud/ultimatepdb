@@ -24,6 +24,7 @@ public class UpdateSequenceDatabaseTest {
      * @throws IOException
      * @throws ParsingConfigFileException
      */
+    @Ignore
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
@@ -81,7 +82,7 @@ public class UpdateSequenceDatabaseTest {
         Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
         Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
         CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        //updateSequenceDatabase.updateDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
+        //updateSequenceDatabase.updateOveridingExistingDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");

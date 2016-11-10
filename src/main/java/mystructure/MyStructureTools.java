@@ -117,6 +117,23 @@ public class MyStructureTools {
     }
 
 
+
+    /**
+     * Returns true if atom name is C, N, O, H1CA or H1N
+     *
+     * @param atomName
+     * @return
+     */
+    public static boolean isAtomNameFromBackBone(char[] atomName) {
+
+        List<char[]> backBoneAtomName = MyStructureTools.getBackBoneAtomWithHydrogensNames();
+
+        if (MyStructureTools.isInList(backBoneAtomName, atomName)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns true if atom name is C, N, O, H1CA or H1N
      *

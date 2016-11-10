@@ -11,15 +11,16 @@ import java.sql.*;
 /**
  * Created by Fabrice on 06/11/16.
  */
-public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
+public class AddInSequenceDB implements DoMyDbTaskIfc {
 
     private AlgoParameters algoParameters;
     private String fourLetterCode;
+    private boolean override;
 
-
-    public AddandNotOverrideExistingTask(AlgoParameters algoParameters, String fourLetterCode) {
+    public AddInSequenceDB(AlgoParameters algoParameters, String fourLetterCode, boolean override) {
         this.algoParameters = algoParameters;
         this.fourLetterCode = fourLetterCode;
+        this.override = override;
     }
 
 
@@ -27,16 +28,18 @@ public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
     public boolean doAndReturnSuccessValue(Connection connexion) {
 
         boolean alreadyFound = isFourLetterCodeAlreadyFoundInDB(connexion, fourLetterCode);
-        if (alreadyFound == true) {
+        if (alreadyFound == true && override == false) {
             return false;
         }
 
-        removeAllEntriesForThisFourLetterCode(connexion, fourLetterCode);
+        if (alreadyFound == true && override == true) {
+            removeAllEntriesForThisFourLetterCode(connexion, fourLetterCode);
+        }
 
         String fourLetterCodeLowerCase = fourLetterCode.toLowerCase();
         MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeLowerCase.toCharArray());
 
-        if (myStructure == null){
+        if (myStructure == null) {
             return false;
         }
         MyChainIfc[] chainsForShapeBuilding = myStructure.getAllChainsRelevantForShapeBuilding();
@@ -73,6 +76,7 @@ public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
                 preparedStatement.setString(4, sequence);
 
                 int ok = preparedStatement.executeUpdate();
+                preparedStatement.close();
                 System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
 
             } catch (SQLException e1) {
@@ -83,7 +87,6 @@ public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
 
         return true;
     }
-
 
 
     private boolean removeAllEntriesForThisFourLetterCode(Connection connexion, String fourLetterCode) {
@@ -99,12 +102,17 @@ public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
         ResultSet value = null;
         try {
             value = stmt.executeQuery(deleteEntry);
+            stmt.close();
         } catch (SQLException e) {
+            try {
+                stmt.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             return false;
         }
         return true;
     }
-
 
 
     private boolean isFourLetterCodeAlreadyFoundInDB(Connection connexion, String fourLetterCode) {
@@ -130,10 +138,20 @@ public class AddandNotOverrideExistingTask implements DoMyDbTaskIfc {
                 foundEntriesCount += 1;
             }
         } catch (SQLException e) {
+            try {
+                stmt.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             return false;
         }
 
         if (foundEntriesCount != 0) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         return false;

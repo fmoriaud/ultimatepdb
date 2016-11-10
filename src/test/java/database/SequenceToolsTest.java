@@ -12,9 +12,16 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
+import protocols.ShapecontainerDefinedByWholeChain;
+import shape.ShapeContainerIfc;
+import shape.ShapeContainerWithPeptide;
+import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -155,5 +162,25 @@ public class SequenceToolsTest {
         String sequence = SequenceTools.generateSequence(myChains[0]);
 
         assertTrue(sequence.equals("PROLYSHISGLYLYSARGTYRARGALALEULEUGLULYSVALASPPROASNLYSILETYRTHRILEASPGLUALAALAHISLEUVALLYSGLULEUALATHRALALYSPHEASPGLUTHRVALGLUVALHISALALYSLEUGLYILEASPPROARGARGSERASPGLNASNVALARGGLYTHRVALSERLEUPROHISGLYLEUGLYLYSGLNVALARGVALLEUALAILEALALYSGLYGLULYSILELYSGLUALAGLUGLUALAGLYALAASPTYRVALGLYGLYGLUGLUILEILEGLNLYSILELEUASPGLYTRPMETASPPHEASPALAVALVALALATHRPROASPVALMETGLYALAVALGLYSERLYSLEUGLYARGILELEUGLYPROARGGLYLEULEUPROASNPROLYSALAGLYTHRVALGLYPHEASNILEGLYGLUILEILEARGGLUILELYSALAGLYARGILEGLUPHEARGASNASPLYSTHRGLYALAILEHISALAPROVALGLYLYSALASERPHEPROPROGLULYSLEUALAASPASNILEARGALAPHEILEARGALALEUGLUALAHISLYSPROGLUGLYALALYSGLYTHRPHELEUARGSERVALTYRVALTHRTHRTHRMETGLYPROSERVALARGILEASNPROHISSER"));
+    }
+
+
+    @Test
+    public void testFindContacts() throws IOException, ParsingConfigFileException, ShapeBuildingException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        char[] fourLetterCode = "1be9".toCharArray();
+        char[] chainId = "B".toCharArray();
+        ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedByWholeChain(fourLetterCode, chainId, algoParameters);
+        ShapeContainerIfc shapeContainer = shapeContainerDefined.getShapecontainer();
+
+        ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) shapeContainer;
+        MyChainIfc ligand = query.getPeptide();
+        Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = SequenceTools.findContacts(ligand, algoParameters);
+
+        for (Map.Entry<MyMonomerIfc, QueryMonomerToTargetContactType> entry: contacts.entrySet()){
+            System.out.println(entry.getKey() + " " + entry.getValue().toString());
+        }
+
     }
 }

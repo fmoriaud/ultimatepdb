@@ -1,11 +1,8 @@
 package database;
 
 import io.IOTools;
-import multithread.CompareWithOneOnlyCallable;
 import multithread.StoreInSequenceDbPDBFileCallable;
 import parameters.AlgoParameters;
-import protocols.ControllerLoger;
-import protocols.ParsingConfigFileException;
 import protocols.ProtocolTools;
 
 import java.nio.file.Path;
@@ -17,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.logging.Level;
 
 /**
  * Created by Fabrice on 06/11/16.
@@ -37,10 +33,26 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
     public void createDatabase() {
 
         DatabaseTools.createDBandTableSequence(connexion);
-        updateDatabase();
+        updateOveridingExistingDatabase(true);
     }
 
-    public void updateDatabase() {
+
+
+    public void updateDatabaseKeepingFourLetterCodeEntries(){
+
+        updateOveridingExistingDatabase(false);
+    }
+
+
+
+    public void updateDatabaseAndOverride(){
+
+        updateOveridingExistingDatabase(true);
+    }
+
+
+
+    private void updateOveridingExistingDatabase(boolean override) {
 
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
 
@@ -51,9 +63,11 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
             String fourLetterCode = entry.getKey();
-            DoMyDbTaskIfc doMyDbTaskIfc = new AddandNotOverrideExistingTask(algoParameters, fourLetterCode);
+            DoMyDbTaskIfc doMyDbTaskIfc = new AddInSequenceDB(algoParameters, fourLetterCode, override);
+
             StoreInSequenceDbPDBFileCallable callable = new StoreInSequenceDbPDBFileCallable(doMyDbTaskIfc, connexion);
             callablesToLauch.add(callable);
+
         }
 
         List<Future<Boolean>> allFuture = new ArrayList<>();

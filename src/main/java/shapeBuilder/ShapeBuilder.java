@@ -97,6 +97,9 @@ public class ShapeBuilder {
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
         //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyChainIfc(ligand);
+        if (myStructureLocalProtonated == null){
+            System.out.println();
+        }
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 

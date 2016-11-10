@@ -1,8 +1,6 @@
 package multithread;
 
-import database.AddandNotOverrideExistingTask;
 import database.DoMyDbTaskIfc;
-import parameters.AlgoParameters;
 
 import java.sql.Connection;
 import java.util.concurrent.Callable;
@@ -16,6 +14,7 @@ public class StoreInSequenceDbPDBFileCallable implements Callable<Boolean> {
     //-------------------------------------------------------------
     private DoMyDbTaskIfc doMyDbTaskIfc;
     private Connection connexion;
+    private boolean override;
 
     // -------------------------------------------------------------------
     // Constructor

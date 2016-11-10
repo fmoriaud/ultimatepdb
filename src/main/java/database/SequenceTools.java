@@ -5,357 +5,435 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import math.ToolsDistance;
+import math.ToolsMath;
+import mystructure.MyAtomIfc;
 import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
+import mystructure.MyStructureTools;
+import parameters.AlgoParameters;
 
 public class SequenceTools {
 
-	public static String generateSequence(MyChainIfc chain){
-
-		StringBuffer stringBuffer = new StringBuffer();
-		for (MyMonomerIfc monomer: chain.getMyMonomers()){
-			String threeLetterCode = String.valueOf(monomer.getThreeLetterCode());
-			if (threeLetterCode.length() == 1){
-				threeLetterCode = "  " + threeLetterCode;
-			}
-			if (threeLetterCode.length() == 2){
-				threeLetterCode = " " + threeLetterCode;
-			}
-			if (threeLetterCode.length() > 3){
-				System.out.println("residue 3 letter code has 4 or more ...");
-				System.exit(0);
-			}
-			stringBuffer.append(threeLetterCode);
-			//stringBuffer.append(" ");
-		}
-		String sequence = stringBuffer.toString();
-		return sequence;
-	}
-
-
-
-	public static List<String> getHydrophobicResiduesList(){
-
-		List<String> hydrophobicResidues = new ArrayList<>();
-		hydrophobicResidues.add("GLY");
-		hydrophobicResidues.add("ALA");
-		hydrophobicResidues.add("VAL");
-		hydrophobicResidues.add("LEU");
-		hydrophobicResidues.add("ILE");
-		hydrophobicResidues.add("MET");
-		hydrophobicResidues.add("SEM");
-		hydrophobicResidues.add("PHE");
-		hydrophobicResidues.add("TRP");
-
-		return hydrophobicResidues;
-	}
-
-
-
-	public static List<String> getAllResiduesList(){
-
-		List<String> listAllResidues = new ArrayList<>();
-		listAllResidues.add("TRP");
-		listAllResidues.add("PHE");
-		listAllResidues.add("TYR");
-		listAllResidues.add("ILE");
-		listAllResidues.add("VAL");
-		listAllResidues.add("LEU");
-		listAllResidues.add("MET");
-		listAllResidues.add("ASP");
-		listAllResidues.add("GLU");
-		listAllResidues.add("ALA");
-		listAllResidues.add("PRO");
-		listAllResidues.add("HIS");
-		listAllResidues.add("LYS");
-		listAllResidues.add("ARG");
-		listAllResidues.add("SER");
-		listAllResidues.add("THR");
-		listAllResidues.add("ASN");
-		listAllResidues.add("GLN");
+    public static String generateSequence(MyChainIfc chain) {
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+            String threeLetterCode = String.valueOf(monomer.getThreeLetterCode());
+            if (threeLetterCode.length() == 1) {
+                threeLetterCode = "  " + threeLetterCode;
+            }
+            if (threeLetterCode.length() == 2) {
+                threeLetterCode = " " + threeLetterCode;
+            }
+            if (threeLetterCode.length() > 3) {
+                System.out.println("residue 3 letter code has 4 or more ...");
+                System.exit(0);
+            }
+            stringBuffer.append(threeLetterCode);
+            //stringBuffer.append(" ");
+        }
+        String sequence = stringBuffer.toString();
+        return sequence;
+    }
+
+
+    public static List<String> getHydrophobicResiduesList() {
+
+        List<String> hydrophobicResidues = new ArrayList<>();
+        hydrophobicResidues.add("GLY");
+        hydrophobicResidues.add("ALA");
+        hydrophobicResidues.add("VAL");
+        hydrophobicResidues.add("LEU");
+        hydrophobicResidues.add("ILE");
+        hydrophobicResidues.add("MET");
+        hydrophobicResidues.add("SEM");
+        hydrophobicResidues.add("PHE");
+        hydrophobicResidues.add("TRP");
+
+        return hydrophobicResidues;
+    }
+
+
+    public static List<String> getAllResiduesList() {
+
+        List<String> listAllResidues = new ArrayList<>();
+        listAllResidues.add("TRP");
+        listAllResidues.add("PHE");
+        listAllResidues.add("TYR");
+        listAllResidues.add("ILE");
+        listAllResidues.add("VAL");
+        listAllResidues.add("LEU");
+        listAllResidues.add("MET");
+        listAllResidues.add("ASP");
+        listAllResidues.add("GLU");
+        listAllResidues.add("ALA");
+        listAllResidues.add("PRO");
+        listAllResidues.add("HIS");
+        listAllResidues.add("LYS");
+        listAllResidues.add("ARG");
+        listAllResidues.add("SER");
+        listAllResidues.add("THR");
+        listAllResidues.add("ASN");
+        listAllResidues.add("GLN");
+
+        return listAllResidues;
+    }
+
+
+    public static List<String> generateNonEquivalentResidues(String inputResidue) {
+
+        List<String> eqResidues = generateEquivalentResidues(inputResidue);
+        List<String> allResidues = getAllResiduesList();
+        for (String eqRes : eqResidues) {
+            allResidues.remove(eqRes);
+        }
+        return allResidues;
+    }
+
+
+    public static List<String> generateEquivalentResidues(String inputResidue) {
+
+        List<String> equivalentResidues = new ArrayList<>();
+
+        equivalentResidues.add(inputResidue);
+
+        switch (inputResidue) {
+
+            case "TRP":
+                equivalentResidues.add("PHE");
+                equivalentResidues.add("TYR");
+                return equivalentResidues;
+
+            case "PHE":
+                equivalentResidues.add("TRP");
+                equivalentResidues.add("TYR");
+                equivalentResidues.add("ILE");
+                return equivalentResidues;
+
+            case "TYR":
+                equivalentResidues.add("TRP");
+                equivalentResidues.add("PHE");
+                return equivalentResidues;
+
+            case "ILE":
+                equivalentResidues.add("PHE");
+                equivalentResidues.add("VAL");
+                equivalentResidues.add("LEU");
+                equivalentResidues.add("MET");
+                return equivalentResidues;
+
+            case "VAL":
+                equivalentResidues.add("ILE");
+                equivalentResidues.add("ALA");
+                return equivalentResidues;
+
+            case "LEU":
+                equivalentResidues.add("ILE");
+                equivalentResidues.add("MET");
+                return equivalentResidues;
+
+            case "MET":
+                equivalentResidues.add("ILE");
+                equivalentResidues.add("LEU");
+                return equivalentResidues;
 
-		return listAllResidues;
-	}
+            case "ASP":
+                equivalentResidues.add("GLU");
+                return equivalentResidues;
 
+            case "GLU":
+                equivalentResidues.add("ASP");
+                return equivalentResidues;
 
-	public static List<String> generateNonEquivalentResidues(String inputResidue){
+            case "ALA":
+                equivalentResidues.add("PRO");
+                equivalentResidues.add("VAL");
+                equivalentResidues.add("THR");
+                return equivalentResidues;
 
-		List<String> eqResidues = generateEquivalentResidues(inputResidue);
-		List<String> allResidues = getAllResiduesList();
-		for (String eqRes: eqResidues){
-			allResidues.remove(eqRes);
-		}
-		return allResidues;
-	}
+            case "PRO":
+                equivalentResidues.add("ALA");
+                return equivalentResidues;
 
+            case "HIS":
+                equivalentResidues.add("LYS");
+                equivalentResidues.add("ARG");
+                return equivalentResidues;
 
+            case "LYS":
+                equivalentResidues.add("HIS");
+                equivalentResidues.add("ARG");
+                return equivalentResidues;
 
-	public static List<String> generateEquivalentResidues(String inputResidue){
+            case "ARG":
+                equivalentResidues.add("HIS");
+                equivalentResidues.add("LYS");
+                return equivalentResidues;
 
-		List<String> equivalentResidues = new ArrayList<>();
+            case "SER":
+                equivalentResidues.add("THR");
+                return equivalentResidues;
 
-		equivalentResidues.add(inputResidue);
+            case "THR":
+                equivalentResidues.add("SER");
+                equivalentResidues.add("ALA");
+                return equivalentResidues;
 
-		switch (inputResidue) {
+            case "ASN":
+                equivalentResidues.add("GLN");
+                return equivalentResidues;
 
-		case "TRP":  equivalentResidues.add("PHE");
-		equivalentResidues.add("TYR");
-		return equivalentResidues;
+            case "GLN":
+                equivalentResidues.add("ASN");
+                return equivalentResidues;
+
+        }
+
+        return equivalentResidues;
+    }
+
+
+    public static List<List<String>> generateEquivalentResidues() {
 
-		case "PHE":  equivalentResidues.add("TRP");
-		equivalentResidues.add("TYR");
-		equivalentResidues.add("ILE");
-		return equivalentResidues;
+        List<List<String>> equivalentResidues = new ArrayList<>();
+
+        List<String> list1 = getHydrophobicResiduesList();
+        equivalentResidues.add(list1);
+
+        List<String> list2 = new ArrayList<>();
+        list2.add("SER");
+        list2.add("CYS");
+        list2.add("THR");
+        equivalentResidues.add(list2);
 
-		case "TYR":  equivalentResidues.add("TRP");
-		equivalentResidues.add("PHE");
-		return equivalentResidues;
+        List<String> list3 = new ArrayList<>();
+        list3.add("PHE");
+        list3.add("TYR");
+        list3.add("TRP");
+        equivalentResidues.add(list3);
 
-		case "ILE":  equivalentResidues.add("PHE");
-		equivalentResidues.add("VAL");
-		equivalentResidues.add("LEU");
-		equivalentResidues.add("MET");
-		return equivalentResidues;
+        List<String> list4 = new ArrayList<>();
+        list4.add("HIS");
+        list4.add("LYS");
+        list4.add("ARG");
+        equivalentResidues.add(list4);
+
+        List<String> list5 = new ArrayList<>();
+        list5.add("ASP");
+        list5.add("ASJ");
+        list5.add("GLU");
+        list5.add("ASN");
+        list5.add("GLN");
+        equivalentResidues.add(list5);
+
+        return equivalentResidues;
+    }
+
+
+    public static List<HitInSequenceDb> findUsingQueryPeptide(MyChainIfc queryPeptide, int minLength, int maxLength, String sequenceToFind, AlgoParameters algoParameters) {
+
+        List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
-		case "VAL":  equivalentResidues.add("ILE");
-		equivalentResidues.add("ALA");
-		return equivalentResidues;
+        findContacts(queryPeptide, algoParameters);
 
-		case "LEU":  equivalentResidues.add("ILE");
-		equivalentResidues.add("MET");
-		return equivalentResidues;
+        return hitsInSequenceDb;
+    }
 
-		case "MET":  equivalentResidues.add("ILE");
-		equivalentResidues.add("LEU");
-		return equivalentResidues;
+
+    public static Map<MyMonomerIfc, QueryMonomerToTargetContactType> findContacts(MyChainIfc queryPeptide, AlgoParameters algoParameters) {
+        Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = new LinkedHashMap<>();
 
-		case "ASP":  equivalentResidues.add("GLU");
-		return equivalentResidues;
+        // check if monomer has a close contact with backbone atoms
+        // 4.5 is maybe too long as it is protonated so dont use algo parameters
 
-		case "GLU":  equivalentResidues.add("ASP");
-		return equivalentResidues;
+        float interactionDistanceCutoff = 3.0f; algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
 
-		case "ALA":  equivalentResidues.add("PRO");
-		equivalentResidues.add("VAL");
-		equivalentResidues.add("THR");
-		return equivalentResidues;
+        for (MyMonomerIfc monomer : queryPeptide.getMyMonomers()) {
 
-		case "PRO":  equivalentResidues.add("ALA");
-		return equivalentResidues;
+            QueryMonomerToTargetContactType currentType = QueryMonomerToTargetContactType.NONE;
+            for (MyAtomIfc atomLigand : monomer.getMyAtoms()) {
 
-		case "HIS":  equivalentResidues.add("LYS");
-		equivalentResidues.add("ARG");
-		return equivalentResidues;
+                boolean fromBackBone = MyStructureTools.isAtomNameFromBackBone(atomLigand.getAtomName());
 
-		case "LYS":  equivalentResidues.add("HIS");
-		equivalentResidues.add("ARG");
-		return equivalentResidues;
+                MyChainIfc[] neihborChains = monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+                for (MyChainIfc neihborChain : neihborChains) {
+                    for (MyMonomerIfc neighborMonomer : neihborChain.getMyMonomers()) {
+                        for (MyAtomIfc atomTarget : neighborMonomer.getMyAtoms()) {
 
-		case "ARG":  equivalentResidues.add("HIS");
-		equivalentResidues.add("LYS");
-		return equivalentResidues;
+                            float distance = ToolsMath.computeDistance(atomLigand.getCoords(), atomTarget.getCoords());
+                            if (distance < interactionDistanceCutoff){
+                                if (fromBackBone == true && currentType != QueryMonomerToTargetContactType.SIDECHAIN){
+                                    currentType = QueryMonomerToTargetContactType.BACKBONE_ONLY;
+                                }else{
+                                    currentType = QueryMonomerToTargetContactType.SIDECHAIN;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            contacts.put(monomer, currentType);
+        }
 
-		case "SER":  equivalentResidues.add("THR");
-		return equivalentResidues;
+        return contacts;
+    }
 
-		case "THR":  equivalentResidues.add("SER");
-		equivalentResidues.add("ALA");
-		return equivalentResidues;
+    /**
+     * Find Hits in SequenceDB which are segment of sequence chain in the DB
+     *
+     * @param minLength           min length of sequence chain from the DB
+     * @param maxLength           max length of sequence chain from the DB
+     * @param sequenceToFind      input sequence as a string of concatenated three letter codes
+     * @param useSimilarSequences if true then equivalent residues are considered in the matching
+     * @return list of Hit in the DB which have a rankid which is the same as the startingid to make segment of chain
+     */
+    public static List<HitInSequenceDb> find(int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences) {
 
-		case "ASN":  equivalentResidues.add("GLN");
-		return equivalentResidues;
+        List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
-		case "GLN":  equivalentResidues.add("ASN");
-		return equivalentResidues;
+        Connection connexion = DatabaseTools.getNewConnection();
 
-		}
+        List<String> listFourLetterCodeFromDB = new ArrayList<>();
+        List<String> listChainIdFromDB = new ArrayList<>();
+        List<String> listSequence = new ArrayList<>();
 
-		return equivalentResidues;
-	}
+        Statement stmt;
+        try {
+            stmt = connexion.createStatement();
+            String findEntry = "SELECT * from sequence";
+            ResultSet resultFindEntry = stmt.executeQuery(findEntry);
 
+            while (resultFindEntry.next()) {
+
+                // check if all ok
 
-
-	public static List<List<String>> generateEquivalentResidues(){
-
-		List<List<String>> equivalentResidues = new ArrayList<>();
-
-		List<String> list1 = getHydrophobicResiduesList();
-		equivalentResidues.add(list1);
-
-		List<String> list2 = new ArrayList<>();
-		list2.add("SER");
-		list2.add("CYS");
-		list2.add("THR");
-		equivalentResidues.add(list2);
-
-		List<String> list3 = new ArrayList<>();
-		list3.add("PHE");
-		list3.add("TYR");
-		list3.add("TRP");
-		equivalentResidues.add(list3);
-
-		List<String> list4 = new ArrayList<>();
-		list4.add("HIS");
-		list4.add("LYS");
-		list4.add("ARG");
-		equivalentResidues.add(list4);
-
-		List<String> list5 = new ArrayList<>();
-		list5.add("ASP");
-		list5.add("ASJ");
-		list5.add("GLU");
-		list5.add("ASN");
-		list5.add("GLN");
-		equivalentResidues.add(list5);
-
-		return equivalentResidues;
-	}
-
-
-
-	public static List<HitInSequenceDb> find(int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences){
-
-		List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
-
-		Connection connexion = DatabaseTools.getNewConnection();
-
-		List<String> listFourLetterCodeFromDB = new ArrayList<>();
-		List<String> listChainIdFromDB = new ArrayList<>();
-		List<String> listSequence = new ArrayList<>();
-
-		Statement stmt;
-		try {
-			stmt = connexion.createStatement();
-			String findEntry = "SELECT * from sequence";
-			ResultSet resultFindEntry = stmt.executeQuery(findEntry);
-
-			while(resultFindEntry.next()){
-
-				// check if all ok
-
-				listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
-				listChainIdFromDB.add(resultFindEntry.getString(2));
-				listSequence.add(resultFindEntry.getString(4));
-
-				if (listSequence.size() != listChainIdFromDB.size() ||
-						listSequence.size() != listFourLetterCodeFromDB.size() ||
-						listChainIdFromDB.size() != listFourLetterCodeFromDB.size()
-						){
-					System.out.println("big pb in FinSequenceInDatabaseTools.find() Terminating program");
-					System.out.println();
-					System.exit(0);
-				}
-			}
-		} catch (SQLException e1) {
-			System.out.println("Exception in reading whole content of DB. Program terminated");
-			System.exit(0);
-
-		}
-
-		int sequenceToFindLength = sequenceToFind.length() / 3;
-
-		for (int i=0 ; i< listSequence.size(); i++){
-			String fourLetterCode = listFourLetterCodeFromDB.get(i);
-
-
-			String chainIdFromDB = listChainIdFromDB.get(i);
-			String sequenceFromDB = listSequence.get(i);
-
-			int peptideLength = sequenceFromDB.length() / 3;
-			if (peptideLength < minLength || peptideLength > maxLength){
-				continue;
-			}
-
-			List<Integer> rankIdList = findRankId(sequenceToFind, sequenceFromDB, useSimilarSequences);
-
-			if (rankIdList.size() != 0){
-
-				HitInSequenceDb HitInSequenceDb = new HitInSequenceDb(rankIdList, fourLetterCode, chainIdFromDB, sequenceToFindLength);
-				hitsInSequenceDb.add(HitInSequenceDb);
-			}
-		}
-
-		DatabaseTools.shutdown();
-		return hitsInSequenceDb;
-	}
-
-
-
-	public static List<Integer> findRankId(String sequenceToFind, String chainSequence, boolean useSimilarSequences){
-
-		List<Integer> listMatchingRankId = new ArrayList<>();
-
-		// split chain sequence into three letter codes
-		// put the three letters in a list
-		List<String> splitSequenceToFind = splitIntoThreeLetterCode(sequenceToFind);
-		List<String> splitChainSequence = splitIntoThreeLetterCode(chainSequence);
-
-		// Definition of equivalent
-		//List<List<String>> equivalentResidues = SequenceTools.generateEquivalentResidues();
-
-
-		// go through
-		A: for (int rankId = 0; rankId < splitChainSequence.size(); rankId ++){
-			for (int i=0; i<splitSequenceToFind.size(); i++){
-
-				// is that residue match the first of the sequenceToFind
-				if (rankId + i >= splitChainSequence.size()){
-					// reach end of chain so no match
-					continue A;
-				}
-				String currentResidueFromChain = splitChainSequence.get(rankId + i);
-				String currentResidueFromSequenceToFind = splitSequenceToFind.get(i);
-
-				if (currentResidueFromSequenceToFind.equals("XXX")){
-					// match for sure
-					continue;
-				}
-				// check if
-				List<String> possibleEquivalent =null;
-				if (useSimilarSequences == true){
-					possibleEquivalent = SequenceTools.generateEquivalentResidues(currentResidueFromSequenceToFind);
-				}else{
-					possibleEquivalent = new ArrayList<>();
-					possibleEquivalent.add(currentResidueFromSequenceToFind);
-				}
-				if (possibleEquivalent.contains(currentResidueFromChain)){
-
-					// then we have a match for current i
-					if (i==splitSequenceToFind.size()-1){
-						// we have a match here !!!
-						//System.out.println("match !!!");
-						listMatchingRankId.add(rankId);
-					}
-					continue;
-
-				}else{
-					// we have no match so moveon
-					continue A;
-				}
-			}
-			rankId += 1;
-		}
-
-		return listMatchingRankId;
-	}
-
-
-
-
-	// -------------------------------------------------------------------
-	// Implementation
-	// -------------------------------------------------------------------
-	private static List<String> splitIntoThreeLetterCode(String sequenceToFind) {
-		// put the three letters in a list
-		List<String> listThreeLetterCode = new ArrayList<>();
-		int countResidue = sequenceToFind.length() / 3;
-		for (int i=0; i<countResidue; i++){
-			int start = i * 3;
-			String threeLetterCode = sequenceToFind.substring(start, start +3);
-			listThreeLetterCode.add(threeLetterCode);
-		}
-		return listThreeLetterCode;
-	}
+                listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
+                listChainIdFromDB.add(resultFindEntry.getString(2));
+                listSequence.add(resultFindEntry.getString(4));
+
+                if (listSequence.size() != listChainIdFromDB.size() ||
+                        listSequence.size() != listFourLetterCodeFromDB.size() ||
+                        listChainIdFromDB.size() != listFourLetterCodeFromDB.size()
+                        ) {
+                    System.out.println("big pb in FinSequenceInDatabaseTools.find() Terminating program");
+                    System.out.println();
+                    System.exit(0);
+                }
+            }
+        } catch (SQLException e1) {
+            System.out.println("Exception in reading whole content of DB. Program terminated");
+            System.exit(0);
+
+        }
+
+        int sequenceToFindLength = sequenceToFind.length() / 3;
+
+        for (int i = 0; i < listSequence.size(); i++) {
+            String fourLetterCode = listFourLetterCodeFromDB.get(i);
+
+
+            String chainIdFromDB = listChainIdFromDB.get(i);
+            String sequenceFromDB = listSequence.get(i);
+
+            int peptideLength = sequenceFromDB.length() / 3;
+            if (peptideLength < minLength || peptideLength > maxLength) {
+                continue;
+            }
+
+            List<Integer> rankIdList = findRankId(sequenceToFind, sequenceFromDB, useSimilarSequences);
+
+            if (rankIdList.size() != 0) {
+
+                HitInSequenceDb HitInSequenceDb = new HitInSequenceDb(rankIdList, fourLetterCode, chainIdFromDB, sequenceToFindLength);
+                hitsInSequenceDb.add(HitInSequenceDb);
+            }
+        }
+
+        DatabaseTools.shutdown();
+        return hitsInSequenceDb;
+    }
+
+
+    public static List<Integer> findRankId(String sequenceToFind, String chainSequence, boolean useSimilarSequences) {
+
+        List<Integer> listMatchingRankId = new ArrayList<>();
+
+        // split chain sequence into three letter codes
+        // put the three letters in a list
+        List<String> splitSequenceToFind = splitIntoThreeLetterCode(sequenceToFind);
+        List<String> splitChainSequence = splitIntoThreeLetterCode(chainSequence);
+
+        // Definition of equivalent
+        //List<List<String>> equivalentResidues = SequenceTools.generateEquivalentResidues();
+
+
+        // go through
+        A:
+        for (int rankId = 0; rankId < splitChainSequence.size(); rankId++) {
+            for (int i = 0; i < splitSequenceToFind.size(); i++) {
+
+                // is that residue match the first of the sequenceToFind
+                if (rankId + i >= splitChainSequence.size()) {
+                    // reach end of chain so no match
+                    continue A;
+                }
+                String currentResidueFromChain = splitChainSequence.get(rankId + i);
+                String currentResidueFromSequenceToFind = splitSequenceToFind.get(i);
+
+                if (currentResidueFromSequenceToFind.equals("XXX")) {
+                    // match for sure
+                    continue;
+                }
+                // check if
+                List<String> possibleEquivalent = null;
+                if (useSimilarSequences == true) {
+
+                    // TODO Here the logic is different if I use the contacts
+
+                    possibleEquivalent = SequenceTools.generateEquivalentResidues(currentResidueFromSequenceToFind);
+                } else {
+                    possibleEquivalent = new ArrayList<>();
+                    possibleEquivalent.add(currentResidueFromSequenceToFind);
+                }
+                if (possibleEquivalent.contains(currentResidueFromChain)) {
+
+                    // then we have a match for current i
+                    if (i == splitSequenceToFind.size() - 1) {
+                        // we have a match here !!!
+                        //System.out.println("match !!!");
+                        listMatchingRankId.add(rankId);
+                    }
+                    continue;
+
+                } else {
+                    // we have no match so moveon
+                    continue A;
+                }
+            }
+            rankId += 1;
+        }
+
+        return listMatchingRankId;
+    }
+
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    private static List<String> splitIntoThreeLetterCode(String sequenceToFind) {
+        // put the three letters in a list
+        List<String> listThreeLetterCode = new ArrayList<>();
+        int countResidue = sequenceToFind.length() / 3;
+        for (int i = 0; i < countResidue; i++) {
+            int start = i * 3;
+            String threeLetterCode = sequenceToFind.substring(start, start + 3);
+            listThreeLetterCode.add(threeLetterCode);
+        }
+        return listThreeLetterCode;
+    }
 }

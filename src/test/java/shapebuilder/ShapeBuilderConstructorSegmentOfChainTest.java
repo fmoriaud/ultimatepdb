@@ -142,4 +142,40 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
+
+
+    @Test
+    public void testShapeBuilderConstructorProblemeticCase() throws IOException, ParsingConfigFileException {
+
+        char[] chainId = "B".toCharArray();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
+        String fourLetterCode = "4ddg";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        int startingRankId = 278;
+        int peptideLength = 5;
+        ShapeContainerIfc shape = null;
+        try {
+            shape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, startingRankId, peptideLength);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+    }
 }
