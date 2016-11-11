@@ -18,7 +18,7 @@ import java.util.concurrent.RejectedExecutionException;
 /**
  * Created by Fabrice on 06/11/16.
  */
-public class CreateAndSearchSequenceDatabaseWithExecutor {
+public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSearchSequenceDatabaseIfc{
 
     private Connection connexion;
     private AlgoParameters algoParameters;
@@ -30,6 +30,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
     }
 
 
+    @Override
     public void createDatabase() {
 
         DatabaseTools.createDBandTableSequence(connexion);
@@ -37,7 +38,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
     }
 
 
-
+    @Override
     public void updateDatabaseKeepingFourLetterCodeEntries(){
 
         updateOveridingExistingDatabase(false);
@@ -45,11 +46,25 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
 
 
 
+    @Override
     public void updateDatabaseAndOverride(){
 
         updateOveridingExistingDatabase(true);
     }
 
+
+    @Override
+    public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
+
+        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
+    }
+
+
+    @Override
+    public void shutdownDb() {
+
+        DatabaseTools.shutdown();
+    }
 
 
     private void updateOveridingExistingDatabase(boolean override) {
@@ -105,16 +120,5 @@ public class CreateAndSearchSequenceDatabaseWithExecutor {
         }
         executorService.shutdown();
 
-    }
-
-
-    public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
-
-        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
-    }
-
-    public void shutdownDb() {
-
-        DatabaseTools.shutdown();
     }
 }

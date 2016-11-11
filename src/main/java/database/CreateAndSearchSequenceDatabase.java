@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by Fabrice on 29/09/16.
  */
-public class CreateAndSearchSequenceDatabase {
+public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceDatabaseIfc{
 
     private Connection connexion;
     private AlgoParameters algoParameters;
@@ -26,15 +26,49 @@ public class CreateAndSearchSequenceDatabase {
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public CreateAndSearchSequenceDatabase() {
+    public CreateAndSearchSequenceDatabase(AlgoParameters algoParameters) {
 
         this.connexion = DatabaseTools.getConnection();
+        this.algoParameters = algoParameters;
     }
 
 
     // -------------------------------------------------------------------
     // Public & Interface Methods
     // -------------------------------------------------------------------
+    @Override
+    public void createDatabase() {
+
+        DatabaseTools.createDBandTableSequence(connexion);
+        updateOveridingExistingDatabase(true);
+    }
+
+    @Override
+    public void updateDatabaseKeepingFourLetterCodeEntries() {
+
+        updateOveridingExistingDatabase(false);
+    }
+
+    @Override
+    public void updateDatabaseAndOverride() {
+
+        updateOveridingExistingDatabase(true);
+    }
+
+    @Override
+    public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
+
+        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
+    }
+
+    @Override
+    public void shutdownDb() {
+
+        DatabaseTools.shutdown();
+    }
+
+
+    /*
     public void shutdownDb() {
 
         DatabaseTools.shutdown();
@@ -98,15 +132,28 @@ public class CreateAndSearchSequenceDatabase {
     }
 
 
+
+
     public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
 
         return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
     }
 
-
+*/
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private void updateOveridingExistingDatabase(boolean override) {
+
+        Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
+
+            String fourLetterCode = entry.getKey();
+            DatabaseTools.addInSequenceDB(connexion, override, fourLetterCode, algoParameters);
+        }
+    }
+
+
     private void generateMyStructureAndstoreSequenceInDB(String fourLetterCode) {
 
 
@@ -158,4 +205,6 @@ public class CreateAndSearchSequenceDatabase {
             }
         }
     }
+
+
 }

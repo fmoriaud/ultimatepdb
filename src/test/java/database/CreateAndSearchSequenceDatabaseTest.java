@@ -16,7 +16,39 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by Fabrice on 29/09/16.
  */
-public class UpdateSequenceDatabaseTest {
+public class CreateAndSearchSequenceDatabaseTest {
+
+    /*
+        void createDatabase();
+    void updateDatabaseKeepingFourLetterCodeEntries();
+    void updateDatabaseAndOverride();
+    String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName);
+
+    */
+
+    @Test
+    public void testCreateDatabase() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters);
+        createAndSearchSequenceDatabase.createDatabase();
+
+        // Read an entry from it
+        String sequence1di9 = createAndSearchSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
+
+        // Check sequence length
+        assertNotNull(sequence1di9);
+        assertEquals((sequence1di9.length() / 3), 348);
+
+        createAndSearchSequenceDatabase.shutdownDb();
+
+        /*
+        From resources 11 November 2016
+        uniqueFourLetterCode count = 28
+        total entries count = 117
+        */
+    }
 
     /**
      * Test is ignored to keep the sequqnce database built
@@ -24,14 +56,13 @@ public class UpdateSequenceDatabaseTest {
      * @throws IOException
      * @throws ParsingConfigFileException
      */
-    @Ignore
     @Test
     public void testBuildDatabaseFromTestFolder() throws IOException, ParsingConfigFileException {
 
         // Create Sequence DB
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
-        updateSequenceDatabase.buildDatabase(algoParameters);
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters);
+        //updateSequenceDatabase.buildDatabase(algoParameters);
 
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
@@ -59,7 +90,7 @@ public class UpdateSequenceDatabaseTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
         Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
-        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters);
         //updateSequenceDatabase.buildDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
@@ -81,7 +112,7 @@ public class UpdateSequenceDatabaseTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
         Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
-        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters);
         //updateSequenceDatabase.updateOveridingExistingDatabase(pathToPDBFolder, pathToChemCompFolderFolder, algoParameters);
 
         // Read an entry from it
@@ -95,12 +126,11 @@ public class UpdateSequenceDatabaseTest {
     }
 
 
-
-    @Ignore
     @Test
     public void testReadFromDB() throws IOException, ParsingConfigFileException {
 
-        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        CreateAndSearchSequenceDatabase updateSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters);
         // Read an entry from it
         String sequence1di9 = updateSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
 
