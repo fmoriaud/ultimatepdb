@@ -68,7 +68,7 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("4c2c", "C");
+        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("1be9", "B");
         // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
 
         protocol.run();
@@ -166,7 +166,7 @@ public class ProtocolBindingVsFolding {
                 }
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
 
-                boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+                boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
                 ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
 
             }
