@@ -108,13 +108,13 @@ public class DatabaseTools {
 	}
 
 
-	public static void createDBandTableSequence(Connection connection) {
+	public static void createDBandTableSequence(Connection connection, String sequenceTableName) {
 
 		try {
 			Statement stmt = connection.createStatement();
-			String sql = "DROP TABLE sequence";
+			String sql = "DROP TABLE " + sequenceTableName;
 			stmt.execute(sql);
-			System.out.println("Drop all tables from myDB !");
+			System.out.println("Drop all tables from myDB " + sequenceTableName + " !");
 			stmt.close();
 		} catch (SQLException e1) {
 			System.out.println("Table sequence is not existing so cannot be droped");
@@ -123,25 +123,25 @@ public class DatabaseTools {
 		// check if table exists if not create it
 		try {
 			Statement stmt = connection.createStatement();
-			//String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(1), sequenceString varchar(" + maxCharInVarchar + "), lastmodificationtime timestamp )";
-			String createTableSql = "CREATE TABLE " + "sequence" + " (fourLettercode varchar(4), chainId varchar(2), chainType varchar(2), "
+			//String createTableSql = "CREATE TABLE " + sequenceTableName + " (fourLettercode varchar(4), chainId varchar(1), sequenceString varchar(" + maxCharInVarchar + "), lastmodificationtime timestamp )";
+			String createTableSql = "CREATE TABLE " + sequenceTableName + " (fourLettercode varchar(4), chainId varchar(2), chainType varchar(2), "
 					+ "sequenceString varchar(" + maxCharInVarchar + "), PRIMARY KEY (fourLettercode, chainId) ) ";
 			//System.out.println(createTableSql);
 			stmt.executeUpdate(createTableSql);
-			System.out.println("created table sequence in myDB !");
+			System.out.println("created table " + sequenceTableName + " in myDB !");
 			stmt.close();
 		} catch (SQLException e1) {
-			System.out.println("Table sequence already exists in myDB !");
+			System.out.println("Table " + sequenceTableName + " already exists in myDB !");
 		}
 	}
 
 
-	public static String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(Connection connection, String fourLetterCode, String chainName) {
+	public static String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(Connection connection, String fourLetterCode, String chainName, String sequenceTableName) {
 
 		String sequenceInDb = null;
 		try {
 			Statement stmt = connection.createStatement();
-			String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "' and chainId = '" + chainName + "'";
+			String findEntry = "SELECT * from " + sequenceTableName + " WHERE fourLettercode = '" + fourLetterCode + "' and chainId = '" + chainName + "'";
 			ResultSet resultFindEntry = stmt.executeQuery(findEntry);
 			int foundEntriesCount = 0;
 			String fourLetterCodeFromDB;
@@ -168,15 +168,15 @@ public class DatabaseTools {
 
 
 
-	public static boolean addInSequenceDB(Connection connexion, boolean override, String fourLetterCode, AlgoParameters algoParameters) {
+	public static boolean addInSequenceDB(Connection connexion, boolean override, String fourLetterCode, AlgoParameters algoParameters, String sequenceTableName) {
 
-		boolean alreadyFound = isFourLetterCodeAlreadyFoundInDB(connexion, fourLetterCode);
+		boolean alreadyFound = isFourLetterCodeAlreadyFoundInDB(connexion, fourLetterCode, sequenceTableName);
 		if (alreadyFound == true && override == false) {
 			return false;
 		}
 
 		if (alreadyFound == true && override == true) {
-			removeAllEntriesForThisFourLetterCode(connexion, fourLetterCode);
+			removeAllEntriesForThisFourLetterCode(connexion, fourLetterCode, sequenceTableName);
 		}
 
 		String fourLetterCodeLowerCase = fourLetterCode.toLowerCase();
@@ -209,7 +209,7 @@ public class DatabaseTools {
 			}
 
 			try {
-				String insertTableSQL = "INSERT INTO sequence"
+				String insertTableSQL = "INSERT INTO " + sequenceTableName + " "
 						+ "(fourLettercode, chainId, chainType, sequenceString) VALUES"
 						+ "(?,?,?,?)";
 				PreparedStatement preparedStatement = connexion.prepareStatement(insertTableSQL);
@@ -223,7 +223,7 @@ public class DatabaseTools {
 				System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
 
 			} catch (SQLException e1) {
-				System.out.println("Failed to enter entry in sequence table ");
+				System.out.println("Failed to enter entry in " + sequenceTableName + " table ");
 				return false;
 			}
 		}
@@ -231,7 +231,7 @@ public class DatabaseTools {
 	}
 
 
-	public static boolean isFourLetterCodeAlreadyFoundInDB(Connection connexion, String fourLetterCode) {
+	public static boolean isFourLetterCodeAlreadyFoundInDB(Connection connexion, String fourLetterCode, String sequenceTableName) {
 
 		Statement stmt = null;
 		try {
@@ -239,7 +239,7 @@ public class DatabaseTools {
 		} catch (SQLException e) {
 			return false;
 		}
-		String findEntry = "SELECT * from sequence WHERE fourLettercode = '" + fourLetterCode + "'";
+		String findEntry = "SELECT * from " + sequenceTableName + " WHERE fourLettercode = '" + fourLetterCode + "'";
 
 		ResultSet resultFindEntry = null;
 		try {
@@ -275,7 +275,7 @@ public class DatabaseTools {
 
 
 
-	public static boolean removeAllEntriesForThisFourLetterCode(Connection connexion, String fourLetterCode) {
+	public static boolean removeAllEntriesForThisFourLetterCode(Connection connexion, String fourLetterCode, String sequenceTableName) {
 
 		Statement stmt = null;
 		try {
@@ -283,7 +283,7 @@ public class DatabaseTools {
 		} catch (SQLException e) {
 			return false;
 		}
-		String deleteEntry = "DELETE * from sequence WHERE fourLettercode = '" + fourLetterCode + "'";
+		String deleteEntry = "DELETE * from " + sequenceTableName + " WHERE fourLettercode = '" + fourLetterCode + "'";
 
 		ResultSet value = null;
 		try {

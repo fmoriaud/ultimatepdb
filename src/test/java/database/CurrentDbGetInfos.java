@@ -25,8 +25,10 @@ public class CurrentDbGetInfos {
 
 
     @Test
-    public void getContentInfos() throws IOException, ParsingConfigFileException {
+    public void getContentInfosBigDB() throws IOException, ParsingConfigFileException {
 
+        System.out.println();
+        System.out.println("getContentInfosBigDB");
 
         Connection connexion = DatabaseTools.getConnection();
 
@@ -36,7 +38,7 @@ public class CurrentDbGetInfos {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String findEntry = "SELECT * from sequence";
+        String findEntry = "SELECT * from " + SequenceTools.tableName;
 
         ResultSet resultFindEntry = null;
         try {
@@ -63,19 +65,57 @@ public class CurrentDbGetInfos {
         System.out.println("total entries count = " + entriesCount);
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
-        Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
-        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder.toFile().toString());
-        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(pathToChemCompFolderFolder.toFile().toString());
+
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
 
-        System.out.println("PDB Four Letter codes in files count = " + indexPDBFileInFolder.size());
+        System.out.println("PDB Four Letter codes in Big DB count = " + indexPDBFileInFolder.size());
 
         // TODO Add test to see how many of intra chains of length 5 ?
         // But that wont incude if invalid residue with not all atoms ?
 
         DatabaseTools.shutdown();
+    }
 
-        // TODO Add test so to check if Sequence DB was not changed
+
+    @Test
+    public void getContentInfosTestDB() throws IOException, ParsingConfigFileException {
+
+        System.out.println();
+        System.out.println("getContentInfosTestDB");
+        Connection connexion = DatabaseTools.getConnection();
+
+        Statement stmt = null;
+        try {
+            stmt = connexion.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String findEntry = "SELECT * from " + Tools.testTableName;
+
+        ResultSet resultFindEntry = null;
+        try {
+            resultFindEntry = stmt.executeQuery(findEntry);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Set<String> uniqueFourLetterCode = new HashSet<>();
+        int entriesCount = 0;
+        try {
+            while(resultFindEntry.next()){
+
+                String fourLetterCode = resultFindEntry.getString(1);
+                uniqueFourLetterCode.add(fourLetterCode);
+
+                entriesCount += 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("uniqueFourLetterCode count = " + uniqueFourLetterCode.size());
+        System.out.println("total entries count = " + entriesCount);
+
+        DatabaseTools.shutdown();
     }
 }

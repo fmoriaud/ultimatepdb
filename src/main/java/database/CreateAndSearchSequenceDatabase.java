@@ -18,18 +18,20 @@ import java.util.Map;
 /**
  * Created by Fabrice on 29/09/16.
  */
-public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceDatabaseIfc{
+public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceDatabaseIfc {
 
     private Connection connexion;
     private AlgoParameters algoParameters;
+    private String sequenceTableName;
 
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public CreateAndSearchSequenceDatabase(AlgoParameters algoParameters) {
+    public CreateAndSearchSequenceDatabase(AlgoParameters algoParameters, String sequenceTableName) {
 
         this.connexion = DatabaseTools.getConnection();
         this.algoParameters = algoParameters;
+        this.sequenceTableName = sequenceTableName;
     }
 
 
@@ -39,7 +41,7 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     @Override
     public void createDatabase() {
 
-        DatabaseTools.createDBandTableSequence(connexion);
+        DatabaseTools.createDBandTableSequence(connexion, sequenceTableName);
         updateOveridingExistingDatabase(true);
     }
 
@@ -58,7 +60,7 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     @Override
     public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
 
-        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
+        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName, sequenceTableName);
     }
 
     @Override
@@ -149,7 +151,7 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
 
             String fourLetterCode = entry.getKey();
-            DatabaseTools.addInSequenceDB(connexion, override, fourLetterCode, algoParameters);
+            DatabaseTools.addInSequenceDB(connexion, override, fourLetterCode, algoParameters, sequenceTableName);
         }
     }
 

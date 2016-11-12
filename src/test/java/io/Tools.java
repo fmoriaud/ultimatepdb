@@ -34,6 +34,10 @@ import static org.junit.Assert.assertTrue;
 public class Tools {
 
     /**
+     * A test database myDBtest so database test can be run without overriding the main database called myDB
+     */
+    public static String testTableName = "sequenceTest";
+    /**
      * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
      */
     public static String testChemcompFolder = createPermanentTestFolder();

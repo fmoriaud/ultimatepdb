@@ -19,6 +19,11 @@ import parameters.AlgoParameters;
 
 public class SequenceTools {
 
+    /**
+     * The sequence DB for protocols
+     */
+    public static String tableName = "sequence";
+
     public static String generateSequence(MyChainIfc chain) {
 
         StringBuffer stringBuffer = new StringBuffer();
@@ -249,9 +254,9 @@ public class SequenceTools {
         Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = new LinkedHashMap<>();
 
         // check if monomer has a close contact with backbone atoms
-        // 4.5 is maybe too long as it is protonated so dont use algo parameters
+        // 4.5 is maybe too long. 2.5 not enough as not protonated
 
-        float interactionDistanceCutoff = 3.0f; algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
+        float interactionDistanceCutoff = 2.8f; algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
 
         for (MyMonomerIfc monomer : queryPeptide.getMyMonomers()) {
 
@@ -305,7 +310,7 @@ public class SequenceTools {
         Statement stmt;
         try {
             stmt = connexion.createStatement();
-            String findEntry = "SELECT * from sequence";
+            String findEntry = "SELECT * from " + SequenceTools.tableName;
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
 
             while (resultFindEntry.next()) {

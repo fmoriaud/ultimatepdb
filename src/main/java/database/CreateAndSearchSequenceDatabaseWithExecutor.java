@@ -22,18 +22,21 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
     private Connection connexion;
     private AlgoParameters algoParameters;
+    private String sequenceTableName;
 
-    public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters) {
+
+    public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters, String sequenceTableName) {
 
         this.connexion = DatabaseTools.getConnection();
         this.algoParameters = algoParameters;
+        this.sequenceTableName = sequenceTableName;
     }
 
 
     @Override
     public void createDatabase() {
 
-        DatabaseTools.createDBandTableSequence(connexion);
+        DatabaseTools.createDBandTableSequence(connexion, sequenceTableName);
         updateOveridingExistingDatabase(true);
     }
 
@@ -56,7 +59,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     @Override
     public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
 
-        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName);
+        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName, sequenceTableName);
     }
 
 
@@ -78,7 +81,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
             String fourLetterCode = entry.getKey();
-            DoMyDbTaskIfc doMyDbTaskIfc = new AddInSequenceDB(algoParameters, fourLetterCode, override);
+            DoMyDbTaskIfc doMyDbTaskIfc = new AddInSequenceDB(algoParameters, fourLetterCode, override, sequenceTableName);
 
             StoreInSequenceDbPDBFileCallable callable = new StoreInSequenceDbPDBFileCallable(doMyDbTaskIfc, connexion);
             callablesToLauch.add(callable);
