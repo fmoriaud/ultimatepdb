@@ -13,6 +13,30 @@ import shapeCompare.ResultsFromEvaluateCost;
 
 public class ShapeContainerTools {
 
+    public static char[] findThreeLetterCode(MyStructureIfc hetatmLigand) {
+        MyChainIfc chain = hetatmLigand.getAllChains()[0];
+        MyMonomerIfc monomer = chain.getMyMonomers()[0];
+        return monomer.getThreeLetterCode();
+    }
+
+    public static char[] findChainId(MyStructureIfc hetatmLigand) {
+        MyChainIfc chain = hetatmLigand.getAllChains()[0];
+        return chain.getChainId();
+    }
+
+    public static MyChainIfc findFirstChain(MyStructureIfc hetatmLigand){
+        MyChainIfc chain = hetatmLigand.getAllChains()[0];
+        return chain;
+    }
+
+
+    public static MyMonomerIfc findFirstMonomer(MyStructureIfc hetatmLigand){
+        MyChainIfc chain = hetatmLigand.getAllChains()[0];
+        MyMonomerIfc monomer = chain.getMyMonomers()[0];
+        return monomer;
+    }
+
+
     public static List<String> makeContentPDBFilePeptide(AlgoParameters algoParameters, MyChainIfc peptide) {
         List<String> contentPDBFilePeptide = new ArrayList<>();
 

@@ -9,6 +9,7 @@ import math.ToolsDistance;
 import math.ToolsMath;
 import multithread.ComputeLennardJonesRecursiveTask;
 import multithread.ComputeShapePointsMultiThread;
+import mystructure.*;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.Box;
@@ -26,14 +27,6 @@ import shape.ShapeContainerWithPeptide;
 import shapeReduction.*;
 import mystructure.AtomProperties.AtomHAcceptorDescriptors;
 import mystructure.AtomProperties.AtomHDonnorDescriptors;
-import mystructure.HBondDefinedWithAtoms;
-import mystructure.MyAtomIfc;
-import mystructure.MyBondIfc;
-import mystructure.MyChain;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
 import ultiJmol1462.MyJmolTools;
 
 public class ShapeBuilder {
@@ -69,6 +62,11 @@ public class ShapeBuilder {
         MyStructureIfc myStructureLocal = structureLocalToBuildShapeWholeChain.getMyStructureLocal();
         MyChainIfc ligand = structureLocalToBuildShapeWholeChain.getLigand();
 
+
+        Cloner cloner = new Cloner(ligand, algoParameters);
+        MyStructureIfc myStructureLigand = cloner.getClone();
+        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
+
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
@@ -78,7 +76,7 @@ public class ShapeBuilder {
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, ligand, 0);
+        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, 0);
         shapeContainerWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithPeptide;
     }
@@ -88,22 +86,26 @@ public class ShapeBuilder {
 
         StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrut, chainId, startingRankId, peptideLength, algoParameters);
         structureLocalToBuildShapeSegmentOfShape.compute();
-        MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
-        MyChainIfc ligand = structureLocalToBuildShapeSegmentOfShape.getLigand();
 
+        MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
+
+        MyChainIfc ligand = structureLocalToBuildShapeSegmentOfShape.getLigand();
+        Cloner cloner = new Cloner(ligand, algoParameters);
+        MyStructureIfc myStructureLigand = cloner.getClone();
+        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
         //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
-        List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyChainIfc(ligand);
-        if (myStructureLocalProtonated == null){
+        List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
+        if (myStructureLocalProtonated == null) {
             System.out.println();
         }
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, ligand, startingRankId);
+        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, startingRankId);
         shapeContainerWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithPeptide;
     }
@@ -114,28 +116,28 @@ public class ShapeBuilder {
         StructureLocalToBuildShapeHetAtm structureLocalToBuildShapeHetAtm = new StructureLocalToBuildShapeHetAtm(myStructureGlobalBrut, hetAtomsLigandId, occurrenceId, algoParameters);
         structureLocalToBuildShapeHetAtm.compute();
         MyStructureIfc myStructureLocal = structureLocalToBuildShapeHetAtm.getMyStructureLocal();
-        MyChainIfc ligand = structureLocalToBuildShapeHetAtm.getLigand();
+
         MyMonomerIfc hetAtomsGroup = structureLocalToBuildShapeHetAtm.getHetAtomsGroup();
+        Cloner cloner = new Cloner(hetAtomsGroup, algoParameters);
+        MyStructureIfc myStructureLigand = cloner.getClone();
+        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
 
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
         //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
-        List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyChainIfc(ligand);
+        List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithLigand shapeContainerWithLigand = buildShapeContainerWithLigand(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, hetAtomsGroup, occurrenceId);
+        ShapeContainerWithLigand shapeContainerWithLigand = buildShapeContainerWithLigand(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, occurrenceId);
         shapeContainerWithLigand.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithLigand;
     }
 
 
     public ShapeContainerAtomIdsWithinShapeWithPeptide getShapeAroundAtomDefinedByIds(List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<String> chainToIgnore) throws ShapeBuildingException { // LennardJones query
-
-        // Note it is built with Peptide although it is only an option for later in case we build a query with atomis
-        // and still wante to use the peptide to compute rmsd of ligand to the hits
 
         StructureLocalToBuildShapeAroundAtomDefinedByIds structureLocalToBuildShapeAroundAtomDefinedByIds = new StructureLocalToBuildShapeAroundAtomDefinedByIds(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
         structureLocalToBuildShapeAroundAtomDefinedByIds.compute();
@@ -398,7 +400,7 @@ public class ShapeBuilder {
     }
 
 
-    private ShapeContainerWithPeptide buildShapeContainerWithPeptide(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyChainIfc peptide, int startingIndex) {
+    private ShapeContainerWithPeptide buildShapeContainerWithPeptide(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc peptide, int startingIndex) {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
@@ -409,7 +411,7 @@ public class ShapeBuilder {
     }
 
 
-    private ShapeContainerWithLigand buildShapeContainerWithLigand(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyMonomerIfc myMonomer, int occurenceId) {
+    private ShapeContainerWithLigand buildShapeContainerWithLigand(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc myMonomer, int occurenceId) {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 

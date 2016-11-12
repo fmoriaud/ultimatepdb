@@ -61,8 +61,8 @@ public class ShapeBuilderConstructorWholeChainTest {
         }
 
         // don't know if it is good, it is as it is now.
-        assertTrue(shapecontainer.getShape().getSize() == 687);
-        assertTrue(shapecontainer.getMiniShape().size() == 68);
+        assertTrue(shapecontainer.getShape().getSize() == 459);
+        assertTrue(shapecontainer.getMiniShape().size() == 59);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

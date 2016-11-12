@@ -14,9 +14,11 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	//------------------------
 	// Class variables
 	//------------------------
-	MyChainIfc peptide;
+	MyStructureIfc peptide;
+	MyChainIfc peptideMyChain;
 	int startingRankId;
 	List<char[]> peptideSequence;
+	char[] peptideChainId;
 
 
 
@@ -24,12 +26,14 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyChainIfc peptide, int startingRankId){
+	public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyStructureIfc peptide, int startingRankId){
 		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
 
 		this.startingRankId = startingRankId;
 		this.peptide = peptide;
-		this.peptideSequence = ShapeContainerTools.generatePeptideSequence(peptide);
+		this.peptideMyChain =ShapeContainerTools.findFirstChain(peptide);
+		this.peptideSequence = ShapeContainerTools.generatePeptideSequence(peptideMyChain);
+		this.peptideChainId = ShapeContainerTools.findChainId(peptide);
 	}
 
 
@@ -41,7 +45,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	@Override
 	public String makeEndFileName(){
 
-		return String.valueOf(fourLetterCode) + "_" + String.valueOf(peptide.getChainId()) + "_" + startingRankId;
+		return String.valueOf(fourLetterCode) + "_" + String.valueOf(peptideChainId) + "_" + startingRankId;
 	}
 
 
@@ -50,7 +54,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportShapeToPDBFile(String fileName, AlgoParameters algoParameters){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentPDBFileShape(fileName, algoParameters);
@@ -64,7 +68,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportRotatedShapeToPDBFile(String fileName, AlgoParameters algoParameters, ResultsFromEvaluateCost result){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentRotatedPDBFileShape(fileName, algoParameters, result);
@@ -78,7 +82,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportShapeColoredToPDBFile(String fileName, AlgoParameters algoParameters){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentPDBFileColoredShape(fileName, algoParameters);
@@ -92,7 +96,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportRotatedShapeColoredToPDBFile(String fileName, AlgoParameters algoParameters, ResultsFromEvaluateCost result){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentRotatedPDBFileColoredShape(fileName, algoParameters, result);
@@ -106,7 +110,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportMiniShapeToPDBFile(String fileName, AlgoParameters algoParameters){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentPDBFileMiniShape(fileName, algoParameters);
@@ -120,7 +124,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportRotatedMiniShapeToPDBFile(String fileName, AlgoParameters algoParameters, ResultsFromEvaluateCost result){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentRotatedPDBFileMiniShape(fileName, algoParameters, result);
@@ -134,7 +138,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportMiniShapeColoredToPDBFile(String fileName, AlgoParameters algoParameters){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentPDBFilePeptide(algoParameters, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentPDBFileColoredMiniShape(fileName, algoParameters);
@@ -148,7 +152,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	public void exportRotatedMiniShapeColoredToPDBFile(String fileName, AlgoParameters algoParameters, ResultsFromEvaluateCost result){
 
 		List<String> contentPDBFile = new ArrayList<>();
-		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptide);
+		List<String> contentPDBFilePeptide = ShapeContainerTools.makeContentRotatedPDBFilePeptide(algoParameters, result, peptideMyChain);
 		contentPDBFile.addAll(contentPDBFilePeptide);
 
 		List<String> contributioncontentPDBFileShape = makeContentRotatedPDBFileColoredMiniShape(fileName, algoParameters, result);
@@ -160,7 +164,7 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	
 	@Override
 	public MyChainIfc getPeptide() {
-		return peptide;
+		return peptideMyChain;
 	}
 
 	

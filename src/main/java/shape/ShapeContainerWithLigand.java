@@ -3,20 +3,21 @@ package shape;
 import java.util.ArrayList;
 import java.util.List;
 
-import mystructure.Cloner;
+import mystructure.*;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
 import shapeCompare.ResultsFromEvaluateCost;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
 
 public class ShapeContainerWithLigand extends ShapeContainer implements ShapeContainerIfc{
 	//------------------------
 	// Class variables
 	//------------------------
-	MyMonomerIfc hetatmLigand;
+	MyStructureIfc hetatmLigand;
+	MyMonomerIfc hetatmLigandMymonomer;
+
+	char[] hetatmLigandChainId;
+	char[] hetatmThreeLetterCode;
 	int occurenceId;
 
 
@@ -25,11 +26,14 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyMonomerIfc hetatmLigand, int occurenceId){
+	public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyStructureIfc hetatmLigand, int occurenceId){
 		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
 
 		this.hetatmLigand = hetatmLigand;
 		this.occurenceId = occurenceId;
+		this.hetatmLigandMymonomer = ShapeContainerTools.findFirstMonomer(hetatmLigand);
+		this.hetatmLigandChainId = ShapeContainerTools.findChainId(hetatmLigand);
+		this.hetatmThreeLetterCode = ShapeContainerTools.findThreeLetterCode(hetatmLigand);
 	}
 
 
@@ -41,7 +45,7 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 	@Override
 	public String makeEndFileName(){
 		
-		return String.valueOf(fourLetterCode) + "_" + String.valueOf(hetatmLigand.getParent().getChainId()) + "_" + String.valueOf(hetatmLigand.getThreeLetterCode()) + "_" + occurenceId;
+		return String.valueOf(fourLetterCode) + "_" + String.valueOf(hetatmLigandChainId) + "_" + String.valueOf(hetatmThreeLetterCode) + "_" + occurenceId;
 	}
 	
 	
@@ -165,9 +169,9 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 	private List<String> makeContentPDBFileHetatmLigand(AlgoParameters algoParameters){
 		List<String> contentPDBFilePeptide = new ArrayList<>();
 
-		contentPDBFilePeptide.addAll(ShapeContainerTools.generateLinesFromMyMonomer(this.hetatmLigand, algoParameters, this.hetatmLigand.getParent().getChainId()));
+		contentPDBFilePeptide.addAll(ShapeContainerTools.generateLinesFromMyMonomer(hetatmLigandMymonomer, algoParameters, hetatmLigandChainId));
 
-		contentPDBFilePeptide.addAll(ShapeContainerTools.generateConnectLines(this.hetatmLigand));
+		contentPDBFilePeptide.addAll(ShapeContainerTools.generateConnectLines(hetatmLigandMymonomer));
 		return contentPDBFilePeptide;
 	}
 
@@ -178,22 +182,24 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 
 		Cloner cloner = new Cloner(this.hetatmLigand, algoParameters);
 		MyMonomerIfc hetatmLigandRotated = cloner.getRotatedClone(result).getAllChains()[0].getMyMonomers()[0];
-		contentPDBFilePeptide.addAll(ShapeContainerTools.generateLinesFromMyMonomer(hetatmLigandRotated, algoParameters, this.hetatmLigand.getParent().getChainId()));
+		contentPDBFilePeptide.addAll(ShapeContainerTools.generateLinesFromMyMonomer(hetatmLigandRotated, algoParameters, hetatmLigandChainId));
 
 		contentPDBFilePeptide.addAll(ShapeContainerTools.generateConnectLines(hetatmLigandRotated));
 		return contentPDBFilePeptide;
 	}
-	
 
-	
-	
+
+
 	// -------------------------------------------------------------------
 	// Getter & Setter
 	// -------------------------------------------------------------------
 	public MyMonomerIfc getHetatmLigand() {
-		return hetatmLigand;
+		return hetatmLigandMymonomer;
 	}
 
+	public char[] getHetatmLigandChainId() {
+		return hetatmLigandChainId;
+	}
 
 
 	public int getOccurenceId() {

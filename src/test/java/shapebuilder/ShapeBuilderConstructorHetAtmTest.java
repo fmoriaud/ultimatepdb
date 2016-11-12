@@ -63,8 +63,8 @@ public class ShapeBuilderConstructorHetAtmTest {
         // don't know if it is good, it is as it is now.
         System.out.println(shape.getShape().getSize());
         System.out.println(shape.getMiniShape().size());
-        assertTrue(shape.getShape().getSize() == 795);
-        assertTrue(shape.getMiniShape().size() == 45 );//|| shape.getMiniShape().size() == 44);
+        assertTrue(shape.getShape().getSize() == 815);
+        assertTrue(shape.getMiniShape().size() == 53 );
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

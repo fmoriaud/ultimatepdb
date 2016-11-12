@@ -14,9 +14,7 @@ import mystructure.EnumMyReaderBiojava;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.CommandLineException;
-import protocols.ParsingConfigFileException;
-import protocols.ShapeContainerFactory;
+import protocols.*;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
@@ -37,57 +35,19 @@ public class TestShapeCompare {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode1di9 = "1di9";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure1di9 = null;
-        try {
-            mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode1di9, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructure1di9 = null;
-        try {
-            myStructure1di9 = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure1di9, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        char[] fourLetterCode1bmk = "1bmk".toCharArray();
+        char[] hetAtomsLigandId1bmk = "SB5".toCharArray();
+        int occurrenceId = 1;
+        ShapeContainerDefined shapeContainerDefined1bmk = new ShapecontainerDefinedByHetatm(fourLetterCode1bmk, algoParameters, hetAtomsLigandId1bmk, occurrenceId);
+        ShapeContainerIfc shapeContainer1bmk = shapeContainerDefined1bmk.getShapecontainer();
 
-        String fourLetterCode1a9u = "1a9u";
-        BiojavaReader reader2 = new BiojavaReader();
-        Structure mmcifStructure1a9u = null;
-        try {
-            mmcifStructure1a9u = reader2.readFromPDBFolder(fourLetterCode1a9u, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure2 = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructure1a9u = null;
-        try {
-            myStructure1a9u = adapterBioJavaStructure2.getMyStructureAndSkipHydrogens(mmcifStructure1a9u, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        char[] fourLetterCode1a9u = "1a9u".toCharArray();
+        char[] hetAtomsLigandId1a9u = "SB2".toCharArray();
 
+        ShapeContainerDefined shapeContainerDefined1a9u = new ShapecontainerDefinedByHetatm(fourLetterCode1a9u, algoParameters, hetAtomsLigandId1a9u, occurrenceId);
+        ShapeContainerIfc shapeContainer1a9u = shapeContainerDefined1a9u.getShapecontainer();
 
-        char[] hetatmLigandSB2 = "SB2".toCharArray();
-        int occurenceId = 1;
-        ShapeContainerIfc shapeSB2 = null;
-        try {
-            shapeSB2 = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure1a9u, algoParameters, hetatmLigandSB2, occurenceId);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-        char[] hetatmLigandMSQ = "MSQ".toCharArray();
-        ShapeContainerIfc shapeMSQ = null;
-        try {
-            shapeMSQ = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure1di9, algoParameters, hetatmLigandMSQ, occurenceId);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-        ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(shapeMSQ, shapeSB2, algoParameters);
+        ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(shapeContainer1bmk, shapeContainer1a9u, algoParameters);
         List<Hit> listBestHitForEachAndEverySeed = null;
         try {
             listBestHitForEachAndEverySeed = comparatorShape.computeResults();
@@ -97,11 +57,11 @@ public class TestShapeCompare {
             e.printStackTrace();
         }
 
-        assertTrue(listBestHitForEachAndEverySeed.size() == 6);
+        assertTrue(listBestHitForEachAndEverySeed.size() == 2);
         float coverageTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getRatioPairedPointInQuery();
-        assertEquals(coverageTopHit, 0.653, 0.001);
+        assertEquals(coverageTopHit, 0.654, 0.001);
         double costTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCost();
-        assertEquals(costTopHit, 0.0436, 0.0001);
+        assertEquals(costTopHit, 0.038, 0.001);
 
 
         /*

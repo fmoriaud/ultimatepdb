@@ -14,7 +14,9 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
 import protocols.ShapeContainerFactory;
+import protocols.ShapecontainerDefinedByAroundAtomDefinedByIds;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
@@ -37,41 +39,28 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
         String chainQuery = "A";
         int residueId = 168;
         String atomName = "OD2";
         float radiusForQueryAtomsDefinedByIds = 8;
+        String fourLetterCode = "1di9";
         QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
         listAtomDefinedByIds.add(queryAtomDefinedByIds);
 
         List<String> chainToIgnore = new ArrayList<>();
+
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedByAroundAtomDefinedByIds(fourLetterCode.toCharArray(), algoParameters, listAtomDefinedByIds, chainToIgnore);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
+            shape = shapecontainerDefined.getShapecontainer();
         } catch (ShapeBuildingException e) {
             e.printStackTrace();
         }
 
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 2335);
-        assertTrue(shape.getMiniShape().size() == 43);
+        assertTrue(shape.getShape().getSize() == 1802);
+        assertTrue(shape.getMiniShape().size() == 40);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);
@@ -93,41 +82,28 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
         String chainQuery = "A";
         int residueId = 4;
         String atomName = "N2";
         float radiusForQueryAtomsDefinedByIds = 8;
+        String fourLetterCode = "394d";
         QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
         listAtomDefinedByIds.add(queryAtomDefinedByIds);
 
         List<String> chainToIgnore = new ArrayList<>();
+
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedByAroundAtomDefinedByIds(fourLetterCode.toCharArray(), algoParameters, listAtomDefinedByIds, chainToIgnore);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
+            shape = shapecontainerDefined.getShapecontainer();
         } catch (ShapeBuildingException e) {
             e.printStackTrace();
         }
 
         // don't know if it is good, it is as it is now.
-        assertTrue(shape.getShape().getSize() == 1424);
-        assertTrue(shape.getMiniShape().size() == 12);
+        assertTrue(shape.getShape().getSize() == 1096);
+        assertTrue(shape.getMiniShape().size() == 11);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

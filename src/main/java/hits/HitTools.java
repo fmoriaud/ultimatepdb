@@ -53,13 +53,14 @@ public class HitTools {
                 }
                 if (hit.getShapeContainer() instanceof ShapeContainerWithLigand) {
                     ShapeContainerWithLigand shapeContainerWithLigand = (ShapeContainerWithLigand) hit.getShapeContainer();
-                    peptideOrLigand = new MyChain(shapeContainerWithLigand.getHetatmLigand(), shapeContainerWithLigand.getHetatmLigand().getParent().getChainId()); // returnCloneRotatedPeptide(hetAtomInChain, hit.getResultsFromEvaluateCost());
+                    peptideOrLigand = new MyChain(shapeContainerWithLigand.getHetatmLigand(), shapeContainerWithLigand.getHetatmLigandChainId()); // returnCloneRotatedPeptide(hetAtomInChain, hit.getResultsFromEvaluateCost());
                 }
 
                 Cloner cloner2 = new Cloner(peptideOrLigand, algoParameters);
                 MyStructureIfc myStructurePeptide = cloner2.getClone();
 
                // MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
+
 
                 Protonate protonate = new Protonate(myStructurePeptide, algoParameters);
                 try {

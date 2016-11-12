@@ -477,7 +477,10 @@ public class Cloner {
     }
 
 
-
+    /**
+     * Neighbors are either updated or kept as they are
+     * @param clone
+     */
     private void updateMyMonomerToClonedOneInNeighbors(MyStructureIfc clone) {
         // Fix neighbors references
         List<MyMonomerIfc> tmpMonomers = new ArrayList<>();
@@ -494,6 +497,8 @@ public class Cloner {
                     for (MyMonomerIfc neighMonomer : neighborchains[i].getMyMonomers()) {
                         if (keyIsOldMonomerValueIsNewMonomer.containsKey(neighMonomer)) {
                             tmpMonomers.add(keyIsOldMonomerValueIsNewMonomer.get(neighMonomer));
+                        }else{
+                            tmpMonomers.add(neighMonomer);
                         }
                     }
                     MyChainIfc newNeighborchains = new MyChain(tmpMonomers);
@@ -511,6 +516,8 @@ public class Cloner {
                 for (int i = 0; i < neighborsByBond.length; i++) {
                     if (keyIsOldMonomerValueIsNewMonomer.containsKey(neighborsByBond[i])) {
                         tmpMonomers.add(keyIsOldMonomerValueIsNewMonomer.get(neighborsByBond[i]));
+                    }else{
+                        tmpMonomers.add(neighborsByBond[i]);
                     }
                 }
                 MyMonomerIfc[] newneighborsByBond = MyStructureTools.makeArrayFromListMyMonomers(tmpMonomers);

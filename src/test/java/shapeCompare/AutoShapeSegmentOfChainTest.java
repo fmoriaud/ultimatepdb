@@ -109,12 +109,12 @@ public class AutoShapeSegmentOfChainTest {
             HitTools.minimizeHitInQuery(hit, shapeQuery, shapeTarget, algoParameters);
             ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getResultsUltiJMolMinimizedHitLigandOnTarget();
             assertTrue(hitScore != null);
-            assertTrue(hitScore.getInteractionEFinal() > -20 && hitScore.getInteractionEFinal() < -19);
-            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 130 && Math.abs(hitScore.getLigandStrainedEnergy()) < 132);
-            assertTrue(hitScore.getRmsdLigand() < 0.7 && hitScore.getRmsdLigand() > 0.6);
-            assertTrue(hitScore.getCountOfLongDistanceChange() == 0);
+            assertTrue(hitScore.getInteractionEFinal() > -2 && hitScore.getInteractionEFinal() < -1);
+            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 120 && Math.abs(hitScore.getLigandStrainedEnergy()) < 122);
+            assertTrue(hitScore.getRmsdLigand() < 0.8 && hitScore.getRmsdLigand() > 0.7);
+            assertTrue(hitScore.getCountOfLongDistanceChange() == 3);
             HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
-            assertTrue(hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() < 0.001);
+            assertTrue(hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() > 0.25 && hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() < 0.30);
 
         } catch (NullResultFromAComparisonException e) {
             e.printStackTrace();

@@ -19,6 +19,7 @@ import shape.ShapeContainerWithPeptide;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -176,11 +177,20 @@ public class SequenceToolsTest {
 
         ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) shapeContainer;
         MyChainIfc ligand = query.getPeptide();
+
         Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = SequenceTools.findContacts(ligand, algoParameters);
 
-        for (Map.Entry<MyMonomerIfc, QueryMonomerToTargetContactType> entry: contacts.entrySet()){
-            System.out.println(entry.getKey() + " " + entry.getValue().toString());
-        }
+        List<QueryMonomerToTargetContactType> expectedValues = new ArrayList<>();
+        expectedValues.add(QueryMonomerToTargetContactType.NONE);
+        expectedValues.add(QueryMonomerToTargetContactType.NONE);
+        expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
+        expectedValues.add(QueryMonomerToTargetContactType.NONE);
+        expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
 
+        int count = 0;
+        for (Map.Entry<MyMonomerIfc, QueryMonomerToTargetContactType> entry : contacts.entrySet()) {
+            assertTrue(entry.getValue().equals(expectedValues.get(count)));
+            count += 1;
+        }
     }
 }

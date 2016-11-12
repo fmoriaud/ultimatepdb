@@ -117,7 +117,6 @@ public class MyStructureTools {
     }
 
 
-
     /**
      * Returns true if atom name is C, N, O, H1CA or H1N
      *
@@ -272,7 +271,6 @@ public class MyStructureTools {
     }
 
 
-
     public static void removeNonExistingMyMonomerNeighbors(MyChainIfc myChain) {
 
         List<MyMonomerIfc> myMonomersInChain = makeListFromArray(myChain.getMyMonomers());
@@ -302,7 +300,6 @@ public class MyStructureTools {
             monomerInchain.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(cleanNeighbors);
         }
     }
-
 
 
     /**
@@ -433,6 +430,7 @@ public class MyStructureTools {
 
     /**
      * Set parents of MyAtom to parent MyMonomer. set Parents of MyMonomer to parent MyChain.
+     *
      * @param myStructure
      */
     public static void fixParents(MyStructureIfc myStructure) {
@@ -447,14 +445,12 @@ public class MyStructureTools {
     }
 
 
-
     public static void setEmptyNeighbors(MyMonomerIfc cloneMyMonomer) {
         MyMonomerIfc[] emptyNeighborsByBond = new MyMonomerIfc[0];
         cloneMyMonomer.setNeighboringMyMonomerByBond(emptyNeighborsByBond);
         MyChainIfc[] emptyNeighborsByDistance = new MyChainIfc[0];
         cloneMyMonomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(emptyNeighborsByDistance);
     }
-
 
 
     public static MyAtomIfc getNterminal(MyChainIfc myChain) {
@@ -464,13 +460,11 @@ public class MyStructureTools {
     }
 
 
-
     public static MyAtomIfc getCaNterminal(MyChainIfc myChain) {
 
         MyMonomerIfc firstMonomer = myChain.getMyMonomers()[0];
         return firstMonomer.getMyAtomFromMyAtomName("CA".toCharArray());
     }
-
 
 
     public static MyAtomIfc getCaCterminal(MyChainIfc myChain) {
@@ -480,7 +474,6 @@ public class MyStructureTools {
     }
 
 
-
     public static MyAtomIfc getCterminal(MyChainIfc myChain) {
 
         MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
@@ -488,13 +481,11 @@ public class MyStructureTools {
     }
 
 
-
     public static MyAtomIfc getOterminal(MyChainIfc myChain) {
 
         MyMonomerIfc lastMonomer = myChain.getMyMonomers()[myChain.getMyMonomers().length - 1];
         return lastMonomer.getMyAtomFromMyAtomName("O".toCharArray());
     }
-
 
 
     public static float computeDistance(MyMonomerIfc monomer1, MyMonomerIfc monomer2) {
@@ -784,6 +775,16 @@ public class MyStructureTools {
                 PointIfc point = new Point(coords);
                 listPoints.add(point);
             }
+        }
+        return listPoints;
+    }
+
+
+    public static List<PointIfc> makeQueryPointsFromMyStructureIfc(MyStructureIfc myStructure) {
+
+        List<PointIfc> listPoints = new ArrayList<>();
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            listPoints.addAll(makeQueryPointsFromMyChainIfc(chain));
         }
         return listPoints;
     }

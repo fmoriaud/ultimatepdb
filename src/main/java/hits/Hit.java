@@ -55,7 +55,7 @@ public class Hit {
         if (shapeContainer instanceof ShapeContainerWithLigand) {
 
             ShapeContainerWithLigand shapeContainerWithLigand = (ShapeContainerWithLigand) shapeContainer;
-            result.append(" chain id = " + String.valueOf(shapeContainerWithLigand.getHetatmLigand().getParent().getChainId()));
+            result.append(" chain id = " + String.valueOf(shapeContainerWithLigand.getHetatmLigandChainId()));
             result.append(" occurrence id = " + String.valueOf(shapeContainerWithLigand.getOccurenceId()));
 
         }

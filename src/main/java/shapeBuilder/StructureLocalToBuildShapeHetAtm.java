@@ -15,7 +15,6 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
     //-------------------------------------------------------------
     private MyStructureIfc myStructureGlobalBrut;
 
-    private MyChainIfc ligand;
     private MyStructureIfc myStructureLocal;
     private MyMonomerIfc hetAtomsGroup;
 
@@ -49,9 +48,8 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
             ShapeBuildingException exception = new ShapeBuildingException(message);
             throw exception;
         }
-        ligand = new MyChain(hetAtomsGroup, hetAtomsGroup.getParent().getChainId());
 
-        myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, ligand, algoParameters);
+        myStructureLocal = StructureLocalTools.makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, hetAtomsGroup, algoParameters);
 
     }
 
@@ -80,11 +78,6 @@ public class StructureLocalToBuildShapeHetAtm implements StructureLocalToBuildSh
     //-------------------------------------------------------------
     // Getters & Setters
     //-------------------------------------------------------------
-    public MyChainIfc getLigand() {
-        return ligand;
-    }
-
-
     @Override
     public MyStructureIfc getMyStructureLocal() {
         return myStructureLocal;

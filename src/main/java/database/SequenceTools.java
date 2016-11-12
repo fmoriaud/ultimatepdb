@@ -4,18 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import math.ToolsDistance;
 import math.ToolsMath;
-import mystructure.MyAtomIfc;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureTools;
+import mystructure.*;
 import parameters.AlgoParameters;
+import shapeBuilder.StructureLocalTools;
 
 public class SequenceTools {
 
@@ -251,12 +246,19 @@ public class SequenceTools {
 
 
     public static Map<MyMonomerIfc, QueryMonomerToTargetContactType> findContacts(MyChainIfc queryPeptide, AlgoParameters algoParameters) {
+
         Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = new LinkedHashMap<>();
 
         // check if monomer has a close contact with backbone atoms
         // 4.5 is maybe too long. 2.5 not enough as not protonated
 
-        float interactionDistanceCutoff = 2.8f; algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
+        // TODO Doesnt work because queryPeptide from shapecontainer was cloned and has no neighbors in target
+        // TODO run tests: if they fail because neighbors are missing then I have to find a solution to store protonated ligand
+        // TODO with the neighbors which means I still clone by cleaning neighbors but in shape builder I put them back
+        float interactionDistanceCutoff = 2.3f;
+        //algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
+
+        Set<MyMonomerIfc> myMonomerNeighborsByDistanceToRepresentativeAtom = StructureLocalTools.makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(queryPeptide);
 
         for (MyMonomerIfc monomer : queryPeptide.getMyMonomers()) {
 
@@ -264,19 +266,18 @@ public class SequenceTools {
             for (MyAtomIfc atomLigand : monomer.getMyAtoms()) {
 
                 boolean fromBackBone = MyStructureTools.isAtomNameFromBackBone(atomLigand.getAtomName());
+                //System.out.println(String.valueOf(atomLigand.getAtomName()) + " fromBackBone = " + fromBackBone);
 
-                MyChainIfc[] neihborChains = monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
-                for (MyChainIfc neihborChain : neihborChains) {
-                    for (MyMonomerIfc neighborMonomer : neihborChain.getMyMonomers()) {
-                        for (MyAtomIfc atomTarget : neighborMonomer.getMyAtoms()) {
+                for (MyMonomerIfc neighborMonomer : myMonomerNeighborsByDistanceToRepresentativeAtom) {
+                    for (MyAtomIfc atomTarget : neighborMonomer.getMyAtoms()) {
 
-                            float distance = ToolsMath.computeDistance(atomLigand.getCoords(), atomTarget.getCoords());
-                            if (distance < interactionDistanceCutoff){
-                                if (fromBackBone == true && currentType != QueryMonomerToTargetContactType.SIDECHAIN){
-                                    currentType = QueryMonomerToTargetContactType.BACKBONE_ONLY;
-                                }else{
-                                    currentType = QueryMonomerToTargetContactType.SIDECHAIN;
-                                }
+                        float distance = ToolsMath.computeDistance(atomLigand.getCoords(), atomTarget.getCoords());
+                        if (distance < interactionDistanceCutoff) {
+                            if (fromBackBone == true && currentType == QueryMonomerToTargetContactType.NONE) {
+                                currentType = QueryMonomerToTargetContactType.BACKBONE_ONLY;
+                            }
+                            if (fromBackBone == false) { // then from sidechain
+                                currentType = QueryMonomerToTargetContactType.SIDECHAIN;
                             }
                         }
                     }

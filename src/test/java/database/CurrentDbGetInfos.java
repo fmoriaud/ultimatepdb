@@ -2,6 +2,7 @@ package database;
 
 import io.IOTools;
 import io.Tools;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class CurrentDbGetInfos {
 
 
+    @Ignore
     @Test
     public void getContentInfosBigDB() throws IOException, ParsingConfigFileException {
 

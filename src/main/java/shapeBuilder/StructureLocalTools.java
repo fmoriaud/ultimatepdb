@@ -262,12 +262,12 @@ public class StructureLocalTools {
         List<Integer> residueIdToModifyOnCTerminal = findResidueIdToModifyCterminal(segmentChainInStructureGlobalBrut, residueIdNterminalSegment, extractedSegment);
 
         MyChainIfc segmentChainInStructureLocal = findChain(clonedMyStructure, type, chainId);
-        for (Integer residueId: residueIdToModifyOnNTerminal){
+        for (Integer residueId : residueIdToModifyOnNTerminal) {
             MyMonomerIfc monomerToModifyOnNTerminal = segmentChainInStructureLocal.getMyMonomerFromResidueId(residueId);
             MyAtomIfc nTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("N".toCharArray());
             doDeletionAtNTerminalStructureLocal(nTerminalAtom);
         }
-        for (Integer residueId: residueIdToModifyOnCTerminal){
+        for (Integer residueId : residueIdToModifyOnCTerminal) {
             MyMonomerIfc monomerToModifyOnNTerminal = segmentChainInStructureLocal.getMyMonomerFromResidueId(residueId);
             MyAtomIfc cTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("C".toCharArray());
             MyAtomIfc oTerminalAtom = monomerToModifyOnNTerminal.getMyAtomFromMyAtomName("O".toCharArray());
@@ -340,7 +340,6 @@ public class StructureLocalTools {
     }
 
 
-
     private static List<Integer> findResidueIdToModifyCterminal(MyChainIfc segmentChainInStructureGlobalBrut, int residueIdNterminalSegment, MyChainIfc extractedSegment) {
 
         List<Integer> residueIds = new ArrayList<>();
@@ -373,6 +372,16 @@ public class StructureLocalTools {
         return false;
     }
 
+    public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyMonomerIfc myMonomer, AlgoParameters algoParameters) {
+
+        Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(myMonomer);
+
+        Cloner cloner = new Cloner(myStructureGlobalBrut, queryMonomers, algoParameters);
+        MyStructureIfc clonedMyStructure = cloner.getClone();
+
+        return clonedMyStructure;
+    }
+
 
     public static MyStructureIfc makeStructureLocalAroundAndExcludingMyMonomersFromInputMyChain(MyStructureIfc myStructureGlobalBrut, MyChainIfc myChain, AlgoParameters algoParameters) {
 
@@ -398,6 +407,23 @@ public class StructureLocalTools {
                 for (MyMonomerIfc neighbor : mychain.getMyMonomers()) {
                     queryMyMonomer.add(neighbor);
                 }
+            }
+        }
+
+        return queryMyMonomer;
+    }
+
+
+    public static Set<MyMonomerIfc> makeMyMonomersLocalAroundAndWithChain(MyMonomerIfc myMonomer) {
+
+        Set<MyMonomerIfc> queryMyMonomer = new HashSet<>();
+        queryMyMonomer.add(myMonomer);
+
+
+        MyChainIfc[] neighbors = myMonomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+        for (MyChainIfc mychain : neighbors) {
+            for (MyMonomerIfc neighbor : mychain.getMyMonomers()) {
+                queryMyMonomer.add(neighbor);
             }
         }
 
@@ -464,13 +490,22 @@ public class StructureLocalTools {
     }
 
 
-    private static Set<MyMonomerIfc> makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(MyChainIfc myChain) {
+    public static Set<MyMonomerIfc> makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(MyChainIfc myChain) {
 
         Set<MyMonomerIfc> queryMyMonomer = makeMyMonomersLocalAroundAndWithChain(myChain);
 
         for (MyMonomerIfc monomerToRemove : myChain.getMyMonomers()) {
             queryMyMonomer.remove(monomerToRemove);
         }
+        return queryMyMonomer;
+    }
+
+
+    private static Set<MyMonomerIfc> makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(MyMonomerIfc myMonomer) {
+
+        Set<MyMonomerIfc> queryMyMonomer = makeMyMonomersLocalAroundAndWithChain(myMonomer);
+        queryMyMonomer.remove(myMonomer);
+
         return queryMyMonomer;
     }
 }

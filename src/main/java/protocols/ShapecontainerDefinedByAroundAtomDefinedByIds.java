@@ -3,32 +3,36 @@ package protocols;
 import io.IOTools;
 import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
+import parameters.QueryAtomDefinedByIds;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 
+import java.util.List;
 
-public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
-
+/**
+ * Created by Fabrice on 12/11/16.
+ */
+public class ShapecontainerDefinedByAroundAtomDefinedByIds implements ShapeContainerDefined {
 
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
     private char[] fourLetterCode;
     private AlgoParameters algoParameters;
-    private char[] hetAtomsLigandId;
-    private int occurrenceId;
+    private List<QueryAtomDefinedByIds> listAtomDefinedByIds;
+    private List<String> chainToIgnore;
 
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ShapecontainerDefinedByHetatm(char[] fourLetterCode, AlgoParameters algoParameters, char[] hetAtomsLigandId, int occurrenceId) {
+    public ShapecontainerDefinedByAroundAtomDefinedByIds(char[] fourLetterCode, AlgoParameters algoParameters, List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<String> chainToIgnore) {
+
         this.fourLetterCode = fourLetterCode;
         this.algoParameters = algoParameters;
-        this.hetAtomsLigandId = hetAtomsLigandId;
-        this.occurrenceId = occurrenceId;
+        this.listAtomDefinedByIds = listAtomDefinedByIds;
+        this.chainToIgnore = chainToIgnore;
     }
-
 
 
     //-------------------------------------------------------------
@@ -36,21 +40,19 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     //-------------------------------------------------------------
     @Override
     public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
-
         MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;
         }
 
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, hetAtomsLigandId, occurrenceId);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
         return shapecontainer;
     }
 
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
-
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, hetAtomsLigandId, occurrenceId);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, listAtomDefinedByIds, chainToIgnore);
         return shapecontainer;
     }
 }
