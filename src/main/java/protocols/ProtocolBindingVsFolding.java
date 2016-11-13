@@ -98,7 +98,7 @@ public class ProtocolBindingVsFolding {
 
 
         // Find same sequence occurences in sequence DB
-        String sequenceToFind = "ALAVALPROALA";
+        String sequenceToFind = "LYSGLNTHRSERVAL";
         // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
         // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
         // And it is a hit which not fit in the target following minimization
@@ -118,7 +118,8 @@ public class ProtocolBindingVsFolding {
             ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
             MyChainIfc ligand = query.getPeptide();
             List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
-
+            System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
+            hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
 
 
@@ -126,7 +127,7 @@ public class ProtocolBindingVsFolding {
         // hitsInDatabaseMod.add(hitsInDatabase.get(2));
         // hitsInDatabase = hitsInDatabaseMod;
 
-        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
+        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
         String fourLetterCodeTarget;
         String chainIdFromDB;
         for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
@@ -163,6 +164,7 @@ public class ProtocolBindingVsFolding {
 
                 } catch (ShapeBuildingException e) {
                     e.printStackTrace();
+                    continue;
                 }
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
 
@@ -176,8 +178,6 @@ public class ProtocolBindingVsFolding {
 
         }
     }
-
-
 
 
     // -------------------------------------------------------------------

@@ -178,7 +178,7 @@ public class SequenceToolsTest {
         ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) shapeContainer;
         MyChainIfc ligand = query.getPeptide();
 
-        Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = SequenceTools.findContacts(ligand, algoParameters);
+        List<QueryMonomerToTargetContactType> contacts = SequenceTools.findContacts(ligand, algoParameters);
 
         List<QueryMonomerToTargetContactType> expectedValues = new ArrayList<>();
         expectedValues.add(QueryMonomerToTargetContactType.NONE);
@@ -188,8 +188,8 @@ public class SequenceToolsTest {
         expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
 
         int count = 0;
-        for (Map.Entry<MyMonomerIfc, QueryMonomerToTargetContactType> entry : contacts.entrySet()) {
-            assertTrue(entry.getValue().equals(expectedValues.get(count)));
+        for (QueryMonomerToTargetContactType type: contacts) {
+            assertTrue(type.equals(expectedValues.get(count)));
             count += 1;
         }
     }

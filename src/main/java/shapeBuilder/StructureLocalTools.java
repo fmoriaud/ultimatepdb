@@ -110,6 +110,9 @@ public class StructureLocalTools {
 
     private static boolean applySegmentCterminal(MyAtomIfc cTerminal) {
 
+        if (cTerminal == null){
+            return false;
+        }
         int bondCountCterminal = cTerminal.getBonds().length;
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
         boolean bondCountCterminalSameMonomer = true;
@@ -139,6 +142,9 @@ public class StructureLocalTools {
 
     private static boolean applySegmentNterminal(MyAtomIfc nTerminal) {
 
+        if (nTerminal == null){
+            return false;
+        }
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
         int bondCountNterminal = nTerminal.getBonds().length;
         boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
@@ -153,6 +159,9 @@ public class StructureLocalTools {
 
     private static boolean applyStructureLocalCterminal(MyAtomIfc cTerminal) {
 
+        if (cTerminal == null){
+            return false;
+        }
         int bondCountCterminal = cTerminal.getBonds().length;
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
 
@@ -176,6 +185,10 @@ public class StructureLocalTools {
 
 
     private static boolean applyStructureLocalNterminal(MyAtomIfc nTerminal) {
+
+        if (nTerminal == null){
+            return false;
+        }
 
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
         int bondCountNterminal = nTerminal.getBonds().length;

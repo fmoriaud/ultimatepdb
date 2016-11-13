@@ -51,6 +51,7 @@ public class StructureLocalToBuildShapeSegmentOfShape implements StructureLocalT
 
 		// ligand is cloned and neighbors bond and distance should be updated
 		// Then Structure local can be built
+
 		ligand = StructureLocalTools.makeChainSegment(wholeChain, startingRankId, peptideLength, algoParameters);
 		MyChainIfc extractedSegment = StructureLocalTools.extractSubChain(wholeChain, startingRankId, peptideLength, algoParameters);
 

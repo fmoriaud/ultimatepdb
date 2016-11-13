@@ -239,15 +239,73 @@ public class SequenceTools {
 
         List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
-        findContacts(queryPeptide, algoParameters);
+        List<QueryMonomerToTargetContactType> contacts = findContacts(queryPeptide, algoParameters);
 
+        List<String> listFourLetterCodeFromDB = new ArrayList<>();
+        List<String> listChainIdFromDB = new ArrayList<>();
+        List<String> listSequence = new ArrayList<>();
+
+        Connection connexion = DatabaseTools.getNewConnection();
+        Statement stmt;
+        try {
+            stmt = connexion.createStatement();
+            String findEntry = "SELECT * from " + SequenceTools.tableName;
+            ResultSet resultFindEntry = stmt.executeQuery(findEntry);
+
+            while (resultFindEntry.next()) {
+
+                // check if all ok
+
+                listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
+                listChainIdFromDB.add(resultFindEntry.getString(2));
+                listSequence.add(resultFindEntry.getString(4));
+
+                if (listSequence.size() != listChainIdFromDB.size() ||
+                        listSequence.size() != listFourLetterCodeFromDB.size() ||
+                        listChainIdFromDB.size() != listFourLetterCodeFromDB.size()
+                        ) {
+                    System.out.println("big pb in FinSequenceInDatabaseTools.find() Terminating program");
+                    System.out.println();
+                    System.exit(0);
+                }
+            }
+        } catch (SQLException e1) {
+            System.out.println("Exception in reading whole content of DB. Program terminated");
+            System.exit(0);
+
+        }
+
+        int sequenceToFindLength = sequenceToFind.length() / 3;
+
+        for (int i = 0; i < listSequence.size(); i++) {
+            String fourLetterCode = listFourLetterCodeFromDB.get(i);
+
+
+            String chainIdFromDB = listChainIdFromDB.get(i);
+            String sequenceFromDB = listSequence.get(i);
+
+            int peptideLength = sequenceFromDB.length() / 3;
+            if (peptideLength < minLength || peptideLength > maxLength) {
+                continue;
+            }
+
+            List<Integer> rankIdList = findRankId(sequenceToFind, sequenceFromDB, contacts);
+
+            if (rankIdList.size() != 0) {
+
+                HitInSequenceDb HitInSequenceDb = new HitInSequenceDb(rankIdList, fourLetterCode, chainIdFromDB, sequenceToFindLength);
+                hitsInSequenceDb.add(HitInSequenceDb);
+            }
+        }
+
+        DatabaseTools.shutdown();
         return hitsInSequenceDb;
     }
 
 
-    public static Map<MyMonomerIfc, QueryMonomerToTargetContactType> findContacts(MyChainIfc queryPeptide, AlgoParameters algoParameters) {
+    public static List<QueryMonomerToTargetContactType> findContacts(MyChainIfc queryPeptide, AlgoParameters algoParameters) {
 
-        Map<MyMonomerIfc, QueryMonomerToTargetContactType> contacts = new LinkedHashMap<>();
+        List<QueryMonomerToTargetContactType> contacts = new ArrayList<>();
 
         // check if monomer has a close contact with backbone atoms
         // 4.5 is maybe too long. 2.5 not enough as not protonated
@@ -283,7 +341,7 @@ public class SequenceTools {
                     }
                 }
             }
-            contacts.put(monomer, currentType);
+            contacts.add(currentType);
         }
 
         return contacts;
@@ -302,12 +360,11 @@ public class SequenceTools {
 
         List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
-        Connection connexion = DatabaseTools.getNewConnection();
-
         List<String> listFourLetterCodeFromDB = new ArrayList<>();
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
 
+        Connection connexion = DatabaseTools.getNewConnection();
         Statement stmt;
         try {
             stmt = connexion.createStatement();
@@ -362,6 +419,76 @@ public class SequenceTools {
 
         DatabaseTools.shutdown();
         return hitsInSequenceDb;
+    }
+
+    public static List<Integer> findRankId(String sequenceToFind, String chainSequence, List<QueryMonomerToTargetContactType> contacts) {
+
+        List<Integer> listMatchingRankId = new ArrayList<>();
+
+        // split chain sequence into three letter codes
+        // put the three letters in a list
+        List<String> splitSequenceToFind = splitIntoThreeLetterCode(sequenceToFind);
+        List<String> splitChainSequence = splitIntoThreeLetterCode(chainSequence);
+
+        // Definition of equivalent
+        //List<List<String>> equivalentResidues = SequenceTools.generateEquivalentResidues();
+
+
+        // go through
+        A:
+        for (int rankId = 0; rankId < splitChainSequence.size(); rankId++) {
+            for (int i = 0; i < splitSequenceToFind.size(); i++) {
+
+                QueryMonomerToTargetContactType contactType = contacts.get(i);
+
+                // is that residue match the first of the sequenceToFind
+                if (rankId + i >= splitChainSequence.size()) {
+                    // reach end of chain so no match
+                    continue A;
+                }
+                String currentResidueFromChain = splitChainSequence.get(rankId + i);
+                String currentResidueFromSequenceToFind = splitSequenceToFind.get(i);
+
+                if (currentResidueFromSequenceToFind.equals("XXX")) {
+                    // match for sure
+                    continue;
+                }
+                // check if
+
+                List<String> possibleEquivalent = new ArrayList<>();
+                if (contactType.equals(QueryMonomerToTargetContactType.SIDECHAIN)) {
+                    possibleEquivalent.add(currentResidueFromSequenceToFind);
+                }
+                if (contactType.equals(QueryMonomerToTargetContactType.NONE) || contactType.equals(QueryMonomerToTargetContactType.BACKBONE_ONLY)) {
+                    // keeps empty the all is possible
+                }
+
+
+                //  possibleEquivalent = SequenceTools.generateEquivalentResidues(currentResidueFromSequenceToFind);
+                //} else {
+                //   possibleEquivalent = new ArrayList<>();
+                //   possibleEquivalent.add(currentResidueFromSequenceToFind);
+                // }
+
+                if (possibleEquivalent.isEmpty() || possibleEquivalent.contains(currentResidueFromChain)) {
+
+                    // then we have a match for current i
+                    if (i == splitSequenceToFind.size() - 1) {
+                        // we have a match here !!!
+                        //System.out.println("match !!!");
+                        listMatchingRankId.add(rankId);
+                    }
+                    continue;
+
+                } else {
+                    // we have no match so moveon
+                    continue A;
+                }
+            }
+            rankId += 1;
+        }
+
+        return listMatchingRankId;
     }
 
 
