@@ -241,6 +241,9 @@ public class SequenceTools {
 
         List<QueryMonomerToTargetContactType> contacts = findContacts(queryPeptide, algoParameters);
 
+        for (QueryMonomerToTargetContactType contact : contacts) {
+            System.out.println(contact.toString());
+        }
         List<String> listFourLetterCodeFromDB = new ArrayList<>();
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
@@ -252,9 +255,13 @@ public class SequenceTools {
             String findEntry = "SELECT * from " + SequenceTools.tableName;
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
 
+            char[] aminochainType = "AA".toCharArray();
             while (resultFindEntry.next()) {
 
-                // check if all ok
+                String chainType = resultFindEntry.getString(3);
+                if (!Arrays.equals(aminochainType, chainType.toCharArray())) {
+                    continue;
+                }
 
                 listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
                 listChainIdFromDB.add(resultFindEntry.getString(2));
@@ -313,7 +320,7 @@ public class SequenceTools {
         // TODO Doesnt work because queryPeptide from shapecontainer was cloned and has no neighbors in target
         // TODO run tests: if they fail because neighbors are missing then I have to find a solution to store protonated ligand
         // TODO with the neighbors which means I still clone by cleaning neighbors but in shape builder I put them back
-        float interactionDistanceCutoff = 2.3f;
+        float interactionDistanceCutoff = 2.4f;
         //algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_SHORTENED();
 
         Set<MyMonomerIfc> myMonomerNeighborsByDistanceToRepresentativeAtom = StructureLocalTools.makeMyMonomersLocalAroundAndExcludingMyMonomersFromInputMyChain(queryPeptide);
@@ -356,7 +363,7 @@ public class SequenceTools {
      * @param useSimilarSequences if true then equivalent residues are considered in the matching
      * @return list of Hit in the DB which have a rankid which is the same as the startingid to make segment of chain
      */
-    public static List<HitInSequenceDb> find(int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences) {
+    public static List<HitInSequenceDb> find(String tableName, int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences) {
 
         List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
@@ -368,12 +375,15 @@ public class SequenceTools {
         Statement stmt;
         try {
             stmt = connexion.createStatement();
-            String findEntry = "SELECT * from " + SequenceTools.tableName;
+            String findEntry = "SELECT * from " + tableName;
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
-
+            char[] aminochainType = "AA".toCharArray();
             while (resultFindEntry.next()) {
 
-                // check if all ok
+                String chainType = resultFindEntry.getString(3);
+                if (!Arrays.equals(aminochainType, chainType.toCharArray())) {
+                    continue;
+                }
 
                 listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
                 listChainIdFromDB.add(resultFindEntry.getString(2));

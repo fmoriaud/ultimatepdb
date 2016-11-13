@@ -141,7 +141,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
         int peptideLength = sequenceToFind.length() / 3;
 
         boolean useSimilarSequences = false;
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFind, useSimilarSequences);
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
 
         String fourLetterCodeTarget;

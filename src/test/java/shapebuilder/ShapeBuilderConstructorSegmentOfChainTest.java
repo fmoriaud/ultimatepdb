@@ -2,6 +2,8 @@ package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import database.HitInSequenceDb;
+import database.SequenceTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
@@ -10,7 +12,9 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
 import protocols.ShapeContainerFactory;
+import protocols.ShapecontainerDefinedBySegmentOfChain;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
@@ -19,6 +23,7 @@ import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -30,35 +35,21 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     @Test
     public void testShapeBuilderConstructorLinearPeptide() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "X".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode = "2ce8";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        char[] fourLetterCode = "2ce8".toCharArray();
+        char[] chainId = "X".toCharArray();
         int startingRankId = 2;
         int peptideLength = 4;
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, startingRankId, peptideLength);
+            shape = shapecontainerDefined.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
+
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         assertTrue(shape.getShape().getSize() == 666);
         assertTrue(shape.getMiniShape().size() == 39);
@@ -80,36 +71,21 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     @Test
     public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        char[] fourLetterCode = "2yjd".toCharArray();
+        char[] chainId = "C".toCharArray();
         int startingRankId = 3;
         int peptideLength = 4;
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, startingRankId, peptideLength);
+            shape = shapecontainerDefined.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
 
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         // don't know if it is good, it is as it is now.
         // especially because ACE and NH2 were moved...
@@ -147,35 +123,56 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     @Test
     public void testShapeBuilderConstructorProblemeticCase() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "B".toCharArray();
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        String fourLetterCode = "4ddg";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        char[] fourLetterCode = "4ddg".toCharArray();
+        char[] chainId = "B".toCharArray();
         int startingRankId = 278;
         int peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, startingRankId, peptideLength);
+            shape = shapecontainerDefined.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
-        System.out.println();
+
+    }
+
+
+    @Test
+    public void testRankId() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
+        char[] fourLetterCode = "2ce8".toCharArray();
+        char[] chainId = "X".toCharArray();
+        int startingRankId = 2;
+        int peptideLength = 4;
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
+        ShapeContainerIfc shape = null;
+        try {
+            shape = shapecontainerDefined.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        ShapeContainerWithPeptide shapeWithPeptide = (ShapeContainerWithPeptide) shape;
+        List<char[]> sequence = shapeWithPeptide.getPeptideSequence();
+
+        StringBuilder sb = new StringBuilder();
+        for (char[] threeLetterCode : sequence) {
+            sb.append(String.valueOf(threeLetterCode));
+        }
+        String peptideSequence = sb.toString();
+
+        int minLength = 4;
+        int maxLength = 1000;
+
+        boolean useSimilarSequences = false;
+        List<HitInSequenceDb> sequenceHit = SequenceTools.find(Tools.testTableName, minLength, maxLength, peptideSequence, useSimilarSequences);
+        List<Integer> rankIds = sequenceHit.get(0).getListRankIds();
+        int matchingRankId = rankIds.get(0);
+
+        assertTrue(matchingRankId == startingRankId);
     }
 }

@@ -69,6 +69,7 @@ public class ProtocolBindingVsFolding {
     public static void main(String[] args) throws ParsingConfigFileException {
 
         ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("1be9", "B");
+        //ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("3erd", "D"); // C leads to poor contacts
         // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
 
         protocol.run();
@@ -98,7 +99,8 @@ public class ProtocolBindingVsFolding {
 
 
         // Find same sequence occurences in sequence DB
-        String sequenceToFind = "LYSGLNTHRSERVAL";
+        String sequenceToFind = "LYSGLNTHRSERVAL"; // 1be9
+        //String sequenceToFind = "HISLYSILELEUHISARGLEULEUGLNASPSER"; // 3erd
         // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
         // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
         // And it is a hit which not fit in the target following minimization
@@ -110,7 +112,7 @@ public class ProtocolBindingVsFolding {
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
         boolean useSimilarSequences = false;
 
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(peptideLength, 1000, sequenceToFind, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFind, useSimilarSequences);
 
 
         if (queryShape instanceof ShapeContainerWithPeptide) {
@@ -119,6 +121,8 @@ public class ProtocolBindingVsFolding {
             MyChainIfc ligand = query.getPeptide();
             List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
             System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
+            System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
+
             hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
 
@@ -127,7 +131,6 @@ public class ProtocolBindingVsFolding {
         // hitsInDatabaseMod.add(hitsInDatabase.get(2));
         // hitsInDatabase = hitsInDatabaseMod;
 
-        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
         String fourLetterCodeTarget;
         String chainIdFromDB;
         for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {

@@ -28,7 +28,6 @@ public class SafeUltiJmolUsage {
     }
 
 
-
     public void run() {
 
         UltiJmol1462 ultiJmol = null;
@@ -40,7 +39,7 @@ public class SafeUltiJmolUsage {
             results.putAll(doMyJmolTaskIfc.getResults());
             results.put(Results.CONVERGENCE_REACHED, convergenceStatus);
 
-                    //results.put("status", "success");
+            //results.put("status", "success");
         } catch (Exception e) {
 
             results.put(Results.STATUS, "ultiJmol crash");
@@ -54,7 +53,7 @@ public class SafeUltiJmolUsage {
                 e1.printStackTrace();
             }
             // write in result that is was an error
-
+            return;
 
         }
 
