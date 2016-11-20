@@ -74,29 +74,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 
         }
 
-        List<TriangleInteger> listTriangleShape1 = shapeContainerQuery.getListTriangleOfPointsFromMinishape();
-        List<TriangleInteger> listTriangleShape2 = shapeContainerAnyShape.getListTriangleOfPointsFromMinishape();
-        System.out.println("compairing " + listTriangleShape1.size() + " triangles from query to " + listTriangleShape2.size() + " from potential hit");
-        System.out.println(shapeContainerAnyShape.getMiniShape().size() + " objects");
-
-
-        List<PairingAndNullSpaces> listPairingTriangleSeed = getTrianglePairingAndNullSpaces(listTriangleShape1, listTriangleShape2);
-
-        System.out.println("scoring " + listPairingTriangleSeed.size() + " pairs of triangles");
-
-        ScorePairing scorePairingBasedOnMinishape = new ScorePairing(shapeContainerQuery.getMiniShape(), shapeContainerAnyShape.getMiniShape(), algoParameters);
-        List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = null;
-        resultsPairingTriangleSeed = scorePairingBasedOnMinishape.getCostOfaListOfPairing(listPairingTriangleSeed);
-        Collections.sort(resultsPairingTriangleSeed, new LowestCostPairingComparator());
-
-        if (resultsPairingTriangleSeed.size() == 0) {
-            return emptyList;
-        }
-
-//		List<ResultsFromEvaluateCost> diverseList = new ArrayList<>();
-//		diverseList.add(resultsPairingTriangleSeed.get(0));
-
-        selectResultsByDiversityOfTransAndRotUsingHashSet(resultsPairingTriangleSeed);
+        List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
 
         List<PairingAndNullSpaces> listExtendedPair = getExtendedPairingAndNullSpaces(resultsPairingTriangleSeed);
 
@@ -149,45 +127,6 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
         return listExtendedPair;
     }
 
-
-
-    private List<PairingAndNullSpaces> getTrianglePairingAndNullSpaces(List<TriangleInteger> listTriangleShape1, List<TriangleInteger> listTriangleShape2) {
-
-        int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
-        int threshold = listTriangleShape1.size() / countOfSubpacket + 1;
-        if (threshold < 2){
-            threshold = 2;
-        }
-        ForkJoinPool pool = new ForkJoinPool();
-        FindMatchingTriangleRecursiveTask computeTriangleSeedExtentions = new FindMatchingTriangleRecursiveTask(0, listTriangleShape1.size() - 1, threshold, listTriangleShape1, listTriangleShape2, shapeContainerQuery, shapeContainerAnyShape, algoParameters);
-        List<PairingAndNullSpaces> listPairingTriangleSeed = pool.invoke(computeTriangleSeedExtentions);
-        pool.shutdownNow();
-        return listPairingTriangleSeed;
-    }
-
-
-    /**
-     * This method filters a list of results based on the trans vector and rot matrix to align hit on query.
-     * It is based on a HashSet so the equals and hashcode of ResultsFromEvaluateCost is critical on the filtering
-     *
-     * @param resultsPairingTriangleSeed a list of results to filter
-     */
-    private void selectResultsByDiversityOfTransAndRotUsingHashSet(List<ResultsFromEvaluateCost> resultsPairingTriangleSeed) {
-
-        System.out.println(resultsPairingTriangleSeed.size() + " trieangle hits scored for " + String.valueOf(shapeContainerAnyShape.getFourLetterCode()));
-
-        Set<ResultsFromEvaluateCost> uniqueSet = new HashSet<>();
-        System.out.println("size of triangle matches before = " + resultsPairingTriangleSeed.size());
-        for (ResultsFromEvaluateCost result : resultsPairingTriangleSeed) {
-            boolean added = uniqueSet.add(result);
-            //System.out.println(added + "  " + uniqueSet.size());
-        }
-
-        resultsPairingTriangleSeed.clear();
-        resultsPairingTriangleSeed.addAll(uniqueSet);
-
-        System.out.println("size of triangle matches after diversity filter = " + resultsPairingTriangleSeed.size());
-    }
 
 
     private static boolean checkDistanceToOutside(ResultsFromEvaluateCost result, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
@@ -257,20 +196,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
     }
 
 
-    private class LowestCostPairingComparator implements Comparator<ResultsFromEvaluateCost> {
 
-        @Override
-        public int compare(ResultsFromEvaluateCost cost1, ResultsFromEvaluateCost cost2) {
-
-            if (cost1.getCost() > cost2.getCost()) {
-                return 1;
-            }
-            if (cost1.getCost() < cost2.getCost()) {
-                return -1;
-            }
-            return 0;
-        }
-    }
 
 
 //	private boolean isItTooCloseToOneAlreadyThere(List<ResultsFromEvaluateCost> listResults, ResultsFromEvaluateCost candidateResult){

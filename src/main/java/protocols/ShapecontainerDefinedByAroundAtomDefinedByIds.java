@@ -22,6 +22,7 @@ public class ShapecontainerDefinedByAroundAtomDefinedByIds implements ShapeConta
     private AlgoParameters algoParameters;
     private List<QueryAtomDefinedByIds> listAtomDefinedByIds;
     private List<String> chainToIgnore;
+    private MyStructureIfc myStructure;
 
     //-------------------------------------------------------------
     // Constructor
@@ -40,7 +41,7 @@ public class ShapecontainerDefinedByAroundAtomDefinedByIds implements ShapeConta
     //-------------------------------------------------------------
     @Override
     public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
-        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
+        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;
@@ -52,7 +53,13 @@ public class ShapecontainerDefinedByAroundAtomDefinedByIds implements ShapeConta
 
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
+        this.myStructure = myStructureTarget;
         ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, listAtomDefinedByIds, chainToIgnore);
         return shapecontainer;
+    }
+
+    @Override
+    public MyStructureIfc getMyStructure() {
+        return myStructure;
     }
 }

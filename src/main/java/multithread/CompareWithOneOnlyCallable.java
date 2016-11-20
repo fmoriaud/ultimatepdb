@@ -17,7 +17,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     // Class members
     //-------------------------------------------------------------
     private final ShapeContainerIfc shapeContainerQuery;
-    private final ShapeContainerDefined shapeContainerDefined;
+    private final ShapeContainerDefined shapeContainerDefinedTarget;
     private final AlgoParameters algoParameters;
     private MyStructureIfc myStructureTarget;
     private final boolean minimizeAllIfTrueOrOnlyOneIfFalse;
@@ -25,10 +25,18 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
+
+    /**
+     * Compare a ShapeContainer already built to a ShapeContainerDefined which needs to read mmCIF file and build Shapecontainer
+     * @param minimizeAllIfTrueOrOnlyOneIfFalse
+     * @param shapeContainerQuery
+     * @param shapeContainerDefined
+     * @param algoParameters
+     */
     public CompareWithOneOnlyCallable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
-        this.shapeContainerDefined = shapeContainerDefined;
+        this.shapeContainerDefinedTarget = shapeContainerDefined;
         this.algoParameters = algoParameters;
         this.minimizeAllIfTrueOrOnlyOneIfFalse = minimizeAllIfTrueOrOnlyOneIfFalse;
     }
@@ -37,7 +45,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     public CompareWithOneOnlyCallable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, MyStructureIfc myStructureTarget, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
-        this.shapeContainerDefined = shapeContainerDefined;
+        this.shapeContainerDefinedTarget = shapeContainerDefined;
         this.algoParameters = algoParameters;
         this.myStructureTarget = myStructureTarget;
         this.minimizeAllIfTrueOrOnlyOneIfFalse = minimizeAllIfTrueOrOnlyOneIfFalse;
@@ -53,9 +61,9 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
 
         ShapeContainerIfc targetShape = null;
         if (myStructureTarget != null) {
-            targetShape = shapeContainerDefined.getShapecontainer(myStructureTarget);
+            targetShape = shapeContainerDefinedTarget.getShapecontainer(myStructureTarget);
         } else {
-            targetShape = shapeContainerDefined.getShapecontainer();
+            targetShape = shapeContainerDefinedTarget.getShapecontainer();
         }
 
         System.out.println("Finish Built a shape container");

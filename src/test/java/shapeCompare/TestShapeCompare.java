@@ -29,6 +29,16 @@ import static org.junit.Assert.assertTrue;
 
 public class TestShapeCompare {
 
+    /**
+     * Use ShapeContainerDefined fro both Shape.
+     * @throws ExceptionInScoringUsingBioJavaJMolGUI
+     * @throws ReadingStructurefileException
+     * @throws ExceptionInMyStructurePackage
+     * @throws CommandLineException
+     * @throws ParsingConfigFileException
+     * @throws ShapeBuildingException
+     * @throws IOException
+     */
     @Test
     public void testCompareTwoKinaseLigandShape() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
@@ -44,6 +54,7 @@ public class TestShapeCompare {
         char[] fourLetterCode1a9u = "1a9u".toCharArray();
         char[] hetAtomsLigandId1a9u = "SB2".toCharArray();
 
+
         ShapeContainerDefined shapeContainerDefined1a9u = new ShapecontainerDefinedByHetatm(fourLetterCode1a9u, algoParameters, hetAtomsLigandId1a9u, occurrenceId);
         ShapeContainerIfc shapeContainer1a9u = shapeContainerDefined1a9u.getShapecontainer();
 
@@ -57,11 +68,11 @@ public class TestShapeCompare {
             e.printStackTrace();
         }
 
-        assertTrue(listBestHitForEachAndEverySeed.size() == 2);
+        assertTrue(listBestHitForEachAndEverySeed.size() == 1);
         float coverageTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getRatioPairedPointInQuery();
-        assertEquals(coverageTopHit, 0.654, 0.001);
+        assertEquals(coverageTopHit, 0.657, 0.001);
         double costTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCost();
-        assertEquals(costTopHit, 0.038, 0.001);
+        assertEquals(costTopHit, 0.068, 0.001);
 
 
         /*

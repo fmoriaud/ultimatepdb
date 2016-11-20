@@ -10,6 +10,7 @@ import shapeBuilder.ShapeBuildingException;
 public interface ShapeContainerDefined {
 
 
+    MyStructureIfc getMyStructure();
     ShapeContainerIfc getShapecontainer() throws ShapeBuildingException;
     ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException;
 

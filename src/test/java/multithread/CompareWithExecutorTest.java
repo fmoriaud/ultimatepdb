@@ -140,4 +140,69 @@ public class CompareWithExecutorTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
+
+
+    /**
+     * Callable built with an already built ShapeContainerIfc as query and a ShapecontainerDefined as Target.
+     * This callable is meant for protocols comparing always the same query to any target.
+     * @throws ExceptionInScoringUsingBioJavaJMolGUI
+     * @throws ReadingStructurefileException
+     * @throws ExceptionInMyStructurePackage
+     * @throws CommandLineException
+     * @throws ParsingConfigFileException
+     * @throws ShapeBuildingException
+     * @throws IOException
+     */
+    @Test
+    public void testCompareTwoKinaseLigandShape() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
+        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(1);
+        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
+
+        char[] fourLetterCode1bmk = "1bmk".toCharArray();
+        char[] hetAtomsLigandId1bmk = "SB5".toCharArray();
+        int occurrenceId = 1;
+        ShapeContainerDefined shapeContainerDefined1bmk = new ShapecontainerDefinedByHetatm(fourLetterCode1bmk, algoParameters, hetAtomsLigandId1bmk, occurrenceId);
+        ShapeContainerIfc shapeContainer1bmk = shapeContainerDefined1bmk.getShapecontainer();
+
+        char[] fourLetterCode1a9u = "1a9u".toCharArray();
+        char[] hetAtomsLigandId1a9u = "SB2".toCharArray();
+
+        ShapeContainerDefined shapeContainerDefined1a9u = new ShapecontainerDefinedByHetatm(fourLetterCode1a9u, algoParameters, hetAtomsLigandId1a9u, occurrenceId);
+
+        boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+        CompareWithOneOnlyCallable callableToLauch = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, shapeContainer1bmk, shapeContainerDefined1a9u, algoParameters);
+
+        Future<Boolean> future = executorService.submit(callableToLauch);
+
+        boolean succes = false;
+        boolean notFinished = true;
+        while (true && notFinished) {
+
+            try {
+                Thread.sleep(100000);
+                succes = future.get();
+                notFinished = false;
+
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        assertTrue(succes == true);
+        executorService.shutdown();
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+    }
 }

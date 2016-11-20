@@ -182,9 +182,9 @@ public class SequenceToolsTest {
 
         List<QueryMonomerToTargetContactType> expectedValues = new ArrayList<>();
         expectedValues.add(QueryMonomerToTargetContactType.NONE);
-        expectedValues.add(QueryMonomerToTargetContactType.NONE);
+        expectedValues.add(QueryMonomerToTargetContactType.BACKBONE_ONLY);
         expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
-        expectedValues.add(QueryMonomerToTargetContactType.NONE);
+        expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
         expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
 
         int count = 0;

@@ -2,7 +2,6 @@ package protocols;
 
 import database.HitInSequenceDb;
 import database.SequenceTools;
-import multithread.CompareOneOnlyRunnable;
 import multithread.CompareWithOneOnlyCallable;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;

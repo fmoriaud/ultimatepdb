@@ -54,9 +54,11 @@ public class ProtocolTools {
                 continue A;
             }
 
-            HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
-            String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
-            ControllerLoger.logger.log(Level.INFO, message);
+            if (hit instanceof HitPeptideWithQueryPeptide) {
+                HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
+                String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
+                ControllerLoger.logger.log(Level.INFO, message);
+            }
 
             if (minimizeAllIfTrueOrOnlyOneIfFalse == false){
                 break;

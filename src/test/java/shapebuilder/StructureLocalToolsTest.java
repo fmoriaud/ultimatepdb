@@ -10,7 +10,10 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
+import parameters.QueryAtomDefinedByIds;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
+import shapeBuilder.StructureLocalToBuildAnyShape;
 import shapeBuilder.StructureLocalTools;
 
 import java.io.IOException;
@@ -27,11 +30,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class StructureLocalToolsTest {
 
-    @Test
-    public void testMethodMakeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain() throws IOException, ParsingConfigFileException {
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+    // TODO what do we expect for neighbors in ligand, in structurelocal ??
+
+    @Test
+    public void testSegmentOfChain() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2ce8";
         BiojavaReader reader = new BiojavaReader();
@@ -50,75 +55,74 @@ public class StructureLocalToolsTest {
             assertTrue(false);
         }
 
-        MyChainIfc inputChain = myStructureGlobalBrut.getAminoMyChain("X".toCharArray());
-
+        char[] chainId = "X".toCharArray();
         int rankIdinChain = 2;
         int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.extractSubChain(inputChain, rankIdinChain, peptideLength, algoParameters);
 
 
-        MyStructureIfc structureLocal = StructureLocalTools.makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, segmentOfChain, algoParameters);
-        MyMonomerIfc monomerOnLeft = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(2);
-        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("C".toCharArray()) == null);
-        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("O".toCharArray()) == null);
-        assertTrue(monomerOnLeft.getMyAtomFromMyAtomName("N".toCharArray()) != null);
-
-        MyMonomerIfc monomerOnRight = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(6);
-        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("C".toCharArray()) != null);
-        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("O".toCharArray()) != null);
-        assertTrue(monomerOnRight.getMyAtomFromMyAtomName("N".toCharArray()) == null);
-
-        int finalCount = algoParameters.ultiJMolBuffer.getSize();
-        assertTrue(finalCount == initialCount);
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
         try {
-            for (int i = 0; i < initialCount; i++) {
-                algoParameters.ultiJMolBuffer.get().frame.dispose();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-    }
-
-
-    @Test
-    public void testMethodExtractSubChain() throws IOException, ParsingConfigFileException {
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
-
-        String fourLetterCode = "2ce8";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, rankIdinChain, peptideLength, algoParameters);
+        } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
+        // assume it is ok like it is
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 30);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomers().length == 6);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(3) == null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(4) == null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(5) == null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(1) != null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(2) != null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(6) != null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(7) != null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(8) != null);
+        assertTrue(structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(9) != null);
+
+
+        // Test deletion of atoms on StructureLocal
+        MyMonomerIfc monomerOnLeftStructureLocal = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(2);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        MyMonomerIfc monomerOnRightStructureLocal = structureLocal.getAminoMyChain("X".toCharArray()).getMyMonomerFromResidueId(6);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+
+        // test on monomersToDiscard: they must covert the MyMonomers from segment of chain
+        // AND be in myStructureGlobalBrut if we want to reuse them in the same myStructureGlobalBrut
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == peptideLength);
+
+        MyChainIfc ligandChain = myStructureGlobalBrut.getAminoMyChain(chainId);
+        List<MyMonomerIfc> monomersFromLigandChain = MyStructureTools.makeListFromArray(ligandChain.getMyMonomers());
+        for (MyMonomerIfc myMonomerToDiscard : monomersToDiscard) {
+            assertTrue(monomersFromLigandChain.contains(myMonomerToDiscard));
         }
 
-        // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
-        MyChainIfc inputChain = mystructure.getAminoMyChain("X".toCharArray());
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == peptideLength);
 
-        int rankIdinChain = 2;
-        int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.extractSubChain(inputChain, rankIdinChain, peptideLength, algoParameters);
-        assertTrue(segmentOfChain.getMyMonomers().length == 3);
-        // SER ILE ASP
-        assertArrayEquals(segmentOfChain.getMyMonomerByRank(0).getThreeLetterCode(), "SER".toCharArray());
-        assertArrayEquals(segmentOfChain.getMyMonomerByRank(1).getThreeLetterCode(), "ILE".toCharArray());
-        assertArrayEquals(segmentOfChain.getMyMonomerByRank(2).getThreeLetterCode(), "ASP".toCharArray());
+        // Test deletion of atoms on ligand
+        MyMonomerIfc monomerOnLeftLigand = ligand.getMyMonomerByRank(0);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("N".toCharArray()) == null);
 
-        // Check peptide bonds
-        MyAtomIfc n1 = segmentOfChain.getMyMonomers()[1].getMyAtomFromMyAtomName("N".toCharArray());
-        MyAtomIfc c0 = segmentOfChain.getMyMonomers()[0].getMyAtomFromMyAtomName("C".toCharArray());
+        MyMonomerIfc monomerOnRightLigand = ligand.getMyMonomerByRank(2);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // Check peptide bonds in between 0 and 1
+        MyAtomIfc n1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = ligand.getMyMonomerByRank(0).getMyAtomFromMyAtomName("C".toCharArray());
         boolean foundPeptideBond = false;
         for (MyBondIfc bond : n1.getBonds()) {
             if (bond.getBondedAtom() == c0) {
@@ -127,8 +131,8 @@ public class StructureLocalToolsTest {
         }
         assertTrue(foundPeptideBond);
 
-        MyAtomIfc n2 = segmentOfChain.getMyMonomers()[2].getMyAtomFromMyAtomName("N".toCharArray());
-        MyAtomIfc c1 = segmentOfChain.getMyMonomers()[1].getMyAtomFromMyAtomName("C".toCharArray());
+        MyAtomIfc n2 = ligand.getMyMonomerByRank(2).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("C".toCharArray());
         foundPeptideBond = false;
         for (MyBondIfc bond : n2.getBonds()) {
             if (bond.getBondedAtom() == c1) {
@@ -136,163 +140,13 @@ public class StructureLocalToolsTest {
             }
         }
         assertTrue(foundPeptideBond);
-
-        int finalCount = algoParameters.ultiJMolBuffer.getSize();
-        assertTrue(finalCount == initialCount);
-        try {
-            for (int i = 0; i < initialCount; i++) {
-                algoParameters.ultiJMolBuffer.get().frame.dispose();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
     @Test
-    public void testMethodMakeChainSegment() throws IOException, ParsingConfigFileException {
+    public void testWholeChain() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
-
-        String fourLetterCode = "2ce8";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
-        MyChainIfc inputChain = mystructure.getAminoMyChain("X".toCharArray());
-        assertTrue(inputChain.getMyMonomers().length == 9);
-
-        int rankIdinChain = 2;
-        int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegment(inputChain, rankIdinChain, peptideLength, algoParameters);
-        assertTrue(segmentOfChain.getMyMonomers().length == 3);
-        // In this chain the monomers id goes from 0 to 12 so easy to test
-        for (int i = 0; i < segmentOfChain.getMyMonomers().length; i++) {
-            assertTrue(segmentOfChain.getMyMonomers()[i].getResidueID() == (i + rankIdinChain + 1));
-        }
-
-        // Check if bonds are ok
-        List<MyAtomIfc> atomsInSEgment = new ArrayList<>();
-
-        for (MyMonomerIfc monomer : segmentOfChain.getMyMonomers()) {
-            MyAtomIfc[] atoms = monomer.getMyAtoms();
-            for (MyAtomIfc atom : atoms) {
-                if (!atomsInSEgment.contains(atom)) {
-                    atomsInSEgment.add(atom);
-                }
-            }
-        }
-        for (MyAtomIfc atom : atomsInSEgment) {
-            assertTrue(atom.getBonds() != null && atom.getBonds().length != 0);
-            for (MyBondIfc bond : atom.getBonds()) {
-                if (atomsInSEgment.contains(bond.getBondedAtom()) == false) {
-                    System.out.println();
-                }
-                assertTrue(atomsInSEgment.contains(bond.getBondedAtom()));
-            }
-        }
-
-        // Check peptide bonds
-        MyAtomIfc n1 = segmentOfChain.getMyMonomers()[1].getMyAtomFromMyAtomName("N".toCharArray());
-        MyAtomIfc c0 = segmentOfChain.getMyMonomers()[0].getMyAtomFromMyAtomName("C".toCharArray());
-        boolean foundPeptideBond = false;
-        for (MyBondIfc bond : n1.getBonds()) {
-            if (bond.getBondedAtom() == c0) {
-                foundPeptideBond = true;
-            }
-        }
-        assertTrue(foundPeptideBond);
-
-        // Check bonds at tip
-        MyAtomIfc nTerminal = MyStructureTools.getNterminal(segmentOfChain);
-        assertTrue(nTerminal == null); // there is no Nterminal in segment
-        MyAtomIfc caNTerminal = MyStructureTools.getCaNterminal(segmentOfChain);
-
-
-        // caNterminal has two bonds to C and CB
-        assertTrue(caNTerminal.getBonds().length == 2);
-        boolean cFound = false;
-        boolean cbFound = false;
-        for (MyBondIfc bond : caNTerminal.getBonds()) {
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "C".toCharArray())) {
-                cFound = true;
-            }
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CB".toCharArray())) {
-                cbFound = true;
-            }
-        }
-        assertTrue(cFound);
-        assertTrue(cbFound);
-
-        MyAtomIfc cTerminal = MyStructureTools.getCterminal(segmentOfChain);
-        assertTrue(cTerminal == null); // there is no Cterminal in segment
-        MyAtomIfc oTerminal = MyStructureTools.getOterminal(segmentOfChain);
-        assertTrue(oTerminal == null); // there is no Cterminal in segment
-
-        MyAtomIfc caCTerminal = MyStructureTools.getCaCterminal(segmentOfChain);
-
-        // caCTerminal has two bonds: to N and to CB of the same monomer
-        assertTrue(caCTerminal.getBonds().length == 2);
-        MyBondIfc[] bonds = caCTerminal.getBonds();
-        cbFound = false;
-        boolean nFound = false;
-        for (MyBondIfc bond : bonds) {
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "N".toCharArray())) {
-                nFound = true;
-            }
-            if (Arrays.equals(bond.getBondedAtom().getAtomName(), "CB".toCharArray())) {
-                cbFound = true;
-            }
-        }
-        assertTrue(cbFound);
-        assertTrue(nFound);
-
-        List<MyMonomerIfc> monomersInSegment = MyStructureTools.makeListFromArray(segmentOfChain.getMyMonomers());
-        // Check neighbors
-        for (MyMonomerIfc monomer : segmentOfChain.getMyMonomers()) {
-            for (MyChainIfc neighborsByDistance : monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance()) {
-                for (MyMonomerIfc neighborByDistance : neighborsByDistance.getMyMonomers()) {
-                    assertTrue(monomersInSegment.contains(neighborByDistance));
-                }
-            }
-        }
-
-        int finalCount = algoParameters.ultiJMolBuffer.getSize();
-        assertTrue(finalCount == initialCount);
-        try {
-            for (int i = 0; i < initialCount; i++) {
-                algoParameters.ultiJMolBuffer.get().frame.dispose();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
-    }
-
-
-    @Ignore
-    @Test
-    public void testMethodMakeChainSegmentStappledPeptide() throws IOException, ParsingConfigFileException {
-
-        char[] chainId = "C".toCharArray();
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2yjd";
         BiojavaReader reader = new BiojavaReader();
@@ -304,77 +158,50 @@ public class StructureLocalToolsTest {
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
+        MyStructureIfc myStructureGlobalBrut = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
-        // Chain C is a peptide bound and has 13 monomers
-        MyChainIfc inputChain = mystructure.getAminoMyChain("C".toCharArray());
-        assertTrue(inputChain.getMyMonomers().length == 13);
+        char[] chainId = "C".toCharArray();
 
-        int rankIdinChain = 2;
-        int peptideLength = 3;
-        MyChainIfc segmentOfChain = StructureLocalTools.makeChainSegment(inputChain, rankIdinChain, peptideLength, algoParameters);
-        assertTrue(segmentOfChain.getMyMonomers().length == 3);
-        // In this chain the monomers id goes from 0 to 12 so easy to test
-        for (int i = 0; i < segmentOfChain.getMyMonomers().length; i++) {
-            assertTrue(segmentOfChain.getMyMonomers()[i].getResidueID() == i);
-        }
 
-        // Check if bonds are ok
-        List<MyAtomIfc> atomsInSEgment = new ArrayList<>();
-
-        for (MyMonomerIfc monomer : segmentOfChain.getMyMonomers()) {
-            MyAtomIfc[] atoms = monomer.getMyAtoms();
-            for (MyAtomIfc atom : atoms) {
-                if (!atomsInSEgment.contains(atom)) {
-                    atomsInSEgment.add(atom);
-                }
-            }
-        }
-        for (MyAtomIfc atom : atomsInSEgment) {
-            assertTrue(atom.getBonds() != null && atom.getBonds().length != 0);
-            for (MyBondIfc bond : atom.getBonds()) {
-                assertTrue(atomsInSEgment.contains(bond.getBondedAtom()));
-            }
-        }
-
-        MyMonomerIfc firstMonomer = segmentOfChain.getMyMonomers()[0];
-        MyMonomerIfc lastMonomer = segmentOfChain.getMyMonomers()[segmentOfChain.getMyMonomers().length - 1];
-        MyAtomIfc nTerminal = firstMonomer.getMyAtomFromMyAtomName("N".toCharArray());
-        MyAtomIfc cTerminal = lastMonomer.getMyAtomFromMyAtomName("C".toCharArray());
-        // Nterminal has only one bon to CA of the same monomer
-        assertTrue(nTerminal.getBonds().length == 1);
-        assertTrue(nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent());
-        assertArrayEquals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
-        // Cterminal has two bonds: to O and to CA of the same monomer
-        assertTrue(cTerminal.getBonds().length == 2);
-        MyBondIfc[] bonds = cTerminal.getBonds();
-
-        int finalCount = algoParameters.ultiJMolBuffer.getSize();
-        assertTrue(finalCount == initialCount);
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
         try {
-            for (int i = 0; i < initialCount; i++) {
-                algoParameters.ultiJMolBuffer.get().frame.dispose();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
         }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
 
+        // test structureLocal
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 32);
+        assertTrue(structureLocal.getAminoMyChain("C".toCharArray()) == null);
+
+
+        // test monomersToDiscard
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == myStructureGlobalBrut.getAminoMyChain("C".toCharArray()).getMyMonomers().length);
+
+        for (MyMonomerIfc monomer : myStructureGlobalBrut.getAminoMyChain("C".toCharArray()).getMyMonomers()) {
+            assertTrue(monomersToDiscard.contains(monomer));
+        }
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == myStructureGlobalBrut.getAminoMyChain("C".toCharArray()).getMyMonomers().length);
     }
 
 
     @Test
-    public void testMethodfindTipsSegmentOfChain() throws IOException, ParsingConfigFileException {
+    public void testHetatm() throws IOException, ParsingConfigFileException {
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
-        String fourLetterCode = "2yjd";
+        String fourLetterCode = "1di9";
         BiojavaReader reader = new BiojavaReader();
         Structure mmcifStructure = null;
         try {
@@ -384,33 +211,84 @@ public class StructureLocalToolsTest {
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
+        MyStructureIfc myStructureGlobalBrut = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
-        // Chain C is a peptide bound and has 13 monomers
-        char[] chainId = "C".toCharArray();
-        MyChainIfc wholeChain = mystructure.getAminoMyChain(chainId);
-        MyChainIfc ligand = null;
-        int startingRankId = 0;
-        int peptideLength = 4;
-        int tipMonoMerDistance = 2;
-        // List<MyMonomerIfc> tipMonomers = StructureLocalTools.findTipsSegmentOfChain(wholeChain, ligand, startingRankId, peptideLength, tipMonoMerDistance);
+        char[] hetAtomsLigandId = "MSQ".toCharArray();
+        int occurrenceId = 1;
 
-        int finalCount = algoParameters.ultiJMolBuffer.getSize();
-        assertTrue(finalCount == initialCount);
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
         try {
-            for (int i = 0; i < initialCount; i++) {
-                algoParameters.ultiJMolBuffer.get().frame.dispose();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, hetAtomsLigandId, occurrenceId, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
         }
-        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
 
+        // test structureLocal
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 39);
+
+        // test monomersToDiscard
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == 0);
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == 1);
+        System.out.println();
     }
 
+
+    @Test
+    public void testAtomIds() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        String fourLetterCode = "1di9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
+        String chainQuery = "A";
+        int residueId = 168;
+        String atomName = "OD2";
+        float radiusForQueryAtomsDefinedByIds = 8;
+        QueryAtomDefinedByIds queryAtomDefinedByIds = new QueryAtomDefinedByIds(fourLetterCode, chainQuery, residueId, atomName, radiusForQueryAtomsDefinedByIds);
+        listAtomDefinedByIds.add(queryAtomDefinedByIds);
+
+        List<String> chainToIgnore = new ArrayList<>();
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        // TODO problem the structure local contains the hetatm chain with MSQ
+        // Should be fine as hetatm are not used in shape, except a few ones like HEM
+        System.out.println();
+    }
+
+
+    public void testAtomIdsWithChainToIgnore() throws IOException, ParsingConfigFileException {
+
+    }
 }

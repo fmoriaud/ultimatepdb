@@ -62,6 +62,7 @@ public class HitTools {
                // MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
 
 
+                // TODO is it already protonated?, should be now ...
                 Protonate protonate = new Protonate(myStructurePeptide, algoParameters);
                 try {
                     protonate.compute();

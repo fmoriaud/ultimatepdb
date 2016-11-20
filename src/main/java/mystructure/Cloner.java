@@ -159,9 +159,31 @@ public class Cloner {
             MyStructureIfc rotatedClone = getRotatedCloneMyStructure(result);
             return rotatedClone;
         }
+
+        if (myChain != null) {
+            MyStructureIfc rotatedClone = getRotatedCloneMyChain(result);
+            return rotatedClone;
+        }
         return null;
     }
 
+
+    private MyStructureIfc getRotatedCloneMyChain(ResultsFromEvaluateCost result) {
+
+        MyStructureIfc rotatedClone = makeClone(myChain, algoParameters);
+
+        for (MyChainIfc chain : rotatedClone.getAllChains()) {
+            for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+                for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
+                    RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
+                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
+                }
+            }
+        }
+
+        return rotatedClone;
+    }
 
     private MyStructureIfc getRotatedCloneMyStructure(ResultsFromEvaluateCost result) {
 
@@ -358,6 +380,9 @@ public class Cloner {
             // TODO abort cloning if one atom is not clonable ???
 
         }
+        keyIsOldMonomerValueIsNewMonomer.put(myMonomer, cloneMyMonomer);
+        keyIsNewMonomerValueIsOldMonomer.put(cloneMyMonomer, myMonomer);
+
 
         MyChainIfc[] chains = new MyChainIfc[1];
         chains[0] = new MyChain(cloneMyMonomer, MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray());
@@ -396,7 +421,8 @@ public class Cloner {
         }
         clone.setFourLetterCode(MyStructureConstants.PDB_ID_DEFAULT.toCharArray());
 
-        MyStructureTools.setEmptyNeighbors(cloneMyMonomer);
+        updateMyMonomerToClonedOneInNeighbors(clone);
+        //MyStructureTools.setEmptyNeighbors(cloneMyMonomer);
         MyStructureTools.fixParents(clone);
         fixBondedAtomReference(clone);
 
@@ -488,6 +514,16 @@ public class Cloner {
 
             MyMonomerIfc[] monomers = chain.getMyMonomers();
             for (MyMonomerIfc monomer : monomers) {
+
+                /*
+                MyMonomerIfc oldMonomer = null;
+                if (keyIsNewMonomerValueIsOldMonomer.containsKey(monomer)) { // in case of hetatm
+                    oldMonomer = keyIsNewMonomerValueIsOldMonomer.get(monomer);
+                } else {
+                    oldMonomer = monomer;
+                }
+                */
+
                 MyMonomerIfc oldMonomer = keyIsNewMonomerValueIsOldMonomer.get(monomer);
                 // neighbors by distance
                 MyChainIfc[] neighborchains = oldMonomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();

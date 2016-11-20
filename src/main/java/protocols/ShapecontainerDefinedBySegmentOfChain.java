@@ -19,7 +19,7 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
     private int startingRankId;
     private int peptideLength;
     private AlgoParameters algoParameters;
-
+    private MyStructureIfc myStructure;
 
     //-------------------------------------------------------------
     // Constructor
@@ -39,7 +39,7 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
     @Override
     public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
 
-        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
+        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;
@@ -49,11 +49,18 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
         return shapecontainer;
     }
 
+
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
 
+        this.myStructure = myStructureTarget;
         ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainId, startingRankId, peptideLength);
 
         return shapecontainer;
+    }
+
+    @Override
+    public MyStructureIfc getMyStructure() {
+        return myStructure;
     }
 }

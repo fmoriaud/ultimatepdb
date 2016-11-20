@@ -18,6 +18,7 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     private AlgoParameters algoParameters;
     private char[] hetAtomsLigandId;
     private int occurrenceId;
+    private MyStructureIfc myStructure;
 
     //-------------------------------------------------------------
     // Constructor
@@ -37,7 +38,7 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     @Override
     public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
 
-        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
+        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;
@@ -50,7 +51,13 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
 
+        this.myStructure = myStructureTarget;
         ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, hetAtomsLigandId, occurrenceId);
         return shapecontainer;
+    }
+
+    @Override
+    public MyStructureIfc getMyStructure() {
+        return myStructure;
     }
 }

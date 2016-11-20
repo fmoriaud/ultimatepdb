@@ -20,7 +20,7 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
     private char[] fourLetterCode;
     private char[] chainId;
     private AlgoParameters algoParameters;
-
+    private MyStructureIfc myStructure;
 
     //-------------------------------------------------------------
     // Constructor
@@ -41,7 +41,7 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
 
         long t = System.nanoTime();
         ControllerLoger.logger.log(Level.INFO, "&&&&& Start Read " + String.valueOf(fourLetterCode) + " " + t);
-        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
+        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
 
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
@@ -60,6 +60,7 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructure) throws ShapeBuildingException {
 
+        this.myStructure = myStructure;
         long t = System.nanoTime();
 
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
@@ -67,6 +68,11 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
 
         return shapecontainer;
+    }
+
+    @Override
+    public MyStructureIfc getMyStructure() {
+        return myStructure;
     }
 
     public char[] getFourLetterCode() {
