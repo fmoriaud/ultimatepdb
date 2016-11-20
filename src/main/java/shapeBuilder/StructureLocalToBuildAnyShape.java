@@ -692,7 +692,6 @@ public class StructureLocalToBuildAnyShape {
         return ligand;
     }
 
-
     public MyStructureIfc getMyStructureLocal() {
         return myStructureLocal;
     }

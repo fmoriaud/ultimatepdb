@@ -57,10 +57,13 @@ public class ShapeBuilder {
     //-------------------------------------------------------------
     public ShapeContainerWithPeptide getShapeAroundAChain(char[] chainId) throws ShapeBuildingException { // whole chain query
 
-        StructureLocalToBuildShapeWholeChain structureLocalToBuildShapeWholeChain = new StructureLocalToBuildShapeWholeChain(myStructureGlobalBrut, chainId, algoParameters);
-        structureLocalToBuildShapeWholeChain.compute();
-        MyStructureIfc myStructureLocal = structureLocalToBuildShapeWholeChain.getMyStructureLocal();
-        MyChainIfc ligand = structureLocalToBuildShapeWholeChain.getLigand();
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, algoParameters);
+        MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+        if (myStructureLocal == null) {
+            return null;
+        }
+        
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
 
 
         Cloner cloner = new Cloner(ligand, algoParameters);
@@ -84,13 +87,15 @@ public class ShapeBuilder {
 
     public ShapeContainerWithPeptide getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException { // part chain query
 
-        StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = new StructureLocalToBuildShapeSegmentOfShape(myStructureGlobalBrut, chainId, startingRankId, peptideLength, algoParameters);
-        structureLocalToBuildShapeSegmentOfShape.compute();
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, startingRankId, peptideLength, algoParameters);
+        MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+        if (myStructureLocal == null) {
+            return null;
+        }
 
-        MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
 
-        MyChainIfc ligand = structureLocalToBuildShapeSegmentOfShape.getLigand();
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
         Cloner cloner = new Cloner(ligand, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
         MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
@@ -113,11 +118,13 @@ public class ShapeBuilder {
 
     public ShapeContainerWithLigand getShapeAroundAHetAtomLigand(char[] hetAtomsLigandId, int occurrenceId) throws ShapeBuildingException {
 
-        StructureLocalToBuildShapeHetAtm structureLocalToBuildShapeHetAtm = new StructureLocalToBuildShapeHetAtm(myStructureGlobalBrut, hetAtomsLigandId, occurrenceId, algoParameters);
-        structureLocalToBuildShapeHetAtm.compute();
-        MyStructureIfc myStructureLocal = structureLocalToBuildShapeHetAtm.getMyStructureLocal();
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, hetAtomsLigandId, occurrenceId, algoParameters);
+        MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+        if (myStructureLocal == null) {
+            return null;
+        }
 
-        MyMonomerIfc hetAtomsGroup = structureLocalToBuildShapeHetAtm.getHetAtomsGroup();
+        MyMonomerIfc hetAtomsGroup = structureLocalToBuildAnyShape.getLigand().getMyMonomers()[0];
         Cloner cloner = new Cloner(hetAtomsGroup, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
         MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
@@ -139,12 +146,13 @@ public class ShapeBuilder {
 
     public ShapeContainerAtomIdsWithinShapeWithPeptide getShapeAroundAtomDefinedByIds(List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<String> chainToIgnore) throws ShapeBuildingException { // LennardJones query
 
-        StructureLocalToBuildShapeAroundAtomDefinedByIds structureLocalToBuildShapeAroundAtomDefinedByIds = new StructureLocalToBuildShapeAroundAtomDefinedByIds(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
-        structureLocalToBuildShapeAroundAtomDefinedByIds.compute();
-        MyStructureIfc myStructureLocal = structureLocalToBuildShapeAroundAtomDefinedByIds.getMyStructureLocal();
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, listAtomDefinedByIds, algoParameters, chainToIgnore);
+        MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
         if (myStructureLocal == null) {
             return null;
         }
+
         MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
 

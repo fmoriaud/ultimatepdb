@@ -18,7 +18,7 @@ import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
 import pointWithProperties.PointsTools;
 import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
+import shapeBuilder.StructureLocalToBuildAnyShape;
 import shapeReduction.PhiThetaInterval;
 import shapeReduction.ToolsShapeReductor;
 import mystructure.MyChainIfc;
@@ -164,14 +164,16 @@ public class MyStructureFingerprint {
 					
 					
 					// I need to schrink myStructure to the env of this subpeptide
-					StructureLocalToBuildShapeSegmentOfShape structureLocalToBuildShapeSegmentOfShape = 
-							new StructureLocalToBuildShapeSegmentOfShape(myStructure, peptide.getChainId(), startId, splittedSequenceLength, algoParameters);
+					StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
 					try {
-						structureLocalToBuildShapeSegmentOfShape.compute();
+						structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructure, peptide.getChainId(), startId, splittedSequenceLength, algoParameters);
 					} catch (ShapeBuildingException e) {
 						continue;
 					}
-					MyStructureIfc myStructureLocal = structureLocalToBuildShapeSegmentOfShape.getMyStructureLocal();
+					MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+					if (myStructureLocal == null) {
+						continue;
+					}
 
 					// makes the subPeptide barycenter
 					MyChainIfc subPeptide = peptide.makeSubchain(startId, splittedSequenceLength);

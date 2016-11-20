@@ -1,26 +1,17 @@
 package shapebuilder;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
 import database.HitInSequenceDb;
 import database.SequenceTools;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
-import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import protocols.ShapeContainerDefined;
-import protocols.ShapeContainerFactory;
 import protocols.ShapecontainerDefinedBySegmentOfChain;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
-import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildShapeSegmentOfShape;
 
 import java.io.IOException;
 import java.util.List;
