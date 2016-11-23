@@ -3,6 +3,7 @@ package shape;
 import java.util.ArrayList;
 import java.util.List;
 
+import mystructure.MyMonomerIfc;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
@@ -15,7 +16,7 @@ public class ShapeContainerAtomIdsWithinShapeWithPeptide extends ShapeContainerA
 	//------------------------
 	// Class variables
 	//------------------------
-	MyChainIfc peptide;
+	private MyChainIfc peptide;
 
 
 
@@ -26,10 +27,10 @@ public class ShapeContainerAtomIdsWithinShapeWithPeptide extends ShapeContainerA
 	public ShapeContainerAtomIdsWithinShapeWithPeptide(List<QueryAtomDefinedByIds> listAtomDefinedByIds,
 			CollectionOfPointsWithPropertiesIfc shape,
 			List<PointIfc> listPointDefininingLigandUsedToComputeShape,
-			MyStructureIfc myStructureUsedToComputeShape,
+			MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude,
 			AlgoParameters algoParameters) {
 
-		super(listAtomDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
+		super(listAtomDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
 	}
 
 

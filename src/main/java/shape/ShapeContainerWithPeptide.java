@@ -3,6 +3,7 @@ package shape;
 import java.util.ArrayList;
 import java.util.List;
 
+import mystructure.MyMonomerIfc;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointIfc;
@@ -14,20 +15,18 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	//------------------------
 	// Class variables
 	//------------------------
-	MyStructureIfc peptide;
-	MyChainIfc peptideMyChain;
-	int startingRankId;
-	List<char[]> peptideSequence;
-	char[] peptideChainId;
-
-
+	private MyStructureIfc peptide;
+	private MyChainIfc peptideMyChain;
+	private int startingRankId;
+	private List<char[]> peptideSequence;
+	private char[] peptideChainId;
 
 
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyStructureIfc peptide, int startingRankId){
-		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
+	public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters, MyStructureIfc peptide, int startingRankId){
+		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
 
 		this.startingRankId = startingRankId;
 		this.peptide = peptide;
@@ -161,7 +160,6 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
 	}
 
 
-	
 	@Override
 	public MyChainIfc getPeptide() {
 		return peptideMyChain;

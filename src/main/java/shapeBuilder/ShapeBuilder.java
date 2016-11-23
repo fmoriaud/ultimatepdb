@@ -79,7 +79,7 @@ public class ShapeBuilder {
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, 0);
+        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, 0, structureLocalToBuildAnyShape.getMonomerToDiscard());
         shapeContainerWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithPeptide;
     }
@@ -110,7 +110,7 @@ public class ShapeBuilder {
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, startingRankId);
+        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, startingRankId, structureLocalToBuildAnyShape.getMonomerToDiscard());
         shapeContainerWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithPeptide;
     }
@@ -138,7 +138,7 @@ public class ShapeBuilder {
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 
-        ShapeContainerWithLigand shapeContainerWithLigand = buildShapeContainerWithLigand(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, occurrenceId);
+        ShapeContainerWithLigand shapeContainerWithLigand = buildShapeContainerWithLigand(myStructureLocalProtonated, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, protonatedLigand, occurrenceId, structureLocalToBuildAnyShape.getMonomerToDiscard());
         shapeContainerWithLigand.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerWithLigand;
     }
@@ -160,7 +160,7 @@ public class ShapeBuilder {
         List<PointIfc> listOfPointsFromChainLigandFromLennarJones = computeListOfPointsWithLennardJones(box, myStructureLocal, listAtomDefinedByIds);
 
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigandFromLennarJones, myStructureLocal, box, algoParameters);
-        ShapeContainerAtomIdsWithinShapeWithPeptide shapeContainerAtomIdsWithinShapeWithPeptide = buildShapeContainerFromAtomIdsWithinShape(myStructureLocal, listOfPointsFromChainLigandFromLennarJones, algoParameters, shapeCollectionPoints, listAtomDefinedByIds);
+        ShapeContainerAtomIdsWithinShapeWithPeptide shapeContainerAtomIdsWithinShapeWithPeptide = buildShapeContainerFromAtomIdsWithinShape(myStructureLocal, listOfPointsFromChainLigandFromLennarJones, algoParameters, shapeCollectionPoints, listAtomDefinedByIds, structureLocalToBuildAnyShape.getMonomerToDiscard());
 
         shapeContainerAtomIdsWithinShapeWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerAtomIdsWithinShapeWithPeptide;
@@ -397,33 +397,33 @@ public class ShapeBuilder {
     }
 
 
-    private ShapeContainerAtomIdsWithinShapeWithPeptide buildShapeContainerFromAtomIdsWithinShape(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, List<QueryAtomDefinedByIds> listAtomDefinedByIds) {
+    private ShapeContainerAtomIdsWithinShapeWithPeptide buildShapeContainerFromAtomIdsWithinShape(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<MyMonomerIfc> monomerToDiscard) {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerAtomIdsWithinShapeWithPeptide shape = new ShapeContainerAtomIdsWithinShapeWithPeptide(listAtomDefinedByIds, shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, algoParameters);
+        ShapeContainerAtomIdsWithinShapeWithPeptide shape = new ShapeContainerAtomIdsWithinShapeWithPeptide(listAtomDefinedByIds, shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters);
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;
     }
 
 
-    private ShapeContainerWithPeptide buildShapeContainerWithPeptide(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc peptide, int startingIndex) {
+    private ShapeContainerWithPeptide buildShapeContainerWithPeptide(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc peptide, int startingIndex, List<MyMonomerIfc> monomerToDiscard) {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerWithPeptide shape = new ShapeContainerWithPeptide(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, algoParameters, peptide, startingIndex);
+        ShapeContainerWithPeptide shape = new ShapeContainerWithPeptide(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters, peptide, startingIndex);
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;
     }
 
 
-    private ShapeContainerWithLigand buildShapeContainerWithLigand(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc myMonomer, int occurenceId) {
+    private ShapeContainerWithLigand buildShapeContainerWithLigand(MyStructureIfc myStructureShape, List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, MyStructureIfc myMonomer, int occurenceId, List<MyMonomerIfc> monomerToDiscard) {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerWithLigand shape = new ShapeContainerWithLigand(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, algoParameters, myMonomer, occurenceId);
+        ShapeContainerWithLigand shape = new ShapeContainerWithLigand(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters, myMonomer, occurenceId);
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;

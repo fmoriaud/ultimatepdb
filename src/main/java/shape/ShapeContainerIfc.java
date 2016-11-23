@@ -3,6 +3,7 @@ package shape;
 import java.util.List;
 import java.util.Map;
 
+import mystructure.MyMonomerIfc;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointWithPropertiesIfc;
@@ -32,5 +33,8 @@ public interface ShapeContainerIfc {
 	List<Integer> getHistogramD2();
 	List<TriangleInteger> getListTriangleOfPointsFromMinishape();
 	PointWithPropertiesIfc get(int idPoint);
+
+	List<MyMonomerIfc> getForeignMonomerToExclude();
+
 
 }

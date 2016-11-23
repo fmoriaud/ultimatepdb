@@ -22,14 +22,14 @@ public class CompareCompleteCheckTest {
 
 
     @Test
-    public void autoShapeSegmentOfChain() throws IOException, ParsingConfigFileException {
+    public void completeCheckAutoCompareSegmentOfChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
-        char[] fourLetterCode = "2yjd".toCharArray();
-        char[] chainId = "C".toCharArray();
-        int startingRankId = 3;
-        int peptideLength = 4;
+        char[] fourLetterCode = "1be9".toCharArray();
+        char[] chainId = "B".toCharArray();
+        int startingRankId = 1;
+        int peptideLength = 3;
         ShapeContainerDefined shapecontainerDefinedQuery = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc queryShape = null;
         try {

@@ -1,12 +1,14 @@
 package shapeCompare;
 
 import hits.Hit;
-import mystructure.MyStructureIfc;
-import mystructure.MyStructureTools;
+import math.ToolsMath;
+import mystructure.*;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
+import shapeBuilder.ShapeBuildingException;
+import shapeBuilder.StructureLocalToBuildAnyShape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,7 @@ public class CompareCompleteCheck {
         List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
         System.out.println("Found " + resultsPairingTriangleSeed.size() + " triangles matches");
 
-        resultsPairingTriangleSeed = resultsPairingTriangleSeed.subList(0,1);
+        resultsPairingTriangleSeed = resultsPairingTriangleSeed.subList(0, 1);
         for (ResultsFromEvaluateCost result : resultsPairingTriangleSeed) {
 
             // cost of overlay of query to hit shape, based on paired points,
@@ -68,25 +70,41 @@ public class CompareCompleteCheck {
 
 
             // get the hit ligand in the query global structure
-            MyStructureIfc rotatedLigandOrPeptide = CompareTools.getProtonatedLigandOrPeptideInReferenceOfQuery(shapeContainerAnyShape, result, algoParameters);
+            MyStructureIfc rotatedLigandOrPeptide = CompareTools.getLigandOrPeptideInReferenceOfQuery(shapeContainerAnyShape, result, algoParameters);
 
 
             // I could compute neighbors by representative distance and then use the same code for shape ??
             // know what was removed to build MyStructureLocal
 
             MyStructureIfc myStructureLocalQuery = shapeContainerAnyShape.getMyStructureUsedToComputeShape();
-            //MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(myStructureLocalQuery, rotatedLigandOrPeptide);
+
+            // TODO shapelocal and ligand are protonated ...
+            int clashesCount = computeClashes(myStructureLocalQuery, rotatedLigandOrPeptide);
 
 
+            if (clashesCount > 10){
+                System.out.println();
+                String message = "Strong clash between hit ligand and query. ClashesCount  = " + clashesCount;
+                NullResultFromAComparisonException exception = new NullResultFromAComparisonException(message);
+                throw exception;
+
+            }
+            List<MyMonomerIfc> foreignMonomerToExclude = shapeContainerQuery.getForeignMonomerToExclude();
+
+            StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+            try {
+                structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureLocalQuery, foreignMonomerToExclude, rotatedLigandOrPeptide, algoParameters);
+            } catch (ShapeBuildingException e) {
+                e.printStackTrace();
+            }
+            MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
 
 
-
-
+            System.out.println();
 
             // Check if rotated hit ligand fits in Query structure global without the query ligand (if there is)
             // Could be a chain, a segment, an ignore chain in shape with ids (then there is a ligand kind of)
             // Check clashes, if too many it is not worth computing the shape as anyway the hit ligand doesnt fit.
-
 
 
             // compute the shape
@@ -102,6 +120,40 @@ public class CompareCompleteCheck {
 
 
         return hitsExtendedPairing;
+    }
+
+    private int computeClashes(MyStructureIfc myStructureLocalQuery, MyStructureIfc rotatedLigandOrPeptide) {
+
+        float distanceThresholdToDefineClashes = 2.0f;
+        int clashescount = 0;
+
+        for (MyChainIfc chainLigand : rotatedLigandOrPeptide.getAllChains()) {
+            for (MyMonomerIfc monomerLigand : chainLigand.getMyMonomers()) {
+                for (MyAtomIfc atomLigand : monomerLigand.getMyAtoms()) {
+                    if (MyStructureTools.isHydrogen(atomLigand)){
+                        continue;
+                    }
+
+                    // TODO check if getAllChainsRelevantForShapeBuilding excludes heatm
+                    MyChainIfc[] chains = myStructureLocalQuery.getAllChainsRelevantForShapeBuilding();
+                    for (MyChainIfc chain : chains) {
+                        for (MyMonomerIfc monomer : chain.getMyMonomers()) {
+
+                            for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                                if (MyStructureTools.isHydrogen(atom)){
+                                    continue;
+                                }
+                                float distance = ToolsMath.computeDistance(atom.getCoords(), atomLigand.getCoords());
+                                if (distance < distanceThresholdToDefineClashes){
+                                    clashescount += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return clashescount;
     }
 
 

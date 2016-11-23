@@ -335,6 +335,7 @@ public class MyStructureTools {
     }
 
 
+
     public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyChainIfc[]... myChains) {
 
         double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
@@ -348,6 +349,27 @@ public class MyStructureTools {
             }
         }
     }
+
+
+    /**
+     *
+     * @param algoParameters
+     * @param myStructureGlobalBrut
+     * @param clonedLigand
+     * @param foreignMonomerToExclude
+     */
+    public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyStructureIfc myStructureGlobalBrut, MyStructureIfc clonedLigand, List<MyMonomerIfc> foreignMonomerToExclude){
+
+        double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
+        GeneratorNeighboringMonomer distancesBetweenResidues = new GeneratorNeighboringMonomer(minDistanceToBeNeighbors, myStructureGlobalBrut.getAllChainsRelevantForShapeBuilding());
+
+        for (MyChainIfc mychain: clonedLigand.getAllChains()){
+            for (MyMonomerIfc monomer: mychain.getMyMonomers()){
+                monomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(distancesBetweenResidues.computeAminoNeighborsOfAGivenResidue(monomer, foreignMonomerToExclude));
+            }
+        }
+    }
+
 
     /**
      * Compute MyMonomer Neighbors using MyBonds. They are stored as a MyMonomer array in each and every MyMonomer.

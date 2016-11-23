@@ -4,6 +4,7 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
@@ -12,9 +13,14 @@ import org.junit.Test;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerFactory;
+import shape.ShapeContainerIfc;
+import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.StructureLocalToBuildAnyShape;
 import shapeBuilder.StructureLocalTools;
+import shapeCompare.CompareTools;
+import shapeCompare.ResultsFromEvaluateCost;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -288,7 +294,71 @@ public class StructureLocalToolsTest {
     }
 
 
+    @Test
     public void testAtomIdsWithChainToIgnore() throws IOException, ParsingConfigFileException {
+
+    }
+
+
+    @Test
+    public void testForeignLigandFromStructureLocalWholeChain() throws IOException, ParsingConfigFileException, ShapeBuildingException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
+        // need a foreign ligand which is defined as a MyStructure
+        // This ligand is built with cloning so the neighbors from original structure are kept
+        char[] fourLetterCodeTarget = "2ce8".toCharArray();
+        char[] chainIdTarget = "X".toCharArray();
+        MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeTarget);
+        MyChainIfc foreignLigandChain = myStructureTarget.getAminoMyChain(chainIdTarget);
+        Cloner cloner = new Cloner(foreignLigandChain, algoParameters);
+        MyStructureIfc foreignLigandFromTarget = cloner.getClone();
+
+
+        char[] fourLetterCodeQuery = "2ce9".toCharArray();
+        char[] chainIdQuery = "X".toCharArray();
+        MyStructureIfc myStructureQuery = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeQuery);
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShapeQuery = null;
+        try {
+            structureLocalToBuildAnyShapeQuery = new StructureLocalToBuildAnyShape(myStructureQuery, chainIdQuery, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        // has 51 monomers
+        MyStructureIfc structureLocalOriginalQuery = structureLocalToBuildAnyShapeQuery.getMyStructureLocal();
+        assertTrue(structureLocalOriginalQuery.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 51);
+        assertTrue(structureLocalOriginalQuery.getAminoMyChain("X".toCharArray()) == null);
+
+        // need to have foreignLigand in the reference frame of the query
+        ShapeContainerIfc shapeTarget = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainIdTarget);
+        ShapeContainerIfc shapeQuery = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureQuery, algoParameters, chainIdQuery);
+        // So I compare shapeTarget to shapeLigand so the hit ligand can be put in reference frame of the target
+        List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeQuery, shapeTarget, algoParameters);
+        MyStructureIfc rotatedLigandOrPeptide = CompareTools.getLigandOrPeptideInReferenceOfQuery(shapeTarget, resultsPairingTriangleSeed.get(0), algoParameters);
+
+        // has 51 monomers: a bit bigger because protonation
+        MyStructureIfc accessibleStructureLocal = shapeQuery.getMyStructureUsedToComputeShape();
+        assertTrue(accessibleStructureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 51);
+        assertTrue(accessibleStructureLocal.getAminoMyChain("X".toCharArray()) == null);
+        //System.out.println();
+
+        // I get the monomer to exclude using the structureLocalToBuildAnyShapeQuery
+        List<MyMonomerIfc> foreignMonomerToExclude = structureLocalToBuildAnyShapeQuery.getMonomerToDiscard();
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShapeCustomLigand = new StructureLocalToBuildAnyShape(myStructureQuery, foreignMonomerToExclude, rotatedLigandOrPeptide, algoParameters);
+
+        // test its structure local
+        MyStructureIfc structureLocalCustomLigand = structureLocalToBuildAnyShapeCustomLigand.getMyStructureLocal();
+        // test structureLocal
+        // As hit ligand is longer, we get more amino acids in structureLocal
+        assertTrue(structureLocalCustomLigand.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 60);
+        assertTrue(structureLocalCustomLigand.getAminoMyChain("X".toCharArray()) == null);
+        // it is what it is but must be similar to accessibleStructureLocal
+
+        // test its ligand
+        MyChainIfc ligandCustom = structureLocalToBuildAnyShapeCustomLigand.getLigand();
+
+        // test its ligand neighbors: they should be in structureLocalCustomLigand or ligandCustom
 
     }
 }

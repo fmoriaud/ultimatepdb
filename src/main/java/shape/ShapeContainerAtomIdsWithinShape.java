@@ -2,6 +2,7 @@ package shape;
 
 import java.util.List;
 
+import mystructure.MyMonomerIfc;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
@@ -15,13 +16,12 @@ public class ShapeContainerAtomIdsWithinShape extends ShapeContainer implements 
 	private List<QueryAtomDefinedByIds> listAtomDefinedByIds;
 
 
-
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ShapeContainerAtomIdsWithinShape(List<QueryAtomDefinedByIds> listAtomDefinedByIds, CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters) {
+	public ShapeContainerAtomIdsWithinShape(List<QueryAtomDefinedByIds> listAtomDefinedByIds, CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters) {
 		super(shape, listPointDefininingLigandUsedToComputeShape,
-				myStructureUsedToComputeShape, algoParameters);
+				myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
 		this.listAtomDefinedByIds = listAtomDefinedByIds;
 	}
 
@@ -31,4 +31,8 @@ public class ShapeContainerAtomIdsWithinShape extends ShapeContainer implements 
 		return listAtomDefinedByIds;
 	}
 
+	@Override
+	public List<MyMonomerIfc> getForeignMonomerToExclude() {
+		return null;
+	}
 }

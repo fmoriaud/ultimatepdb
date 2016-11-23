@@ -13,21 +13,20 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 	//------------------------
 	// Class variables
 	//------------------------
-	MyStructureIfc hetatmLigand;
-	MyMonomerIfc hetatmLigandMymonomer;
+	private MyStructureIfc hetatmLigand;
+	private MyMonomerIfc hetatmLigandMymonomer;
 
-	char[] hetatmLigandChainId;
-	char[] hetatmThreeLetterCode;
-	int occurenceId;
-
+	private char[] hetatmLigandChainId;
+	private char[] hetatmThreeLetterCode;
+	private int occurenceId;
 
 
 
 	// -------------------------------------------------------------------
 	// Constructor
 	// -------------------------------------------------------------------
-	public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, AlgoParameters algoParameters, MyStructureIfc hetatmLigand, int occurenceId){
-		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, algoParameters);
+	public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters, MyStructureIfc hetatmLigand, int occurenceId){
+		super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
 
 		this.hetatmLigand = hetatmLigand;
 		this.occurenceId = occurenceId;
@@ -159,7 +158,6 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
 		contentPDBFile.addAll(contributioncontentPDBFileShape);
 		writeLinesToPDBFile(contentPDBFile, fileName, algoParameters);
 	}
-
 
 
 

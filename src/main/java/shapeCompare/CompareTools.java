@@ -22,7 +22,7 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class CompareTools {
 
-    public static MyStructureIfc getProtonatedLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters){
+    public static MyStructureIfc getLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters){
 
 
         MyStructureIfc clonedRotatedPeptideOrLigand = null;
@@ -40,16 +40,7 @@ public class CompareTools {
             clonedRotatedPeptideOrLigand = cloner.getRotatedClone(result);
         }
 
-        Protonate protonate = new Protonate(clonedRotatedPeptideOrLigand, algoParameters);
-        try {
-            protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-        }
-        MyStructureIfc protonatedPeptideOrLigand = protonate.getProtonatedMyStructure();
-
-
-        return protonatedPeptideOrLigand;
+        return clonedRotatedPeptideOrLigand;
     }
 
     /**

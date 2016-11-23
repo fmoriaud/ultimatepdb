@@ -25,6 +25,58 @@ public class StructureLocalToBuildAnyShape {
     //-------------------------------------------------------------
 
     /**
+     * Constructor to get a StructureLocal using a whole structure, some monomer to exclude and a foreign ligand
+     * neighbors by representative atom distance must be recomputed
+     *
+     * @param myStructureGlobalBrut
+     * @param foreignMonomerToExclude
+     * @param rotatedLigandOrPeptideForeigner
+     * @param algoParameters
+     * @throws ShapeBuildingException
+     */
+    public StructureLocalToBuildAnyShape(MyStructureIfc myStructureGlobalBrut, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptideForeigner, AlgoParameters algoParameters) throws ShapeBuildingException {
+
+        this.myStructureGlobalBrut = myStructureGlobalBrut;
+        this.algoParameters = algoParameters;
+
+
+        // As it is different I write something new
+
+        // the neighbors are the one by distance from rotatedLigandOrPeptideForeigner in myStructureGlobalBrut
+        // no need to remove the ones from rotatedLigandOrPeptideForeigner as we cloned it.
+
+        Cloner cloner = new Cloner(rotatedLigandOrPeptideForeigner, algoParameters);
+        MyStructureIfc clonedLigand = cloner.getClone();
+
+        MyStructureTools.computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(algoParameters, myStructureGlobalBrut, clonedLigand, foreignMonomerToExclude);
+        // clonedLigand neighbors are ready to build a StructureLocal
+        Set<MyMonomerIfc> monomerToKeep = makeMyMonomersLocalAround(clonedLigand);
+
+        Cloner cloner2 = new Cloner(myStructureGlobalBrut, monomerToKeep, algoParameters);
+        MyStructureIfc clonedMyStructure = cloner2.getClone();
+        myStructureLocal = clonedMyStructure;
+
+        System.out.println();
+
+        //MyMonomerIfc[] myMonomomers = foreignMonomerToExclude.getMyMonomers();
+        //monomerToDiscard = foreignMonomerToExclude;
+
+        // Set<MyMonomerIfc> monomerToKeep = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInput(foreignMonomerToExclude);
+
+        // The way to go is the cloner with definition of what to keep
+        //Cloner cloner2 = new Cloner(myStructureGlobalBrut, monomerToKeep, algoParameters);
+        //MyStructureIfc clonedMyStructure = cloner2.getClone();
+
+        //if (clonedMyStructure.getAllAminochains().length == 0) {
+        //    ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");
+        //    throw exception;
+        //}
+        // myStructureLocal = clonedMyStructure;
+        System.out.println();
+    }
+
+
+    /**
      * Constructor to get StructureLocal using myStructureGlobalBrut and a chainId
      * Assume myStructureGlobalBrut is good, so neighbors by distance are correct in the chain with chainid
      *
@@ -179,6 +231,25 @@ public class StructureLocalToBuildAnyShape {
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
+    private Set<MyMonomerIfc> makeMyMonomersLocalAround(MyStructureIfc clonedLigand) {
+
+        Set<MyMonomerIfc> queryMyMonomer = new HashSet<>();
+
+        for (MyChainIfc myChainLigand : clonedLigand.getAllChains()) {
+            for (MyMonomerIfc monomer : myChainLigand.getMyMonomers()) {
+                MyChainIfc[] neighbors = monomer.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
+                for (MyChainIfc mychain : neighbors) {
+                    for (MyMonomerIfc neighbor : mychain.getMyMonomers()) {
+                        queryMyMonomer.add(neighbor);
+                    }
+                }
+            }
+        }
+        return queryMyMonomer;
+
+    }
+
+
     private MyStructureIfc makeStructureLocalAroundAndWithChain(MyChainIfc myChain, List<String> chainToIgnore) {
 
         Set<MyMonomerIfc> queryMonomers = makeMyMonomersLocalAroundAndWithChain(myChain);
