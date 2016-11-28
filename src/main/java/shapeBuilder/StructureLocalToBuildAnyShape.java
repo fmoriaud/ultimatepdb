@@ -56,7 +56,7 @@ public class StructureLocalToBuildAnyShape {
         MyStructureIfc clonedMyStructure = cloner2.getClone();
         myStructureLocal = clonedMyStructure;
 
-        System.out.println();
+        ligand = clonedLigand.getAllChains()[0];
 
         //MyMonomerIfc[] myMonomomers = foreignMonomerToExclude.getMyMonomers();
         //monomerToDiscard = foreignMonomerToExclude;
@@ -72,7 +72,6 @@ public class StructureLocalToBuildAnyShape {
         //    throw exception;
         //}
         // myStructureLocal = clonedMyStructure;
-        System.out.println();
     }
 
 

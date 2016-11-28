@@ -20,10 +20,7 @@ import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
 import pointWithProperties.PointWithPropertiesIfc;
 import pointWithProperties.StrikingProperties;
-import shape.ShapeContainer;
-import shape.ShapeContainerAtomIdsWithinShapeWithPeptide;
-import shape.ShapeContainerWithLigand;
-import shape.ShapeContainerWithPeptide;
+import shape.*;
 import shapeReduction.*;
 import mystructure.AtomProperties.AtomHAcceptorDescriptors;
 import mystructure.AtomProperties.AtomHDonnorDescriptors;
@@ -105,7 +102,7 @@ public class ShapeBuilder {
         //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
         if (myStructureLocalProtonated == null) {
-            System.out.println();
+            System.out.println("myStructureLocalProtonated == null");
         }
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
@@ -165,6 +162,34 @@ public class ShapeBuilder {
         shapeContainerAtomIdsWithinShapeWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
         return shapeContainerAtomIdsWithinShapeWithPeptide;
     }
+
+
+    /**
+     * Assumes myStructureGlobalBrut is already protonated
+     * @param foreignMonomerToExclude
+     * @param rotatedLigandOrPeptide
+     * @return
+     */
+    public ShapeContainerIfc getShapeAroundForeignLigand(List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide) {
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, foreignMonomerToExclude, rotatedLigandOrPeptide, algoParameters);
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+        MyStructureIfc myStructureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(rotatedLigandOrPeptide);
+        Box box = makeBoxOutOfLocalStructure(myStructureLocal);
+        CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocal, box, algoParameters);
+
+        ShapeContainerWithPeptide shapeContainerWithPeptide = buildShapeContainerWithPeptide(myStructureLocal, listOfPointsFromChainLigand, algoParameters, shapeCollectionPoints, rotatedLigandOrPeptide, 0, structureLocalToBuildAnyShape.getMonomerToDiscard());
+        shapeContainerWithPeptide.setFourLetterCode(myStructureGlobalBrut.getFourLetterCode());
+        return shapeContainerWithPeptide;
+    }
+
+
 
 
     //-------------------------------------------------------------
@@ -310,7 +335,7 @@ public class ShapeBuilder {
         List<HBondDefinedWithAtoms> hBonds = intraStructureHBondDetector(myStructureShape);
         List<HBondDefinedWithAtoms> dehydrons = buildDehydrons(hBonds);
 
-        System.out.println("in myStructureGlobal hbond count = " + hBonds.size() + " dehydron count = " + dehydrons.size());
+        //System.out.println("in myStructureGlobal hbond count = " + hBonds.size() + " dehydron count = " + dehydrons.size());
 
         List<float[]> listPositionWhereToComputeProperties = new ArrayList<>();
         List<Float> listMinDistanceOfThisGridPointToAnyAtomOfPeptide = new ArrayList<>();
@@ -334,7 +359,7 @@ public class ShapeBuilder {
             }
         }
 
-        System.out.println(listPositionWhereToComputeProperties.size() + " points to compute with ComputeShapePointsMultiThread");
+        //System.out.println(listPositionWhereToComputeProperties.size() + " points to compute with ComputeShapePointsMultiThread");
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
         int threshold = listPositionWhereToComputeProperties.size() / countOfSubpacket + 1;
         if (threshold < 2) {
@@ -347,7 +372,7 @@ public class ShapeBuilder {
 
 
         listShrinkedShapePoints = pool.invoke(computeShapePointsMultiThread);
-        System.out.println(listShrinkedShapePoints.size() + "  were actually computed");
+        //System.out.println(listShrinkedShapePoints.size() + "  were actually computed");
         pool.shutdownNow();
 
         CollectionOfPointsWithPropertiesIfc collectionOfPointsWithProperties = new CollectionOfPointsWithProperties(listShrinkedShapePoints);
@@ -372,10 +397,10 @@ public class ShapeBuilder {
             }
         }
 
-        System.out.println("in this shape striking count : " + countHbondDonnor + " donnor grid points " + countHbondAcceptor + " acceptor grid points ");
+        //System.out.println("in this shape striking count : " + countHbondDonnor + " donnor grid points " + countHbondAcceptor + " acceptor grid points ");
 
         if (countDehydron > 0) {
-            System.out.println("in this shape : " + countDehydron + " dehydron grid points ");
+            //System.out.println("in this shape : " + countDehydron + " dehydron grid points ");
         }
         return collectionOfPointsWithProperties;
     }
@@ -500,7 +525,7 @@ public class ShapeBuilder {
         long compTime = System.currentTimeMillis() - startTime;
         double comptimeSeconds = compTime / 1000.0;
 
-        System.out.println("mini shape size = " + miniShape.size() + " done in " + comptimeSeconds + " s ");
+        //System.out.println("mini shape size = " + miniShape.size() + " done in " + comptimeSeconds + " s ");
         //Map<Integer, PointWithProperties> shrinkedMiniShape = shrinkMiniShapeAccordingToFinalMaxDistanceToLigand(miniShape, algoParameters);
         //System.out.println("mini shape after = " + shrinkedMiniShape.size());
         return miniShape;
@@ -509,9 +534,9 @@ public class ShapeBuilder {
 
     private CollectionOfPointsWithPropertiesIfc simplifyShape(AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints) {
 
-        System.out.println("before NONE removal : " + shapeCollectionPoints.getSize());
+        //System.out.println("before NONE removal : " + shapeCollectionPoints.getSize());
         CollectionOfPointsWithPropertiesIfc shrinkedShapeForNONEPoint = removePointsOfStrikingPropertiesNoneIfCloseEnoughToAnotherPointWithAnyStrikingPropertiesNotNone(shapeCollectionPoints);
-        System.out.println("after NONE removal : " + shrinkedShapeForNONEPoint.getSize());
+        //System.out.println("after NONE removal : " + shrinkedShapeForNONEPoint.getSize());
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = shrinkShapeAccordingToFinalMaxDistanceToLigand(shrinkedShapeForNONEPoint, algoParameters);
         return shrinkedShapeBasedOnDistanceToLigand;
@@ -714,4 +739,6 @@ public class ShapeBuilder {
 
         return true;
     }
+
+
 }

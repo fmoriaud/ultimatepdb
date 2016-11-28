@@ -13,7 +13,6 @@ public class DebugTools {
 			for(String strikingProperties: entry.getValue()){
 				System.out.println(strikingProperties + " ");
 			}
-			System.out.println();
 		}
 	}
 

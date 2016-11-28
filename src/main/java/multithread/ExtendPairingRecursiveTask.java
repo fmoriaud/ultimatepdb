@@ -182,8 +182,6 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 						listPairsNonMatchingWithoutStrikingPropertiesWithShortDistance.add(pairPointIdsFromMinishape1andMinishape2WithMatchingStrikingPropertiesWithDistance);
 						continue;
 					}
-
-					System.out.println();
 				}
 			}
 		}
@@ -212,7 +210,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 		//		cleanOfDuplicatePoints(listPairsNoneMatchingWithoutStrikingPropertiesWithShortDistance);
 		//		cleanOfDuplicatePoints(listPairsNonMatchingWithoutStrikingPropertiesWithShortDistance);
 
-		// Now I should try to pair unpaired point so far 
+		// Now I should try to pair unpaired point so far
 		// clean the list of pairs matching distance but without matching properties OF pairs having points in matching properties list
 
 		globalList.clear();
@@ -243,7 +241,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 		while(itr.hasNext()) {
 			PairPointWithDistance pairPointWithDistance = itr.next();
 			if (pairPointWithDistance.getDistance() < 0.7){ // We really use the sorting for very short distances
-				if (resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point1)) 
+				if (resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point1))
 						&& resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap2().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point2)) ){
 					resultSeed.getPairingAndNullSpaces().getPairing().put(pairPointWithDistance.getPairInteger().point1, pairPointWithDistance.getPairInteger().point2);
 					boolean toto = resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().remove(Integer.valueOf(pairPointWithDistance.getPairInteger().point1));
@@ -257,7 +255,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 		Iterator<PairPointWithDistance> itr2 = globalList.iterator();
 		while(itr2.hasNext()) {
 			PairPointWithDistance pairPointWithDistance = itr2.next();
-			if (resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point1)) 
+			if (resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point1))
 					&& resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap2().contains(Integer.valueOf(pairPointWithDistance.getPairInteger().point2)) ){
 				resultSeed.getPairingAndNullSpaces().getPairing().put(pairPointWithDistance.getPairInteger().point1, pairPointWithDistance.getPairInteger().point2);
 				boolean toto = resultSeed.getPairingAndNullSpaces().getNullSpaceOfMap1().remove(Integer.valueOf(pairPointWithDistance.getPairInteger().point1));
@@ -312,9 +310,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 
 			}
 			System.out.println("remainingShortDistance = " + remainingShortDistance.size());
-			if (remainingShortDistance.size() > 10){
-				System.out.println();
-			}
+
 		}
 
 	}
@@ -369,7 +365,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
 		List<Integer> deepCopyNullSpaceMap1 = new ArrayList<Integer>();
 		List<Integer> deepCopyNullSpaceMap2 = new ArrayList<Integer>();
 
-		for( Entry<Integer, Integer> entry: newPairingAndNewNullSpacesToCopy.getPairing().entrySet() ) { 
+		for( Entry<Integer, Integer> entry: newPairingAndNewNullSpacesToCopy.getPairing().entrySet() ) {
 			deepCopyPairing.put(Integer.valueOf(entry.getKey().intValue()), Integer.valueOf(entry.getValue().intValue()));
 		}
 

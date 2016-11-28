@@ -2,6 +2,7 @@ package shapeCompare;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.ToolsMath;
+import multithread.ExtendPairingRecursiveTask;
 import multithread.FindMatchingTriangleRecursiveTask;
 import mystructure.*;
 import parameters.AlgoParameters;
@@ -21,6 +22,22 @@ import java.util.concurrent.ForkJoinPool;
  * Created by Fabrice on 14/11/16.
  */
 public class CompareTools {
+
+    public static List<PairingAndNullSpaces> getExtendedPairingAndNullSpaces(List<ResultsFromEvaluateCost> resultsPairingTriangleSeed, AlgoParameters algoParameters, ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape) {
+
+        int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
+        int threshold = resultsPairingTriangleSeed.size() / countOfSubpacket + 1;
+        if (threshold < 2) {
+            threshold = 2;
+        }
+
+        ForkJoinPool pool = new ForkJoinPool();
+        ExtendPairingRecursiveTask computeExtendedPairings = new ExtendPairingRecursiveTask(resultsPairingTriangleSeed, 0, resultsPairingTriangleSeed.size() - 1, threshold, shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
+        List<PairingAndNullSpaces> listExtendedPair = pool.invoke(computeExtendedPairings);
+        pool.shutdownNow();
+        return listExtendedPair;
+    }
+
 
     public static MyStructureIfc getLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters){
 

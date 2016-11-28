@@ -159,7 +159,7 @@ public class GenerateTriangles {
     private List<TriangleEdge> generateListOfEdge(List<Integer> listOfIDinMap) {
 
         if (listOfIDinMap.size() == 6) {
-            System.out.println();
+            System.out.println("listOfIDinMap.size() == 6");
         }
         List<TriangleEdge> listEdges = new ArrayList<>();
 

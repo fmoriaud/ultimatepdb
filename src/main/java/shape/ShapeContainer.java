@@ -52,6 +52,7 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
 
     private List<MyMonomerIfc> foreignMonomerToExclude;
 
+    // TODO add foreign atom to delete for the segment of chain
 
     // -------------------------------------------------------------------
     // Constructor

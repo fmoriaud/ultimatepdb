@@ -248,7 +248,7 @@ public class MyChain implements MyChainIfc {
                         }
                         monomers[insertionRank + 1] = monomer;
                     } catch (Exception e1) {
-                        System.out.println();
+                        System.out.println("Exception in  monomers[insertionRank + 1] = monomer");
                     }
 
                     for (int j = insertionRank + 2; j < monomers.length; j++) {

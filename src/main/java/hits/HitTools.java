@@ -86,7 +86,7 @@ public class HitTools {
                     resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
                 } catch (Exception e) {
-                    System.out.println();
+                    System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor");
                 }
 
                 // handle coverage of query into hit

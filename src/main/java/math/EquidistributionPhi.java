@@ -300,7 +300,7 @@ public class EquidistributionPhi {
 		List<Double> startingDeltaValues = defineStartingDeltaValues(n); // n/2 -1 values   e.g for 6 it is 2 ; for 8 it is 3 ...
 
 		List<Double> optimizedValues = optimizeDeltasN28(startingValues, startingDeltaValues, n);
-		System.out.println();
+
 	}
 
 

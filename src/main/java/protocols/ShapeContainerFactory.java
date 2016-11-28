@@ -1,5 +1,6 @@
 package protocols;
 
+import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
@@ -58,6 +59,14 @@ public class ShapeContainerFactory {
 
         ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundAtomDefinedByIds(listAtomDefinedByIds, chainToIgnore);
+        return shapeContainer;
+    }
+
+
+    public static ShapeContainerIfc getShapeAroundForeignLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureLocalQuery, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide, AlgoParameters algoParameters){
+
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureLocalQuery, algoParameters, enumShapeReductor);
+        ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundForeignLigand(foreignMonomerToExclude, rotatedLigandOrPeptide);
         return shapeContainer;
     }
 

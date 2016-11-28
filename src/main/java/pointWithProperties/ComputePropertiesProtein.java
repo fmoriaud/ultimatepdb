@@ -227,7 +227,7 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
     private boolean checkIfDonnorOrAcceptorAtomArePointingTowardsLigand(MyAtomIfc atomClosest) {
 
         if (!mapMinDistanceAtomToLigand.containsKey(atomClosest)) {
-            System.out.println();
+            System.out.println("!mapMinDistanceAtomToLigand.containsKey(atomClosest)");
         }
         float distToBeTheSortest = mapMinDistanceAtomToLigand.get(atomClosest);
         MyBondIfc[] bonds = atomClosest.getBonds();

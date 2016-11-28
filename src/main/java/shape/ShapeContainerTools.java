@@ -103,7 +103,6 @@ public class ShapeContainerTools {
                         connectLines.add(connectLine);
                     } else {
                         System.out.println("problem generateConnectLines");
-                        System.out.println();
                     }
                 }
                 // CONECT 1023 3769
@@ -124,7 +123,6 @@ public class ShapeContainerTools {
             listOfLines = makePDBFileTestOutputFromAMonomer(monomer, 0, chainId);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println();
         }
 
         return listOfLines;

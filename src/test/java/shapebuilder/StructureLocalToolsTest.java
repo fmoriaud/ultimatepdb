@@ -245,7 +245,6 @@ public class StructureLocalToolsTest {
         // test on ligand
         MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
         assertTrue(ligand.getMyMonomers().length == 1);
-        System.out.println();
     }
 
 
@@ -290,7 +289,6 @@ public class StructureLocalToolsTest {
 
         // TODO problem the structure local contains the hetatm chain with MSQ
         // Should be fine as hetatm are not used in shape, except a few ones like HEM
-        System.out.println();
     }
 
 
@@ -357,8 +355,6 @@ public class StructureLocalToolsTest {
 
         // test its ligand
         MyChainIfc ligandCustom = structureLocalToBuildAnyShapeCustomLigand.getLigand();
-
-        // test its ligand neighbors: they should be in structureLocalCustomLigand or ligandCustom
-
+        assertTrue(ligandCustom.getMyMonomers().length == 9);
     }
 }

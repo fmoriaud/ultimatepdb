@@ -11,6 +11,7 @@ import mystructure.EnumMyReaderBiojava;
 import parameters.*;
 import shape.ShapeContainerIfc;
 import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
+import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.ProcrustesAnalysis;
 
@@ -24,6 +25,48 @@ import java.util.logging.Level;
  */
 public class ProtocolTools {
 
+    public static void compareCompleteCheckAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
+
+        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
+
+        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
+        List<Hit> hits = null;
+        try {
+            hits = compareCompleteCheck.computeResults();
+        } catch (NullResultFromAComparisonException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + hits.size() + " hits to minimize");
+
+        int hitRank = -1;
+        A:
+        for (Hit hit : hits) {
+            hitRank += 1;
+            ControllerLoger.logger.log(Level.INFO,"&&&&&& Minimizing " + String.valueOf(targetShape.getFourLetterCode()) + " rankId = " + hitRank);
+
+            try {
+                HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
+            } catch (NullResultFromAComparisonException e) {
+                e.printStackTrace();
+            } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+                exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
+                continue A;
+            }
+
+            if (hit instanceof HitPeptideWithQueryPeptide) {
+                HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
+                String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
+                ControllerLoger.logger.log(Level.INFO, message);
+            }
+
+            if (minimizeAllIfTrueOrOnlyOneIfFalse == false){
+                break;
+            }
+        }
+
+    }
 
     public static void compareAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
         ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
@@ -103,6 +146,8 @@ public class ProtocolTools {
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
         return threadPoolExecutor;
     }
+
+
 
 
 /*

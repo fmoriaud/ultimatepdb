@@ -28,7 +28,6 @@ public class CommandLineToolsTest {
 
         // TODO write an exhaustive comparison of the resulting algoParameters and the xml file content
         assertTrue(algoParameters.getQUERY_PDB_FOUR_LETTER_CODE().equals("1NLN"));
-        System.out.println();
     }
 
 }
