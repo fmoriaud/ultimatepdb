@@ -50,7 +50,7 @@ public class CompareCompleteCheckTest {
             assertTrue(false);
         }
 
-        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(shapecontainerDefinedQuery.getMyStructure(), queryShape, targetShape, algoParameters);
+        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> results = null;
         try {
             results = compareCompleteCheck.computeResults();
@@ -102,7 +102,7 @@ public class CompareCompleteCheckTest {
             assertTrue(false);
         }
 
-        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(shapecontainerDefinedQuery.getMyStructure(), queryShape, targetShape, algoParameters);
+        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> results = null;
         try {
             results = compareCompleteCheck.computeResults();
@@ -161,7 +161,7 @@ public class CompareCompleteCheckTest {
         all convergence reached true RmsdBackbone = 1.4588981 Rank = 0
                 */
 
-        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(shapecontainerDefinedQuery.getMyStructure(), queryShape, targetShape, algoParameters);
+        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> results = null;
         try {
             results = compareCompleteCheck.computeResults();
