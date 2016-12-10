@@ -34,7 +34,6 @@ public class ProtocolTools {
         try {
             hits = compareCompleteCheck.computeResults();
         } catch (NullResultFromAComparisonException e) {
-            e.printStackTrace();
             return;
         }
 
@@ -66,47 +65,6 @@ public class ProtocolTools {
             }
         }
 
-    }
-
-    public static void compareAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
-        ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(queryShape, targetShape, algoParameters);
-        List<Hit> listBestHitForEachAndEverySeed = null;
-
-        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
-
-        try {
-            listBestHitForEachAndEverySeed = comparatorShape.computeResults();
-        } catch (NullResultFromAComparisonException e) {
-            e.printStackTrace();
-            return;
-        }
-        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + listBestHitForEachAndEverySeed.size() + " hits to minimize");
-
-        int hitRank = -1;
-        A:
-        for (Hit hit : listBestHitForEachAndEverySeed) {
-            hitRank += 1;
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Minimizing " + String.valueOf(targetShape.getFourLetterCode()) + " rankId = " + hitRank);
-
-            try {
-                HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
-            } catch (NullResultFromAComparisonException e) {
-                e.printStackTrace();
-            } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-                continue A;
-            }
-
-            if (hit instanceof HitPeptideWithQueryPeptide) {
-                HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
-                String message = hit.toString() + " RmsdBackbone = " + hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() + " Rank = " + hitRank;
-                ControllerLoger.logger.log(Level.INFO, message);
-            }
-
-            if (minimizeAllIfTrueOrOnlyOneIfFalse == false){
-                break;
-            }
-        }
     }
 
 

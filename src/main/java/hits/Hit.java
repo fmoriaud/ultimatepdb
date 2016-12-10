@@ -19,6 +19,10 @@ public class Hit {
     private ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget;
 
 
+    private int clashesCount;
+    private double percentageIncreaseCompleteCheck;
+
+
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
@@ -71,6 +75,7 @@ public class Hit {
             result.append(" LigandStrainedEnergy = " + resultsUltiJMolMinimizedHitLigandOnTarget.getLigandStrainedEnergy() + NEW_LINE);
             result.append(" all convergence reached " + resultsUltiJMolMinimizedHitLigandOnTarget.isAllconvergenceReached());
         }
+        result.append("Complete Check clashesCount = " + clashesCount + " percentageIncreaseCompleteCheck = " + percentageIncreaseCompleteCheck);
         return result.toString();
     }
 
@@ -92,4 +97,22 @@ public class Hit {
     public void setResultsUltiJMolMinimizedHitLigandOnTarget(ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget) {
         this.resultsUltiJMolMinimizedHitLigandOnTarget = resultsUltiJMolMinimizedHitLigandOnTarget;
     }
+
+    public int getClashesCount() {
+        return clashesCount;
+    }
+
+    public double getPercentageIncreaseCompleteCheck() {
+        return percentageIncreaseCompleteCheck;
+    }
+
+    public void setClashesCount(int clashesCount) {
+        this.clashesCount = clashesCount;
+    }
+
+    public void setPercentageIncreaseCompleteCheck(double percentageIncreaseCompleteCheck) {
+        this.percentageIncreaseCompleteCheck = percentageIncreaseCompleteCheck;
+    }
+
+
 }

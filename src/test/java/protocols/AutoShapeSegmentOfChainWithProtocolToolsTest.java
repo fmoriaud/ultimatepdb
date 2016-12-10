@@ -39,7 +39,7 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
     @Test
     public void testAutoCompareShapeFromSegmentOfChain() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
-        char[] chainId = "C".toCharArray();
+
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
@@ -60,55 +60,28 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructureQuery = null;
-        try {
-            mmcifStructureQuery = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructureQuery = null;
-        try {
-            mystructureQuery = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructureQuery, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        char[] chainId = "C".toCharArray();
         int startingRankId = 3;
         int peptideLength = 4;
+
+        ShapeContainerDefined shapeContainerDefinedQuery = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode.toCharArray(), chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shapeQuery = null;
         try {
-            shapeQuery = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructureQuery, algoParameters, chainId, startingRankId, peptideLength);
+            shapeQuery = shapeContainerDefinedQuery.getShapecontainer();
         } catch (ShapeBuildingException e) {
             e.printStackTrace();
         }
 
-
-        Structure mmcifStructureTarget = null;
-        try {
-            mmcifStructureTarget = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        MyStructureIfc mystructureTarget = null;
-        try {
-            mystructureTarget = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructureTarget, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        ShapeContainerDefined shapeContainerDefinedTarget = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode.toCharArray(), chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shapeTarget = null;
         try {
-            shapeTarget = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructureTarget, algoParameters, chainId, startingRankId, peptideLength);
+            shapeTarget = shapeContainerDefinedTarget.getShapecontainer();
         } catch (ShapeBuildingException e) {
             e.printStackTrace();
         }
 
         boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
-        ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeQuery, shapeTarget, algoParameters);
+        ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeQuery, shapeTarget, algoParameters);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

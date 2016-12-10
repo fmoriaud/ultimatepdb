@@ -13,31 +13,38 @@ import java.util.Map;
  */
 public class CheckDistanceToOutside {
 
-    private ResultsFromEvaluateCost result;
     private ShapeContainerIfc queryShape;
     private ShapeContainerIfc hitShape;
 
-
+    private int countCasesDifferentSign = 0;
+    private int countConsideredCases = 0;
     private boolean distanceOk = false;
 
 
-    public CheckDistanceToOutside(ResultsFromEvaluateCost result, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
+    public CheckDistanceToOutside(PairingAndNullSpaces pairingAndNullSpaces, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
 
-        this.result = result;
         this.queryShape = queryShape;
         this.hitShape = hitShape;
-        this.distanceOk = checkDistanceToOutside(result, queryShape, hitShape);
+        this.distanceOk = checkDistanceToOutside(pairingAndNullSpaces, queryShape, hitShape);
     }
 
 
-    private static boolean checkDistanceToOutside(ResultsFromEvaluateCost result, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
+    /**
+     * Detect if the overlap leads to a ligand on the other side
+     * For each paired point 1, take each paired point 2 (not closeby),
+     * if in query the paired point 1 is closer to ligand than paired point 2, then it should be the same for the target
+     * So same sign is good.
+     * @param pairingAndNullSpaces
+     * @param queryShape
+     * @param hitShape
+     * @return
+     */
+    private boolean checkDistanceToOutside(PairingAndNullSpaces pairingAndNullSpaces, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
 
 
-        PairingAndNullSpaces currentNewPairingAndNewNullSpaces = result.getPairingAndNullSpaces();
+        PairingAndNullSpaces currentNewPairingAndNewNullSpaces = pairingAndNullSpaces;
         // This regression should detect very firmly if the hit ligand is on the same side as the query ligand
         //SimpleRegression regression = new SimpleRegression();
-        int countCasesDifferentSign = 0;
-        int countConsideredCases = 0;
 
         for (Map.Entry<Integer, Integer> entry : currentNewPairingAndNewNullSpaces.getPairing().entrySet()) {
 
@@ -45,8 +52,8 @@ public class CheckDistanceToOutside {
             Integer idFromMap2a = entry.getValue();
             PointWithPropertiesIfc point1a = queryShape.get(idFromMap1a);
             PointWithPropertiesIfc point2a = hitShape.get(idFromMap2a);
-            float distanceToOutsideOfPoint1a = point1a.getDistanceToLigand();
-            float distanceToOutsideOfPoint2a = point2a.getDistanceToLigand();
+            float distanceToOutsideOfPoint1Query = point1a.getDistanceToLigand();
+            float distanceToOutsideOfPoint1Target = point2a.getDistanceToLigand();
 
             for (Map.Entry<Integer, Integer> entry2 : currentNewPairingAndNewNullSpaces.getPairing().entrySet()) {
 
@@ -58,14 +65,16 @@ public class CheckDistanceToOutside {
                 Integer idFromMap2b = entry2.getValue();
                 PointWithPropertiesIfc point1b = queryShape.get(idFromMap1b);
                 PointWithPropertiesIfc point2b = hitShape.get(idFromMap2b);
-                float distanceToOutsideOfPoint1b = point1b.getDistanceToLigand();
-                float distanceToOutsideOfPoint2b = point2b.getDistanceToLigand();
+                float distanceToOutsideOfPoint2Query = point1b.getDistanceToLigand();
+                float distanceToOutsideOfPoint2Target = point2b.getDistanceToLigand();
 
-                float deltaQuery = distanceToOutsideOfPoint1a - distanceToOutsideOfPoint1b;
-                float deltaHit = distanceToOutsideOfPoint2a - distanceToOutsideOfPoint2b;
+                float deltaQuery = distanceToOutsideOfPoint1Query - distanceToOutsideOfPoint2Query;
+                float deltaHit = distanceToOutsideOfPoint1Target - distanceToOutsideOfPoint2Target;
 
                 float distBetweenQueryPoints = ToolsMath.computeDistance(point1a.getCoords().getCoords(), point1b.getCoords().getCoords());
-                if (distBetweenQueryPoints < 3.0f) { // I consider that the dist to ligand difference cannot be reliable if shape points are too close
+                if (distBetweenQueryPoints < 2.0f || distBetweenQueryPoints > 5f) {
+                    // I consider that the dist to ligand difference cannot be reliable if shape points are too close or too far
+                    // It is a local check of upside down hit
                     continue;
                 }
 
@@ -89,11 +98,30 @@ public class CheckDistanceToOutside {
         //System.out.println("percentageDifferentSign = " + percentageDifferentSign + " countConsideredCases =  " + countConsideredCases);
 
         //System.out.println("percentageDifferentSign = " + percentageDifferentSign);
-        if (percentageDifferentSign > 0.4) {
+        if (percentageDifferentSign > 0.47) {
             //System.out.println("hit deleted");
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * For Junit tests
+     *
+     * @return
+     */
+    public int getCountCasesDifferentSign() {
+        return countCasesDifferentSign;
+    }
+
+    /**
+     * For Junit tests
+     *
+     * @return
+     */
+    public int getCountConsideredCases() {
+        return countConsideredCases;
     }
 
 

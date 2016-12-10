@@ -12,8 +12,7 @@ import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.ParsingConfigFileException;
-import protocols.ShapeContainerFactory;
+import protocols.*;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
@@ -32,37 +31,23 @@ public class ShapeBuilderConstructorWholeChainTest {
     @Test
     public void testShapeBuilderConstructor() throws IOException, ParsingConfigFileException {
 
-        char[] chainId = "C".toCharArray();
+
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
+        char[] chainId = "C".toCharArray();
+        ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByWholeChain(fourLetterCode.toCharArray(), chainId, algoParameters);
+        ShapeContainerIfc shape = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        ShapeContainerIfc shapecontainer = null;
-        try {
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
+            shape = shapeContainerbuilder.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
 
         // don't know if it is good, it is as it is now.
-        assertTrue(shapecontainer.getShape().getSize() == 459);
-        assertTrue(shapecontainer.getMiniShape().size() == 59);
+        assertTrue(shape.getShape().getSize() == 459);
+        assertTrue(shape.getMiniShape().size() == 59);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

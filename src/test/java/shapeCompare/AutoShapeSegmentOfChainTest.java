@@ -16,9 +16,7 @@ import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.CommandLineException;
-import protocols.ParsingConfigFileException;
-import protocols.ShapeContainerFactory;
+import protocols.*;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
@@ -38,57 +36,30 @@ public class AutoShapeSegmentOfChainTest {
     @Test
     public void testAutoCompareShapeFromSegmentOfChain() throws ExceptionInScoringUsingBioJavaJMolGUI, ReadingStructurefileException, ExceptionInMyStructurePackage, CommandLineException, ParsingConfigFileException, ShapeBuildingException, IOException {
 
-        char[] chainId = "C".toCharArray();
+
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructureQuery = null;
-        try {
-            mmcifStructureQuery = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructureQuery = null;
-        try {
-            mystructureQuery = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructureQuery, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        char[] chainId = "C".toCharArray();
         int startingRankId = 3;
         int peptideLength = 4;
+        ShapeContainerDefined shapeContainerbuilderQuery = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode.toCharArray(), chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shapeQuery = null;
         try {
-            shapeQuery = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructureQuery, algoParameters, chainId, startingRankId, peptideLength);
+            shapeQuery = shapeContainerbuilderQuery.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-
-        Structure mmcifStructureTarget = null;
-        try {
-            mmcifStructureTarget = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
 
-        MyStructureIfc mystructureTarget = null;
-        try {
-            mystructureTarget = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructureTarget, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        ShapeContainerDefined shapeContainerbuilderTarget = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode.toCharArray(), chainId, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc shapeTarget = null;
         try {
-            shapeTarget = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructureTarget, algoParameters, chainId, startingRankId, peptideLength);
+            shapeTarget = shapeContainerbuilderTarget.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
+
 
         ComparatorShapeContainerQueryVsAnyShapeContainer comparatorShape = new ComparatorShapeContainerQueryVsAnyShapeContainer(shapeQuery, shapeTarget, algoParameters);
         List<Hit> listBestHitForEachAndEverySeed = null;

@@ -23,6 +23,17 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class CompareTools {
 
+    public static List<ResultsFromEvaluateCost> compare(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
+
+        List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
+        List<PairingAndNullSpaces> listExtendedPair = CompareTools.getExtendedPairingAndNullSpaces(resultsPairingTriangleSeed, algoParameters, shapeContainerQuery, shapeContainerAnyShape);
+        ScorePairing scorePairingBasedOnShape = new ScorePairing(shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
+        List<ResultsFromEvaluateCost> resultsExtendedPairing = scorePairingBasedOnShape.getCostOfaListOfPairing(listExtendedPair);
+
+        return resultsExtendedPairing;
+    }
+
+
     public static List<PairingAndNullSpaces> getExtendedPairingAndNullSpaces(List<ResultsFromEvaluateCost> resultsPairingTriangleSeed, AlgoParameters algoParameters, ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape) {
 
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
@@ -39,7 +50,7 @@ public class CompareTools {
     }
 
 
-    public static MyStructureIfc getLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters){
+    public static MyStructureIfc getLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters) {
 
 
         MyStructureIfc clonedRotatedPeptideOrLigand = null;

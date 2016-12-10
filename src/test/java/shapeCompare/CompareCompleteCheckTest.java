@@ -170,15 +170,15 @@ public class CompareCompleteCheckTest {
         }
 
         int countHitDeletedBecauseOforiginalCost = compareCompleteCheck.getCountHitDeletedBecauseOforiginalCost();
-        assertTrue(countHitDeletedBecauseOforiginalCost == 2);
+        assertTrue(countHitDeletedBecauseOforiginalCost == 3);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
-        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 32);
+        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 65);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 16);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 25);
 
         int hitCount = results.size();
-        assertTrue(hitCount == 15);
+        assertTrue(hitCount == 18);
     }
 }

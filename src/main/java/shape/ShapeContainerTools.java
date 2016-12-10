@@ -174,7 +174,12 @@ public class ShapeContainerTools {
         }
         line += formatStringAlignedRight(Integer.toString(atom.getOriginalAtomId()), 5);
         line += " ";
-        line += formatStringAlignedLeft(String.valueOf(atom.getAtomName()), 4);
+
+        String atomName = String.valueOf(atom.getAtomName());
+        if (atomName.length() > 4){
+            atomName = atomName.substring(0, 4);
+        }
+        line += formatStringAlignedLeft(String.valueOf(atomName), 4);
         //System.out.println( formatStringAlignedLeft ( getAtomType( atom ),4 ));
         line += " "; // 17 is alternate location
         String residueType = formatStringAlignedRight(threeLetterCode, 3);
@@ -183,7 +188,12 @@ public class ShapeContainerTools {
 
         line += " "; // 21 is empty
         //System.out.println("Chain ID = " + chainID);
-        line += chainName;
+        if (chainName.length() > 1){
+            line += chainName.substring(0, 1);
+        }else{
+            line += chainName;
+        }
+
         //System.out.println("Chain ID when about to create ATOM line  = " + chainID);
         String residueIDString = formatStringAlignedRight(Integer.toString(residueID), 4);
         line += residueIDString;

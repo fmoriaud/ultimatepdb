@@ -15,6 +15,7 @@ import parameters.AlgoParameters;
 import pointWithProperties.PointWithProperties;
 import pointWithProperties.PointWithPropertiesIfc;
 import pointWithProperties.StrikingPropertiesTools;
+import shape.ShapeContainerIfc;
 import shapeCompare.PairPointWithDistance;
 import shapeCompare.PairingAndNullSpaces;
 import shapeCompare.PairingTools;
@@ -31,6 +32,19 @@ public class ScorePairingTools {
 	//------------------------
 	// Static Method
 	//------------------------
+	public static ResultsFromEvaluateCost score(ShapeContainerIfc shapeContainerAnyShape, ShapeContainerIfc shapeContainerCompleteCheck, ResultsFromEvaluateCost result, AlgoParameters algoParameters) {
+
+
+		ExtendPairing extendPairing = new ExtendPairing(shapeContainerAnyShape.getShape(), shapeContainerCompleteCheck.getShape(), algoParameters);
+		ResultsFromEvaluateCost extendedResult = extendPairing.extendSeed(result);
+		ScorePairing scorePairing = new ScorePairing(shapeContainerAnyShape.getShape(), shapeContainerCompleteCheck.getShape(), algoParameters);
+		ResultsFromEvaluateCost extendPairingAndScored = scorePairing.getCostOfaPairing(extendedResult.getPairingAndNullSpaces());
+
+		return extendPairingAndScored;
+
+	}
+
+
 	public static List<ResultsFromEvaluateCost> getCostOfaListOfPairing(List<PairingAndNullSpaces> listPairingAndNullSpacesToBeScored, Map<Integer, PointWithPropertiesIfc> shape1, Map<Integer, PointWithPropertiesIfc> shape2, AlgoParameters algoParameters){
 
 		List<ResultsFromEvaluateCost> listCost = new ArrayList<>();

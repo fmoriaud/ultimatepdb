@@ -67,7 +67,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
         }
 
         System.out.println("Finish Built a shape container");
-        ProtocolTools.compareAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeContainerQuery, targetShape, algoParameters);
+        ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeContainerQuery, targetShape, algoParameters);
 
         return true;
     }

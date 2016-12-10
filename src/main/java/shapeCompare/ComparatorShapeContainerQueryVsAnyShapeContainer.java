@@ -75,13 +75,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 
         }
 
-        List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
-
-        List<PairingAndNullSpaces> listExtendedPair = CompareTools.getExtendedPairingAndNullSpaces(resultsPairingTriangleSeed, algoParameters, shapeContainerQuery, shapeContainerAnyShape);
-
-        ScorePairing scorePairingBasedOnShape = new ScorePairing(shapeContainerQuery.getShape(), shapeContainerAnyShape.getShape(), algoParameters);
-        List<ResultsFromEvaluateCost> resultsExtendedPairing = scorePairingBasedOnShape.getCostOfaListOfPairing(listExtendedPair);
-
+        List<ResultsFromEvaluateCost> resultsExtendedPairing = CompareTools.compare(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
 
         // Remove hit where hit is not enough matching query based on covergage
         //int before = resultsExtendedPairing.size();
@@ -92,7 +86,7 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
             float fractionNeededOnHit = algoParameters.getFRACTION_NEEDED_ON_QUERY();
             float ratioPairedPointInQuery = nextResult.getRatioPairedPointInQuery();
 
-            CheckDistanceToOutside checkDistanceToOutside = new CheckDistanceToOutside(nextResult, shapeContainerQuery, shapeContainerAnyShape);
+            CheckDistanceToOutside checkDistanceToOutside = new CheckDistanceToOutside(nextResult.getPairingAndNullSpaces(), shapeContainerQuery, shapeContainerAnyShape);
 
             boolean isDistanceToOutsideOk = checkDistanceToOutside.isDistanceOk();
 

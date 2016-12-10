@@ -8,6 +8,7 @@ import protocols.ShapeContainerFactory;
 import scorePairing.CheckDistanceToOutside;
 import scorePairing.ExtendPairing;
 import scorePairing.ScorePairing;
+import scorePairing.ScorePairingTools;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
@@ -125,8 +126,8 @@ public class CompareCompleteCheck {
             // using the rotation and translation form query to hit.
             ResultsFromEvaluateCost result = hit.getResultsFromEvaluateCost();
 
-            ResultsFromEvaluateCost resultCompleteCheck = score(shapeContainerCompleteCheck, shapeContainerAnyShape, result);
-            ResultsFromEvaluateCost resultRedone = score(shapeContainerQuery, shapeContainerAnyShape, result);
+            ResultsFromEvaluateCost resultCompleteCheck = ScorePairingTools.score(shapeContainerCompleteCheck, shapeContainerAnyShape, result, algoParameters);
+            ResultsFromEvaluateCost resultRedone = ScorePairingTools.score(shapeContainerQuery, shapeContainerAnyShape, result, algoParameters);
 
             // results are relative to the number of points in the pairing
             int pairedPointsCompleteCheck = resultCompleteCheck.getPairingAndNullSpaces().getPairing().size();
@@ -148,28 +149,21 @@ public class CompareCompleteCheck {
                 continue;
             }
 
+            hit.setClashesCount(clashesCount);
+            hit.setPercentageIncreaseCompleteCheck(percentageIncreaseCompleteCheck);
             resultsCompareQueryAndTargetSelectedOnCompleteCheck.add(hit);
+            /*
             System.out.println("absoluteCostCompleteCheck = " + absoluteCostCompleteCheck + " with " + pairedPointsCompleteCheck + " points");
             System.out.println("absoluteCostRedone = " + absoluteCostRedone + " with " + pairedPointsRedone + " points");
             System.out.println("Cost original = " + costOriginal);
             System.out.println("absoluteCostOriginal = " + absoluteCostOriginal + " with " + pairedPointsOriginal + " points");
             System.out.println();
+            */
         }
 
         return resultsCompareQueryAndTargetSelectedOnCompleteCheck;
     }
 
-    private ResultsFromEvaluateCost score(ShapeContainerIfc shapeContainerAnyShape, ShapeContainerIfc shapeContainerCompleteCheck, ResultsFromEvaluateCost result) {
-
-
-        ExtendPairing extendPairing = new ExtendPairing(shapeContainerAnyShape.getShape(), shapeContainerCompleteCheck.getShape(), algoParameters);
-        ResultsFromEvaluateCost extendedResult = extendPairing.extendSeed(result);
-        ScorePairing scorePairing = new ScorePairing(shapeContainerAnyShape.getShape(), shapeContainerCompleteCheck.getShape(), algoParameters);
-        ResultsFromEvaluateCost extendPairingAndScored = scorePairing.getCostOfaPairing(extendedResult.getPairingAndNullSpaces());
-
-        return extendPairingAndScored;
-
-    }
 
 
     private int computeClashes(MyStructureIfc myStructureLocalQuery, MyStructureIfc rotatedLigandOrPeptide) {
@@ -211,10 +205,18 @@ public class CompareCompleteCheck {
         return countHitDeletedBecauseOforiginalCost;
     }
 
+    /**
+     * For test only
+     * @return
+     */
     public int getCountHitDeletedBecauseOfHitLigandClashesInQuery() {
         return countHitDeletedBecauseOfHitLigandClashesInQuery;
     }
 
+    /**
+     * For test only
+     * @return
+     */
     public int getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck() {
         return countHitDeletedBecauseOfPercentageIncreaseCompleteCheck;
     }

@@ -95,7 +95,15 @@ public class ProtocolBindingVsFolding {
 
 
         // build the query
-        ShapeContainerIfc queryShape = buildQueryShape();
+
+        ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByWholeChain(queryFourLetterCode.toCharArray(), peptideChainId.toCharArray(), algoParameters);
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = shapeContainerbuilder.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
 
 
         // Find same sequence occurences in sequence DB
@@ -155,15 +163,16 @@ public class ProtocolBindingVsFolding {
             }
 
             char[] chainId = chainIdFromDB.toCharArray();
-
             B:
             for (int i = 0; i < listRankIds.size(); i++) {
 
                 Integer matchingRankId = listRankIds.get(i);
 
+                ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget.toLowerCase().toCharArray(), chainId, matchingRankId, peptideLength, algoParameters);
+
                 ShapeContainerIfc targetShape = null;
                 try {
-                    targetShape = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId, matchingRankId, peptideLength);
+                    targetShape = shapeContainerDefined.getShapecontainer(mystructure);
 
                 } catch (ShapeBuildingException e) {
                     e.printStackTrace();
@@ -173,12 +182,7 @@ public class ProtocolBindingVsFolding {
 
                 boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
                 ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
-
             }
-            // Put in a callable the shape building and comparison
-
-            // Feed an executor
-
         }
     }
 
@@ -186,33 +190,5 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     // Implementation
     // -------------------------------------------------------------------
-    private ShapeContainerIfc buildQueryShape() {
 
-        char[] chainId = peptideChainId.toCharArray();
-
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(queryFourLetterCode, algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-        } catch (IOException | ExceptionInIOPackage e) {
-
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-
-        }
-
-        ShapeContainerIfc shapecontainer = null;
-        try {
-            shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, chainId);
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-        }
-
-        return shapecontainer;
-    }
 }

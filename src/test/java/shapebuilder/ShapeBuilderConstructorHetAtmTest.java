@@ -13,7 +13,9 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
 import protocols.ShapeContainerFactory;
+import protocols.ShapecontainerDefinedByHetatm;
 import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuilderConstructorIfc;
@@ -35,36 +37,21 @@ public class ShapeBuilderConstructorHetAtmTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
         char[] hetatmLigandThreeLetterCode = "MSQ".toCharArray();
         int occurenceId = 1;
+        ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByHetatm(fourLetterCode.toCharArray(), algoParameters, hetatmLigandThreeLetterCode, occurenceId);
         ShapeContainerIfc shape = null;
         try {
-            shape = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, mystructure, algoParameters, hetatmLigandThreeLetterCode, occurenceId);
+            shape = shapeContainerbuilder.getShapecontainer();
         } catch (ShapeBuildingException e) {
-            e.printStackTrace();
+            assertTrue(false);
         }
 
         // don't know if it is good, it is as it is now.
         System.out.println(shape.getShape().getSize());
         System.out.println(shape.getMiniShape().size());
         assertTrue(shape.getShape().getSize() == 805);
-        assertTrue(shape.getMiniShape().size() == 53 );
+        assertTrue(shape.getMiniShape().size() == 53);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

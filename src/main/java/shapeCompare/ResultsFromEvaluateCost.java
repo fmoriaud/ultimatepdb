@@ -12,6 +12,7 @@ public class ResultsFromEvaluateCost {
 	//------------------------
 	private double cost;
 	private double distanceResidual;
+
 	private RealMatrix rotationMatrix;
 	private RealVector translationVector;
 	private RealVector translationVectorToTranslateShape2ToOrigin;
@@ -194,6 +195,9 @@ public class ResultsFromEvaluateCost {
 	public RealMatrix getRotationMatrix() {
 		return rotationMatrix;
 	}
+	public void setRotationMatrix(RealMatrix rotationMatrix) {
+		this.rotationMatrix = rotationMatrix;
+	}
 	public RealVector getTranslationVector() {
 		return translationVector;
 	}
@@ -207,5 +211,7 @@ public class ResultsFromEvaluateCost {
 	public float getRatioPairedPointInQuery() {
 		return ratioPairedPointInQuery;
 	}
+
+
 
 }
