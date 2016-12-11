@@ -658,7 +658,11 @@ public class StructureLocalToBuildAnyShape {
             return false;
         }
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
+        // or no bond
         int bondCountNterminal = nTerminal.getBonds().length;
+        if (bondCountNterminal == 0) { // 5it7 chain OO rankid 5 peptide length 5
+            return true;
+        }
         boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
         boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
 
@@ -675,6 +679,7 @@ public class StructureLocalToBuildAnyShape {
             return false;
         }
         int bondCountCterminal = cTerminal.getBonds().length;
+
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
 
         boolean oFound = false;
@@ -704,6 +709,10 @@ public class StructureLocalToBuildAnyShape {
 
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
         int bondCountNterminal = nTerminal.getBonds().length;
+        if (bondCountNterminal == 0){ // 5it7 chain OO rankid 5 peptide length 5
+            return true;
+        }
+
         boolean bondToCaSameMonomer = nTerminal.getBonds()[0].getBondedAtom().getParent() == nTerminal.getParent();
         boolean bondToCa = Arrays.equals(nTerminal.getBonds()[0].getBondedAtom().getAtomName(), "CA".toCharArray());
         MyBondIfc[] bondsToNTerminal = nTerminal.getBonds();

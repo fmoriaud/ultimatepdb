@@ -65,6 +65,9 @@ public class CheckDistanceToOutside {
                 Integer idFromMap2b = entry2.getValue();
                 PointWithPropertiesIfc point1b = queryShape.get(idFromMap1b);
                 PointWithPropertiesIfc point2b = hitShape.get(idFromMap2b);
+                if (point2b == null){
+                    System.out.println();
+                }
                 float distanceToOutsideOfPoint2Query = point1b.getDistanceToLigand();
                 float distanceToOutsideOfPoint2Target = point2b.getDistanceToLigand();
 
