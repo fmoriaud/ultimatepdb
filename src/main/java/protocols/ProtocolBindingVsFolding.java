@@ -134,7 +134,16 @@ public class ProtocolBindingVsFolding {
             hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
 
-
+        boolean startoutput = false;
+        for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
+            if (hitInSequenceDb.getFourLetterCode().equals("5IT7")){
+                startoutput = true;
+            }
+            if (startoutput == true){
+                System.out.println(hitInSequenceDb.getFourLetterCode() + " " + hitInSequenceDb.getChainIdFromDB() + " " + hitInSequenceDb.getListRankIds().get(0));
+                System.out.println();
+            }
+        }
         //List<HitInSequenceDb> hitsInDatabaseMod = new ArrayList<>();
         // hitsInDatabaseMod.add(hitsInDatabase.get(2));
         // hitsInDatabase = hitsInDatabaseMod;
@@ -142,6 +151,7 @@ public class ProtocolBindingVsFolding {
         String fourLetterCodeTarget;
         String chainIdFromDB;
         for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
+
 
             fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
             chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
