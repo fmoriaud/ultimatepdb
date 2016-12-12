@@ -90,9 +90,9 @@ public class ShapeContainerTools {
         List<String> connectLines = new ArrayList<>();
 
         for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
-            if (!Arrays.equals(monomer.getType(), "hetatm".toCharArray())) {
-                continue; // CONNECT lines only for hetatm
-            }
+            //if (!Arrays.equals(monomer.getType(), "hetatm".toCharArray())) {
+            //    continue; // CONNECT lines only for hetatm
+            //}
             for (MyAtomIfc myAtom : monomer.getMyAtoms()) {
                 MyBondIfc[] bonds = myAtom.getBonds();
                 for (MyBondIfc bond : bonds) {

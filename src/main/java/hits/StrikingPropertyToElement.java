@@ -12,7 +12,7 @@ public enum StrikingPropertyToElement {
 	HBOND_DONNOR (StrikingProperties.HBOND_DONNOR, Element.Cl),
 	HBOND_ACCEPTOR (StrikingProperties.HBOND_ACCEPTOR, Element.S),
 	DEHYDRON (StrikingProperties.DEHYDRON, Element.Br),
-	AROMATICRING (StrikingProperties.AROMATICRING, Element.H),
+	AROMATICRING (StrikingProperties.AROMATICRING, Element.P),
 	NONE (StrikingProperties.NONE, Element.I);
 	
 	private final StrikingProperties strikingProperties ;
