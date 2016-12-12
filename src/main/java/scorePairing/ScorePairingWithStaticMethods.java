@@ -16,218 +16,245 @@ import shapeCompare.PairingAndNullSpaces;
 public class ScorePairingWithStaticMethods {
 
 
-	public static ResultFromScorePairing computeCost(PairingAndNullSpaces currentNewPairingAndNewNullSpaces, Map<Integer, PointWithPropertiesIfc> queryShape, Map<Integer, PointWithPropertiesIfc> hitShape, AlgoParameters algoParameters){
+    public static ResultFromScorePairing computeCost(PairingAndNullSpaces currentNewPairingAndNewNullSpaces, Map<Integer, PointWithPropertiesIfc> queryShape, Map<Integer, PointWithPropertiesIfc> hitShape, AlgoParameters algoParameters) {
 
-		int countOfPairedPoint = currentNewPairingAndNewNullSpaces.getPairing().size();
+        int countOfPairedPoint = currentNewPairingAndNewNullSpaces.getPairing().size();
 
-		double[][]  matrixPointsModelDouble = new double[3][countOfPairedPoint];
-		double[][]  matrixPointsCandidateDouble = new double[3][countOfPairedPoint];
+        double[][] matrixPointsModelDouble = new double[3][countOfPairedPoint];
+        double[][] matrixPointsCandidateDouble = new double[3][countOfPairedPoint];
 
-		RealMatrix matrixPointsModel = new Array2DRowRealMatrix(matrixPointsModelDouble);
-		RealMatrix matrixPointsCandidate = new Array2DRowRealMatrix(matrixPointsCandidateDouble);
+        RealMatrix matrixPointsModel = new Array2DRowRealMatrix(matrixPointsModelDouble);
+        RealMatrix matrixPointsCandidate = new Array2DRowRealMatrix(matrixPointsCandidateDouble);
 
-		int currentPoint = 0;
+        int currentPoint = 0;
 
-		RealVector sumVector1 = new ArrayRealVector(new double[3]);
-		RealVector sumVector2 = new ArrayRealVector(new double[3]);
+        RealVector sumVector1 = new ArrayRealVector(new double[3]);
+        RealVector sumVector2 = new ArrayRealVector(new double[3]);
 
-		sumVector1.setEntry(0, 0.0);
-		sumVector1.setEntry(1, 0.0);
-		sumVector1.setEntry(2, 0.0);
-		sumVector2.setEntry(0, 0.0);
-		sumVector2.setEntry(1, 0.0);
-		sumVector2.setEntry(2, 0.0);
-
-
-		for( Map.Entry<Integer, Integer> entry: currentNewPairingAndNewNullSpaces.getPairing().entrySet() ) {
-
-			Integer point1id = Integer.valueOf(entry.getKey().intValue());
-			Integer point2id = Integer.valueOf(entry.getValue().intValue());
-
-			// the 2 points could be defined as static be static
-			PointWithPropertiesIfc point1 = queryShape.get(point1id);
-			PointWithPropertiesIfc point2 = hitShape.get(point2id);
-
-			// matrix for procrustes
-			matrixPointsModel.setEntry(0, currentPoint, point1.getCoords().getCoords()[0]);
-			matrixPointsModel.setEntry(1, currentPoint, point1.getCoords().getCoords()[1]);
-			matrixPointsModel.setEntry(2, currentPoint, point1.getCoords().getCoords()[2]);
-
-			matrixPointsCandidate.setEntry(0, currentPoint, point2.getCoords().getCoords()[0]);
-			matrixPointsCandidate.setEntry(1, currentPoint, point2.getCoords().getCoords()[1]);
-			matrixPointsCandidate.setEntry(2, currentPoint, point2.getCoords().getCoords()[2]);
-
-			// barycenter computation
-			sumVector1.addToEntry(0, point1.getCoords().getCoords()[0]);
-			sumVector1.addToEntry(1, point1.getCoords().getCoords()[1]);
-			sumVector1.addToEntry(2, point1.getCoords().getCoords()[2]);
-
-			sumVector2.addToEntry(0, point2.getCoords().getCoords()[0]);
-			sumVector2.addToEntry(1, point2.getCoords().getCoords()[1]);
-			sumVector2.addToEntry(2, point2.getCoords().getCoords()[2]);
-			currentPoint += 1;
-
-		}
-
-		RealVector barycenterVector1 = sumVector1.mapDivide((double) currentPoint);
-		RealVector barycenterVector2 = sumVector2.mapDivide((double) currentPoint);
+        sumVector1.setEntry(0, 0.0);
+        sumVector1.setEntry(1, 0.0);
+        sumVector1.setEntry(2, 0.0);
+        sumVector2.setEntry(0, 0.0);
+        sumVector2.setEntry(1, 0.0);
+        sumVector2.setEntry(2, 0.0);
 
 
-		RealVector translationVectorToTranslateShape2ToOrigin = barycenterVector2.mapMultiply(-1.0);
-		RealVector translationVectorToTranslateShape2ToShape1 = barycenterVector1.subtract(barycenterVector2);
+        for (Map.Entry<Integer, Integer> entry : currentNewPairingAndNewNullSpaces.getPairing().entrySet()) {
 
-		translateBarycenterListOfPointToOrigin(matrixPointsModel, barycenterVector1);
-		translateBarycenterListOfPointToOrigin(matrixPointsCandidate, barycenterVector2);
+            Integer point1id = Integer.valueOf(entry.getKey().intValue());
+            Integer point2id = Integer.valueOf(entry.getValue().intValue());
 
-		ProcrustesAnalysisIfc procrustesAnalysis = null;
-		try {
-			procrustesAnalysis = algoParameters.procrustesAnalysisBuffer.get();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		procrustesAnalysis.run(matrixPointsModel, matrixPointsCandidate);
+            // the 2 points could be defined as static be static
+            PointWithPropertiesIfc point1 = queryShape.get(point1id);
+            PointWithPropertiesIfc point2 = hitShape.get(point2id);
 
-		RealMatrix rotationMatrixToRotateShape2ToShape1 = procrustesAnalysis.getRotationMatrix();
+            // matrix for procrustes
+            matrixPointsModel.setEntry(0, currentPoint, point1.getCoords().getCoords()[0]);
+            matrixPointsModel.setEntry(1, currentPoint, point1.getCoords().getCoords()[1]);
+            matrixPointsModel.setEntry(2, currentPoint, point1.getCoords().getCoords()[2]);
 
-		try {
-			algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            matrixPointsCandidate.setEntry(0, currentPoint, point2.getCoords().getCoords()[0]);
+            matrixPointsCandidate.setEntry(1, currentPoint, point2.getCoords().getCoords()[1]);
+            matrixPointsCandidate.setEntry(2, currentPoint, point2.getCoords().getCoords()[2]);
 
-		// not used: we dont really care how accurate is the overlap of points in pairs as it is within expected range because of the
-		// fact that I extend hits with a distance criteria
-		double distanceResidual = procrustesAnalysis.getResidual();
-		// no need to use hit coverage as already used as a filter
+            // barycenter computation
+            sumVector1.addToEntry(0, point1.getCoords().getCoords()[0]);
+            sumVector1.addToEntry(1, point1.getCoords().getCoords()[1]);
+            sumVector1.addToEntry(2, point1.getCoords().getCoords()[2]);
 
-		// no need to use the distance to outside as it is used as a filter
+            sumVector2.addToEntry(0, point2.getCoords().getCoords()[0]);
+            sumVector2.addToEntry(1, point2.getCoords().getCoords()[1]);
+            sumVector2.addToEntry(2, point2.getCoords().getCoords()[2]);
+            currentPoint += 1;
 
-		// handling of probability to have a small contribution of if
-		float toleranceElectronProbability = 0.2f;
+        }
 
-		// use only properties for cost
-		double costCharge = 0.0;
-		double costHydrophobicity = 0.0;
-		double costHbondDonnor = 0.0;
-		double costHbondAcceptor = 0.0;
-		double costDehydron = 0.0;
-		double costAromaticRing = 0.0;
-		double costProbabilityDiff = 0.0;
-
-		for( Map.Entry<Integer, Integer> entry: currentNewPairingAndNewNullSpaces.getPairing().entrySet() ) { 
-
-			Integer idFromMap1 = entry.getKey();
-			Integer idFromMap2 = entry.getValue();
-			PointWithPropertiesIfc point1 = queryShape.get(idFromMap1);
-			PointWithPropertiesIfc point2 = hitShape.get(idFromMap2);
-
-			float probabilityOfPoint1 = point1.getElectronProbability();
-			float probabilityOfPoint2 = point2.getElectronProbability();
-			float probabilityDiff = Math.abs(probabilityOfPoint1 - probabilityOfPoint2);
-			if (probabilityDiff < toleranceElectronProbability){
-				probabilityDiff = 0.0f;
-			}else{
-				probabilityDiff -= toleranceElectronProbability;
-			}
-			costProbabilityDiff += probabilityDiff;
-
-			Float chargeOfPointFromMap1 = point1.get(PropertyName.FormalCharge);
-			Float chargeOfPointFromMap2 = point2.get(PropertyName.FormalCharge);
-			costCharge += returnCost(chargeOfPointFromMap1, chargeOfPointFromMap2);
-
-			Float hydrophobicityOfPointFromMap1 = point1.get(PropertyName.Hydrophobicity);
-			Float hydrophobicityOfPointFromMap2 = point2.get(PropertyName.Hydrophobicity);
-			costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
-
-			Float hBondDonnorOfPointFromMap1 = point1.get(PropertyName.HbondDonnor);
-			Float hBondDonnorOfPointFromMap2 = point2.get(PropertyName.HbondDonnor);
-			costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
-
-			Float hBondAcceptorOfPointFromMap1 = point1.get(PropertyName.HbondAcceptor);
-			Float hBondAcceptorOfPointFromMap2 = point2.get(PropertyName.HbondAcceptor);
-			costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
-
-			Float dehydronOfPointFromMap1 = point1.get(PropertyName.Dehydron);
-			Float dehydronOfPointFromMap2 = point2.get(PropertyName.Dehydron);
-			costDehydron += returnCost(dehydronOfPointFromMap1, dehydronOfPointFromMap2);
-
-			Float aromaticRingOfPointFromMap1 = point1.get(PropertyName.AromaticRing);
-			Float aromaticRingOfPointFromMap2 = point2.get(PropertyName.AromaticRing);
-			costAromaticRing += returnCost(aromaticRingOfPointFromMap1, aromaticRingOfPointFromMap2);
-
-		}
-
-		int size = currentNewPairingAndNewNullSpaces.getPairing().size();
-
-		costCharge = costCharge / size;
-		costHbondDonnor = costHbondDonnor / size;
-		costHbondAcceptor = costHbondAcceptor / size;
-		costDehydron = costDehydron / size;
-		costHydrophobicity = costHydrophobicity / size;
-		costAromaticRing = costAromaticRing / size;
-		costProbabilityDiff = costProbabilityDiff / size;
-
-		double costOnPairs =
-				algoParameters.getWEIGHT_DIFFERENCE_IN_CHARGES_BETWEEN_PAIRED_POINTS() * costCharge +
-				algoParameters.getWEIGHT_DIFFERENCE_IN_HYDROPHOBICITY_BETWEEN_PAIRED_POINTS() * costHydrophobicity +
-				algoParameters.getWEIGHT_HBOND_DONNOR() * costHbondDonnor +
-				algoParameters.getWEIGHT_HBOND_ACCEPTOR() * costHbondAcceptor +
-				algoParameters.getWEIGHT_DEHYDRON() * costDehydron +
-				algoParameters.getWEIGHT_DIFFERENCE_AROMATICRING() * costAromaticRing +
-				algoParameters.getWEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS() * costProbabilityDiff
-				;
-
-		//double costOnUnpairedPoints = computeRatioFromUnpairedPointsHitToAllPointsHits(currentNewPairingAndNewNullSpaces, hitShape);
-		//double newFinalCost = costOnPairs + algoParameters.getWEIGHT_UNPAIRED_POINT_IN_SMALLEST_MAP() * costOnUnpairedPoints;
-
-		double sumWeight = algoParameters.getWEIGHT_DIFFERENCE_IN_CHARGES_BETWEEN_PAIRED_POINTS() + 
-				algoParameters.getWEIGHT_DIFFERENCE_IN_HYDROPHOBICITY_BETWEEN_PAIRED_POINTS() +
-				algoParameters.getWEIGHT_HBOND_DONNOR() +
-				algoParameters.getWEIGHT_HBOND_ACCEPTOR() +
-				algoParameters.getWEIGHT_DEHYDRON() +
-				algoParameters.getWEIGHT_DIFFERENCE_AROMATICRING() +
-				algoParameters.getWEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS() ;
-
-		double finalCost = costOnPairs / sumWeight;
-
-		ResultFromScorePairing resultFromScorePairing = new ResultFromScorePairing(finalCost, 
-				rotationMatrixToRotateShape2ToShape1, translationVectorToTranslateShape2ToShape1, 
-				translationVectorToTranslateShape2ToOrigin, distanceResidual);
-		return resultFromScorePairing;
+        RealVector barycenterVector1 = sumVector1.mapDivide((double) currentPoint);
+        RealVector barycenterVector2 = sumVector2.mapDivide((double) currentPoint);
 
 
-	}
+        RealVector translationVectorToTranslateShape2ToOrigin = barycenterVector2.mapMultiply(-1.0);
+        RealVector translationVectorToTranslateShape2ToShape1 = barycenterVector1.subtract(barycenterVector2);
+
+        translateBarycenterListOfPointToOrigin(matrixPointsModel, barycenterVector1);
+        translateBarycenterListOfPointToOrigin(matrixPointsCandidate, barycenterVector2);
+
+        ProcrustesAnalysisIfc procrustesAnalysis = null;
+        try {
+            procrustesAnalysis = algoParameters.procrustesAnalysisBuffer.get();
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        procrustesAnalysis.run(matrixPointsModel, matrixPointsCandidate);
+
+        RealMatrix rotationMatrixToRotateShape2ToShape1 = procrustesAnalysis.getRotationMatrix();
+
+        try {
+            algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysis);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // not used: we dont really care how accurate is the overlap of points in pairs as it is within expected range because of the
+        // fact that I extend hits with a distance criteria
+        double distanceResidual = procrustesAnalysis.getResidual();
+        // no need to use hit coverage as already used as a filter
+
+        // no need to use the distance to outside as it is used as a filter
+
+        // handling of probability to have a small contribution of if
+        float toleranceElectronProbability = 0.2f;
+
+        // use only properties for cost
+        double costCharge = 0.0;
+        double costHydrophobicity = 0.0;
+        double costHbondDonnor = 0.0;
+        double costHbondAcceptor = 0.0;
+        double costDehydron = 0.0;
+        double costAromaticRing = 0.0;
+        double costProbabilityDiff = 0.0;
+
+        for (Map.Entry<Integer, Integer> entry : currentNewPairingAndNewNullSpaces.getPairing().entrySet()) {
+
+            Integer idFromMap1 = entry.getKey();
+            Integer idFromMap2 = entry.getValue();
+            PointWithPropertiesIfc point1 = queryShape.get(idFromMap1);
+            PointWithPropertiesIfc point2 = hitShape.get(idFromMap2);
+
+            float probabilityOfPoint1 = point1.getElectronProbability();
+            float probabilityOfPoint2 = point2.getElectronProbability();
+            float probabilityDiff = Math.abs(probabilityOfPoint1 - probabilityOfPoint2);
+            if (probabilityDiff < toleranceElectronProbability) {
+                probabilityDiff = 0.0f;
+            } else {
+                probabilityDiff -= toleranceElectronProbability;
+            }
+            costProbabilityDiff += probabilityDiff;
 
 
+            // handle multi properties
 
-	private static float returnCost(Float value1, Float value2){
+            // Hydrophobe and Aromatic
+            Float hydrophobicityOfPointFromMap1 = point1.get(PropertyName.Hydrophobicity);
+            Float hydrophobicityOfPointFromMap2 = point2.get(PropertyName.Hydrophobicity);
+            Float aromaticRingOfPointFromMap1 = point1.get(PropertyName.AromaticRing);
+            Float aromaticRingOfPointFromMap2 = point2.get(PropertyName.AromaticRing);
 
-		if (value1 != null && value2 == null){
-			return (float) Math.abs(value1);
-		}else{
-			if (value1 == null && value2 != null){
-				return (float) Math.abs(value2);
-			}else{
-				if (value1 != null && value2 != null){
-					return (float) Math.abs(value1 - value2);
-				}
-			}
-		}
-		return 0.0f;
-	}
+            boolean bothAromatic = hydrophobicityOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 != null;
+            boolean bothHydrophobe = aromaticRingOfPointFromMap1 != null && aromaticRingOfPointFromMap2 != null;
+
+            if (bothAromatic) {
+                costAromaticRing += returnCost(aromaticRingOfPointFromMap1, aromaticRingOfPointFromMap2);
+            } else {
+                if (bothHydrophobe) {
+                    costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
+                } else {
+                    // not both aromatic nor both hydrophobe
+                    costAromaticRing += returnCost(aromaticRingOfPointFromMap1, aromaticRingOfPointFromMap2);
+                    costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
+                }
+            }
 
 
+            Float chargeOfPointFromMap1 = point1.get(PropertyName.FormalCharge);
+            Float chargeOfPointFromMap2 = point2.get(PropertyName.FormalCharge);
+            costCharge += returnCost(chargeOfPointFromMap1, chargeOfPointFromMap2);
 
-	public static void translateBarycenterListOfPointToOrigin(RealMatrix matrix, RealVector barycenter){
+            Float hBondDonnorOfPointFromMap1 = point1.get(PropertyName.HbondDonnor);
+            Float hBondDonnorOfPointFromMap2 = point2.get(PropertyName.HbondDonnor);
+            Float hBondAcceptorOfPointFromMap1 = point1.get(PropertyName.HbondAcceptor);
+            Float hBondAcceptorOfPointFromMap2 = point2.get(PropertyName.HbondAcceptor);
 
-		int countOfPoint = matrix.getColumnDimension();
+            boolean bothDonnor = hBondDonnorOfPointFromMap1 != null && hBondDonnorOfPointFromMap2 != null;
+            boolean bothAcceptor = hBondAcceptorOfPointFromMap1 != null && hBondAcceptorOfPointFromMap2 != null;
 
-		for (int i=0; i<countOfPoint; i++){
-			matrix.addToEntry(0, i, -1.0 * barycenter.getEntry(0));
-			matrix.addToEntry(1, i, -1.0 * barycenter.getEntry(1));
-			matrix.addToEntry(2, i, -1.0 * barycenter.getEntry(2));
-		}
-	}
+            if (bothDonnor) {
+                // if both donor I dont score acceptor
+                costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
+            } else {
+                if (bothAcceptor) {
+                    // if both acceptor I score only on acceptor
+                    costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
+                } else {
+                    costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
+                    costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
+                }
+            }
+
+            Float dehydronOfPointFromMap1 = point1.get(PropertyName.Dehydron);
+            Float dehydronOfPointFromMap2 = point2.get(PropertyName.Dehydron);
+            costDehydron += returnCost(dehydronOfPointFromMap1, dehydronOfPointFromMap2);
+
+        }
+
+        int size = currentNewPairingAndNewNullSpaces.getPairing().size();
+
+        costCharge = costCharge / size;
+        costHbondDonnor = costHbondDonnor / size;
+        costHbondAcceptor = costHbondAcceptor / size;
+        costDehydron = costDehydron / size;
+        costHydrophobicity = costHydrophobicity / size;
+        costAromaticRing = costAromaticRing / size;
+        costProbabilityDiff = costProbabilityDiff / size;
+
+        double costOnPairs =
+                algoParameters.getWEIGHT_DIFFERENCE_IN_CHARGES_BETWEEN_PAIRED_POINTS() * costCharge +
+                        algoParameters.getWEIGHT_DIFFERENCE_IN_HYDROPHOBICITY_BETWEEN_PAIRED_POINTS() * costHydrophobicity +
+                        algoParameters.getWEIGHT_HBOND_DONNOR() * costHbondDonnor +
+                        algoParameters.getWEIGHT_HBOND_ACCEPTOR() * costHbondAcceptor +
+                        algoParameters.getWEIGHT_DEHYDRON() * costDehydron +
+                        algoParameters.getWEIGHT_DIFFERENCE_AROMATICRING() * costAromaticRing +
+                        algoParameters.getWEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS() * costProbabilityDiff;
+
+        //double costOnUnpairedPoints = computeRatioFromUnpairedPointsHitToAllPointsHits(currentNewPairingAndNewNullSpaces, hitShape);
+        //double newFinalCost = costOnPairs + algoParameters.getWEIGHT_UNPAIRED_POINT_IN_SMALLEST_MAP() * costOnUnpairedPoints;
+
+        double sumWeight = algoParameters.getWEIGHT_DIFFERENCE_IN_CHARGES_BETWEEN_PAIRED_POINTS() +
+                algoParameters.getWEIGHT_DIFFERENCE_IN_HYDROPHOBICITY_BETWEEN_PAIRED_POINTS() +
+                algoParameters.getWEIGHT_HBOND_DONNOR() +
+                algoParameters.getWEIGHT_HBOND_ACCEPTOR() +
+                algoParameters.getWEIGHT_DEHYDRON() +
+                algoParameters.getWEIGHT_DIFFERENCE_AROMATICRING() +
+                algoParameters.getWEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS();
+
+        double finalCost = costOnPairs / sumWeight;
+
+        ResultFromScorePairing resultFromScorePairing = new ResultFromScorePairing(finalCost,
+                rotationMatrixToRotateShape2ToShape1, translationVectorToTranslateShape2ToShape1,
+                translationVectorToTranslateShape2ToOrigin, distanceResidual);
+        return resultFromScorePairing;
+
+
+    }
+
+
+    private static float returnCost(Float value1, Float value2) {
+
+        if (value1 != null && value2 == null) {
+            return (float) Math.abs(value1);
+        } else {
+            if (value1 == null && value2 != null) {
+                return (float) Math.abs(value2);
+            } else {
+                if (value1 != null && value2 != null) {
+                    return (float) Math.abs(value1 - value2);
+                }
+            }
+        }
+        return 0.0f;
+    }
+
+
+    public static void translateBarycenterListOfPointToOrigin(RealMatrix matrix, RealVector barycenter) {
+
+        int countOfPoint = matrix.getColumnDimension();
+
+        for (int i = 0; i < countOfPoint; i++) {
+            matrix.addToEntry(0, i, -1.0 * barycenter.getEntry(0));
+            matrix.addToEntry(1, i, -1.0 * barycenter.getEntry(1));
+            matrix.addToEntry(2, i, -1.0 * barycenter.getEntry(2));
+        }
+    }
 }
