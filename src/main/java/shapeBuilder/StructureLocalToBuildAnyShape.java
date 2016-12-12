@@ -626,6 +626,9 @@ public class StructureLocalToBuildAnyShape {
             return false;
         }
         int bondCountCterminal = cTerminal.getBonds().length;
+        if (bondCountCterminal == 0) { // safety like for nTerminal
+            return true;
+        }
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
         boolean bondCountCterminalSameMonomer = true;
         for (MyBondIfc bond : bondsToCTerminal) {
@@ -679,7 +682,9 @@ public class StructureLocalToBuildAnyShape {
             return false;
         }
         int bondCountCterminal = cTerminal.getBonds().length;
-
+        if (bondCountCterminal == 0) { // safety like for nTerminal
+            return true;
+        }
         MyBondIfc[] bondsToCTerminal = cTerminal.getBonds();
 
         boolean oFound = false;
