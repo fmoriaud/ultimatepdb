@@ -127,7 +127,9 @@ public class CompareCompleteCheck {
             ResultsFromEvaluateCost result = hit.getResultsFromEvaluateCost();
 
             ResultsFromEvaluateCost resultCompleteCheck = ScorePairingTools.score(shapeContainerCompleteCheck, shapeContainerAnyShape, result, algoParameters);
+
             ResultsFromEvaluateCost resultRedone = ScorePairingTools.score(shapeContainerQuery, shapeContainerAnyShape, result, algoParameters);
+
 
             // results are relative to the number of points in the pairing
             int pairedPointsCompleteCheck = resultCompleteCheck.getPairingAndNullSpaces().getPairing().size();
@@ -142,7 +144,10 @@ public class CompareCompleteCheck {
             double costOriginal = result.getCost();
             double absoluteCostOriginal = pairedPointsOriginal * costOriginal;
 
-            double percentageIncreaseCompleteCheck = (absoluteCostCompleteCheck - absoluteCostRedone) / absoluteCostRedone;
+            double percentageIncreaseCompleteCheck = 0;
+            if (absoluteCostCompleteCheck > 0.001) { // in some cases we could get a zero cost with perfect pairing
+                percentageIncreaseCompleteCheck = (absoluteCostCompleteCheck - absoluteCostRedone) / absoluteCostRedone;
+            }
 
             if (percentageIncreaseCompleteCheck > thresholdPercentageIncreaseCompleteCheck) {
                 countHitDeletedBecauseOfPercentageIncreaseCompleteCheck += 1;
@@ -163,7 +168,6 @@ public class CompareCompleteCheck {
 
         return resultsCompareQueryAndTargetSelectedOnCompleteCheck;
     }
-
 
 
     private int computeClashes(MyStructureIfc myStructureLocalQuery, MyStructureIfc rotatedLigandOrPeptide) {
@@ -207,6 +211,7 @@ public class CompareCompleteCheck {
 
     /**
      * For test only
+     *
      * @return
      */
     public int getCountHitDeletedBecauseOfHitLigandClashesInQuery() {
@@ -215,6 +220,7 @@ public class CompareCompleteCheck {
 
     /**
      * For test only
+     *
      * @return
      */
     public int getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck() {

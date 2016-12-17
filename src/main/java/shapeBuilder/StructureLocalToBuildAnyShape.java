@@ -372,6 +372,10 @@ public class StructureLocalToBuildAnyShape {
 
         MyChainIfc segmentChainInStructureLocal = findChain(clonedMyStructure, type, chainId);
 
+        if (segmentChainInStructureLocal == null) { // all residues from chain are in the segment so
+            // nothing to delete
+            return;
+        }
         handleCterminal(extractedSegment, segmentChainInStructureGlobalBrut, segmentChainInStructureLocal);
         handleNterminal(extractedSegment, segmentChainInStructureGlobalBrut, segmentChainInStructureLocal);
     }

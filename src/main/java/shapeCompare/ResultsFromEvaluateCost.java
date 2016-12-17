@@ -195,9 +195,6 @@ public class ResultsFromEvaluateCost {
 	public RealMatrix getRotationMatrix() {
 		return rotationMatrix;
 	}
-	public void setRotationMatrix(RealMatrix rotationMatrix) {
-		this.rotationMatrix = rotationMatrix;
-	}
 	public RealVector getTranslationVector() {
 		return translationVector;
 	}
