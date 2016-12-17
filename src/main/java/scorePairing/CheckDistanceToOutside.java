@@ -101,7 +101,7 @@ public class CheckDistanceToOutside {
         //System.out.println("percentageDifferentSign = " + percentageDifferentSign + " countConsideredCases =  " + countConsideredCases);
 
         //System.out.println("percentageDifferentSign = " + percentageDifferentSign);
-        if (percentageDifferentSign > 0.47) {
+        if (percentageDifferentSign > 0.51) {
             //System.out.println("hit deleted");
             return false;
         }

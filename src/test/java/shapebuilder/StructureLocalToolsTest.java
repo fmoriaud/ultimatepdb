@@ -40,7 +40,7 @@ public class StructureLocalToolsTest {
     // TODO what do we expect for neighbors in ligand, in structurelocal ??
 
     @Test
-    public void testSegmentOfChain() throws IOException, ParsingConfigFileException {
+    public void testSegmentOfChainSimpleCase() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
@@ -147,6 +147,396 @@ public class StructureLocalToolsTest {
         }
         assertTrue(foundPeptideBond);
     }
+
+
+    @Test
+    public void testSegmentOfChainAnotherSimpleCase() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        String fourLetterCode = "1be9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        char[] chainId = "B".toCharArray();
+        int rankIdinChain = 1;
+        int peptideLength = 3;
+
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, rankIdinChain, peptideLength, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        // assume it is ok like it is
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 31);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomers().length == 2);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(6) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(7) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(8) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(5) != null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(9) != null);
+
+
+        // Test deletion of atoms on StructureLocal
+        MyMonomerIfc monomerOnLeftStructureLocal = structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(5);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        MyMonomerIfc monomerOnRightStructureLocal = structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(9);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+
+        // test on monomersToDiscard: they must covert the MyMonomers from segment of chain
+        // AND be in myStructureGlobalBrut if we want to reuse them in the same myStructureGlobalBrut
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == peptideLength);
+
+        MyChainIfc ligandChain = myStructureGlobalBrut.getAminoMyChain(chainId);
+        List<MyMonomerIfc> monomersFromLigandChain = MyStructureTools.makeListFromArray(ligandChain.getMyMonomers());
+        for (MyMonomerIfc myMonomerToDiscard : monomersToDiscard) {
+            assertTrue(monomersFromLigandChain.contains(myMonomerToDiscard));
+        }
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == peptideLength);
+
+        // Test deletion of atoms on ligand
+        MyMonomerIfc monomerOnLeftLigand = ligand.getMyMonomerByRank(0);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+        MyMonomerIfc monomerOnRightLigand = ligand.getMyMonomerByRank(2);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // Check peptide bonds in between 0 and 1
+        MyAtomIfc n1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = ligand.getMyMonomerByRank(0).getMyAtomFromMyAtomName("C".toCharArray());
+        boolean foundPeptideBond = false;
+        for (MyBondIfc bond : n1.getBonds()) {
+            if (bond.getBondedAtom() == c0) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+
+        MyAtomIfc n2 = ligand.getMyMonomerByRank(2).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("C".toCharArray());
+        foundPeptideBond = false;
+        for (MyBondIfc bond : n2.getBonds()) {
+            if (bond.getBondedAtom() == c1) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+    }
+
+
+    @Test
+    public void testSegmentOfChainSegmentstartsAtBeginingOfChain() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        String fourLetterCode = "1be9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        char[] chainId = "B".toCharArray();
+        int rankIdinChain = 0;
+        int peptideLength = 3;
+
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, rankIdinChain, peptideLength, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        // assume it is ok like it is
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 27);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomers().length == 2);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(5) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(6) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(7) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(8) != null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(9) != null);
+
+
+        // Test deletion of atoms on StructureLocal
+        // There should have been nothing on the left to be deleted as the fragment starts at the beginning of the chain
+
+
+        MyMonomerIfc monomerOnRightStructureLocal = structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(8);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRightStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+        // test on monomersToDiscard: they must covert the MyMonomers from segment of chain
+        // AND be in myStructureGlobalBrut if we want to reuse them in the same myStructureGlobalBrut
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == peptideLength);
+
+        MyChainIfc ligandChain = myStructureGlobalBrut.getAminoMyChain(chainId);
+        List<MyMonomerIfc> monomersFromLigandChain = MyStructureTools.makeListFromArray(ligandChain.getMyMonomers());
+        for (MyMonomerIfc myMonomerToDiscard : monomersToDiscard) {
+            assertTrue(monomersFromLigandChain.contains(myMonomerToDiscard));
+        }
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == peptideLength);
+
+        // Test deletion of atoms on ligand
+        MyMonomerIfc monomerOnLeftLigand = ligand.getMyMonomerByRank(0);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        MyMonomerIfc monomerOnRightLigand = ligand.getMyMonomerByRank(2);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // Check peptide bonds in between 0 and 1
+        MyAtomIfc n1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = ligand.getMyMonomerByRank(0).getMyAtomFromMyAtomName("C".toCharArray());
+        boolean foundPeptideBond = false;
+        for (MyBondIfc bond : n1.getBonds()) {
+            if (bond.getBondedAtom() == c0) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+
+        MyAtomIfc n2 = ligand.getMyMonomerByRank(2).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("C".toCharArray());
+        foundPeptideBond = false;
+        for (MyBondIfc bond : n2.getBonds()) {
+            if (bond.getBondedAtom() == c1) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+    }
+
+
+    @Test
+    public void testSegmentOfChainSegmentEndingAtEndOfChain() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        String fourLetterCode = "1be9";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+        char[] chainId = "B".toCharArray();
+        int rankIdinChain = 2;
+        int peptideLength = 3;
+
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, rankIdinChain, peptideLength, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        // assume it is ok like it is
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 35);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomers().length == 2);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(7) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(8) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(9) == null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(5) != null);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(6) != null);
+
+
+        // Test deletion of atoms on StructureLocal
+
+        MyMonomerIfc monomerOnLeftStructureLocal = structureLocal.getAminoMyChain("B".toCharArray()).getMyMonomerFromResidueId(6);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("C".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("O".toCharArray()) == null);
+        assertTrue(monomerOnLeftStructureLocal.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // There should have been nothing on the right to be deleted as the fragment ends at the end of the chain
+
+
+        // test on monomersToDiscard: they must covert the MyMonomers from segment of chain
+        // AND be in myStructureGlobalBrut if we want to reuse them in the same myStructureGlobalBrut
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == peptideLength);
+
+        MyChainIfc ligandChain = myStructureGlobalBrut.getAminoMyChain(chainId);
+        List<MyMonomerIfc> monomersFromLigandChain = MyStructureTools.makeListFromArray(ligandChain.getMyMonomers());
+        for (MyMonomerIfc myMonomerToDiscard : monomersToDiscard) {
+            assertTrue(monomersFromLigandChain.contains(myMonomerToDiscard));
+        }
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == peptideLength);
+
+        // Test deletion of atoms on ligand
+        MyMonomerIfc monomerOnLeftLigand = ligand.getMyMonomerByRank(0);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("N".toCharArray()) == null);
+
+        MyMonomerIfc monomerOnRightLigand = ligand.getMyMonomerByRank(2);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // Check peptide bonds in between 0 and 1
+        MyAtomIfc n1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c0 = ligand.getMyMonomerByRank(0).getMyAtomFromMyAtomName("C".toCharArray());
+        boolean foundPeptideBond = false;
+        for (MyBondIfc bond : n1.getBonds()) {
+            if (bond.getBondedAtom() == c0) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+
+        MyAtomIfc n2 = ligand.getMyMonomerByRank(2).getMyAtomFromMyAtomName("N".toCharArray());
+        MyAtomIfc c1 = ligand.getMyMonomerByRank(1).getMyAtomFromMyAtomName("C".toCharArray());
+        foundPeptideBond = false;
+        for (MyBondIfc bond : n2.getBonds()) {
+            if (bond.getBondedAtom() == c1) {
+                foundPeptideBond = true;
+            }
+        }
+        assertTrue(foundPeptideBond);
+    }
+
+
+    @Test
+    public void testSegmentOfChainThatCoversTheWholeChain() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
+        String fourLetterCode = "1be9";
+        char[] chainId = "B".toCharArray();
+        int rankIdinChain = 0;
+        int peptideLength = 5;
+
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc myStructureGlobalBrut = null;
+        try {
+            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            assertTrue(false);
+        }
+
+
+        StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
+        try {
+            structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, rankIdinChain, peptideLength, algoParameters);
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+        MyStructureIfc structureLocal = structureLocalToBuildAnyShape.getMyStructureLocal();
+
+        assertTrue(structureLocal.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 38);
+        assertTrue(structureLocal.getAminoMyChain("B".toCharArray()) == null);
+
+        // test on monomersToDiscard: they must covert the MyMonomers from segment of chain
+        // AND be in myStructureGlobalBrut if we want to reuse them in the same myStructureGlobalBrut
+        List<MyMonomerIfc> monomersToDiscard = structureLocalToBuildAnyShape.getMonomerToDiscard();
+        assertTrue(monomersToDiscard.size() == peptideLength);
+
+
+        // test on ligand
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
+        assertTrue(ligand.getMyMonomers().length == peptideLength);
+
+        // Test deletion of atoms on ligand
+        MyMonomerIfc monomerOnLeftLigand = ligand.getMyMonomerByRank(0);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnLeftLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        MyMonomerIfc monomerOnRightLigand = ligand.getMyMonomerByRank(4);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("C".toCharArray()) != null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("O".toCharArray()) != null);
+        assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
+
+        // Check peptide bonds
+        for (int i=0; i<peptideLength-1; i++){
+            MyAtomIfc n1 = ligand.getMyMonomerByRank(i+1).getMyAtomFromMyAtomName("N".toCharArray());
+            MyAtomIfc c0 = ligand.getMyMonomerByRank(i).getMyAtomFromMyAtomName("C".toCharArray());
+            boolean foundPeptideBond = false;
+            for (MyBondIfc bond : n1.getBonds()) {
+                if (bond.getBondedAtom() == c0) {
+                    foundPeptideBond = true;
+                }
+            }
+            assertTrue(foundPeptideBond);
+        }
+
+        System.out.println();
+    }
+
 
 
     @Test

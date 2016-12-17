@@ -574,20 +574,20 @@ public class StructureLocalToBuildAnyShape {
 
         // Nterminal
         MyAtomIfc nTerminal = MyStructureTools.getNterminal(clonedSegment);
-        doDeletionAtNTerminalSegment(nTerminal);
+        doDeletionAtNTerminalSegment(nTerminal, clonedSegment);
 
 
         // CO Cterminal
         MyAtomIfc cTerminal = MyStructureTools.getCterminal(clonedSegment);
         MyAtomIfc oTerminal = MyStructureTools.getOterminal(clonedSegment);
 
-        doDeletionAtCTerminalSegment(cTerminal, oTerminal);
+        doDeletionAtCTerminalSegment(cTerminal, oTerminal, clonedSegment);
     }
 
 
-    private void doDeletionAtCTerminalSegment(MyAtomIfc cTerminal, MyAtomIfc oTerminal) {
+    private void doDeletionAtCTerminalSegment(MyAtomIfc cTerminal, MyAtomIfc oTerminal, MyChainIfc clonedSegment) {
 
-        if (applySegmentCterminal(cTerminal)) {
+        if (applySegmentCterminal(cTerminal, clonedSegment)) {
             oTerminal.getParent().deleteAtomAndbonds(oTerminal);
             cTerminal.getParent().deleteAtomAndbonds(cTerminal);
             //System.out.println();
@@ -595,9 +595,9 @@ public class StructureLocalToBuildAnyShape {
     }
 
 
-    private void doDeletionAtNTerminalSegment(MyAtomIfc nTerminal) {
+    private void doDeletionAtNTerminalSegment(MyAtomIfc nTerminal, MyChainIfc clonedSegment) {
 
-        if (applySegmentNterminal(nTerminal)) {
+        if (applySegmentNterminal(nTerminal, clonedSegment)) {
             nTerminal.getParent().deleteAtomAndbonds(nTerminal);
         }
     }
@@ -615,12 +615,19 @@ public class StructureLocalToBuildAnyShape {
 
     private void doDeletionAtNTerminalStructureLocal(MyAtomIfc nTerminal) {
 
-        if (applyStructureLocalNterminal(nTerminal)) {
+        if (doApplyStructureLocalNterminalWithOutDoingAnythingOnAtom(nTerminal)) {
             nTerminal.getParent().deleteAtomAndbonds(nTerminal);
         }
     }
 
-    private boolean applySegmentCterminal(MyAtomIfc cTerminal) {
+    private boolean applySegmentCterminal(MyAtomIfc cTerminal, MyChainIfc clonedSegment) {
+
+        // if it is a terminal monomer then dont delete anything
+        List<MyMonomerIfc> neighborsByBond = MyStructureTools.makeListFromArray(cTerminal.getParent().getNeighboringMyMonomerByBond());
+        List<MyMonomerIfc> segmentMonomers = MyStructureTools.makeListFromArray(clonedSegment.getMyMonomers());
+        if (segmentMonomers.containsAll(neighborsByBond)) {
+            return false;
+        }
 
         if (cTerminal == null) {
             return false;
@@ -655,7 +662,13 @@ public class StructureLocalToBuildAnyShape {
     }
 
 
-    private boolean applySegmentNterminal(MyAtomIfc nTerminal) {
+    private boolean applySegmentNterminal(MyAtomIfc nTerminal, MyChainIfc clonedSegment) {
+
+        List<MyMonomerIfc> neighborsByBond = MyStructureTools.makeListFromArray(nTerminal.getParent().getNeighboringMyMonomerByBond());
+        List<MyMonomerIfc> segmentMonomers = MyStructureTools.makeListFromArray(clonedSegment.getMyMonomers());
+        if (segmentMonomers.containsAll(neighborsByBond)) {
+            return false;
+        }
 
         if (nTerminal == null) {
             return false;
@@ -706,7 +719,7 @@ public class StructureLocalToBuildAnyShape {
     }
 
 
-    private boolean applyStructureLocalNterminal(MyAtomIfc nTerminal) {
+    private boolean doApplyStructureLocalNterminalWithOutDoingAnythingOnAtom(MyAtomIfc nTerminal) {
 
         if (nTerminal == null) {
             return false;
@@ -714,7 +727,7 @@ public class StructureLocalToBuildAnyShape {
 
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
         int bondCountNterminal = nTerminal.getBonds().length;
-        if (bondCountNterminal == 0){ // 5it7 chain OO rankid 5 peptide length 5
+        if (bondCountNterminal == 0) { // 5it7 chain OO rankid 5 peptide length 5
             return true;
         }
 

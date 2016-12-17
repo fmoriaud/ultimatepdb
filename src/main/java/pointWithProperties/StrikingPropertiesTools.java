@@ -105,6 +105,21 @@ public class StrikingPropertiesTools {
 	}
 
 
+	public static List<StrikingProperties> findCommonStrikingProperties(PointWithPropertiesIfc point1, PointWithPropertiesIfc point2){
+
+		List<StrikingProperties> propertyOfpoint1 = point1.getStrikingProperties();
+		List<StrikingProperties> propertyOfpoint2 = point2.getStrikingProperties();
+
+		List<StrikingProperties> commonStrikingProperties = new ArrayList<>();
+		for (StrikingProperties property: propertyOfpoint1){
+			if (propertyOfpoint2.contains(property)){
+				commonStrikingProperties.add(property);
+			}
+		}
+		return commonStrikingProperties;
+	}
+
+
 	// Both points has StrikingProperties not none and they all match (also if only one of course)
 	public static int evaluatePointsMatchingAllNotNoneProperties(PointWithPropertiesIfc point1, PointWithPropertiesIfc point2){
 

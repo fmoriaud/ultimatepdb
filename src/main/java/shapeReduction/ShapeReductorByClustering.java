@@ -82,7 +82,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 
 		// They are closeby with q 
 		for (Entry<PointWithPropertiesIfc, PointWithPropertiesIfc> pairPoint: pairsPointCloseBy.entrySet()){
-			Integer idOfPoint = mapPointToOriginalId.get(returnPointWithLowerPriority(pairPoint.getKey(), pairPoint.getValue()));
+			Integer idOfPoint = mapPointToOriginalId.get(ShapeReductorTools.returnPointWithLowerPriorityWhenThereIsAMatchingProperty(pairPoint.getKey(), pairPoint.getValue()));
 			collectionOfPointsWithProperties.remove(idOfPoint);
 		}
 		removePointsOfStrikingPropertiesNoneIfCloseEnoughToAnotherPointWithAnyStrikingPropertiesNotNone(collectionOfPointsWithProperties);
@@ -90,46 +90,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 		return collectionOfPointsWithProperties;
 	}
 
-	
-	
-	private PointWithPropertiesIfc returnPointWithLowerPriority(PointWithPropertiesIfc point1, PointWithPropertiesIfc point2){
-		
-		PointWithPropertiesIfc pointWithHigherPriority = point1;
-		
-		if (point2.getStrikingProperties().contains(StrikingProperties.HBOND_ACCEPTOR)){
-			pointWithHigherPriority =  point2;
-		}
-		if (point1.getStrikingProperties().contains(StrikingProperties.HBOND_ACCEPTOR)){
-			pointWithHigherPriority =  point1;
-		}
-		
-		if (point2.getStrikingProperties().contains(StrikingProperties.HBOND_DONNOR)){
-			pointWithHigherPriority =  point2;
-		}
-		if (point1.getStrikingProperties().contains(StrikingProperties.HBOND_DONNOR)){
-			pointWithHigherPriority =  point1;
-		}
-		
-		if (point2.getStrikingProperties().contains(StrikingProperties.POSITIVE_CHARGE) || point2.getStrikingProperties().contains(StrikingProperties.NEGATIVE_CHARGE)){
-			pointWithHigherPriority =  point2;
-		}
-		if (point1.getStrikingProperties().contains(StrikingProperties.POSITIVE_CHARGE) || point1.getStrikingProperties().contains(StrikingProperties.NEGATIVE_CHARGE)){
-			pointWithHigherPriority = point1;
-		}
-		
-		if (point2.getStrikingProperties().contains(StrikingProperties.AROMATICRING)){ // vs HYDROPHOBE
-			pointWithHigherPriority =  point2;
-		}
-		if (point1.getStrikingProperties().contains(StrikingProperties.AROMATICRING)){
-			pointWithHigherPriority =  point1;
-		}
-		
-		if (pointWithHigherPriority == point1){
-			return point2;
-		}
-		
-		return point1;
-	}
 
 
 	private Map<PointWithPropertiesIfc, PointWithPropertiesIfc> findPointsTooCloseWithASharedStrikingProperties(Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties) {

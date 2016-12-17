@@ -67,7 +67,7 @@ public class Hit {
                 " minishape size = " + this.getShapeContainer().getMiniShape().size() + " shape size = " + this.getShapeContainer().getShape().getSize()
                 + NEW_LINE);
 
-        result.append("RatioPairedPointToHitPoints = " + resultsFromEvaluateCost.getRatioPairedPointInQuery());
+        result.append("RatioPairedPointInQuery = " + resultsFromEvaluateCost.getRatioPairedPointInQuery());
         if (resultsUltiJMolMinimizedHitLigandOnTarget != null) {
             result.append(" CountOfLongDistanceChange = " + resultsUltiJMolMinimizedHitLigandOnTarget.getCountOfLongDistanceChange());
             result.append(" InteractionEFinal = " + resultsUltiJMolMinimizedHitLigandOnTarget.getInteractionEFinal());

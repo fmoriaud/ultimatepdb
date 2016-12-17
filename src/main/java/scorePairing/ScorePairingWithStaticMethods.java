@@ -142,21 +142,23 @@ public class ScorePairingWithStaticMethods {
             Float aromaticRingOfPointFromMap1 = point1.get(PropertyName.AromaticRing);
             Float aromaticRingOfPointFromMap2 = point2.get(PropertyName.AromaticRing);
 
-            boolean bothAromatic = hydrophobicityOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 != null;
-            boolean bothHydrophobe = aromaticRingOfPointFromMap1 != null && aromaticRingOfPointFromMap2 != null;
 
-            if (bothAromatic) {
-                costAromaticRing += returnCost(aromaticRingOfPointFromMap1, aromaticRingOfPointFromMap2);
-            } else {
-                if (bothHydrophobe) {
-                    costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
-                } else {
-                    // not both aromatic nor both hydrophobe
-                    costAromaticRing += returnCost(aromaticRingOfPointFromMap1, aromaticRingOfPointFromMap2);
-                    costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
-                }
+            // if aromatic it is hydrophobe as well by definition
+            if (aromaticRingOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 == null){
+                System.out.println(aromaticRingOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 == null);
             }
-
+            if (aromaticRingOfPointFromMap2 != null && hydrophobicityOfPointFromMap2 == null){
+                System.out.println(aromaticRingOfPointFromMap2 != null && hydrophobicityOfPointFromMap2 == null);
+            }
+            // if one hydrophobe and not the other one
+            // then cost hydrophobe
+            if (hydrophobicityOfPointFromMap1 != null && hydrophobicityOfPointFromMap2 == null) {
+                costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
+            }
+            if (hydrophobicityOfPointFromMap2 != null && hydrophobicityOfPointFromMap1 == null) {
+                costHydrophobicity += returnCost(hydrophobicityOfPointFromMap1, hydrophobicityOfPointFromMap2);
+            }
+            // so a difference of hydrophobe to aromatic is neglected !!!
 
             Float chargeOfPointFromMap1 = point1.get(PropertyName.FormalCharge);
             Float chargeOfPointFromMap2 = point2.get(PropertyName.FormalCharge);
@@ -167,21 +169,8 @@ public class ScorePairingWithStaticMethods {
             Float hBondAcceptorOfPointFromMap1 = point1.get(PropertyName.HbondAcceptor);
             Float hBondAcceptorOfPointFromMap2 = point2.get(PropertyName.HbondAcceptor);
 
-            boolean bothDonnor = hBondDonnorOfPointFromMap1 != null && hBondDonnorOfPointFromMap2 != null;
-            boolean bothAcceptor = hBondAcceptorOfPointFromMap1 != null && hBondAcceptorOfPointFromMap2 != null;
-
-            if (bothDonnor) {
-                // if both donor I dont score acceptor
-                costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
-            } else {
-                if (bothAcceptor) {
-                    // if both acceptor I score only on acceptor
-                    costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
-                } else {
-                    costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
-                    costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
-                }
-            }
+            costHbondDonnor += returnCost(hBondDonnorOfPointFromMap1, hBondDonnorOfPointFromMap2);
+            costHbondAcceptor += returnCost(hBondAcceptorOfPointFromMap1, hBondAcceptorOfPointFromMap2);
 
             Float dehydronOfPointFromMap1 = point1.get(PropertyName.Dehydron);
             Float dehydronOfPointFromMap2 = point2.get(PropertyName.Dehydron);

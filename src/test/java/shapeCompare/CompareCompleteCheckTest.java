@@ -65,7 +65,7 @@ public class CompareCompleteCheckTest {
         assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 10);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 16);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 13);
 
         int hitCount = results.size();
         assertTrue(hitCount == 34);
@@ -114,13 +114,13 @@ public class CompareCompleteCheckTest {
         assertTrue(countHitDeletedBecauseOforiginalCost == 0);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
-        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 2);
+        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 1);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 26);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 31);
 
         int hitCount = results.size();
-        assertTrue(hitCount == 11);
+        assertTrue(hitCount == 7);
     }
 
 
@@ -170,15 +170,55 @@ public class CompareCompleteCheckTest {
         }
 
         int countHitDeletedBecauseOforiginalCost = compareCompleteCheck.getCountHitDeletedBecauseOforiginalCost();
-        assertTrue(countHitDeletedBecauseOforiginalCost == 3);
+        assertTrue(countHitDeletedBecauseOforiginalCost == 0);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
         assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 65);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 25);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 28);
 
         int hitCount = results.size();
-        assertTrue(hitCount == 18);
+        assertTrue(hitCount == 15);
+    }
+
+
+    @Test
+    public void completeCheckCompareVsItSeflWasAWeirdCoverageResult() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
+        String queryFourLetterCode = "1be9";
+        String peptideChainId = "B";
+
+        ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByWholeChain(queryFourLetterCode.toCharArray(), peptideChainId.toCharArray(), algoParameters);
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = shapeContainerbuilder.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+
+        ShapeContainerDefined shapeContainerDefinedTarget = new ShapecontainerDefinedBySegmentOfChain(queryFourLetterCode.toCharArray(), peptideChainId.toCharArray(), 0, 5, algoParameters);
+        ShapeContainerIfc targetShape = null;
+        try {
+            targetShape = shapeContainerDefinedTarget.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+
+
+        CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
+        List<Hit> results = null;
+        try {
+            results = compareCompleteCheck.computeResults();
+        } catch (NullResultFromAComparisonException e) {
+            e.printStackTrace();
+        }
+
+        Hit result = results.get(0);
+        double percentageIncreaseCompleteCheck = result.getPercentageIncreaseCompleteCheck();
+
+        System.out.println("percentageIncreaseCompleteCheck = " + percentageIncreaseCompleteCheck);
     }
 }

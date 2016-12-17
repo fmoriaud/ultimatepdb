@@ -60,7 +60,7 @@ public class ShapeBuilderConstructorAtomIdsWithinShapeTest {
 
         // don't know if it is good, it is as it is now.
         assertTrue(shape.getShape().getSize() == 1802);
-        assertTrue(shape.getMiniShape().size() == 40);
+        assertTrue(shape.getMiniShape().size() == 41);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

@@ -32,8 +32,8 @@ public class CheckDistanceToOutsideTest {
     public void testDistanceToOutsideGoodSuperpositionForAGoodBurriedPocketSuperpositionCae() throws IOException, ParsingConfigFileException, ShapeBuildingException {
 
 
-        boolean visualInspection = false;
-        boolean debug = false;
+        boolean visualInspection = true;
+        boolean debug = true;
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
@@ -63,23 +63,23 @@ public class CheckDistanceToOutsideTest {
         List<Boolean> expectedResult = new ArrayList<>();
         expectedResult.add(true); //0
         expectedResult.add(true);
-        expectedResult.add(false);
+        expectedResult.add(true);
         expectedResult.add(false); // 3
         expectedResult.add(false);
         expectedResult.add(false);
         expectedResult.add(false);
         expectedResult.add(false);
         expectedResult.add(false);
-        expectedResult.add(true); // 9 true
-        expectedResult.add(true); // 10 true
-        expectedResult.add(true); // 11 true
-        expectedResult.add(true); // 12 true
+        expectedResult.add(false);
+        expectedResult.add(false);
+        expectedResult.add(true); // 11 true // not clear
+        expectedResult.add(false);
         expectedResult.add(false);
         expectedResult.add(true); // 14 true
-        expectedResult.add(true); // 15 true
+        expectedResult.add(false); // 15 true
         expectedResult.add(true); // 16 true
-        expectedResult.add(false);
-        expectedResult.add(false);
+        expectedResult.add(true);
+        expectedResult.add(true);
         expectedResult.add(true); // 19 true
 
         int countOk = 0;
@@ -156,10 +156,9 @@ public class CheckDistanceToOutsideTest {
         assertTrue(countFN == 0);
 
         // The code could be improved, currently we have 3 FP
-        assertTrue(countFP == 3);
+        assertTrue(countFP == 2);
         // Check which one to detect changes
-        assertTrue(listFP.get(0) == 3);
+        assertTrue(listFP.get(0) == 4);
         assertTrue(listFP.get(1) == 6);
-        assertTrue(listFP.get(2) == 18);
     }
 }

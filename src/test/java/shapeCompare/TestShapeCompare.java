@@ -69,10 +69,10 @@ public class TestShapeCompare {
         }
 
         assertTrue(listBestHitForEachAndEverySeed.size() == 1);
-        float coverageTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getRatioPairedPointInQuery();
-        assertEquals(coverageTopHit, 0.657, 0.001);
+        float coverageQueryTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getRatioPairedPointInQuery();
+        assertEquals(coverageQueryTopHit, 0.657, 0.001);
         double costTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCost();
-        assertEquals(costTopHit, 0.068, 0.001);
+        assertEquals(costTopHit, 0.026, 0.001);
 
 
         /*
