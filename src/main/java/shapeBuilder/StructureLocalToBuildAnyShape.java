@@ -626,6 +626,10 @@ public class StructureLocalToBuildAnyShape {
 
     private boolean applySegmentCterminal(MyAtomIfc cTerminal, MyChainIfc clonedSegment) {
 
+        if (cTerminal == null) {
+            return false;
+        }
+
         // if it is a terminal monomer then dont delete anything
         List<MyMonomerIfc> neighborsByBond = MyStructureTools.makeListFromArray(cTerminal.getParent().getNeighboringMyMonomerByBond());
         List<MyMonomerIfc> segmentMonomers = MyStructureTools.makeListFromArray(clonedSegment.getMyMonomers());
@@ -633,9 +637,6 @@ public class StructureLocalToBuildAnyShape {
             return false;
         }
 
-        if (cTerminal == null) {
-            return false;
-        }
         int bondCountCterminal = cTerminal.getBonds().length;
         if (bondCountCterminal == 0) { // safety like for nTerminal
             return true;
@@ -668,15 +669,16 @@ public class StructureLocalToBuildAnyShape {
 
     private boolean applySegmentNterminal(MyAtomIfc nTerminal, MyChainIfc clonedSegment) {
 
+        if (nTerminal == null) {
+            return false;
+        }
+
         List<MyMonomerIfc> neighborsByBond = MyStructureTools.makeListFromArray(nTerminal.getParent().getNeighboringMyMonomerByBond());
         List<MyMonomerIfc> segmentMonomers = MyStructureTools.makeListFromArray(clonedSegment.getMyMonomers());
         if (segmentMonomers.containsAll(neighborsByBond)) {
             return false;
         }
 
-        if (nTerminal == null) {
-            return false;
-        }
         // If Nterminal is only bound to the Ca of same monomer then I delete it and the bond from Ca to N
         // or no bond
         int bondCountNterminal = nTerminal.getBonds().length;
