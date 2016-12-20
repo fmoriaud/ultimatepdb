@@ -80,24 +80,30 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 		Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties = doClustering(mapPropertyAndMapSectorAndPoints);
 		Map<PointWithPropertiesIfc, PointWithPropertiesIfc> pairsPointCloseBy = findPointsTooCloseWithASharedStrikingProperties(collectionOfPointsWithProperties);
 
-		// They are closeby with q 
+		// They are closeby with q
+
 		for (Entry<PointWithPropertiesIfc, PointWithPropertiesIfc> pairPoint: pairsPointCloseBy.entrySet()){
 			Integer idOfPoint = mapPointToOriginalId.get(ShapeReductorTools.returnPointWithLowerPriorityWhenThereIsAMatchingProperty(pairPoint.getKey(), pairPoint.getValue()));
 			collectionOfPointsWithProperties.remove(idOfPoint);
 		}
+
 		removePointsOfStrikingPropertiesNoneIfCloseEnoughToAnotherPointWithAnyStrikingPropertiesNotNone(collectionOfPointsWithProperties);
 
 		return collectionOfPointsWithProperties;
 	}
 
 
-
+	/**
+	 * Note: it is generating for matching 1-2 and 2-1. Is it needed ?
+	 * @param collectionOfPointsWithProperties
+	 * @return
+	 */
 	private Map<PointWithPropertiesIfc, PointWithPropertiesIfc> findPointsTooCloseWithASharedStrikingProperties(Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties) {
 
 		Map<PointWithPropertiesIfc, PointWithPropertiesIfc> pairsPointCloseBy = new LinkedHashMap<>();
 
 		for (Entry<Integer, PointWithPropertiesIfc> entry: collectionOfPointsWithProperties.entrySet()){
-			for (Entry<Integer, PointWithPropertiesIfc> entry2: collectionOfPointsWithProperties.entrySet()){
+			A: for (Entry<Integer, PointWithPropertiesIfc> entry2: collectionOfPointsWithProperties.entrySet()){
 
 				PointWithPropertiesIfc pointWithProperties1 = entry.getValue();
 				PointWithPropertiesIfc pointWithProperties2 = entry2.getValue();
@@ -107,9 +113,15 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 					//ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
 					if (distance < ((algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() * Math.sqrt(3)) + 0.1)){
 
-						boolean matchingProperty = StrikingPropertiesTools.evaluatePointsMatchingWithAtLeastOneProperty(pointWithProperties1, pointWithProperties2);
-						if (matchingProperty == true){
-							pairsPointCloseBy.put(entry.getValue(), entry2.getValue());	
+						int matchingPropertyCount = StrikingPropertiesTools.evaluatePointsMatchingWithAllProperties(pointWithProperties1, pointWithProperties2);
+						if (matchingPropertyCount != 0){
+							if (pairsPointCloseBy.containsKey(entry2.getValue())){
+								if (pairsPointCloseBy.get(entry2.getValue()).equals(entry.getValue())){
+									// already there
+									continue A;
+								}
+							}
+							pairsPointCloseBy.put(entry.getValue(), entry2.getValue());
 						}
 					}
 				}
@@ -158,7 +170,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 				PointWithPropertiesIfc onePointPerCluster = ToolsShapeReductor.selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(clusterForThisProperty, miniShape);
 				if (onePointPerCluster != null){
 					Integer idOfPoint = mapPointToOriginalId.get(onePointPerCluster);
-					onePointPerCluster.setMiniShapeStrikingProperty(mapSectorAndPoint.getKey()); // not used afterwards but maybe useful
+					//onePointPerCluster.setMiniShapeStrikingProperty(mapSectorAndPoint.getKey()); // not used afterwards but maybe useful
 					miniShape.put(idOfPoint, onePointPerCluster);
 				}
 			}
@@ -266,12 +278,17 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 	}
 
 
-
+	/**
+	 * Each sector is multiply by different striking properties found in
+	 * @return
+	 */
 	private Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> distributePointsInSectorsAndGroupPerProperty() {
 
 		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPointsAllSectors = groupPoints();
-		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints = removeSectorsWith2orLessPoints(mapSectorAndPointsAllSectors);
+		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints = removeEmptySectors(mapSectorAndPointsAllSectors);
 
+
+		// group point having exactly the same properties, inlcuding 1 or 2 or more
 		Map<PhiThetaRadiusInterval, List<StrikingProperties>> mapSectorAndListProperties = computePropertiesOfGroups(mapSectorAndPoints);
 		Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints = multiplySectorByProperty(mapSectorAndPoints, mapSectorAndListProperties);
 		return mapPropertyAndMapSectorAndPoints;
@@ -456,7 +473,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc{
 
 
 	
-	private Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> removeSectorsWith2orLessPoints(Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints){
+	private Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> removeEmptySectors(Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints){
 
 		Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> newMap = new LinkedHashMap<>();
 

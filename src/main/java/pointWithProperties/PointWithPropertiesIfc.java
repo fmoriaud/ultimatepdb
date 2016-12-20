@@ -19,6 +19,6 @@ public interface PointWithPropertiesIfc {
 	float getElectronProbability();
 	void setElectronProbability(float electronProbability);
 
-	StrikingProperties getMiniShapeStrikingProperty();
-	void setMiniShapeStrikingProperty(StrikingProperties miniShapeStrikingProperty);
+	//StrikingProperties getMiniShapeStrikingProperty();
+	//void setMiniShapeStrikingProperty(StrikingProperties miniShapeStrikingProperty);
 }

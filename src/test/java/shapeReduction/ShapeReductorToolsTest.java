@@ -1,10 +1,9 @@
-package shapeReductor;
+package shapeReduction;
 
 import org.junit.Test;
 import pointWithProperties.PointWithProperties;
 import pointWithProperties.PointWithPropertiesIfc;
 import pointWithProperties.StrikingProperties;
-import shapeReduction.ShapeReductorTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Fabrice on 13.12.16.
  */
-public class ShapeReductorByClusteringTest {
+public class ShapeReductorToolsTest {
 
     // Test also if two in common, then any point is returned
 

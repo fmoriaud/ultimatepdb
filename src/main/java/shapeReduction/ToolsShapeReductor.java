@@ -45,7 +45,12 @@ public class ToolsShapeReductor {
 	}
 
 
-	
+	/**
+	 * Select One point from a cluster, among points not already in minishape, to avoid duplicates point
+	 * @param listPoint
+	 * @param miniShape
+	 * @return
+	 */
 	public static PointWithPropertiesIfc selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(List<PointWithPropertiesIfc> listPoint, Map<Integer, PointWithPropertiesIfc> miniShape){
 
 		List<PointWithPropertiesIfc> listPointsFreeOfMiniShapePoints = new ArrayList<>();

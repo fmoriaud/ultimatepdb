@@ -13,7 +13,7 @@ public class PointWithProperties implements PointWithPropertiesIfc{
 	private PointIfc coords;
 
 	private List<StrikingProperties> strikingProperties;
-	private StrikingProperties miniShapeStrikingProperty;
+	//private StrikingProperties miniShapeStrikingProperty;
 
 	private float distanceToLigand;
 	private float electronProbability;
@@ -100,7 +100,7 @@ public class PointWithProperties implements PointWithPropertiesIfc{
 	}
 
 	
-	
+	/*
 	@Override
 	public StrikingProperties getMiniShapeStrikingProperty() {
 		return miniShapeStrikingProperty;
@@ -111,7 +111,7 @@ public class PointWithProperties implements PointWithPropertiesIfc{
 	public void setMiniShapeStrikingProperty(StrikingProperties miniShapeStrikingProperty) {
 		this.miniShapeStrikingProperty = miniShapeStrikingProperty;
 	}
-
+*/
 	
 	
 	@Override public String toString() {
