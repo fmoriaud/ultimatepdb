@@ -43,7 +43,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         assertTrue(shape.getShape().getSize() == 666);
-        assertTrue(shape.getMiniShape().size() == 41);
+        assertTrue(shape.getMiniShape().size() == 45);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);
@@ -81,7 +81,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         // don't know if it is good, it is as it is now.
         // especially because ACE and NH2 were moved...
         assertTrue(shape.getShape().getSize() == 868);
-        assertTrue(shape.getMiniShape().size() == 81);
+        assertTrue(shape.getMiniShape().size() == 82);
 
         // Check ligand peptide bonds
         ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) shape;

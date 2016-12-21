@@ -739,7 +739,8 @@ public class StructureLocalToolsTest {
         MyStructureIfc structureLocalCustomLigand = structureLocalToBuildAnyShapeCustomLigand.getMyStructureLocal();
         // test structureLocal
         // As hit ligand is longer, we get more amino acids in structureLocal
-        assertTrue(structureLocalCustomLigand.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 60);
+        // has 51 too now, was 60 ...
+        assertTrue(structureLocalCustomLigand.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 51);
         assertTrue(structureLocalCustomLigand.getAminoMyChain("X".toCharArray()) == null);
         // it is what it is but must be similar to accessibleStructureLocal
 
