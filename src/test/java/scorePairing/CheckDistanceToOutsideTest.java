@@ -61,24 +61,24 @@ public class CheckDistanceToOutsideTest {
 
         // determined by visual inspection of the superposition
         List<Boolean> expectedResult = new ArrayList<>();
-        expectedResult.add(true); //0
+        expectedResult.add(false); //0 a bit risky but really not nice
+        expectedResult.add(true);
+        expectedResult.add(false);
+        expectedResult.add(true); // 3
+        expectedResult.add(false);
+        expectedResult.add(false);
+        expectedResult.add(false);
         expectedResult.add(true);
         expectedResult.add(true);
-        expectedResult.add(false); // 3
         expectedResult.add(false);
         expectedResult.add(false);
-        expectedResult.add(false);
-        expectedResult.add(false);
-        expectedResult.add(false);
-        expectedResult.add(false);
-        expectedResult.add(false);
-        expectedResult.add(true); // 11 true // not clear
+        expectedResult.add(false); // 11 true // not clear
         expectedResult.add(false);
         expectedResult.add(false);
         expectedResult.add(true); // 14 true
-        expectedResult.add(false); // 15 true
+        expectedResult.add(false);
         expectedResult.add(true); // 16 true
-        expectedResult.add(true);
+        expectedResult.add(false);
         expectedResult.add(true);
         expectedResult.add(true); // 19 true
 
@@ -154,11 +154,7 @@ public class CheckDistanceToOutsideTest {
 
         // Must be as we dont want to loose potential good hits
         assertTrue(countFN == 0);
+        assertTrue(countFP == 0);
 
-        // The code could be improved, currently we have 3 FP
-        assertTrue(countFP == 2);
-        // Check which one to detect changes
-        assertTrue(listFP.get(0) == 4);
-        assertTrue(listFP.get(1) == 6);
     }
 }

@@ -24,7 +24,6 @@ public class ShapeReductorByClusteringTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
-        float criticalDistance = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() * (float) Math.sqrt(3) + 0.1f;
         float cellSize = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM();
 
         List<PointWithPropertiesIfc> listPointsWithProperties = new ArrayList<>();
@@ -72,7 +71,6 @@ public class ShapeReductorByClusteringTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
-        float criticalDistance = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() * (float) Math.sqrt(3) + 0.1f;
         float cellSize = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM();
 
         List<PointWithPropertiesIfc> listPointsWithProperties = new ArrayList<>();
@@ -87,7 +85,7 @@ public class ShapeReductorByClusteringTest {
 
             List<StrikingProperties> properties = new ArrayList<>();
             properties.add(StrikingProperties.HYDROPHOBE);
-            if (i < 3){
+            if (i < 3) {
                 properties.add(StrikingProperties.AROMATICRING);
             }
             point.setStrikingProperties(properties);
@@ -125,7 +123,6 @@ public class ShapeReductorByClusteringTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
-        float criticalDistance = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() * (float) Math.sqrt(3) + 0.1f;
         float cellSize = algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM();
 
         List<PointWithPropertiesIfc> listPointsWithProperties = new ArrayList<>();
@@ -140,7 +137,7 @@ public class ShapeReductorByClusteringTest {
 
             List<StrikingProperties> properties = new ArrayList<>();
             properties.add(StrikingProperties.HBOND_ACCEPTOR);
-            if (i < 3){
+            if (i < 3) {
                 properties.add(StrikingProperties.NEGATIVE_CHARGE);
             }
             point.setStrikingProperties(properties);
@@ -194,10 +191,10 @@ public class ShapeReductorByClusteringTest {
 
             List<StrikingProperties> properties = new ArrayList<>();
             properties.add(StrikingProperties.HBOND_ACCEPTOR);
-            if (i < 3){
+            if (i < 3) {
                 properties.add(StrikingProperties.NEGATIVE_CHARGE);
             }
-            if (i > 4){
+            if (i > 4) {
                 properties.add(StrikingProperties.HBOND_DONNOR);
             }
             point.setStrikingProperties(properties);
@@ -230,4 +227,5 @@ public class ShapeReductorByClusteringTest {
         assertTrue(propertiesMiniPoint1.get(0) == StrikingProperties.HBOND_ACCEPTOR);
         assertTrue(propertiesMiniPoint1.get(1) == StrikingProperties.HBOND_DONNOR);
     }
+
 }

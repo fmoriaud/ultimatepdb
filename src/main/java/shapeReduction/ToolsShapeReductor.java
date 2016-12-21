@@ -31,7 +31,7 @@ public class ToolsShapeReductor {
 	
 	
 	// change to use the same safe code as the next method. Maybe a bit silly code
-	public static PointWithPropertiesIfc getPointClosestToBarycenterButNotAlreadyInMinishapeIfPossible(Map<Integer, PointWithPropertiesIfc> pointsCluster, Map<Integer, PointWithPropertiesIfc> miniShape){
+	public static PointWithPropertiesIfc getPointClosestToBarycenter(Map<Integer, PointWithPropertiesIfc> pointsCluster, Map<Integer, PointWithPropertiesIfc> miniShape){
 
 		// I can sort point according to Id for reproducibility
 
@@ -40,10 +40,41 @@ public class ToolsShapeReductor {
 			listPoint.add(entry.getValue());
 		}
 
-		PointWithPropertiesIfc pointCloserToBarycenterPointWithProperties = selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(listPoint, miniShape);
+		PointWithPropertiesIfc pointCloserToBarycenterPointWithProperties = selectOnePointFromACluster(listPoint, miniShape);
 		return pointCloserToBarycenterPointWithProperties;
 	}
 
+
+	/**
+	 * Select One point from a cluster, among points not already in minishape, to avoid duplicates point
+	 * @param listPoint
+	 * @param miniShape
+	 * @return
+	 */
+	public static PointWithPropertiesIfc selectOnePointFromACluster(List<PointWithPropertiesIfc> listPoint, Map<Integer, PointWithPropertiesIfc> miniShape){
+
+		// TODO listPointsFreeOfMiniShapePoints is not needed anymore
+		List<PointWithPropertiesIfc> listPointsFreeOfMiniShapePoints = new ArrayList<>();
+		listPointsFreeOfMiniShapePoints.addAll(listPoint);
+		//listPointsFreeOfMiniShapePoints.removeAll(miniShape.values());
+
+		//Collections.sort(listPointsFreeOfMiniShapePoints, new PointIdComparator(listShapePoints)); // there I use the list of point then the minishqpe mqp format will be asier to get rid of
+
+		//List<PointWithProperties> listPointToUse;
+		if (listPointsFreeOfMiniShapePoints.size() == 0){
+			System.out.println("could not find a point not already in minishape so one minishape point is lost");
+			return null;
+		}
+		PointIfc barycenter = computeBarycenterOfAListOfPoint(listPointsFreeOfMiniShapePoints);
+		Collections.sort(listPointsFreeOfMiniShapePoints, new PointDistanceToBarycenterComparator(barycenter));
+		//		System.out.println("dist ");
+		//		for (PointWithProperties point: listPointsFreeOfMiniShapePoints){
+		//			float distancePoint1ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point.getCoords().getCoords());
+		//			System.out.println("dist = " + distancePoint1ToBarycenter + " count of striking prop = " + point.getStrikingProperties().size());
+		//		}
+
+		return listPointsFreeOfMiniShapePoints.get(0);
+	}
 
 	/**
 	 * Select One point from a cluster, among points not already in minishape, to avoid duplicates point
