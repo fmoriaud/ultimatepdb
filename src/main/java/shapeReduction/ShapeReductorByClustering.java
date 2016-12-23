@@ -38,7 +38,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
     // -------------------------------------------------------------------
     public ShapeReductorByClustering(CollectionOfPointsWithPropertiesIfc shapeCollectionPoints, AlgoParameters algoParameters) {
         this.shapeCollectionPoints = shapeCollectionPoints;
-        this.barycenterShape = ToolsShapeReductor.computeBarycenterOfACollectionOfPointCoords(shapeCollectionPoints);
+        this.barycenterShape = ShapeReductorTools.computeBarycenterOfACollectionOfPointCoords(shapeCollectionPoints);
         this.mapPointToOriginalId = fillMap();
         this.algoParameters = algoParameters;
     }
@@ -170,7 +170,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
             for (Entry<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> sectorAndPoints : mapSectorAndPoint.getValue().entrySet()) {
 
                 // find the represenative point which is the point closest to barycenter
-                PointWithPropertiesIfc pointWithProperties = ToolsShapeReductor.getPointClosestToBarycenter(sectorAndPoints.getValue(), miniShape);
+                PointWithPropertiesIfc pointWithProperties = ShapeReductorTools.getPointClosestToBarycenter(sectorAndPoints.getValue(), miniShape);
                 if (pointWithProperties != null) {
 
                     listBarycenters.add(pointWithProperties);
@@ -195,7 +195,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
             // I want only one point per cluster !!!!!!!!!!!!!!!!!!!!!
             for (List<PointWithPropertiesIfc> clusterForThisProperty : clusteredPoints) {
 
-                PointWithPropertiesIfc onePointPerCluster = ToolsShapeReductor.selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(clusterForThisProperty, miniShape);
+                PointWithPropertiesIfc onePointPerCluster = ShapeReductorTools.selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(clusterForThisProperty, miniShape);
                 if (onePointPerCluster != null) {
                     Integer idOfPoint = mapPointToOriginalId.get(onePointPerCluster);
                     //onePointPerCluster.setMiniShapeStrikingProperty(mapSectorAndPoint.getKey()); // not used afterwards but maybe useful
@@ -371,7 +371,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
         EquidistributionPhi equidistributionPhi = new EquidistributionPhi();
         List<Double> phiValues = equidistributionPhi.getMapCountOfIntervalsAndPointValues().get(countOfIncrementAngle);
         // theta in map ranges from -pi to +pi in agreement with apache spherical coodinates
-        List<Double> tethaValues = ToolsShapeReductor.doBinningThetaValues(deltaOnlyForTheta, algoParameters.getCOUNT_OF_INCREMENT_ANGLE());
+        List<Double> tethaValues = ShapeReductorTools.doBinningThetaValues(deltaOnlyForTheta, algoParameters.getCOUNT_OF_INCREMENT_ANGLE());
 
         double maxRinThisShape = findMaxRadiusInThisShape(barycenterShape);
         radiusValues = doBinningRadiusValues(maxRinThisShape);

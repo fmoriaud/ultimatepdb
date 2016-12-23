@@ -20,7 +20,7 @@ import pointWithProperties.PointsTools;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.StructureLocalToBuildAnyShape;
 import shapeReduction.PhiThetaInterval;
-import shapeReduction.ToolsShapeReductor;
+import shapeReduction.ShapeReductorTools;
 import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
@@ -140,7 +140,7 @@ public class MyStructureFingerprint {
 
 		if (peptide.getMyMonomers().length == splittedSequenceLength){
 			List<PointIfc> pointsPeptide = PointsTools.createListOfPointIfcFromPeptide(peptide);
-			PointIfc barycenter = ToolsShapeReductor.computeLigandBarycenter(pointsPeptide);
+			PointIfc barycenter = ShapeReductorTools.computeLigandBarycenter(pointsPeptide);
 
 			LinkedHashMap<PhiThetaInterval, List<PointIfc>> groupedResidues = groupResiduesAccordingToSolidAngleAccordingToLocalStructureBarycenter(barycenter, myStructure);
 			int countOccupied = 0;
@@ -178,7 +178,7 @@ public class MyStructureFingerprint {
 					// makes the subPeptide barycenter
 					MyChainIfc subPeptide = peptide.makeSubchain(startId, splittedSequenceLength);
 					List<PointIfc> pointsPeptide = PointsTools.createListOfPointIfcFromPeptide(subPeptide);
-					PointIfc barycenter = ToolsShapeReductor.computeLigandBarycenter(pointsPeptide);
+					PointIfc barycenter = ShapeReductorTools.computeLigandBarycenter(pointsPeptide);
 
 					LinkedHashMap<PhiThetaInterval, List<PointIfc>> groupedResidues = groupResiduesAccordingToSolidAngleAccordingToLocalStructureBarycenter(barycenter, myStructureLocal);
 					int countOccupied = 0;
@@ -263,7 +263,7 @@ public class MyStructureFingerprint {
 		EquidistributionPhi equidistributionPhi = new EquidistributionPhi();
 		List<Double> phiValues = equidistributionPhi.getMapCountOfIntervalsAndPointValues().get(countOfIncrementAngle);
 		// theta in map ranges from -pi to +pi in agreement with apache spherical coodinates
-		List<Double> tethaValues = ToolsShapeReductor.doBinningThetaValues(deltaOnlyForTheta, countOfIncrementAngle);
+		List<Double> tethaValues = ShapeReductorTools.doBinningThetaValues(deltaOnlyForTheta, countOfIncrementAngle);
 
 
 		List<PhiThetaInterval> sectors = generateSector(deltaOnlyForTheta, phiValues, tethaValues);
