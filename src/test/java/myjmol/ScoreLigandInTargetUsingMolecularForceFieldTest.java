@@ -43,7 +43,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -162,7 +162,7 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }

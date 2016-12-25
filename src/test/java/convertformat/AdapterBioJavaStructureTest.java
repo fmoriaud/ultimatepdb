@@ -57,7 +57,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -122,7 +122,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(e instanceof ReadingStructurefileException);
             assertTrue(e.getMessage().startsWith("Only empty amino chain were parsed for"));
@@ -147,7 +147,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -232,7 +232,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -291,7 +291,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -331,7 +331,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -371,7 +371,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
 
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
@@ -402,7 +402,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
@@ -427,7 +427,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -455,7 +455,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Corresponding alt loc residue not found so adapter fails"));
@@ -482,7 +482,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure, EnumMyReaderBiojava.BioJava_MMCIFF);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Not supported atom type found"));
