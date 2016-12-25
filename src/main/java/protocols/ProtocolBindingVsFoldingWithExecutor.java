@@ -3,8 +3,10 @@ package protocols;
 import database.HitInSequenceDb;
 import database.SequenceTools;
 import multithread.CompareWithOneOnlyCallable;
+import mystructure.MyChainIfc;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
+import shape.ShapeContainerWithPeptide;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
-    private ShapeContainerDefined query;
+    private  ShapeContainerIfc queryShape;
     private List<ShapeContainerDefined> targets;
     private static AlgoParameters algoParameters;
 
@@ -32,9 +34,9 @@ public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ProtocolBindingVsFoldingWithExecutor(ShapeContainerDefined query, List<ShapeContainerDefined> targets) {
+    public ProtocolBindingVsFoldingWithExecutor( ShapeContainerIfc queryShape, List<ShapeContainerDefined> targets) {
 
-        this.query = query;
+        this.queryShape = queryShape;
         this.targets = targets;
     }
 
@@ -60,9 +62,18 @@ public class ProtocolBindingVsFoldingWithExecutor {
         ControllerLoger.logger.addHandler(fh);
 
         ShapeContainerDefined query = new ShapecontainerDefinedByWholeChain("1be9".toCharArray(), "B".toCharArray(), algoParameters);
-        List<ShapeContainerDefined> targets = buildTargets();
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = query.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
 
-        ProtocolBindingVsFoldingWithExecutor protocol = new ProtocolBindingVsFoldingWithExecutor(query, targets);
+
+        List<ShapeContainerDefined> targets = buildTargets(queryShape);
+
+        ProtocolBindingVsFoldingWithExecutor protocol = new ProtocolBindingVsFoldingWithExecutor(queryShape, targets);
         // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
 
         protocol.run();
@@ -75,13 +86,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
         final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
-        ShapeContainerIfc queryShape = null;
-        try {
-            queryShape = query.getShapecontainer();
-        } catch (ShapeBuildingException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
+
 
         List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
@@ -99,7 +104,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
 
-                ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
+               // ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
 
             } catch (RejectedExecutionException e) {
 
@@ -132,7 +137,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
     }
 
 
-    private static List<ShapeContainerDefined> buildTargets() {
+    private static List<ShapeContainerDefined> buildTargets(ShapeContainerIfc queryShape) {
 
         List<ShapeContainerDefined> targets = new ArrayList<>();
 
@@ -142,6 +147,17 @@ public class ProtocolBindingVsFoldingWithExecutor {
         boolean useSimilarSequences = false;
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFind, useSimilarSequences);
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
+
+        if (queryShape instanceof ShapeContainerWithPeptide) {
+
+            ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
+            MyChainIfc ligand = query.getPeptide();
+            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
+            System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
+            System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
+
+            hitsInDatabase = hitsInDatabaseUsingInteractions;
+        }
 
         String fourLetterCodeTarget;
         String chainIdFromDB;
