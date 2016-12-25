@@ -80,9 +80,9 @@ public class AutoShapeSegmentOfChainTest {
             HitTools.minimizeHitInQuery(hit, shapeQuery, shapeTarget, algoParameters);
             ResultsUltiJMolMinimizedHitLigandOnTarget hitScore = hit.getResultsUltiJMolMinimizedHitLigandOnTarget();
             assertTrue(hitScore != null);
-            assertTrue(hitScore.getInteractionEFinal() > -2 && hitScore.getInteractionEFinal() < -1);
-            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 120 && Math.abs(hitScore.getLigandStrainedEnergy()) < 122);
-            assertTrue(hitScore.getRmsdLigand() < 0.8 && hitScore.getRmsdLigand() > 0.7);
+            assertTrue(hitScore.getInteractionEFinal() > -30 && hitScore.getInteractionEFinal() < -28);
+            assertTrue(Math.abs(hitScore.getLigandStrainedEnergy()) > 40 && Math.abs(hitScore.getLigandStrainedEnergy()) < 50);
+            assertTrue(hitScore.getRmsdLigand() < 0.7 && hitScore.getRmsdLigand() > 0.5);
             assertTrue(hitScore.getCountOfLongDistanceChange() == 3);
             HitPeptideWithQueryPeptide hitPeptideWithQueryPeptide = (HitPeptideWithQueryPeptide) hit;
             assertTrue(hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() > 0.25 && hitPeptideWithQueryPeptide.getRmsdBackboneWhencomparingPeptideToPeptide() < 0.30);

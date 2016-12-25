@@ -65,7 +65,7 @@ public class CompareCompleteCheckTest {
         assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 10);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 13);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 16);
 
         int hitCount = results.size();
         assertTrue(hitCount == 34);
@@ -114,13 +114,13 @@ public class CompareCompleteCheckTest {
         assertTrue(countHitDeletedBecauseOforiginalCost == 0);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
-        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 1);
+        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 8);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 31);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 29);
 
         int hitCount = results.size();
-        assertTrue(hitCount == 7);
+        assertTrue(hitCount == 5);
     }
 
 
@@ -173,13 +173,13 @@ public class CompareCompleteCheckTest {
         assertTrue(countHitDeletedBecauseOforiginalCost == 0);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
-        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 65);
+        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 80);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 28);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 14);
 
         int hitCount = results.size();
-        assertTrue(hitCount == 15);
+        assertTrue(hitCount == 20);
     }
 
 

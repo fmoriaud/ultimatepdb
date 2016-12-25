@@ -1,17 +1,32 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package convertformat;
 
 import java.util.*;
 
-import math.AddToMap;
 import math.ToolsMath;
 import mystructure.*;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 
 public class AdapterBioJavaStructure {
-
-
-    private EnumMyReaderBiojava enumMyReaderBiojava;
 
     private AlgoParameters algoParameters;
 
@@ -47,14 +62,12 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Interface & Public methods
     //-------------------------------------------------------------
-    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure, EnumMyReaderBiojava enumMyReaderBiojava) throws ExceptionInMyStructurePackage, ReadingStructurefileException, ExceptionInConvertFormat {
-
-        this.enumMyReaderBiojava = enumMyReaderBiojava;
+    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure) throws ExceptionInMyStructurePackage, ReadingStructurefileException, ExceptionInConvertFormat {
 
         MyStructureIfc myStructure = convertStructureToMyStructure(structure, algoParameters);
-
         return myStructure;
     }
+
 
 
     public MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters) throws ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
@@ -63,7 +76,6 @@ public class AdapterBioJavaStructure {
         hetatmChains.clear();
         nucleotidesChains.clear();
 
-        // then it is always upper case
         char[] fourLetterCode = structure.getPDBCode().toUpperCase().toCharArray();
 
         int countOfChains = structure.getChains().size();
@@ -115,7 +127,8 @@ public class AdapterBioJavaStructure {
                 }
             }
         }
-        // N.B. all correspondance atom and MyAtom are stored now in the map
+
+
 
         if (aminoChains.size() == 0 && nucleotidesChains.size() == 0) {
             // then nothing to do, problem in the file
@@ -128,16 +141,13 @@ public class AdapterBioJavaStructure {
         // define bonds before building MyStructure otherwise the call for building neighbors by Bond won't work
         int countOfBonds = 0;
         for (MyChainIfc myChain : aminoChains) {
-            int count = defineBonds(myChain);
-            countOfBonds += count;
+            defineBonds(myChain);
         }
         for (MyChainIfc myChain : hetatmChains) {
-            int count = defineBonds(myChain);
-            countOfBonds += count;
+            defineBonds(myChain);
         }
         for (MyChainIfc myChain : nucleotidesChains) {
-            int count = defineBonds(myChain);
-            countOfBonds += count;
+            defineBonds(myChain);
         }
 
         Set<ExperimentalTechnique> expTechniqueBiojava = structure.getPDBHeader().getExperimentalTechniques();
@@ -174,19 +184,22 @@ public class AdapterBioJavaStructure {
     }
 
 
+
+
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private MyChainIfc[] removeEmptychains(MyChainIfc[] myChains){
+    private MyChainIfc[] removeEmptychains(MyChainIfc[] myChains) {
 
         List<MyChainIfc> keptMyChain = new ArrayList<>();
-        for (MyChainIfc myChain: myChains){
-            if (myChain.getMyMonomers().length > 0){
+        for (MyChainIfc myChain : myChains) {
+            if (myChain.getMyMonomers().length > 0) {
                 keptMyChain.add(myChain);
             }
         }
         return MyStructureTools.makeArrayFromListMyChains(keptMyChain);
     }
+
 
 
     private void moveNucleosidesIfTheyAreInAchainWithSameIdAsAminoChainAndCovalentlyBound(MyChainIfc[] currentAminoChains, MyChainIfc[] currentNucleosidesChains) {
@@ -209,10 +222,12 @@ public class AdapterBioJavaStructure {
     }
 
 
+
     private void moveHetatmResiduesThatAreBoundCovalentlyToChains(MyChainIfc[] hetatmArray, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
 
         move(hetatmArray, destinationChains);
     }
+
 
 
     private void move(MyChainIfc[] chainsWithMovingCandidates, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
@@ -271,9 +286,9 @@ public class AdapterBioJavaStructure {
                 monomersToInsert.add(hetatom.getParent());
             }
         }
-
         insertAndDelete(destinationChains, monomersToInsert);
     }
+
 
 
     private void insertAndDelete(MyChainIfc[] destinationChains, List<MyMonomerIfc> monomersToInsert) {
@@ -291,7 +306,7 @@ public class AdapterBioJavaStructure {
             }
 
             if (relevantChain == null) {
-                System.out.println("failed to find chain to insert ");
+                System.out.println("failed to find chain to insert");
                 continue;
             }
 
@@ -311,6 +326,7 @@ public class AdapterBioJavaStructure {
             }
         }
     }
+
 
 
     private ExpTechniquesEnum convertExpTechniques(Set<ExperimentalTechnique> expTechniqueBiojava) {
@@ -346,6 +362,7 @@ public class AdapterBioJavaStructure {
     }
 
 
+
     private void cleanListOfGroup(List<Group> listGroups) {
 
         // if there is only one atom in a residue I skip the monomer: lets see what happen for 1dgi
@@ -364,6 +381,7 @@ public class AdapterBioJavaStructure {
             }
         }
     }
+
 
 
     private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) throws ExceptionInConvertFormat {
@@ -464,9 +482,9 @@ public class AdapterBioJavaStructure {
     }
 
 
-    private int defineBonds(MyChainIfc myChain) throws ExceptionInConvertFormat {
 
-        int countOfBond = 0;
+    private void defineBonds(MyChainIfc myChain) throws ExceptionInConvertFormat {
+
         for (MyMonomerIfc myMonomer : myChain.getMyMonomers()) {
 
             for (MyAtomIfc myAtom : myMonomer.getMyAtoms()) {
@@ -545,7 +563,6 @@ public class AdapterBioJavaStructure {
                     } catch (ExceptionInMyStructurePackage e) {
                         continue;
                     }
-                    countOfBond += 1;
                     tempMyBondList.add(myBond);
                 }
 
@@ -588,7 +605,6 @@ public class AdapterBioJavaStructure {
                     try {
                         myBondCtoN = new MyBond(atomN, 1);
                         atomC.addBond(myBondCtoN);
-                        countOfBond += 1;
                     } catch (ExceptionInMyStructurePackage e) {
                     }
 
@@ -596,25 +612,20 @@ public class AdapterBioJavaStructure {
                     try {
                         myBondNtoC = new MyBond(atomC, 1);
                         atomN.addBond(myBondNtoC);
-                        countOfBond += 1;
                     } catch (ExceptionInMyStructurePackage e) {
                     }
                 }
             }
         }
-
-        // like in 101M and I dont know why some atoms are not connected
-        // It is very costly all atom to all atom
-
-        return countOfBond;
     }
+
+
 
     private MyMonomerIfc findBondedMyMonomer(Atom bondBondedAtom) {
 
         String chainIDToFind = bondBondedAtom.getGroup().getChainId();
         String threeLetterCode = bondBondedAtom.getGroup().getPDBName();
         int residueId = bondBondedAtom.getGroup().getResidueNumber().getSeqNum();
-
 
         for (MyChainIfc myChain : aminoChains) {
             if (Arrays.equals(myChain.getChainId(), chainIDToFind.toCharArray())) {
@@ -653,6 +664,7 @@ public class AdapterBioJavaStructure {
     }
 
 
+
     private char[] getThreeLetterCode(Group currentGroup) {
         char[] threeLetterCode = null;
         if (currentGroup.getChemComp().getThree_letter_code() != null) {
@@ -664,6 +676,7 @@ public class AdapterBioJavaStructure {
     }
 
 
+
     private void addParentReference(MyMonomerIfc myMonomer, MyAtomIfc[] myAtoms) {
 
         for (MyAtomIfc atom : myAtoms) {
@@ -672,78 +685,11 @@ public class AdapterBioJavaStructure {
     }
 
 
+
     private void addParentReference(MyChainIfc myChain, MyMonomerIfc[] myMonomers) {
 
         for (MyMonomerIfc monomer : myMonomers) {
             monomer.setParent(myChain);
         }
-    }
-
-
-    private static void updateMyMonomerParentReference(MyChainIfc myChain) {
-
-        for (MyMonomerIfc myMonomer : myChain.getMyMonomers()) {
-            myMonomer.setParent(myChain);
-        }
-    }
-
-
-    private static MyMonomerIfc findMonomerJustBefore(int monomerId, MyChainIfc chain) {
-
-        for (int i = chain.getMyMonomers().length - 1; i >= 0; i--) {
-            MyMonomerIfc monomer = chain.getMyMonomerByRank(i);
-            if (monomer.getResidueID() < monomerId) {
-                return monomer;
-            }
-        }
-        return null;
-    }
-
-
-    private static boolean isThatMonomerChainIdAndResidueIdFitsInAGapOfAnAminoChain(MyStructureIfc myStructure, Map<String, Set<Integer>> mapChainAndResidueIDBeforeAGap, MyMonomerIfc monomer) {
-
-        int residueIdOfMonomerToInsert = monomer.getResidueID();
-        char[] chainId = monomer.getParent().getChainId();
-        if (mapChainAndResidueIDBeforeAGap.containsKey(String.valueOf(chainId))) {
-            //
-            Set<Integer> residuesBeforeGapsInChain = mapChainAndResidueIDBeforeAGap.get(String.valueOf(chainId));
-            if (residuesBeforeGapsInChain.contains(residueIdOfMonomerToInsert - 1)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    private static Map<String, Set<Integer>> findGapsInAminoChains(MyStructureIfc myStructure) {
-
-        Map<String, Set<Integer>> mapChainAndResidueIDBeforeAGap = new HashMap<>();
-        for (MyChainIfc chain : myStructure.getAllAminochains()) {
-
-            // residues withan id > 0 and before first element are considered as a gap
-            // maybe silly but works for 2qlj E
-            int residueIdOfFirstMonomerInChain = chain.getMyMonomerByRank(0).getResidueID();
-            if (residueIdOfFirstMonomerInChain > 1) {
-                for (int j = 1; j < residueIdOfFirstMonomerInChain; j++) {
-                    AddToMap.addElementToAMapOfSet(mapChainAndResidueIDBeforeAGap, String.valueOf(chain.getChainId()), j);
-                }
-            }
-
-            for (int i = 1; i < chain.getMyMonomers().length; i++) {
-                MyMonomerIfc currentMonomer = chain.getMyMonomerByRank(i); // guess they are sorted according to residue ID
-                MyMonomerIfc previousMonomer = chain.getMyMonomerByRank(i - 1);
-                if (currentMonomer.getResidueID() > previousMonomer.getResidueID() + 1) {
-                    //
-                    //System.out.println("Found a gap in amino chain " + chain.getChainId() + " after position " +  previousMonomer.getResidueID());
-                    // I should add all id in between !!!
-                    int startId = previousMonomer.getResidueID();
-                    int endId = currentMonomer.getResidueID();
-                    for (int j = startId; j < endId - 1; j++) {
-                        AddToMap.addElementToAMapOfSet(mapChainAndResidueIDBeforeAGap, String.valueOf(chain.getChainId()), j);
-                    }
-                }
-            }
-        }
-        return mapChainAndResidueIDBeforeAGap;
     }
 }
