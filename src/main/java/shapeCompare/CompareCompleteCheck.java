@@ -34,8 +34,8 @@ public class CompareCompleteCheck {
     private ShapeContainerIfc shapeContainerAnyShape;
     private AlgoParameters algoParameters;
 
-    private float thresholdCostOriginal = 0.15f; // arbitrary but fix a limit on quality of paired points so partial hit quality
-    private int thresholdClashesCount = 5; // ten clashes maximum
+    private float thresholdCostOriginal = 0.05f; // arbitrary but fix a limit on quality of paired points so partial hit quality
+    private int thresholdClashesCount = 2; // ten clashes maximum
     private float thresholdPercentageClashesCount = 0.1f; // 25% of ligand atoms clashing
     private float thresholdPercentageIncreaseCompleteCheck = 0.2f;
 

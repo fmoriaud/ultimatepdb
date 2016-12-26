@@ -27,7 +27,7 @@ public class ProtocolTools {
 
     public static void compareCompleteCheckAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
 
-        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
+        //ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
 
         CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> hits = null;
@@ -37,13 +37,12 @@ public class ProtocolTools {
             return;
         }
 
-        ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + hits.size() + " hits to minimize");
+        //ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + hits.size() + " hits to minimize");
 
         int hitRank = -1;
         A:
         for (Hit hit : hits) {
             hitRank += 1;
-            ControllerLoger.logger.log(Level.INFO,"&&&&&& Minimizing " + String.valueOf(targetShape.getFourLetterCode()) + " rankId = " + hitRank);
 
             try {
                 HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);

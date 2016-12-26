@@ -155,6 +155,7 @@ public class ProtocolBindingVsFolding {
         String chainIdFromDB;
 
         List<HitInSequenceDb> hitsEnrichedOnTop = putGoodHitsOnTopOfList(hitsInDatabase, getHitWithGoodRmsdBackbone());
+        A:
         for (HitInSequenceDb hitInSequenceDb : hitsEnrichedOnTop) {
 
 
@@ -167,14 +168,14 @@ public class ProtocolBindingVsFolding {
             try {
                 mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
             } catch (IOException | ExceptionInIOPackage e) {
-
+                continue A;
             }
             AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
             MyStructureIfc mystructure = null;
             try {
                 mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
             } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-
+                continue A;
             }
 
             char[] chainId = chainIdFromDB.toCharArray();
@@ -190,13 +191,16 @@ public class ProtocolBindingVsFolding {
                     targetShape = shapeContainerDefined.getShapecontainer(mystructure);
 
                 } catch (ShapeBuildingException e) {
-                    e.printStackTrace();
-                    continue;
+                    continue B;
                 }
                 System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
 
-                boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
-                ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
+                boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+                try {
+                    ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
+                } catch (Exception e) {
+                    continue B;
+                }
             }
         }
     }
@@ -207,7 +211,8 @@ public class ProtocolBindingVsFolding {
 
         List<HitInSequenceDb> hitToBeAddedOnTop = new ArrayList<>();
 
-        A: for (String goodHit: hitWithGoodRmsdBackbone){
+        A:
+        for (String goodHit : hitWithGoodRmsdBackbone) {
 
             String[] splitGoodHit = goodHit.split(" ");
             String dbFourLetterCode = splitGoodHit[0];
@@ -216,14 +221,14 @@ public class ProtocolBindingVsFolding {
 
             Iterator<HitInSequenceDb> it = hitsInDatabase.iterator();
 
-            while (it.hasNext()){
+            while (it.hasNext()) {
                 HitInSequenceDb currentdbHit = it.next();
 
-                if (currentdbHit.getFourLetterCode().equals(dbFourLetterCode)){
+                if (currentdbHit.getFourLetterCode().equals(dbFourLetterCode)) {
 
                     // Only if only one matching ID, should be enough
-                    if (currentdbHit.getChainIdFromDB().equals(dbChainId)){
-                        if (currentdbHit.getListRankIds().size() == 1 && currentdbHit.getListRankIds().get(0) == rankid){
+                    if (currentdbHit.getChainIdFromDB().equals(dbChainId)) {
+                        if (currentdbHit.getListRankIds().size() == 1 && currentdbHit.getListRankIds().get(0) == rankid) {
                             it.remove();
                             hitToBeAddedOnTop.add(currentdbHit);
                             continue A;
@@ -245,6 +250,7 @@ public class ProtocolBindingVsFolding {
     /**
      * Obtained with a three weeks run on single CPU on my Mac.
      * Cost was a bit different on aromatic & hydrophobe
+     *
      * @return
      */
     private List<String> getHitWithGoodRmsdBackbone() {

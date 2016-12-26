@@ -59,16 +59,12 @@ public class HitTools {
                 Cloner cloner2 = new Cloner(peptideOrLigand, algoParameters);
                 MyStructureIfc myStructurePeptide = cloner2.getClone();
 
-               // MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
+                // MyStructureIfc myStructurePeptide = new MyStructure(peptideOrLigand, algoParameters);
 
 
                 // TODO is it already protonated?, should be now ...
                 Protonate protonate = new Protonate(myStructurePeptide, algoParameters);
-                try {
-                    protonate.compute();
-                } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                    exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-                }
+                protonate.compute();
 
                 MyStructureIfc preparedPeptide = protonate.getProtonatedMyStructure();
 
@@ -81,13 +77,7 @@ public class HitTools {
                 protonate2.compute();
 
                 MyStructureIfc preparedQuery = protonate2.getProtonatedMyStructure();
-
-                try {
-                    resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
-
-                } catch (Exception e) {
-                    System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor");
-                }
+                resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
                 // handle coverage of query into hit
 
