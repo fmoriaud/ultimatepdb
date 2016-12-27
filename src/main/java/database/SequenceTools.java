@@ -1,24 +1,51 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package database;
+
+import math.ToolsMath;
+import mystructure.MyAtomIfc;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureTools;
+import parameters.AlgoParameters;
+import shapeBuilder.StructureLocalTools;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-
-import math.ToolsDistance;
-import math.ToolsMath;
-import mystructure.*;
-import parameters.AlgoParameters;
-import shapeBuilder.StructureLocalTools;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class SequenceTools {
-
-    /**
-     * The sequence DB for protocols
-     */
+    //-------------------------------------------------------------
+    // Static variables
+    //-------------------------------------------------------------
     public static String tableName = "sequence";
 
+
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static String generateSequence(MyChainIfc chain) {
 
         StringBuffer stringBuffer = new StringBuffer();
@@ -350,9 +377,9 @@ public class SequenceTools {
             }
             contacts.add(currentType);
         }
-
         return contacts;
     }
+
 
     /**
      * Find Hits in SequenceDB which are segment of sequence chain in the DB
@@ -430,6 +457,7 @@ public class SequenceTools {
         DatabaseTools.shutdown();
         return hitsInSequenceDb;
     }
+
 
     public static List<Integer> findRankId(String sequenceToFind, String chainSequence, List<QueryMonomerToTargetContactType> contacts) {
 
@@ -563,6 +591,8 @@ public class SequenceTools {
 
         return listMatchingRankId;
     }
+
+
 
 
     // -------------------------------------------------------------------

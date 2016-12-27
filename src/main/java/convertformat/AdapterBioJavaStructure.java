@@ -19,15 +19,17 @@ Author:
   */
 package convertformat;
 
-import java.util.*;
-
 import math.ToolsMath;
 import mystructure.*;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 
-public class AdapterBioJavaStructure {
+import java.util.*;
 
+public class AdapterBioJavaStructure {
+    //-------------------------------------------------------------
+    // Class variables
+    //-------------------------------------------------------------
     private AlgoParameters algoParameters;
 
     private List<MyChainIfc> aminoChains = new ArrayList<>();
@@ -67,7 +69,6 @@ public class AdapterBioJavaStructure {
         MyStructureIfc myStructure = convertStructureToMyStructure(structure, algoParameters);
         return myStructure;
     }
-
 
 
     public MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters) throws ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
@@ -129,7 +130,6 @@ public class AdapterBioJavaStructure {
         }
 
 
-
         if (aminoChains.size() == 0 && nucleotidesChains.size() == 0) {
             // then nothing to do, problem in the file
             String message = "Only empty amino chain and empty nucleotides chain were parsed for " + String.valueOf(fourLetterCode);
@@ -184,8 +184,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
-
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -199,7 +197,6 @@ public class AdapterBioJavaStructure {
         }
         return MyStructureTools.makeArrayFromListMyChains(keptMyChain);
     }
-
 
 
     private void moveNucleosidesIfTheyAreInAchainWithSameIdAsAminoChainAndCovalentlyBound(MyChainIfc[] currentAminoChains, MyChainIfc[] currentNucleosidesChains) {
@@ -222,12 +219,10 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private void moveHetatmResiduesThatAreBoundCovalentlyToChains(MyChainIfc[] hetatmArray, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
 
         move(hetatmArray, destinationChains);
     }
-
 
 
     private void move(MyChainIfc[] chainsWithMovingCandidates, MyChainIfc[] destinationChains) throws ExceptionInMyStructurePackage {
@@ -290,7 +285,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private void insertAndDelete(MyChainIfc[] destinationChains, List<MyMonomerIfc> monomersToInsert) {
         // insert them based on residue Id or add at the end
         // and delete from hetchain
@@ -328,7 +322,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private ExpTechniquesEnum convertExpTechniques(Set<ExperimentalTechnique> expTechniqueBiojava) {
 
         if (expTechniqueBiojava.contains(ExperimentalTechnique.XRAY_DIFFRACTION)) {
@@ -362,7 +355,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private void cleanListOfGroup(List<Group> listGroups) {
 
         // if there is only one atom in a residue I skip the monomer: lets see what happen for 1dgi
@@ -381,7 +373,6 @@ public class AdapterBioJavaStructure {
             }
         }
     }
-
 
 
     private MyChainIfc createAChainFromAListOfGroups(List<Group> listGroups, int countOfGroups, AlgoParameters algoParameters, char[] chainType) throws ExceptionInConvertFormat {
@@ -480,7 +471,6 @@ public class AdapterBioJavaStructure {
 
         return myChain;
     }
-
 
 
     private void defineBonds(MyChainIfc myChain) throws ExceptionInConvertFormat {
@@ -620,7 +610,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private MyMonomerIfc findBondedMyMonomer(Atom bondBondedAtom) {
 
         String chainIDToFind = bondBondedAtom.getGroup().getChainId();
@@ -664,7 +653,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private char[] getThreeLetterCode(Group currentGroup) {
         char[] threeLetterCode = null;
         if (currentGroup.getChemComp().getThree_letter_code() != null) {
@@ -676,14 +664,12 @@ public class AdapterBioJavaStructure {
     }
 
 
-
     private void addParentReference(MyMonomerIfc myMonomer, MyAtomIfc[] myAtoms) {
 
         for (MyAtomIfc atom : myAtoms) {
             atom.setParent(myMonomer);
         }
     }
-
 
 
     private void addParentReference(MyChainIfc myChain, MyMonomerIfc[] myMonomers) {

@@ -1,4 +1,22 @@
-package database;
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */package database;
 
 import io.IOTools;
 import multithread.StoreInSequenceDbPDBFileCallable;
@@ -15,16 +33,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 
-/**
- * Created by Fabrice on 06/11/16.
- */
-public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSearchSequenceDatabaseIfc{
-
+public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSearchSequenceDatabaseIfc {
+    //-------------------------------------------------------------
+    // Class variables
+    //-------------------------------------------------------------
     private Connection connexion;
     private AlgoParameters algoParameters;
     private String sequenceTableName;
 
 
+    //-------------------------------------------------------------
+    // Constructor
+    //-------------------------------------------------------------
     public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters, String sequenceTableName) {
 
         this.connexion = DatabaseTools.getConnection();
@@ -33,6 +53,9 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     }
 
 
+    // -------------------------------------------------------------------
+    // Public & Interface Methods
+    // -------------------------------------------------------------------
     @Override
     public void createDatabase() {
 
@@ -42,15 +65,14 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
 
     @Override
-    public void updateDatabaseKeepingFourLetterCodeEntries(){
+    public void updateDatabaseKeepingFourLetterCodeEntries() {
 
         updateOveridingExistingDatabase(false);
     }
 
 
-
     @Override
-    public void updateDatabaseAndOverride(){
+    public void updateDatabaseAndOverride() {
 
         updateOveridingExistingDatabase(true);
     }
@@ -70,6 +92,11 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     }
 
 
+
+
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
     private void updateOveridingExistingDatabase(boolean override) {
 
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
@@ -122,6 +149,5 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
             }
         }
         executorService.shutdown();
-
     }
 }

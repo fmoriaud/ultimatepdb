@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package database;
 
 import io.IOTools;
@@ -9,24 +28,18 @@ import parameters.AlgoParameters;
 import java.sql.*;
 
 public class DatabaseTools {
-
-
+	//-------------------------------------------------------------
+	// Static variables
+	//-------------------------------------------------------------
 	public static final int maxCharInVarchar = 30000;
-
-
-	//-------------------------------------------------------------
-	// Class variables
-	//-------------------------------------------------------------
 	private static String dbURL = "jdbc:derby:myDB;create=true;user=me;password=mine";
-	//private static String dbURL = "jdbc:derby://localhost:1527/myDB;create=true;user=me;password=mine";
-
 	private static Connection connection = null;
 
 
 
 
 	//-------------------------------------------------------------
-	// Interface & Public methods
+	// Static methods
 	//-------------------------------------------------------------
 	public static Connection getConnection(){
 
@@ -63,31 +76,6 @@ public class DatabaseTools {
 		}
 		return null;
 	}
-	
-
-
-	public static Connection getConnectionImproved(){
-
-		try{
-			Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-			//Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
-		//	BasicDatabase ds = new BasicDatabase();
-			//ds.setDriverClassName(org.apache.derby.jdbc.EmbeddedDriver.class.getName());
-			 // ds.setUrl(dbURL);
-			 // ds.setUsername("james");
-			//  ds.setPassword("james");
-
-			  
-			connection = DriverManager.getConnection(dbURL); 
-			return connection;
-		}
-		catch (Exception except){
-			except.printStackTrace();
-		}
-		return null;
-
-	}
-
 
 
 
@@ -106,6 +94,7 @@ public class DatabaseTools {
 			//sqlExcept.printStackTrace();
 		}
 	}
+
 
 
 	public static void createDBandTableSequence(Connection connection, String sequenceTableName) {
@@ -134,6 +123,7 @@ public class DatabaseTools {
 			System.out.println("Table " + sequenceTableName + " already exists in myDB !");
 		}
 	}
+
 
 
 	public static String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(Connection connection, String fourLetterCode, String chainName, String sequenceTableName) {
@@ -229,6 +219,7 @@ public class DatabaseTools {
 		}
 		return true;
 	}
+
 
 
 	public static boolean isFourLetterCodeAlreadyFoundInDB(Connection connexion, String fourLetterCode, String sequenceTableName) {
