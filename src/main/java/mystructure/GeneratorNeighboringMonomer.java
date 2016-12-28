@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import math.ToolsMathAppliedToObjects;
+import math.ToolsMathAppliedToMyStructure;
 
 public class GeneratorNeighboringMonomer {
     //------------------------
@@ -85,7 +85,7 @@ public class GeneratorNeighboringMonomer {
                 continue;
             }
 
-            distance = ToolsMathAppliedToObjects.computeDistanceBetweenTwoResidues(startingMonomer, myMonomer);
+            distance = ToolsMathAppliedToMyStructure.computeDistanceBetweenTwoResidues(startingMonomer, myMonomer);
 
             if ((distance < minDistanceToBeNeighbors - 0.001) && (distance > 0.001)) {
                 //System.out.println("distance = " + distance);

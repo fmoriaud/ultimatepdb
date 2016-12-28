@@ -31,7 +31,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import database.SequenceTools;
 import math.EquidistributionPhi;
 import math.ToolsMath;
-import math.ToolsMathAppliedToObjects;
+import math.ToolsMathAppliedToMyStructure;
 import parameters.AlgoParameters;
 import pointWithProperties.Point;
 import pointWithProperties.PointIfc;
@@ -266,7 +266,7 @@ public class MyStructureFingerprint {
 
 		for (MyChainIfc chain: myStructureHere.getAllChainsRelevantForShapeBuilding()){
 			for (MyMonomerIfc monomer: chain.getMyMonomers()){
-				float[] coords = ToolsMathAppliedToObjects.getCoordinatesOfRepresentativeAtom(monomer);
+				float[] coords = ToolsMathAppliedToMyStructure.getCoordinatesOfRepresentativeAtom(monomer);
 				PointIfc point = new Point(coords);
 				listRepresentativePoints.add(point);
 			}

@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package math;
 
 import java.util.List;
@@ -37,7 +56,6 @@ public class ToolsMath {
 		for (int i= 0; i<3; i++){
 			vectorSum[i] = v1[i] + v2[i];
 		}
-
 		return vectorSum;
 	} 
 
@@ -55,7 +73,7 @@ public class ToolsMath {
 
 
 
-	public static double[] multiplyByScalar ( double[] v1, double scalar) {
+	public static double[] multiplyByScalar(double[] v1, double scalar){
 
 		double[] vectorSum = new double[3];
 		for (int i= 0; i<3; i++){
@@ -67,7 +85,7 @@ public class ToolsMath {
 
 
 
-	public static double computeDistance ( double[] v1, double[] v2 ) {
+	public static double computeDistance (double[] v1, double[] v2){
 		double distanceToReturn = 0.0 ;
 		if ( ( v1 != null ) && ( v2 != null ) ) {
 			for ( int i=0 ; i<3 ; i++ ) {
@@ -80,7 +98,7 @@ public class ToolsMath {
 
 
 
-	public static float computeDistance (float[] v1, float[] v2) {
+	public static float computeDistance (float[] v1, float[] v2){
 		float distanceToReturn = 0.0f ;
 		if ( ( v1 != null ) && ( v2 != null ) ) {
 			for ( int i=0 ; i<3 ; i++ ) {
@@ -100,7 +118,7 @@ public class ToolsMath {
 
 
 
-	public static float computeDistance ( float[] v1, List<float[]> listV2 ) {
+	public static float computeDistance (float[] v1, List<float[]> listV2){
 
 		float minDistance = Float.MAX_VALUE;
 		for (float[] v2: listV2){
@@ -118,7 +136,7 @@ public class ToolsMath {
 
 
 
-	public static double computeDistance ( double[] v1, List<double[]> listV2 ) {
+	public static double computeDistance (double[] v1, List<double[]> listV2){
 
 		double minDistance = Double.MAX_VALUE;
 		for (double[] v2: listV2){
@@ -135,7 +153,7 @@ public class ToolsMath {
 	} 
 
 
-	public static float computeTorsionAngle( float[] v1, float[] v2, float[] v3, float[] v4  ){
+	public static float computeTorsionAngle(float[] v1, float[] v2, float[] v3, float[] v4){
 
 		float torsionAngle = 0.0f;
 
@@ -181,12 +199,13 @@ public class ToolsMath {
 
 	
 	public static float[] v1minusV2( float[] v1, float[] v2 ){
+
 		return vectorFromTwoPoints(v1, v2);
 	}
 
 
 
-	public static float[] v1plusV2( float[] v1, float[] v2 ){
+	public static float[] v1plusV2(float[] v1, float[] v2){
 		float[] returnedVector = new float[3];
 		for (int i=0; i<3; i++) {
 			returnedVector[i] = v1[i] + v2[i];
@@ -207,7 +226,7 @@ public class ToolsMath {
 	}
 
 
-	public static float[] computeCrossVectorProduct( float[] v1, float[] v2 ){
+	public static float[] computeCrossVectorProduct(float[] v1, float[] v2){
 
 		float[] returnedVector = new float[3];
 
@@ -220,7 +239,7 @@ public class ToolsMath {
 
 
 
-	public static double computeScalarVectorProduct( double[] v1, double[] v2 ){
+	public static double computeScalarVectorProduct(double[] v1, double[] v2){
 
 		return  v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 	}
@@ -247,7 +266,7 @@ public class ToolsMath {
 	}
 
 
-	public static double[] normalizeVector( double[] v){
+	public static double[] normalizeVector(double[] v){
 
 		double[] returnedVector = new double[3];
 
@@ -262,7 +281,7 @@ public class ToolsMath {
 
 	
 	
-	public static float[] normalizeVector( float[] v){
+	public static float[] normalizeVector(float[] v){
 
 		float[] returnedVector = new float[3];
 
@@ -277,7 +296,7 @@ public class ToolsMath {
 
 	
 
-	public static float covertAngleFromRadianToDegrees( float angleInRadian) {
+	public static float covertAngleFromRadianToDegrees(float angleInRadian) {
 		return angleInRadian * 180.0f / (float)Math.PI;
 	}
 
@@ -299,11 +318,5 @@ public class ToolsMath {
 		}
 		average /= values.size();
 		return average;
-	}
-
-
-	public static enum ROCMOD {
-		SCORE,
-		COST;
 	}
 }

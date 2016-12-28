@@ -1,25 +1,30 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package hits;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import math.ToolsMath;
 import mystructure.*;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
-
-import math.ToolsMath;
 import parameters.AlgoParameters;
-import pointWithProperties.CollectionOfPointsWithProperties;
-import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
-import pointWithProperties.Point;
-import pointWithProperties.PointIfc;
-import pointWithProperties.PointWithProperties;
-import pointWithProperties.PointWithPropertiesIfc;
+import pointWithProperties.*;
 import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
@@ -31,8 +36,13 @@ import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
-public class HitTools {
+import java.util.*;
+import java.util.Map.Entry;
 
+public class HitTools {
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static void minimizeHitInQuery(Hit hit, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) throws NullResultFromAComparisonException, ExceptionInScoringUsingBioJavaJMolGUI {
 
         double cost = hit.getResultsFromEvaluateCost().getCost();
@@ -104,6 +114,7 @@ public class HitTools {
         }
     }
 
+
     public static Set<char[]> makeListOfChainId(MyStructureIfc myStructure) {
         Set<char[]> setChainIds = new HashSet<>();
 
@@ -113,44 +124,6 @@ public class HitTools {
         return setChainIds;
     }
 
-
-    /*
-    public static MyStructureIfc restrictNeighbors(MyStructureIfc myStructureUsedToComputeShape, MyStructureIfc peptide, AlgoParameters algoParameters) {
-
-        Set<MyMonomerIfc> myMonomerToKeep = new HashSet<>();
-
-        // I guess I cant rely on neighbors by monomer
-        List<PointIfc> pointsLigands = MyStructureTools.makeQueryPointsFromMyChainIfc(peptide.getAminoChain(0));
-
-        for (MyChainIfc chain : myStructureUsedToComputeShape.getAllChainsRelevantForShapeBuilding()) {
-            A:
-            for (MyMonomerIfc myMonomer : chain.getMyMonomers()) {
-                //float[] representativeCoords = ToolsMathAppliedToObjects.getCoordinatesOfRepresentativeAtom(myMonomer);
-                for (MyAtomIfc atom : myMonomer.getMyAtoms()) {
-                    for (PointIfc pointLigand : pointsLigands) {
-                        float distance = ToolsMath.computeDistance(pointLigand.getCoords(), atom.getCoords());
-                        if (distance < algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR_IN_JMOL_MINIMIZATION()) {
-                            myMonomerToKeep.add(myMonomer); // monomer is kept is at least one of its atom is closer that threshold to
-                            // any of the ligand, then we should be closer to interaction distances
-                            continue A;
-                        }
-                    }
-                }
-            }
-        }
-
-        // I keep monomers which are in close distance to ligand
-        MyStructureIfc restrictedToNeighbors = null;
-        try {
-            restrictedToNeighbors = myStructureUsedToComputeShape.cloneWithSameObjectsWhileKeepingOnlyMyMonomerInThisSet(myMonomerToKeep);
-        } catch (ExceptionInMyStructurePackage e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return restrictedToNeighbors;
-    }
-*/
 
     public static Map<Integer, PointWithPropertiesIfc> returnCloneRotatedMiniShape(Map<Integer, PointWithPropertiesIfc> miniShape, ResultsFromEvaluateCost result) {
 
@@ -174,17 +147,6 @@ public class HitTools {
 
         CollectionOfPointsWithPropertiesIfc newShape = new CollectionOfPointsWithProperties(listNewpoints);
         return newShape;
-    }
-
-
-    private static PointWithPropertiesIfc rotateAndClonePointWithProperties(PointWithPropertiesIfc inputPoint, ResultsFromEvaluateCost result) {
-
-        RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(inputPoint.getCoords().getCoords()));
-        RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
-        PointWithPropertiesIfc newPoint = new PointWithProperties();
-        newPoint.setCoords(new Point(ToolsMath.convertToFloatArray(newPointCoords.toArray())));
-        newPoint.setStrikingProperties(inputPoint.getStrikingProperties());
-        return newPoint;
     }
 
 
@@ -286,6 +248,10 @@ public class HitTools {
     }
 
 
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static List<MyAtomIfc> extractBackBoneAtoms(MyChainIfc peptideUsedToBuiltTheQuery, AlgoParameters algoParameters) {
 
         List<MyAtomIfc> backboneAtomToReturn = new ArrayList<>();
@@ -326,4 +292,13 @@ public class HitTools {
     }
 
 
+    private static PointWithPropertiesIfc rotateAndClonePointWithProperties(PointWithPropertiesIfc inputPoint, ResultsFromEvaluateCost result) {
+
+        RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(inputPoint.getCoords().getCoords()));
+        RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
+        PointWithPropertiesIfc newPoint = new PointWithProperties();
+        newPoint.setCoords(new Point(ToolsMath.convertToFloatArray(newPointCoords.toArray())));
+        newPoint.setStrikingProperties(inputPoint.getStrikingProperties());
+        return newPoint;
+    }
 }
