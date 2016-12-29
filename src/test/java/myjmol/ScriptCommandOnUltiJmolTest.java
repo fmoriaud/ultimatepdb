@@ -6,10 +6,8 @@ import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
-import math.ToolsMath;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -17,8 +15,6 @@ import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;

@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package mystructure;
 
 import java.util.ArrayList;
@@ -7,9 +26,9 @@ import math.MathTools;
 import parameters.AlgoParameters;
 
 public class MergingPeptideTools {
-
-
-
+	// -------------------------------------------------------------------
+	// Static Methods
+	// -------------------------------------------------------------------
 	public static MyChainIfc mergePeptide(MyChainIfc peptideLeft, MyChainIfc peptideRight, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage{
 
 		// i use an order because I will anyhow know how two peptides should be merged to match the query sequence

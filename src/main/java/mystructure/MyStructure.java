@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package mystructure;
 
 import java.nio.file.attribute.FileTime;
@@ -32,7 +51,6 @@ public class MyStructure implements MyStructureIfc {
     private FileTime lastModificationTime;
 
 
-
     //-------------------------------------------------------------
     // Constructors
     //-------------------------------------------------------------
@@ -42,6 +60,7 @@ public class MyStructure implements MyStructureIfc {
      * Parents are assumed to be already set correctlty.
      * Neighbors by Distance are assumed to be set already correctly.
      * Neighbors by Bond are assumed to be set correctly.
+     *
      * @param expTechnique
      * @param algoParameters
      * @throws ExceptionInMyStructurePackage
@@ -56,7 +75,6 @@ public class MyStructure implements MyStructureIfc {
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
     }
-
 
 
     /**
@@ -92,10 +110,10 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-
     /**
      * Generate a MyStructureIfc from a V3000 molecular file
      * MyAtoms are all put in the same MyMonomer of type Amino.
+     *
      * @param readV3000
      * @throws ExceptionInMyStructurePackage
      */
@@ -105,8 +123,6 @@ public class MyStructure implements MyStructureIfc {
         MyStructureTools.fixParents(this);
         MyStructureTools.setEmptyNeighbors(this.getAllAminochains()[0].getMyMonomers()[0]);
     }
-
-
 
 
     //-------------------------------------------------------------
@@ -360,8 +376,6 @@ public class MyStructure implements MyStructureIfc {
     }
 
 
-
-
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -476,7 +490,6 @@ public class MyStructure implements MyStructureIfc {
         MyAtomIfc newAtom = new MyAtom(atomSymbol.toCharArray(), coords, "".toCharArray(), atomId);
         return newAtom;
     }
-
 
 
     private void removeMonomer(MyChainIfc[] chains, MyMonomerIfc monomerToRemove) {

@@ -1,24 +1,12 @@
 package shapebuilder;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.EnumMyReaderBiojava;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
-import mystructure.ReadingStructurefileException;
-import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import protocols.ShapeContainerDefined;
-import protocols.ShapeContainerFactory;
 import protocols.ShapecontainerDefinedByHetatm;
 import shape.ShapeContainerIfc;
-import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;

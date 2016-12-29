@@ -3,24 +3,15 @@ package shapeCompare;
 import java.io.IOException;
 import java.util.List;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.EnumMyReaderBiojava;
-import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.*;
 import shape.ShapeContainerIfc;
-import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuilderConstructorIfc;
 import shapeBuilder.ShapeBuildingException;
 import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
 
 import static org.junit.Assert.assertEquals;

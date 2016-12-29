@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package mystructure;
 
 import java.util.ArrayList;
@@ -15,6 +34,9 @@ import pointWithProperties.PointsTools;
 import mystructure.EnumResidues.HetatmResidues;
 
 public class MyStructureTools {
+    // -------------------------------------------------------------------
+    // Static Methods
+    // -------------------------------------------------------------------
 
     /**
      * @param type BioJava Residue type
@@ -335,7 +357,6 @@ public class MyStructureTools {
     }
 
 
-
     public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyChainIfc[]... myChains) {
 
         double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
@@ -352,19 +373,18 @@ public class MyStructureTools {
 
 
     /**
-     *
      * @param algoParameters
      * @param myStructureGlobalBrut
      * @param clonedLigand
      * @param foreignMonomerToExclude
      */
-    public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyStructureIfc myStructureGlobalBrut, MyStructureIfc clonedLigand, List<MyMonomerIfc> foreignMonomerToExclude){
+    public static void computeAndStoreNeighBorhingAminoMonomersByDistanceBetweenRepresentativeMyAtom(AlgoParameters algoParameters, MyStructureIfc myStructureGlobalBrut, MyStructureIfc clonedLigand, List<MyMonomerIfc> foreignMonomerToExclude) {
 
         double minDistanceToBeNeighbors = algoParameters.getMIN_DISTANCE_TO_BE_NEIBHOR();
         GeneratorNeighboringMonomer distancesBetweenResidues = new GeneratorNeighboringMonomer(minDistanceToBeNeighbors, myStructureGlobalBrut.getAllChainsRelevantForShapeBuilding());
 
-        for (MyChainIfc mychain: clonedLigand.getAllChains()){
-            for (MyMonomerIfc monomer: mychain.getMyMonomers()){
+        for (MyChainIfc mychain : clonedLigand.getAllChains()) {
+            for (MyMonomerIfc monomer : mychain.getMyMonomers()) {
                 monomer.setNeighboringAminoMyMonomerByRepresentativeAtomDistance(distancesBetweenResidues.computeAminoNeighborsOfAGivenResidue(monomer, foreignMonomerToExclude));
             }
         }
@@ -704,6 +724,49 @@ public class MyStructureTools {
     }
 
 
+    public static List<PointIfc> makeQueryPointsFromMyChainIfc(MyChainIfc myChain) {
+
+        List<PointIfc> listPoints = new ArrayList<>();
+        for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
+            for (MyAtomIfc atom : monomer.getMyAtoms()) {
+                float[] coords = atom.getCoords();
+                PointIfc point = new Point(coords);
+                listPoints.add(point);
+            }
+        }
+        return listPoints;
+    }
+
+
+    public static List<PointIfc> makeQueryPointsFromMyStructureIfc(MyStructureIfc myStructure) {
+
+        List<PointIfc> listPoints = new ArrayList<>();
+        for (MyChainIfc chain : myStructure.getAllChains()) {
+            listPoints.addAll(makeQueryPointsFromMyChainIfc(chain));
+        }
+        return listPoints;
+    }
+
+    public static List<char[]> makeHydrogensName(int size, String heavyAtomName) {
+
+        List<char[]> hydrogens = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            hydrogens.add(makeHydrogenAtomName(i + 1, heavyAtomName));
+        }
+        return hydrogens;
+    }
+
+
+    public static char[] makeHydrogenAtomName(int hydrogenId, String heavyAtomName) {
+
+        String name = "H" + (hydrogenId) + heavyAtomName;
+        return name.toCharArray();
+    }
+
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static char[] getAtomNameOfRepresentativeMyMonomer(MyMonomerIfc monomer) {
 
         if (Arrays.equals(monomer.getType(), MyMonomerType.AMINOACID.getType())) {
@@ -788,30 +851,6 @@ public class MyStructureTools {
     }
 
 
-    public static List<PointIfc> makeQueryPointsFromMyChainIfc(MyChainIfc myChain) {
-
-        List<PointIfc> listPoints = new ArrayList<>();
-        for (MyMonomerIfc monomer : myChain.getMyMonomers()) {
-            for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                float[] coords = atom.getCoords();
-                PointIfc point = new Point(coords);
-                listPoints.add(point);
-            }
-        }
-        return listPoints;
-    }
-
-
-    public static List<PointIfc> makeQueryPointsFromMyStructureIfc(MyStructureIfc myStructure) {
-
-        List<PointIfc> listPoints = new ArrayList<>();
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            listPoints.addAll(makeQueryPointsFromMyChainIfc(chain));
-        }
-        return listPoints;
-    }
-
-
     private static void regroupHetAtmGroupAfterProtonationUsingStructureNotClearIfItWorks(Structure structureToReturn) {
 
         for (int chainId = 0; chainId < structureToReturn.size(); chainId++) {
@@ -868,23 +907,6 @@ public class MyStructureTools {
         }
         listGroupsHetattm.removeAll(groupToRemove);
         return chainToReturn;
-    }
-
-
-    public static List<char[]> makeHydrogensName(int size, String heavyAtomName) {
-
-        List<char[]> hydrogens = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            hydrogens.add(makeHydrogenAtomName(i + 1, heavyAtomName));
-        }
-        return hydrogens;
-    }
-
-
-    public static char[] makeHydrogenAtomName(int hydrogenId, String heavyAtomName) {
-
-        String name = "H" + (hydrogenId) + heavyAtomName;
-        return name.toCharArray();
     }
 
 
