@@ -17,14 +17,14 @@ Author:
   You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-package mystructure;
+package pointWithProperties;
 
-// -------------------------------------------------------------------
-// Constants PropertyName
-// -------------------------------------------------------------------
-public enum EnumMyReaderBiojava {
+public enum PropertyName {
 
-    BioJava_MMCIFF,
-    //BioJava_PDB,
-    //BioJava_PDB_BIOUNIT;
+    FormalCharge,
+    Hydrophobicity,
+    HbondDonnor,
+    HbondAcceptor,
+    AromaticRing,
+    Dehydron;
 }

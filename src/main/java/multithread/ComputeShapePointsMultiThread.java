@@ -19,26 +19,15 @@ Author:
   */
 package multithread;
 
+import math.MathTools;
+import mystructure.*;
+import parameters.AlgoParameters;
+import pointWithProperties.*;
+import pointWithProperties.PropertyName;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
-
-import math.MathTools;
-import parameters.AlgoParameters;
-import pointWithProperties.ComputePropertiesProtein;
-import pointWithProperties.Enum.PropertyName;
-import pointWithProperties.Point;
-import pointWithProperties.PointIfc;
-import pointWithProperties.PointWithProperties;
-import pointWithProperties.PointWithPropertiesIfc;
-import pointWithProperties.StrikingProperties;
-import pointWithProperties.StrikingPropertiesTools;
-import mystructure.AtomProperties;
-import mystructure.HBondDefinedWithAtoms;
-import mystructure.MyAtomIfc;
-import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
-import mystructure.MyStructureIfc;
 
 
 public class ComputeShapePointsMultiThread extends RecursiveTask<List<PointWithPropertiesIfc>> {

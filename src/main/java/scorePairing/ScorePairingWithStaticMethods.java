@@ -1,17 +1,16 @@
 package scorePairing;
 
-import java.util.Map;
-
+import math.ProcrustesAnalysisIfc;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
-
-import math.ProcrustesAnalysisIfc;
 import parameters.AlgoParameters;
-import pointWithProperties.Enum.PropertyName;
 import pointWithProperties.PointWithPropertiesIfc;
+import pointWithProperties.PropertyName;
 import shapeCompare.PairingAndNullSpaces;
+
+import java.util.Map;
 
 public class ScorePairingWithStaticMethods {
 

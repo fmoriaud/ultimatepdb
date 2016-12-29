@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package pointWithProperties;
 
 import java.util.Arrays;
@@ -16,9 +35,9 @@ import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 
 public class ComputePropertiesProtein implements ComputePropertiesIfc {
-    //------------------------
+    //-------------------------------------------------------------
     // Class variables
-    //------------------------
+    //-------------------------------------------------------------
     private MyStructureIfc structureShape;
     private AlgoParameters algoParameters;
     private Map<MyAtomIfc, Float> mapMinDistanceAtomToLigand;
@@ -98,7 +117,7 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
         int countOfHydrophobicAtomRelevantForHbond = getCountOfHydrophobicAtomsInTheNeighborhoodOfMyAtomAndCloseToLigand(atomClosest, mapMinDistanceAtomToLigand, algoParameters);
 
         float factor = 1.0f;
-        if (countOfHydrophobicAtomRelevantForHbond < 3){
+        if (countOfHydrophobicAtomRelevantForHbond < 3) {
             factor = 0.0f;
         }
 
@@ -149,6 +168,9 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
     }
 
 
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
     private int getCountOfHydrophobicAtomsInTheNeighborhoodOfMyAtomAndCloseToLigand(MyAtomIfc myAtom, Map<MyAtomIfc, Float> mapMinDistanceAtomToLigand, AlgoParameters algoParameters) {
 
         int countHydrophobicAtom = 0;
@@ -247,9 +269,9 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
     }
 
 
-    //------------------------
+    // -------------------------------------------------------------------
     // Getter and Setter
-    //------------------------
+    // -------------------------------------------------------------------
     @Override
     public Float getCharge() {
         return charge;

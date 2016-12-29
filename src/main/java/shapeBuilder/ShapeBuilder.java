@@ -1,30 +1,23 @@
 package shapeBuilder;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ForkJoinPool;
-
 import fingerprint.ShapeFingerprint;
 import math.MathTools;
 import math.ToolsDistance;
 import multithread.ComputeLennardJonesRecursiveTask;
 import multithread.ComputeShapePointsMultiThread;
+import mystructure.AtomProperties.AtomHAcceptorDescriptors;
+import mystructure.AtomProperties.AtomHDonnorDescriptors;
 import mystructure.*;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
-import pointWithProperties.Box;
-import pointWithProperties.CollectionOfPointsWithProperties;
-import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
-import pointWithProperties.Enum.PropertyName;
-import pointWithProperties.Point;
-import pointWithProperties.PointIfc;
-import pointWithProperties.PointWithPropertiesIfc;
-import pointWithProperties.StrikingProperties;
+import pointWithProperties.*;
 import shape.*;
 import shapeReduction.*;
-import mystructure.AtomProperties.AtomHAcceptorDescriptors;
-import mystructure.AtomProperties.AtomHDonnorDescriptors;
 import ultiJmol1462.MyJmolTools;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ForkJoinPool;
 
 public class ShapeBuilder {
     //-------------------------------------------------------------

@@ -21,7 +21,7 @@ package mystructure;
 
 public class AtomProperties {
     // -------------------------------------------------------------------
-    // Constants Enum
+    // Constants PropertyName
     // -------------------------------------------------------------------
     // http://www.ccdc.cam.ac.uk/support/documentation/mercury/mercury/appa_glossary.4.73.html
     //van der Waals Radii
