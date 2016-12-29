@@ -19,7 +19,7 @@ Author:
   */
 package database;
 
-import math.ToolsMath;
+import math.MathTools;
 import mystructure.MyAtomIfc;
 import mystructure.MyChainIfc;
 import mystructure.MyMonomerIfc;
@@ -363,7 +363,7 @@ public class SequenceTools {
                 for (MyMonomerIfc neighborMonomer : myMonomerNeighborsByDistanceToRepresentativeAtom) {
                     for (MyAtomIfc atomTarget : neighborMonomer.getMyAtoms()) {
 
-                        float distance = ToolsMath.computeDistance(atomLigand.getCoords(), atomTarget.getCoords());
+                        float distance = MathTools.computeDistance(atomLigand.getCoords(), atomTarget.getCoords());
                         if (distance < interactionDistanceCutoff) {
                             if (fromBackBone == true && currentType == QueryMonomerToTargetContactType.NONE) {
                                 currentType = QueryMonomerToTargetContactType.BACKBONE_ONLY;
@@ -591,8 +591,6 @@ public class SequenceTools {
 
         return listMatchingRankId;
     }
-
-
 
 
     // -------------------------------------------------------------------

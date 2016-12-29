@@ -6,7 +6,7 @@ import java.util.List;
 
 //import org.biojava.nbio.structure.secstruc.SecStrucInfo;
 
-import math.ToolsMath;
+import math.MathTools;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 import pointWithProperties.Point;
@@ -516,7 +516,7 @@ public class MyStructureTools {
 
         for (MyAtomIfc atom1 : monomer1.getMyAtoms()) {
             for (MyAtomIfc atom2 : monomer2.getMyAtoms()) {
-                float distance = ToolsMath.computeDistance(atom1.getCoords(), atom2.getCoords());
+                float distance = MathTools.computeDistance(atom1.getCoords(), atom2.getCoords());
                 if (distance < mindistance) {
                     mindistance = distance;
                 }
@@ -534,7 +534,7 @@ public class MyStructureTools {
         double mindistance = Double.MAX_VALUE;
         MyAtomIfc atomToReturn = null;
         for (MyAtomIfc atom : monomer.getMyAtoms()) {
-            double distance = ToolsMath.computeDistance(barycenter.getCoords(), atom.getCoords());
+            double distance = MathTools.computeDistance(barycenter.getCoords(), atom.getCoords());
             if (distance < mindistance) {
                 mindistance = distance;
                 atomToReturn = atom;

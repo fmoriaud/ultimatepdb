@@ -1,19 +1,16 @@
 package shapeCompare;
 
-import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import math.ToolsMath;
+import math.MathTools;
 import multithread.ExtendPairingRecursiveTask;
 import multithread.FindMatchingTriangleRecursiveTask;
 import mystructure.*;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithPropertiesIfc;
 import scorePairing.ScorePairing;
-import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
 import shapeReduction.TriangleInteger;
-import ultiJmol1462.Protonate;
 
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -207,7 +204,7 @@ public class CompareTools {
                 float deltaQuery = distanceToOutsideOfPoint1a - distanceToOutsideOfPoint1b;
                 float deltaHit = distanceToOutsideOfPoint2a - distanceToOutsideOfPoint2b;
 
-                float distBetweenQueryPoints = ToolsMath.computeDistance(point1a.getCoords().getCoords(), point1b.getCoords().getCoords());
+                float distBetweenQueryPoints = MathTools.computeDistance(point1a.getCoords().getCoords(), point1b.getCoords().getCoords());
                 if (distBetweenQueryPoints < 3.0f) { // I consider that the dist to ligand difference cannot be reliable if shape points are too close
                     continue;
                 }

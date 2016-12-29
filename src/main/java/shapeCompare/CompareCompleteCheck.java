@@ -1,24 +1,17 @@
 package shapeCompare;
 
 import hits.Hit;
-import math.ToolsMath;
+import math.MathTools;
 import mystructure.*;
 import parameters.AlgoParameters;
 import protocols.ShapeContainerFactory;
-import scorePairing.CheckDistanceToOutside;
-import scorePairing.ExtendPairing;
-import scorePairing.ScorePairing;
 import scorePairing.ScorePairingTools;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
 import shapeBuilder.EnumShapeReductor;
-import shapeBuilder.ShapeBuildingException;
-import shapeBuilder.StructureLocalToBuildAnyShape;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -191,7 +184,7 @@ public class CompareCompleteCheck {
                                 if (MyStructureTools.isHydrogen(atom)) {
                                     continue;
                                 }
-                                float distance = ToolsMath.computeDistance(atom.getCoords(), atomLigand.getCoords());
+                                float distance = MathTools.computeDistance(atom.getCoords(), atomLigand.getCoords());
                                 if (distance < distanceThresholdToDefineClashes) {
                                     clashescount += 1;
                                 }

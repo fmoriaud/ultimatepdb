@@ -19,7 +19,7 @@ Author:
   */
 package hits;
 
-import math.ToolsMath;
+import math.MathTools;
 import mystructure.*;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
@@ -183,12 +183,12 @@ public class HitTools {
             // put hit in ref frame of query
             List<double[]> coordinatesHit = new ArrayList<>();
             for (MyAtomIfc atomHit : backboneAtomPeptideHit) {
-                RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, new ArrayRealVector(ToolsMath.convertToDoubleArray(atomHit.getCoords())));
+                RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, new ArrayRealVector(MathTools.convertToDoubleArray(atomHit.getCoords())));
                 coordinatesHit.add(newPointCoords.toArray());
             }
             List<double[]> coordinatesQuery = new ArrayList<>();
             for (MyAtomIfc atomQuery : backboneAtomPeptideQuery) {
-                coordinatesQuery.add(ToolsMath.convertToDoubleArray(atomQuery.getCoords()));
+                coordinatesQuery.add(MathTools.convertToDoubleArray(atomQuery.getCoords()));
             }
 
             List<double[]> smallestChainCoords = coordinatesHit;
@@ -232,7 +232,7 @@ public class HitTools {
                 for (int k = 0; k < smallestChain.size(); k++) {
                     double[] currentAtomSmallestchain = smallestChainCoords.get(k);
                     double[] currentAtomLongestchain = longestChainCoords.get(k + posibleStart.get(j));
-                    double contribRmsd = ToolsMath.computeDistance(currentAtomSmallestchain, currentAtomLongestchain);
+                    double contribRmsd = MathTools.computeDistance(currentAtomSmallestchain, currentAtomLongestchain);
                     rmsd += contribRmsd * contribRmsd;
                 }
                 rmsd = rmsd / smallestChain.size();
@@ -246,7 +246,6 @@ public class HitTools {
         }
         return null;
     }
-
 
 
     // -------------------------------------------------------------------
@@ -294,10 +293,10 @@ public class HitTools {
 
     private static PointWithPropertiesIfc rotateAndClonePointWithProperties(PointWithPropertiesIfc inputPoint, ResultsFromEvaluateCost result) {
 
-        RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(inputPoint.getCoords().getCoords()));
+        RealVector coordsVector = new ArrayRealVector(MathTools.convertToDoubleArray(inputPoint.getCoords().getCoords()));
         RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
         PointWithPropertiesIfc newPoint = new PointWithProperties();
-        newPoint.setCoords(new Point(ToolsMath.convertToFloatArray(newPointCoords.toArray())));
+        newPoint.setCoords(new Point(MathTools.convertToFloatArray(newPointCoords.toArray())));
         newPoint.setStrikingProperties(inputPoint.getStrikingProperties());
         return newPoint;
     }

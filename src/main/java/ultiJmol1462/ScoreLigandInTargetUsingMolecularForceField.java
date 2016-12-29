@@ -1,7 +1,7 @@
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import math.ToolsMath;
+import math.MathTools;
 import mystructure.*;
 import parameters.AlgoParameters;
 
@@ -224,7 +224,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
             idAtomTarget += 1;
             for (MyAtomIfc atomLigand : myStructureFile2.getAllChains()[0].getMyMonomers()[0].getMyAtoms()) {
 
-                float distance = ToolsMath.computeDistance(atomTarget.getCoords(), atomLigand.getCoords());
+                float distance = MathTools.computeDistance(atomTarget.getCoords(), atomLigand.getCoords());
                 if (distance < thresholdDistance && !atomIds.contains(idAtomTarget)) {
                     atomIds.add(idAtomTarget);
                 }

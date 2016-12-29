@@ -1,7 +1,7 @@
 package scorePairing;
 
 import math.AddToMap;
-import math.ToolsMath;
+import math.MathTools;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 import parameters.AlgoParameters;
@@ -96,7 +96,7 @@ public class ExtendPairing {
                     vector1[k] = (float) (vector2[k] - resultSeed.getTranslationVectorToTranslateShape2ToOrigin().getEntry(k) + resultSeed.getTranslationVector().getEntry(k));
                 }
 
-                double distance = ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
+                double distance = MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
 
                 if (distance < algoParameters.getDISTANCE_MIN_FOR_EXTENDED_PAIRING_FROM_SEED()) {
 
@@ -259,7 +259,7 @@ public class ExtendPairing {
                     }
 
 
-                    double distance = ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
+                    double distance = MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
 
                     if (distance < algoParameters.getDISTANCE_MIN_FOR_EXTENDED_PAIRING_FROM_SEED()) {
 

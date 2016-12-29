@@ -22,7 +22,7 @@ package fingerprint;
 import java.util.BitSet;
 import java.util.List;
 
-import math.ToolsMath;
+import math.MathTools;
 
 public class DistributionComparisonTools {
     //-------------------------------------------------------------
@@ -94,8 +94,8 @@ public class DistributionComparisonTools {
         // parameters to say if values are significant
         float percentageOfAverageToSaysignificant = 0.33f;
 
-        float averageDistrib1 = ToolsMath.getAverageValueFromList(distrib1);
-        float averageDistrib2 = ToolsMath.getAverageValueFromList(distrib2);
+        float averageDistrib1 = MathTools.getAverageValueFromList(distrib1);
+        float averageDistrib2 = MathTools.getAverageValueFromList(distrib2);
         float overallAverage = (averageDistrib1 + averageDistrib2) / 2.0f;
 
         BitSet bitset1 = new BitSet();

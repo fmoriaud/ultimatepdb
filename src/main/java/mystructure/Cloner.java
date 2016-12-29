@@ -1,6 +1,6 @@
 package mystructure;
 
-import math.ToolsMath;
+import math.MathTools;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import parameters.AlgoParameters;
@@ -175,9 +175,9 @@ public class Cloner {
         for (MyChainIfc chain : rotatedClone.getAllChains()) {
             for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
+                    RealVector coordsVector = new ArrayRealVector(MathTools.convertToDoubleArray(atom.getCoords().clone()));
                     RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
-                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
+                    atom.setCoords(MathTools.convertToFloatArray(newPointCoords.toArray()));
                 }
             }
         }
@@ -192,9 +192,9 @@ public class Cloner {
         for (MyChainIfc chain : rotatedClone.getAllChains()) {
             for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
+                    RealVector coordsVector = new ArrayRealVector(MathTools.convertToDoubleArray(atom.getCoords().clone()));
                     RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
-                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
+                    atom.setCoords(MathTools.convertToFloatArray(newPointCoords.toArray()));
                 }
             }
         }
@@ -210,9 +210,9 @@ public class Cloner {
         for (MyChainIfc chain : rotatedClone.getAllChains()) {
             for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                    RealVector coordsVector = new ArrayRealVector(ToolsMath.convertToDoubleArray(atom.getCoords().clone()));
+                    RealVector coordsVector = new ArrayRealVector(MathTools.convertToDoubleArray(atom.getCoords().clone()));
                     RealVector newPointCoords = PairingTools.alignPointFromShape2toShape1(result, coordsVector);
-                    atom.setCoords(ToolsMath.convertToFloatArray(newPointCoords.toArray()));
+                    atom.setCoords(MathTools.convertToFloatArray(newPointCoords.toArray()));
                 }
             }
         }

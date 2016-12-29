@@ -3,7 +3,7 @@ package mystructure;
 import java.util.ArrayList;
 import java.util.List;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 
 public class MergingPeptideTools {
@@ -23,7 +23,7 @@ public class MergingPeptideTools {
 			return null;
 		}
 		// check bond length 1.33 +- 0.5 (it is drastic)
-		float bondLength = ToolsMath.computeDistance(carbonCarbonyl.getCoords(), nitrogen.getCoords());
+		float bondLength = MathTools.computeDistance(carbonCarbonyl.getCoords(), nitrogen.getCoords());
 		if (Math.abs(bondLength - 1.33) > 0.5){
 			return null;
 		}
@@ -36,7 +36,7 @@ public class MergingPeptideTools {
 		}
 
 		// check for flat dihedral angle and normal orientation: so +-20 degres
-		float omegaAngle = ToolsMath.computeTorsionAngle(oxygenCarbonyl.getCoords(), carbonCarbonyl.getCoords(), nitrogen.getCoords(), cAlpha.getCoords());
+		float omegaAngle = MathTools.computeTorsionAngle(oxygenCarbonyl.getCoords(), carbonCarbonyl.getCoords(), nitrogen.getCoords(), cAlpha.getCoords());
 		if (Math.abs(omegaAngle) > 20.0f){
 			return null;
 		}

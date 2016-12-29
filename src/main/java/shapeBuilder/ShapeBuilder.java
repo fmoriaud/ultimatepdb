@@ -5,8 +5,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ForkJoinPool;
 
 import fingerprint.ShapeFingerprint;
+import math.MathTools;
 import math.ToolsDistance;
-import math.ToolsMath;
 import multithread.ComputeLennardJonesRecursiveTask;
 import multithread.ComputeShapePointsMultiThread;
 import mystructure.*;
@@ -225,7 +225,7 @@ public class ShapeBuilder {
                     for (MyChainIfc chain : localMyStructure.getAllChainsRelevantForShapeBuilding()) {
                         for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                             for (MyAtomIfc atom : monomer.getMyAtoms()) {
-                                double distance = ToolsMath.computeDistance(atom.getCoords(), atPosition);
+                                double distance = MathTools.computeDistance(atom.getCoords(), atPosition);
                                 if (distance < minDistanceOfThisPoint) {
                                     minDistanceOfThisPoint = distance;
                                 }
@@ -267,7 +267,7 @@ public class ShapeBuilder {
             for (PointIfc pointsWithLennardJones : listOfPointsWithLennardJones) {
 
                 float[] coordsLNPoint = pointsWithLennardJones.getCoords();
-                float distance = ToolsMath.computeDistance(coordsLNPoint, listV2);
+                float distance = MathTools.computeDistance(coordsLNPoint, listV2);
 
                 if (distance < queryAtomDefinedByIds.getRadiusForQueryAtomsDefinedByIds()) {
                     listOfPointsWithLennardJonesQuery.add(pointsWithLennardJones);
@@ -578,7 +578,7 @@ public class ShapeBuilder {
                     List<StrikingProperties> listStrikingPropertiesForThisNeighBohrpoint = shape.getPointFromId(j).getStrikingProperties();
                     if ((listStrikingPropertiesForThisNeighBohrpoint.size() != 0) && (!listStrikingPropertiesForThisNeighBohrpoint.contains(StrikingProperties.NONE))) {
 
-                        distance = ToolsMath.computeDistance(shape.getPointFromId(i).getCoords().getCoords(), shape.getPointFromId(j).getCoords().getCoords());
+                        distance = MathTools.computeDistance(shape.getPointFromId(i).getCoords().getCoords(), shape.getPointFromId(j).getCoords().getCoords());
                         if (distance < threshold) {
                             setSomeNonePointsToRemove.add(i);
                             continue A;
@@ -636,7 +636,7 @@ public class ShapeBuilder {
         // check if distance acceptor and H donnor
 
         if (donnor.getParent() != acceptor.getParent()) { // Intra skipped because of Tyr OH to its own O
-            float distanceBetweenHydrogenAndAcceptor = ToolsMath.computeDistance(acceptor.getCoords(), hydrogen.getCoords());
+            float distanceBetweenHydrogenAndAcceptor = MathTools.computeDistance(acceptor.getCoords(), hydrogen.getCoords());
             if (distanceBetweenHydrogenAndAcceptor < thresholdDistanceHydrogenToAcceptor) {
                 //PairOfMyAtomWithMyMonomerAndMychainReferences pairOfMyAtom = new PairOfMyAtomWithMyMonomerAndMychainReferences(donnor.getMyAtom(), acceptor.getMyAtom(), donnor.getMyMonomer(), acceptor.getMyMonomer());
                 HBondDefinedWithAtoms hBondDefinedWithAtoms = new HBondDefinedWithAtoms(donnor, acceptor, hydrogen);

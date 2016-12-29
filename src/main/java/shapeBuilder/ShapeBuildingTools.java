@@ -2,7 +2,7 @@ package shapeBuilder;
 
 import java.util.List;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import mystructure.AtomProperties;
 import mystructure.EnumMyReaderBiojava;
@@ -42,7 +42,7 @@ public class ShapeBuildingTools {
 				for (MyAtomIfc atomNeighbor: monomerNeighbor.getMyAtoms()){
 
 					if (isMyAtomHydrophobic(atomNeighbor)){
-						float distance = ToolsMath.computeDistance(myAtom.getCoords(), atomNeighbor.getCoords());
+						float distance = MathTools.computeDistance(myAtom.getCoords(), atomNeighbor.getCoords());
 						if (distance <( algoParameters.getCUTOFF_DISTANCE_FORHYDROPHOBIC_AROUND_HBOND() + 1.2f)){ // because we use the H in the middle
 							countHydrophobicAtom += 1;
 						}

@@ -22,9 +22,13 @@ package database;
 public interface CreateAndSearchSequenceDatabaseIfc {
 
     void createDatabase();
+
     void updateDatabaseKeepingFourLetterCodeEntries();
+
     void updateDatabaseAndOverride();
+
     String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName);
+
     void shutdownDb();
 
 }

@@ -1,10 +1,9 @@
 package scorePairing;
 
-import math.ToolsMath;
+import math.MathTools;
 import pointWithProperties.PointWithPropertiesIfc;
 import shape.ShapeContainerIfc;
 import shapeCompare.PairingAndNullSpaces;
-import shapeCompare.ResultsFromEvaluateCost;
 
 import java.util.Map;
 
@@ -74,7 +73,7 @@ public class CheckDistanceToOutside {
                 float deltaQuery = distanceToOutsideOfPoint1Query - distanceToOutsideOfPoint2Query;
                 float deltaHit = distanceToOutsideOfPoint1Target - distanceToOutsideOfPoint2Target;
 
-                float distBetweenQueryPoints = ToolsMath.computeDistance(point1a.getCoords().getCoords(), point1b.getCoords().getCoords());
+                float distBetweenQueryPoints = MathTools.computeDistance(point1a.getCoords().getCoords(), point1b.getCoords().getCoords());
                 if (distBetweenQueryPoints < 2.0f || distBetweenQueryPoints > 5f) {
                     // I consider that the dist to ligand difference cannot be reliable if shape points are too close or too far
                     // It is a local check of upside down hit

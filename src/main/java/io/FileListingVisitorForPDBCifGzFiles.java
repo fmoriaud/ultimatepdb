@@ -96,7 +96,7 @@ public class FileListingVisitorForPDBCifGzFiles {
 
         String[] splitFileName = fileName.split("\\.");
 
-        if (splitFileName == null){
+        if (splitFileName == null) {
             return null;
         }
         if (splitFileName.length != 3) {

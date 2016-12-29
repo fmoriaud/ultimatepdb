@@ -19,7 +19,7 @@ Author:
   */
 package convertformat;
 
-import math.ToolsMath;
+import math.MathTools;
 import mystructure.*;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
@@ -245,7 +245,7 @@ public class AdapterBioJavaStructure {
 
                             // for each neighborAtom I look at distance to any of the hetarom
                             for (MyAtomIfc atomFroHetAtom : hetatmMonomer.getMyAtoms()) {
-                                float distance = ToolsMath.computeDistance(neighborAtom.getCoords(), atomFroHetAtom.getCoords());
+                                float distance = MathTools.computeDistance(neighborAtom.getCoords(), atomFroHetAtom.getCoords());
                                 if (distance < thresholdDistance) {
                                     covalentbonds.put(atomFroHetAtom, neighborAtom);
                                 }
@@ -418,7 +418,7 @@ public class AdapterBioJavaStructure {
 
                 char[] atomElement = atom.getElement().toString().toCharArray();
                 char[] atomName = atom.getName().toCharArray();
-                float[] coords = ToolsMath.convertToFloatArray(atom.getCoords());
+                float[] coords = MathTools.convertToFloatArray(atom.getCoords());
                 int originalAtomID = atom.getPDBserial();
                 MyAtomIfc myAtom;
                 try {
@@ -589,7 +589,7 @@ public class AdapterBioJavaStructure {
 
         for (MyAtomIfc atomC : listAtom1) {
             for (MyAtomIfc atomN : listAtom2) {
-                float distance = ToolsMath.computeDistance(atomC.getCoords(), atomN.getCoords());
+                float distance = MathTools.computeDistance(atomC.getCoords(), atomN.getCoords());
                 if (distance < 1.5) {
                     MyBondIfc myBondCtoN;
                     try {

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import math.ToolsMath;
+import math.MathTools;
 import pointWithProperties.PointIfc;
 
 
@@ -56,7 +56,7 @@ public class SimilarityTools {
 
         for (int i = 0; i < listPoint1.size(); i++) {
             for (int j = 0; j < listPoint2.size(); j++) {
-                float distance = (float) ToolsMath.computeDistance(listPoint1.get(i).getCoords(), listPoint2.get(j).getCoords());
+                float distance = (float) MathTools.computeDistance(listPoint1.get(i).getCoords(), listPoint2.get(j).getCoords());
                 if (distance > minDistance) {
                     listDistances.add(distance);
                 }

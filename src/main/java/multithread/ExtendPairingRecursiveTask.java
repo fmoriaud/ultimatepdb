@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package multithread;
 
 import java.util.ArrayList;
@@ -13,7 +32,7 @@ import java.util.concurrent.RecursiveTask;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import math.AddToMap;
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.PointWithPropertiesIfc;
@@ -26,10 +45,9 @@ import shapeCompare.ResultsFromEvaluateCost;
 import shapeReduction.PairInteger;
 
 public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNullSpaces>> {
-
-    //------------------------
+    // -------------------------------------------------------------------
     // Class variables
-    //------------------------
+    // -------------------------------------------------------------------
     private final List<ResultsFromEvaluateCost> listResultSeed;
     private int start;
     private int end;
@@ -64,6 +82,9 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
     }
 
 
+    // -------------------------------------------------------------------
+    // Public & Interface
+    // -------------------------------------------------------------------
     @Override
     protected List<PairingAndNullSpaces> compute() {
         List<PairingAndNullSpaces> listExtendedPairing = new ArrayList<>();
@@ -156,7 +177,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
                     vector1[k] = (float) (vector2[k] - resultSeed.getTranslationVectorToTranslateShape2ToOrigin().getEntry(k) + resultSeed.getTranslationVector().getEntry(k));
                 }
 
-                double distance = ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
+                double distance = MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
 
                 if (distance < algoParameters.getDISTANCE_MIN_FOR_EXTENDED_PAIRING_FROM_SEED()) {
 
@@ -303,7 +324,7 @@ public class ExtendPairingRecursiveTask extends RecursiveTask<List<PairingAndNul
                     }
 
 
-                    double distance = ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
+                    double distance = MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), vector1);
 
                     if (distance < algoParameters.getDISTANCE_MIN_FOR_EXTENDED_PAIRING_FROM_SEED()) {
 

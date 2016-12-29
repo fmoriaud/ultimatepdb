@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import mystructure.AtomProperties;
 import mystructure.HBondDefinedWithAtoms;
@@ -140,7 +140,7 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
         for (PointIfc pointsWithLennardJones : listOfPointsWithLennardJonesQuery) {
 
             float[] atomPosition = pointsWithLennardJones.getCoords();
-            float distance = ToolsMath.computeDistance(atomPosition, atPosition);
+            float distance = MathTools.computeDistance(atomPosition, atPosition);
             if (distance < minDistance) {
                 minDistance = distance;
             }
@@ -157,7 +157,7 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
                 for (MyAtomIfc atomNeighbor : monomerNeighbor.getMyAtoms()) {
 
                     if (isMyAtomHydrophobic(atomNeighbor)) {
-                        float distance = ToolsMath.computeDistance(myAtom.getCoords(), atomNeighbor.getCoords());
+                        float distance = MathTools.computeDistance(myAtom.getCoords(), atomNeighbor.getCoords());
                         if (distance < algoParameters.getCUTOFF_DISTANCE_FORHYDROPHOBIC_AROUND_HBOND()) {
                             if (!mapMinDistanceAtomToLigand.containsKey(atomNeighbor)) {
                                 continue;
@@ -193,7 +193,7 @@ public class ComputePropertiesProtein implements ComputePropertiesIfc {
             for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
                     float[] atomPosition = atom.getCoords();
-                    float distance = ToolsMath.computeDistance(atomPosition, atPosition);
+                    float distance = MathTools.computeDistance(atomPosition, atPosition);
 
                     if (distance < minDistance) {
                         minDistance = distance;

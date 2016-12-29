@@ -4,43 +4,20 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import database.HitInSequenceDb;
 import database.SequenceTools;
-import genericBuffer.GenericBuffer;
-import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import hits.Hit;
-import hits.HitPeptideWithQueryPeptide;
-import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
-import jmolgui.UltiJmol1462;
-import math.ProcrustesAnalysisIfc;
-import math.ToolsMath;
 import mystructure.*;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-import org.biojava.nbio.core.sequence.location.template.Location;
 import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
-import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
-import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
-import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
-import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
-import shapeCompare.NullResultFromAComparisonException;
-import shapeCompare.PairingTools;
-import shapeCompare.ProcrustesAnalysis;
-import ultiJmol1462.MyJmolTools;
-import ultiJmol1462.Protonate;
-import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 
 /**
  * Created by Fabrice on 02/10/16.

@@ -16,7 +16,8 @@ Author:
 
   You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */package database;
+  */
+package database;
 
 import io.IOTools;
 import multithread.StoreInSequenceDbPDBFileCallable;
@@ -90,8 +91,6 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
         DatabaseTools.shutdown();
     }
-
-
 
 
     //-------------------------------------------------------------

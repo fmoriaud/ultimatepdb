@@ -3,7 +3,7 @@ package pointWithProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import mystructure.AtomProperties;
 import mystructure.MyAtomIfc;
@@ -94,7 +94,7 @@ public class BoxTools {
 				}
 			}
 		}
-		return ToolsMath.multiplyByScalar(barycenter, 1.0f / sumFwhm);
+		return MathTools.multiplyByScalar(barycenter, 1.0f / sumFwhm);
 	}
 
 }

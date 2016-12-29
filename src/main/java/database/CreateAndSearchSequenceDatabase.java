@@ -90,8 +90,6 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     }
 
 
-
-
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -104,7 +102,6 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
             DatabaseTools.addInSequenceDB(connexion, override, fourLetterCode, algoParameters, sequenceTableName);
         }
     }
-
 
 
     private void generateMyStructureAndstoreSequenceInDB(String fourLetterCode) {

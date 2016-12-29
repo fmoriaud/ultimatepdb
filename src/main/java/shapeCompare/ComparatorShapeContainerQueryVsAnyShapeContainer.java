@@ -2,26 +2,15 @@ package shapeCompare;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.*;
 
 import fingerprint.CannotCompareDistributionException;
 import fingerprint.DistributionComparisonTools;
 import hits.Hit;
-import math.ToolsMath;
-import multithread.ExtendPairingRecursiveTask;
-import multithread.FindMatchingTriangleRecursiveTask;
 import parameters.AlgoParameters;
-import pointWithProperties.PointWithPropertiesIfc;
 import scorePairing.CheckDistanceToOutside;
-import scorePairing.ScorePairing;
 import shape.ShapeContainerIfc;
-import shapeReduction.TriangleInteger;
 
 public class ComparatorShapeContainerQueryVsAnyShapeContainer {
     //------------------------

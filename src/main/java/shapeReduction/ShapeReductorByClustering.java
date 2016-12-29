@@ -3,13 +3,13 @@ package shapeReduction;
 import java.util.*;
 import java.util.Map.Entry;
 
+import math.MathTools;
 import org.apache.commons.math3.geometry.euclidean.threed.SphericalCoordinates;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import math.ClusteringByLinkageWithAnUpdatedAndSortedCollectionOfClusterPairs;
 import math.ClusteringByLinkageWithAnUpdatedAndSortedCollectionOfClusterPairs.ClusteringLinkageType;
 import math.EquidistributionPhi;
-import math.ToolsMath;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
 import pointWithProperties.IdAndPointWithProperties;
@@ -106,8 +106,8 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
                 PointWithPropertiesIfc pointWithProperties2 = entry2.getValue();
 
                 if (pointWithProperties1 != pointWithProperties2) {
-                    double distance = (float) ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
-                    //ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
+                    double distance = (float) MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
+                    //MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
                     if (distance < ((algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() * Math.sqrt(3)) + 0.1)) {
 
                         int matchingPropertyCount = StrikingPropertiesTools.evaluatePointsMatchingWithAllProperties(pointWithProperties1, pointWithProperties2);
@@ -246,7 +246,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
                     List<StrikingProperties> listStrikingPropertiesForThisNeighBohrpoint = neighBohrpoint.getValue().getStrikingProperties();
                     if ((listStrikingPropertiesForThisNeighBohrpoint.size() != 0) && (!listStrikingPropertiesForThisNeighBohrpoint.contains(StrikingProperties.NONE))) {
 
-                        distance = ToolsMath.computeDistance(point.getValue().getCoords().getCoords(), neighBohrpoint.getValue().getCoords().getCoords());
+                        distance = MathTools.computeDistance(point.getValue().getCoords().getCoords(), neighBohrpoint.getValue().getCoords().getCoords());
                         if (distance < threshold) {
                             setSomeNonePointsToRemove.add(point.getKey());
                             continue A;
@@ -402,7 +402,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
             // coords x y z of point
             float[] point = shapeCollectionPoints.getPointFromId(i).getCoords().getCoords();
 
-            float[] pointRelativeToBarycenter = ToolsMath.v1minusV2(point, barycenterShape.getCoords());
+            float[] pointRelativeToBarycenter = MathTools.v1minusV2(point, barycenterShape.getCoords());
             Vector3D pointRelativeToBarycenterV3d = new Vector3D(pointRelativeToBarycenter[0], pointRelativeToBarycenter[1], pointRelativeToBarycenter[2]);
 
             SphericalCoordinates pointShericalRelative = new SphericalCoordinates(pointRelativeToBarycenterV3d);
@@ -453,7 +453,7 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
             PointIfc point = shapeCollectionPoints.getPointFromId(i).getCoords();
 
-            double distance = ToolsMath.computeDistance(center.getCoords(), point.getCoords());
+            double distance = MathTools.computeDistance(center.getCoords(), point.getCoords());
 
             if (distance > maxRadius) {
                 maxRadius = distance;
@@ -536,8 +536,8 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
         @Override
         public int compare(PointWithPropertiesIfc point1, PointWithPropertiesIfc point2) {
 
-            float distancePoint1ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point1.getCoords().getCoords());
-            float distancePoint2ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point2.getCoords().getCoords());
+            float distancePoint1ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point1.getCoords().getCoords());
+            float distancePoint2ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point2.getCoords().getCoords());
             if (distancePoint1ToBarycenter < distancePoint2ToBarycenter) {
                 return -1;
             }

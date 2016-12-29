@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import math.ToolsMath;
+import math.MathTools;
 import pointWithProperties.*;
 
 
@@ -65,7 +65,7 @@ public class ShapeReductorTools {
         Collections.sort(listPointsFreeOfMiniShapePoints, new PointDistanceToBarycenterComparator(barycenter));
         //		System.out.println("dist ");
         //		for (PointWithProperties point: listPointsFreeOfMiniShapePoints){
-        //			float distancePoint1ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point.getCoords().getCoords());
+        //			float distancePoint1ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point.getCoords().getCoords());
         //			System.out.println("dist = " + distancePoint1ToBarycenter + " count of striking prop = " + point.getStrikingProperties().size());
         //		}
 
@@ -96,7 +96,7 @@ public class ShapeReductorTools {
         Collections.sort(listPointsFreeOfMiniShapePoints, new PointDistanceToBarycenterComparator(barycenter));
         //		System.out.println("dist ");
         //		for (PointWithProperties point: listPointsFreeOfMiniShapePoints){
-        //			float distancePoint1ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point.getCoords().getCoords());
+        //			float distancePoint1ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point.getCoords().getCoords());
         //			System.out.println("dist = " + distancePoint1ToBarycenter + " count of striking prop = " + point.getStrikingProperties().size());
         //		}
 
@@ -150,7 +150,7 @@ public class ShapeReductorTools {
     //
     //		for (PointWithProperties point: listPointsFreeOfMiniShapePoints){
     //			float[] pointInShapecoords = point.getCoords().getCoords();
-    //			float distance = ToolsMath.computeDistance(barycenter.getCoords(), pointInShapecoords);
+    //			float distance = MathTools.computeDistance(barycenter.getCoords(), pointInShapecoords);
     //
     //			if (distance < (minDistance - diffThreshold)){
     //				minDistance = distance;
@@ -184,8 +184,8 @@ public class ShapeReductorTools {
         @Override
         public int compare(PointWithPropertiesIfc point1, PointWithPropertiesIfc point2) {
 
-            float distancePoint1ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point1.getCoords().getCoords());
-            float distancePoint2ToBarycenter = ToolsMath.computeDistance(barycenter.getCoords(), point2.getCoords().getCoords());
+            float distancePoint1ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point1.getCoords().getCoords());
+            float distancePoint2ToBarycenter = MathTools.computeDistance(barycenter.getCoords(), point2.getCoords().getCoords());
             if (distancePoint1ToBarycenter < distancePoint2ToBarycenter) {
                 return -1;
             }

@@ -224,7 +224,7 @@ public class ClusteringByLinkageWithAnUpdatedAndSortedCollectionOfClusterPairs {
         for (PointWithPropertiesIfc point1 : cluster1) {
             for (PointWithPropertiesIfc point2 : cluster2) {
 
-                float distance = ToolsMath.computeDistance(point1.getCoords().getCoords(), point2.getCoords().getCoords());
+                float distance = MathTools.computeDistance(point1.getCoords().getCoords(), point2.getCoords().getCoords());
                 if (distance > maxDistance) {
                     maxDistance = distance;
                 }

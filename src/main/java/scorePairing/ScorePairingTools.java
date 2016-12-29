@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithProperties;
 import pointWithProperties.PointWithPropertiesIfc;
@@ -102,7 +102,7 @@ public class ScorePairingTools {
 				PointWithProperties pointWithProperties1 = entry1.getValue();
 				PointWithProperties pointWithProperties2 = entry2.getValue();
 
-				double distance = ToolsMath.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
+				double distance = MathTools.computeDistance(pointWithProperties1.getCoords().getCoords(), pointWithProperties2.getCoords().getCoords());
 
 				if (distance < algoParameters.getDISTANCE_MIN_FOR_EXTENDED_PAIRING_FROM_SEED()){
 

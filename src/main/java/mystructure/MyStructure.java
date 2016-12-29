@@ -8,16 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
 
 import math.AddToMap;
-import math.ToolsMath;
 import parameters.AlgoParameters;
-import shapeCompare.PairingTools;
-import shapeCompare.ResultsFromEvaluateCost;
 
 
 public class MyStructure implements MyStructureIfc {

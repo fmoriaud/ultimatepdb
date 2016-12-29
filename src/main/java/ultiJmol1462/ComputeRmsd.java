@@ -1,6 +1,6 @@
 package ultiJmol1462;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyAtomIfc;
@@ -75,7 +75,7 @@ public class ComputeRmsd {
 		for (int i=0; i<atomsBefore.length; i++){
 			MyAtomIfc atomBefore = atomsBefore[i];
 			MyAtomIfc atomAfter = atomsAfter[i];
-			float distance = ToolsMath.computeDistance(atomBefore.getCoords(), atomAfter.getCoords());
+			float distance = MathTools.computeDistance(atomBefore.getCoords(), atomAfter.getCoords());
 			if (distance > thresholdLongDistance){
 				countOfLongDistanceChange += 1;
 			}

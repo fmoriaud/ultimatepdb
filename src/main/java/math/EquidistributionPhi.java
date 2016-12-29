@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class EquidistributionPhi {
-
+    // -------------------------------------------------------------------
+    // Class variables
+    // -------------------------------------------------------------------
     private List<Double> sixIntervals = new ArrayList<>();
     private List<Double> eigthIntervals = new ArrayList<>();
     private List<Double> tenIntervals = new ArrayList<>();
@@ -42,10 +44,14 @@ public class EquidistributionPhi {
 
     private Map<Integer, List<Double>> mapCountOfIntervalsAndPointValues;
 
+    // -------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------
+
     /**
-     *  Purpose of this class is to get pre-computed well distributed angle values
-     *  (latitude OR Phi according to Apache libs.)
-     *  according to constant solid angle.
+     * Purpose of this class is to get pre-computed well distributed angle values
+     * (latitude OR Phi according to Apache libs.)
+     * according to constant solid angle.
      */
     public EquidistributionPhi() {
 
@@ -308,12 +314,13 @@ public class EquidistributionPhi {
     }
 
 
-   public Map<Integer, List<Double>> getMapCountOfIntervalsAndPointValues() {
+    public Map<Integer, List<Double>> getMapCountOfIntervalsAndPointValues() {
         return mapCountOfIntervalsAndPointValues;
     }
 
     /**
      * Run to run an optimisation
+     *
      * @param args
      */
     public static void main(String[] args) {

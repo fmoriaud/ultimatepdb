@@ -36,8 +36,8 @@ public class IOTools {
     //-------------------------------------------------------------
     // Static methods
     //-------------------------------------------------------------
+
     /**
-     *
      * @param algoParameters
      * @param fourLetterCode that must be lower case
      * @return Can return null
@@ -49,7 +49,7 @@ public class IOTools {
             // TODO change to char[]
             mmcifStructure = reader.readFromPDBFolder(String.valueOf(fourLetterCode), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         } catch (IOException | ExceptionInIOPackage e) {
-           return null;
+            return null;
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -61,7 +61,6 @@ public class IOTools {
         }
         return mystructure;
     }
-
 
 
     public static Map<String, List<Path>> indexPDBFileInFolder(String pathToDividedPDBFolder) {

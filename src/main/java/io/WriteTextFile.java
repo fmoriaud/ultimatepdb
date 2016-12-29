@@ -25,29 +25,29 @@ import java.io.IOException;
 
 
 public class WriteTextFile {
-	//-------------------------------------------------------------
-	// Static methods
-	//-------------------------------------------------------------
-	public static void writeTextFile(String content, String pathToFile){
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
+    public static void writeTextFile(String content, String pathToFile) {
 
-		File file = new File(pathToFile);
+        File file = new File(pathToFile);
 
-		try (FileOutputStream fop = new FileOutputStream(pathToFile)) {
+        try (FileOutputStream fop = new FileOutputStream(pathToFile)) {
 
-			// if file doesn't exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-			}
+            // if file doesn't exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
 
-			// get the content in bytes
-			byte[] contentInBytes = content.getBytes();
+            // get the content in bytes
+            byte[] contentInBytes = content.getBytes();
 
-			fop.write(contentInBytes);
-			fop.flush();
-			fop.close();
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

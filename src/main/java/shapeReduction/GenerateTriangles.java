@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import math.ToolsMath;
+import math.MathTools;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithPropertiesIfc;
 import pointWithProperties.StrikingProperties;
@@ -125,8 +125,8 @@ public class GenerateTriangles {
 
                 if ((point != vertice1) && (point != vertice2)) {
 
-                    double distance1 = ToolsMath.computeDistance(miniShape.get(vertice1).getCoords().getCoords(), miniShape.get(point).getCoords().getCoords());
-                    double distance2 = ToolsMath.computeDistance(miniShape.get(vertice2).getCoords().getCoords(), miniShape.get(point).getCoords().getCoords());
+                    double distance1 = MathTools.computeDistance(miniShape.get(vertice1).getCoords().getCoords(), miniShape.get(point).getCoords().getCoords());
+                    double distance2 = MathTools.computeDistance(miniShape.get(vertice2).getCoords().getCoords(), miniShape.get(point).getCoords().getCoords());
 
                     if (distance1 > absoluteEdgeMin && distance1 < absoluteEdgeMax) {
                         if (distance2 > absoluteEdgeMin && distance2 < absoluteEdgeMax) {
@@ -172,7 +172,7 @@ public class GenerateTriangles {
         //					if (j>i){
         //						Integer pointId1 = listOfIDinMap.get(i);
         //						Integer pointId2 = listOfIDinMap.get(j);
-        //						double distance = ToolsMath.computeDistance(miniShape.get(pointId1).getCoords().getCoords(), miniShape.get(pointId2).getCoords().getCoords());
+        //						double distance = MathTools.computeDistance(miniShape.get(pointId1).getCoords().getCoords(), miniShape.get(pointId2).getCoords().getCoords());
         //
         //						if (distance > edgeMaxFound){
         //							edgeMaxFound = distance;
@@ -188,7 +188,7 @@ public class GenerateTriangles {
                 if (j > i) {
                     Integer pointId1 = listOfIDinMap.get(i);
                     Integer pointId2 = listOfIDinMap.get(j);
-                    double distance = ToolsMath.computeDistance(miniShape.get(pointId1).getCoords().getCoords(), miniShape.get(pointId2).getCoords().getCoords());
+                    double distance = MathTools.computeDistance(miniShape.get(pointId1).getCoords().getCoords(), miniShape.get(pointId2).getCoords().getCoords());
                     if (distance > absoluteEdgeMin && distance < absoluteEdgeMax) {
 
                         TriangleEdge triangleEdge = new TriangleEdge(pointId1.intValue(), pointId2.intValue(), distance);
@@ -209,19 +209,19 @@ public class GenerateTriangles {
         PointWithPropertiesIfc point2 = miniShape.get(arrayTriangleIdAndPointId[1]);
         PointWithPropertiesIfc point3 = miniShape.get(arrayTriangleIdAndPointId[2]);
 
-        float[] v1v2 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point2.getCoords().getCoords(), point1.getCoords().getCoords()));
-        float[] v2v1 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point1.getCoords().getCoords(), point2.getCoords().getCoords()));
+        float[] v1v2 = MathTools.normalizeVector(MathTools.v1minusV2(point2.getCoords().getCoords(), point1.getCoords().getCoords()));
+        float[] v2v1 = MathTools.normalizeVector(MathTools.v1minusV2(point1.getCoords().getCoords(), point2.getCoords().getCoords()));
 
-        float[] v1v3 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point3.getCoords().getCoords(), point1.getCoords().getCoords()));
-        float[] v3v1 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point1.getCoords().getCoords(), point3.getCoords().getCoords()));
+        float[] v1v3 = MathTools.normalizeVector(MathTools.v1minusV2(point3.getCoords().getCoords(), point1.getCoords().getCoords()));
+        float[] v3v1 = MathTools.normalizeVector(MathTools.v1minusV2(point1.getCoords().getCoords(), point3.getCoords().getCoords()));
 
-        float[] v2v3 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point3.getCoords().getCoords(), point2.getCoords().getCoords()));
-        float[] v3v2 = ToolsMath.normalizeVector(ToolsMath.v1minusV2(point2.getCoords().getCoords(), point3.getCoords().getCoords()));
+        float[] v2v3 = MathTools.normalizeVector(MathTools.v1minusV2(point3.getCoords().getCoords(), point2.getCoords().getCoords()));
+        float[] v3v2 = MathTools.normalizeVector(MathTools.v1minusV2(point2.getCoords().getCoords(), point3.getCoords().getCoords()));
 
 
-        double angleRadian1 = ToolsMath.computeAngle(v1v2, v1v3);
-        double angleRadian2 = ToolsMath.computeAngle(v2v1, v2v3);
-        double angleRadian3 = ToolsMath.computeAngle(v3v1, v3v2);
+        double angleRadian1 = MathTools.computeAngle(v1v2, v1v3);
+        double angleRadian2 = MathTools.computeAngle(v2v1, v2v3);
+        double angleRadian3 = MathTools.computeAngle(v3v1, v3v2);
 
         //		System.out.println("angle degres1 = " + angleRadian1 * 180 / Math.PI);
         //		System.out.println("angle degres2 = " + angleRadian2 * 180 / Math.PI);

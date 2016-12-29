@@ -46,12 +46,12 @@ public class RocCurve {
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
+
     /**
-     *
      * @param pointsPositives values from the group of Positives
      * @param pointsNegatives values from the group of Negatives
-     * @param rocmod values are either, cost then it is good to have low cost for Positives, or score,
-     *               then it is good to have high score for Positives
+     * @param rocmod          values are either, cost then it is good to have low cost for Positives, or score,
+     *                        then it is good to have high score for Positives
      */
     public RocCurve(List<Double> pointsPositives, List<Double> pointsNegatives, ROCMOD rocmod) {
         this.pointsPositives = pointsPositives;

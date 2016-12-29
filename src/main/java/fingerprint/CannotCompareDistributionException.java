@@ -25,6 +25,7 @@ public class CannotCompareDistributionException extends Exception {
     public CannotCompareDistributionException() {
         super();
     }
+
     public CannotCompareDistributionException(String message) {
         super(message);
     }
