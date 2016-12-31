@@ -40,7 +40,6 @@ public class EquidistributionPhi {
     private List<Double> twentyFourIntervals = new ArrayList<>();
     private List<Double> twentySixIntervals = new ArrayList<>();
     private List<Double> twentyEightntervals = new ArrayList<>();
-    private List<Double> thirtyIntervals = new ArrayList<>();
 
     private Map<Integer, List<Double>> mapCountOfIntervalsAndPointValues;
 
@@ -262,9 +261,8 @@ public class EquidistributionPhi {
         twentySixIntervals.add(2.8999316802367323);
         twentySixIntervals.add(3.141592653589793);
 
-        // maybe not finished the 28 .... should be redone
         twentyEightntervals.add(0.0);
-        twentyEightntervals.add(0.20195952773077241);
+        twentyEightntervals.add(0.2243994752564138);
         twentyEightntervals.add(0.3365992128846207);
         twentyEightntervals.add(0.4487989505128276);
         twentyEightntervals.add(0.5609986881410345);
@@ -290,10 +288,8 @@ public class EquidistributionPhi {
         twentyEightntervals.add(2.5805939654487586);
         twentyEightntervals.add(2.6927937030769655);
         twentyEightntervals.add(2.804993440705173);
-        twentyEightntervals.add(2.9396331258590207);
+        twentyEightntervals.add(2.9171931783333793);
         twentyEightntervals.add(3.141592653589793);
-
-        thirtyIntervals.add(0.0);
 
         mapCountOfIntervalsAndPointValues = new HashMap<>();
 
@@ -310,7 +306,6 @@ public class EquidistributionPhi {
         mapCountOfIntervalsAndPointValues.put(24, twentyFourIntervals);
         mapCountOfIntervalsAndPointValues.put(26, twentySixIntervals);
         mapCountOfIntervalsAndPointValues.put(28, twentyEightntervals);
-        mapCountOfIntervalsAndPointValues.put(30, thirtyIntervals);
     }
 
 
@@ -1230,97 +1225,6 @@ public class EquidistributionPhi {
                                                                 printValues(valuesAtMin);
                                                             }
                                                             //System.out.println("cost = " + cost);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    private static void optimizeDeltasN30(List<Double> startingValues, List<Double> startingDeltaValues, Integer n) {
-
-        if (n != 30) {
-            System.out.println("routine only OK for n=28");
-            System.exit(0);
-        }
-
-        double minRmsd = Double.MAX_VALUE;
-        List<Double> valuesAtMin;
-
-        for (int incr1 = 0; incr1 < 6; incr1++) {
-            System.out.println(incr1);
-            for (int incr2 = 0; incr2 < 6; incr2++) {
-                for (int incr3 = 0; incr3 < 6; incr3++) {
-                    for (int incr4 = 0; incr4 < 6; incr4++) {
-                        for (int incr5 = 0; incr5 < 6; incr5++) {
-                            for (int incr6 = 0; incr6 < 6; incr6++) {
-                                for (int incr7 = 0; incr7 < 6; incr7++) {
-                                    for (int incr8 = 0; incr8 < 6; incr8++) {
-                                        for (int incr9 = 0; incr9 < 6; incr9++) {
-                                            for (int incr10 = 0; incr10 < 6; incr10++) {
-                                                for (int incr11 = 0; incr11 < 6; incr11++) {
-                                                    for (int incr12 = 0; incr12 < 6; incr12++) {
-                                                        for (int incr13 = 0; incr13 < 6; incr13++) {
-                                                            for (int incr14 = 0; incr14 < 6; incr14++) {
-                                                                List<Double> coeff = new ArrayList<>();
-                                                                coeff.add(incr1 * 0.2);
-                                                                coeff.add(incr2 * 0.2);
-                                                                coeff.add(incr3 * 0.2);
-                                                                coeff.add(incr4 * 0.2);
-                                                                coeff.add(incr5 * 0.2);
-                                                                coeff.add(incr6 * 0.2);
-                                                                coeff.add(incr7 * 0.2);
-                                                                coeff.add(incr8 * 0.2);
-                                                                coeff.add(incr9 * 0.2);
-                                                                coeff.add(incr10 * 0.2);
-                                                                coeff.add(incr11 * 0.2);
-                                                                coeff.add(incr12 * 0.2);
-                                                                coeff.add(incr13 * 0.2);
-                                                                coeff.add(incr14 * 0.2);
-                                                                // Fill deltaValuesToTry
-                                                                List<Double> currentDeltaValues = new ArrayList<>();
-                                                                for (int i = 0; i < startingDeltaValues.size(); i++) {
-
-                                                                    double startingValue = startingDeltaValues.get(i);
-                                                                    double newValue = startingValue + coeff.get(i) * Math.PI / (1.0 * n);
-                                                                    currentDeltaValues.add(newValue);
-                                                                }
-                                                                // Fill as a consequence the values
-                                                                List<Double> currentValues = new ArrayList<>();
-                                                                for (Double value : startingValues) {
-                                                                    currentValues.add(value);
-                                                                }
-
-                                                                for (int i = 0; i < startingDeltaValues.size(); i++) {
-                                                                    int rankLeft = i + 1;
-                                                                    int rankRight = n - rankLeft;
-                                                                    double startingValueLeft = startingValues.get(rankLeft);
-                                                                    double startingValueRight = startingValues.get(rankRight);
-                                                                    double newValueLeft = startingValueLeft + currentDeltaValues.get(i);
-                                                                    double newValueRight = startingValueRight - currentDeltaValues.get(i);
-
-                                                                    currentValues.set(rankLeft, newValueLeft);
-                                                                    currentValues.set(rankRight, newValueRight);
-                                                                }
-
-                                                                //System.out.println("there values should be set");
-                                                                double cost = computeCostToMinimize(currentValues);
-                                                                if (cost < minRmsd) {
-                                                                    minRmsd = cost;
-                                                                    valuesAtMin = currentValues;
-                                                                    System.out.println("new min " + minRmsd);
-                                                                    printValues(valuesAtMin);
-                                                                }
-                                                            }
                                                         }
                                                     }
                                                 }

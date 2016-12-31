@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package protocols;
 
 import database.HitInSequenceDb;
@@ -17,16 +36,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 
-/**
- * Created by Fabrice on 31/10/16.
- */
 public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
-    private  ShapeContainerIfc queryShape;
+    private ShapeContainerIfc queryShape;
     private List<ShapeContainerDefined> targets;
     private static AlgoParameters algoParameters;
 
@@ -34,7 +49,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ProtocolBindingVsFoldingWithExecutor( ShapeContainerIfc queryShape, List<ShapeContainerDefined> targets) {
+    public ProtocolBindingVsFoldingWithExecutor(ShapeContainerIfc queryShape, List<ShapeContainerDefined> targets) {
 
         this.queryShape = queryShape;
         this.targets = targets;
@@ -50,7 +65,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -70,22 +85,21 @@ public class ProtocolBindingVsFoldingWithExecutor {
             System.exit(0);
         }
 
-
         List<ShapeContainerDefined> targets = buildTargets(queryShape);
 
         ProtocolBindingVsFoldingWithExecutor protocol = new ProtocolBindingVsFoldingWithExecutor(queryShape, targets);
-        // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
-
         protocol.run();
     }
 
 
-    public void run() throws ParsingConfigFileException {
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    private void run() throws ParsingConfigFileException {
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
-        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
+        final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
-
 
 
         List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
@@ -104,7 +118,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
 
-               // ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
+                // ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
 
             } catch (RejectedExecutionException e) {
 
@@ -132,8 +146,6 @@ public class ProtocolBindingVsFoldingWithExecutor {
             }
         }
         executorService.shutdown();
-
-
     }
 
 
@@ -141,18 +153,27 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         List<ShapeContainerDefined> targets = new ArrayList<>();
 
-        String sequenceToFind = "LYSGLNTHRSERVAL";
-        int peptideLength = sequenceToFind.length() / 3;
+        List<char[]> sequenceToFind = null;
+        if (queryShape instanceof ShapeContainerWithPeptide) {
+            ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) queryShape;
+            sequenceToFind = shapeContainerWithPeptide.getPeptideSequence();
+        } else {
+            System.out.println("queryShape is not instanceof ShapeContainerWithPeptide. Program terminated.");
+            System.exit(0);
+        }
+        String sequenceToFindAsString = ProtocolTools.makeSequenceString(sequenceToFind);
+
+        int peptideLength = sequenceToFindAsString.length() / 3;
 
         boolean useSimilarSequences = false;
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFind, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
 
         if (queryShape instanceof ShapeContainerWithPeptide) {
 
             ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
             MyChainIfc ligand = query.getPeptide();
-            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
+            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFindAsString, algoParameters);
             System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
             System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
 
@@ -178,5 +199,4 @@ public class ProtocolBindingVsFoldingWithExecutor {
         }
         return targets;
     }
-
 }

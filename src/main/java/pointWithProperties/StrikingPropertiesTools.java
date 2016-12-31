@@ -27,7 +27,9 @@ import java.util.Map.Entry;
 
 
 public class StrikingPropertiesTools {
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static List<StrikingProperties> computeStrinkingPropertiesOfAPointWithPropertiesIncludingNone(PointWithPropertiesIfc pointWithProperties) {
 
         List<StrikingProperties> listPropertiesFound = computeStrinkingPropertiesOfAPointWithProperties(pointWithProperties);

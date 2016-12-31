@@ -101,7 +101,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
-        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
+        final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
@@ -111,7 +111,6 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
             StoreInSequenceDbPDBFileCallable callable = new StoreInSequenceDbPDBFileCallable(doMyDbTaskIfc, connexion);
             callablesToLauch.add(callable);
-
         }
 
         List<Future<Boolean>> allFuture = new ArrayList<>();

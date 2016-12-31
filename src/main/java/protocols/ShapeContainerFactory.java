@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package protocols;
 
 import mystructure.MyMonomerIfc;
@@ -12,11 +31,8 @@ import shapeBuilder.ShapeBuildingException;
 import java.util.List;
 
 /**
- * Created by Fabrice on 26/09/16.
+ * This factory is the recommanded way to by=uild a ShapeContainer.
  */
-
-
-// Would be the way to get a shapecontainer
 public class ShapeContainerFactory {
 
 
@@ -37,7 +53,7 @@ public class ShapeContainerFactory {
 
 
     public static ShapeContainerIfc getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureGlobal, AlgoParameters algoParameters,
-                                                                       char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException {
+                                                                                                       char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException {
 
         ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(chainId, startingRankId, peptideLength);
@@ -63,15 +79,10 @@ public class ShapeContainerFactory {
     }
 
 
-    public static ShapeContainerIfc getShapeAroundForeignLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureLocalQuery, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide, AlgoParameters algoParameters){
+    public static ShapeContainerIfc getShapeAroundForeignLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureLocalQuery, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide, AlgoParameters algoParameters) {
 
         ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureLocalQuery, algoParameters, enumShapeReductor);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundForeignLigand(foreignMonomerToExclude, rotatedLigandOrPeptide);
         return shapeContainer;
     }
-
-
-    //-------------------------------------------------------------
-    // Implementation
-    //-------------------------------------------------------------
 }

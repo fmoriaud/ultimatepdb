@@ -1,13 +1,27 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package protocols;
 
-import database.CreateAndSearchSequenceDatabase;
 import database.CreateAndSearchSequenceDatabaseWithExecutor;
 import database.SequenceTools;
 import parameters.AlgoParameters;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Created by Fabrice on 11/11/16.
@@ -17,6 +31,13 @@ public class SequenceDatabaseBuildMultiThread {
     // -------------------------------------------------------------------
     // Public && Interface method
     // -------------------------------------------------------------------
+
+    /**
+     * To build the sequense database. It takes one or two days. This method deletes existing database and builds a new one.
+     *
+     * @param args
+     * @throws ParsingConfigFileException
+     */
     public static void main(String[] args) throws ParsingConfigFileException {
 
         AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
@@ -26,58 +47,4 @@ public class SequenceDatabaseBuildMultiThread {
 
         createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
     }
-
 }
-/*
-    @Ignore
-    @Test
-    public void testBuildDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
-
-
-        // Create Sequence DB
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(4);
-        Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
-        Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
-        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder.toFile().toString());
-        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(pathToChemCompFolderFolder.toFile().toString());
-        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, SequenceTools.tableName);
-        createAndSearchSequenceDatabaseWithExecutor.createDatabase();
-
-        // Read an entry from it
-        String sequence1di9 = createAndSearchSequenceDatabaseWithExecutor.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
-
-        // Check sequence length
-        assertNotNull(sequence1di9);
-        assertEquals((sequence1di9.length() / 3), 348);
-
-        createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
-    }
-
-*/
-/*
-    @Ignore
-    @Test
-    public void testUpdateDatabaseFromBigFolder() throws IOException, ParsingConfigFileException {
-
-
-        // Create Sequence DB
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(4);
-        Path pathToPDBFolder = Paths.get("//Users//Fabrice//Documents//pdb");
-        Path pathToChemCompFolderFolder = Paths.get("//Users//Fabrice//Documents//chemcomp");
-        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder.toFile().toString());
-        algoParameters.setPATH_TO_CHEMCOMP_FOLDER(pathToChemCompFolderFolder.toFile().toString());
-        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, SequenceTools.tableName);
-        createAndSearchSequenceDatabaseWithExecutor.updateDatabaseKeepingFourLetterCodeEntries();
-
-        // Read an entry from it
-        String sequence1di9 = createAndSearchSequenceDatabaseWithExecutor.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
-
-        // Check sequence length
-        assertNotNull(sequence1di9);
-        assertEquals((sequence1di9.length() / 3), 348);
-
-        createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
-    }
-*/

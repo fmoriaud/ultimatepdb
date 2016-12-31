@@ -26,8 +26,18 @@ import genericBuffer.MyStructureBuffer;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 
+/**
+ * AlgoParameters stores all global parameters.
+ * AlgoParameters contains buffers to store UltiJmol classes and ProcrustesAnalysis classes. They are as many as thresds.
+ * N.B When parameters are elsewhere in a class or in a method, they are meant to be implementation dependent and
+ * are therefore local.
+ *
+ */
 public class AlgoParameters {
 
+    //-------------------------------------------------------------
+    // Buffers
+    //-------------------------------------------------------------
     public GenericBuffer<UltiJmol1462> ultiJMolBuffer;
     public GenericBuffer<ProcrustesAnalysisIfc> procrustesAnalysisBuffer;
     public MyStructureBuffer myStructureBuffer;
@@ -36,17 +46,7 @@ public class AlgoParameters {
     // ****************************
     // Admin parameters
     //
-    private boolean BUILD_SEQ_DB;
     private String PATH_TO_TARGET_LIST_FILE_TO_BE_PROCESSED_BUILD_SEQ_DB;
-
-
-    public boolean isBUILD_SEQ_DB() {
-        return BUILD_SEQ_DB;
-    }
-
-    public void setBUILD_SEQ_DB(boolean bUILD_SEQ_DB) {
-        BUILD_SEQ_DB = bUILD_SEQ_DB;
-    }
 
     public String getPATH_TO_TARGET_LIST_FILE_TO_BE_PROCESSED_BUILD_SEQ_DB() {
         return PATH_TO_TARGET_LIST_FILE_TO_BE_PROCESSED_BUILD_SEQ_DB;
@@ -245,7 +245,7 @@ public class AlgoParameters {
     private float WEIGHT_DIFFERENCE_IN_HYDROPHOBICITY_BETWEEN_PAIRED_POINTS = 1.0f;
     private float WEIGHT_DIFFERENCE_AROMATICRING = 1.0f;
 
-    private float WEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS = 1.0f; // 0.4f; // 0.4f; // 0.4f;
+    private float WEIGHT_DIFFERENCE_IN_PROBABILITIES_IN_PAIRED_POINTS = 1.0f;
     private float WEIGHT_DIFFERENCE_IN_PROBA_IN_DISTANCES_BETWEEN_PAIRED_POINTS = 0.4f;
     private float WEIGHT_DIFFERENCE_TO_OUTSIDE = 2.0f;//1.0f;
 
@@ -266,6 +266,10 @@ public class AlgoParameters {
 
     private int DOCKING_PEPTIDES_SPLITTING_SEQUENCE_LENGTH = 5;
 
+
+    // -------------------------------------------------------------------
+    // Getter and Setter
+    // -------------------------------------------------------------------
     public float getMIN_DISTANCE_TO_BE_NEIBHOR_IN_JMOL_MINIMIZATION() {
         return MIN_DISTANCE_TO_BE_NEIBHOR_IN_JMOL_MINIMIZATION;
     }

@@ -23,10 +23,10 @@ public class QueryAtomDefinedByIds {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------
-    private String fourLetterCode = "2fx7";
-    private String chainQuery = "L";
-    private int residueId = 161;
-    private String atomName = "OE2";
+    private String fourLetterCode;
+    private String chainQuery;
+    private int residueId;
+    private String atomName;
     private float radiusForQueryAtomsDefinedByIds;
 
 

@@ -1,21 +1,13 @@
 package multithread;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.*;
 import shape.ShapeContainerIfc;
-import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
@@ -41,7 +33,7 @@ public class CompareWithExecutorTest {
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -53,7 +45,7 @@ public class CompareWithExecutorTest {
         ControllerLoger.logger.addHandler(fh);
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
-        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(consumersCount);
+        final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         char[] chainId1 = "C".toCharArray();
@@ -159,7 +151,7 @@ public class CompareWithExecutorTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        final ExecutorService executorService = ProtocolTools.getExecutorServiceForComparisons(1);
+        final ExecutorService executorService = ProtocolTools.getExecutorService(1);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         char[] fourLetterCode1bmk = "1bmk".toCharArray();

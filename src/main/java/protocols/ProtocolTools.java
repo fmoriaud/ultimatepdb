@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package protocols;
 
 import genericBuffer.GenericBuffer;
@@ -8,26 +27,33 @@ import hits.HitTools;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import mystructure.EnumMyReaderBiojava;
-import parameters.*;
+import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
-import shapeCompare.ComparatorShapeContainerQueryVsAnyShapeContainer;
 import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.ProcrustesAnalysis;
 
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
-/**
- * Created by Fabrice on 31/10/16.
- */
 public class ProtocolTools {
+    // -------------------------------------------------------------------
+    // Static Methods
+    // -------------------------------------------------------------------
+    public static String makeSequenceString(List<char[]> sequenceToFind) {
+
+        StringBuilder sb = new StringBuilder();
+        for (char[] treeLetterCode : sequenceToFind) {
+            sb.append(String.valueOf(treeLetterCode));
+        }
+        return sb.toString();
+    }
+
 
     public static void compareCompleteCheckAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
-
-        //ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing starts " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()));
 
         CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> hits = null;
@@ -36,8 +62,6 @@ public class ProtocolTools {
         } catch (NullResultFromAComparisonException e) {
             return;
         }
-
-        //ControllerLoger.logger.log(Level.INFO,"&&&&&& Comparing ends " + String.valueOf(targetShape.getMyStructureUsedToComputeShape().getFourLetterCode()) + " found " + hits.size() + " hits to minimize");
 
         int hitRank = -1;
         A:
@@ -59,13 +83,12 @@ public class ProtocolTools {
                 ControllerLoger.logger.log(Level.INFO, message);
             }
 
-            if (minimizeAllIfTrueOrOnlyOneIfFalse == false){
+            if (minimizeAllIfTrueOrOnlyOneIfFalse == false) {
                 break;
             }
         }
 
     }
-
 
 
     public static AlgoParameters prepareAlgoParameters() throws ParsingConfigFileException {
@@ -97,8 +120,7 @@ public class ProtocolTools {
     }
 
 
-
-    public static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
+    public static ExecutorService getExecutorService(int consumersCount) {
 
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
         return threadPoolExecutor;
@@ -108,7 +130,7 @@ public class ProtocolTools {
 
 
 /*
-    public static ExecutorService getExecutorServiceForComparisons(int consumersCount) {
+    public static ExecutorService getExecutorService(int consumersCount) {
         int corePoolSize = 0; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
         // could happen when searching database for a potetial hit, that could last as long

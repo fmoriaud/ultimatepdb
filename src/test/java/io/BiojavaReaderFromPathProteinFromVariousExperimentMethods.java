@@ -2,15 +2,10 @@ package io;
 
 import org.biojava.nbio.structure.ExperimentalTechnique;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
-import parameters.AlgoParameters;
-import protocols.BioJavaReaderProtocol;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;

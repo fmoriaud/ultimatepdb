@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package protocols;
 
 import convertformat.AdapterBioJavaStructure;
@@ -19,13 +38,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.FileHandler;
 
-/**
- * Created by Fabrice on 02/10/16.
- */
 public class ProtocolBindingVsFolding {
-    //------------------------
+    //-------------------------------------------------------------
     // Class variables
-    //------------------------
+    //-------------------------------------------------------------
     private String queryFourLetterCode;
     private String peptideChainId;
     private AlgoParameters algoParameters;
@@ -47,20 +63,20 @@ public class ProtocolBindingVsFolding {
     public static void main(String[] args) throws ParsingConfigFileException {
 
         ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("1be9", "B");
-        //ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("3erd", "D"); // C leads to poor contacts
-        // SEQRES   1 X    9  MET PHE SER ILE ASP ASN ILE LEU ALA
-
         protocol.run();
     }
 
 
-    public void run() throws ParsingConfigFileException {
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    private void run() throws ParsingConfigFileException {
 
         algoParameters = ProtocolTools.prepareAlgoParameters();
 
         FileHandler fh = null;
         try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + "log_Project.txt");
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         } catch (SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -83,57 +99,51 @@ public class ProtocolBindingVsFolding {
             System.exit(0);
         }
 
-
+        List<char[]> sequenceToFind = null;
+        if (queryShape instanceof ShapeContainerWithPeptide) {
+            ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) queryShape;
+            sequenceToFind = shapeContainerWithPeptide.getPeptideSequence();
+        } else {
+            System.out.println("queryShape is not instanceof ShapeContainerWithPeptide. Program terminated.");
+            System.exit(0);
+        }
         // Find same sequence occurences in sequence DB
-        String sequenceToFind = "LYSGLNTHRSERVAL"; // 1be9
+        //String sequenceToFind = String.valueOf(sequenceToFind);
+        //"LYSGLNTHRSERVAL"; // 1be9
         //String sequenceToFind = "HISLYSILELEUHISARGLEULEUGLNASPSER"; // 3erd
         // String sequenceToFind = "METPHESERILEASPASNILELEUALA";
         // Only hit in DB is 2Q14 ILE, TYR, SER, ILE, GLU, ASN, PHE, LEU, THR
         // And it is a hit which not fit in the target following minimization
         //String sequenceToFind = "METPHESERILE";
 
-        int peptideLength = sequenceToFind.length() / 3;
+        String sequenceToFindAsString = ProtocolTools.makeSequenceString(sequenceToFind);
+
+        int peptideLength = sequenceToFind.size() / 3;
 
         //int minLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMinLength();
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
         boolean useSimilarSequences = false;
 
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFind, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
 
 
         if (queryShape instanceof ShapeContainerWithPeptide) {
 
             ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
             MyChainIfc ligand = query.getPeptide();
-            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFind, algoParameters);
+            List<HitInSequenceDb> hitsInDatabaseUsingInteractions = SequenceTools.findUsingQueryPeptide(ligand, peptideLength, 1000, sequenceToFindAsString, algoParameters);
             System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
             System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
 
-            hitsInDatabase = hitsInDatabaseUsingInteractions;
+            //hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
-
-        /*
-        boolean startoutput = false;
-        for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
-            if (hitInSequenceDb.getFourLetterCode().equals("5IT7")) {
-                startoutput = true;
-            }
-            if (startoutput == true) {
-                System.out.println(hitInSequenceDb.getFourLetterCode() + " " + hitInSequenceDb.getChainIdFromDB() + " " + hitInSequenceDb.getListRankIds().get(0));
-                System.out.println();
-            }
-        }
-        */
-        //List<HitInSequenceDb> hitsInDatabaseMod = new ArrayList<>();
-        // hitsInDatabaseMod.add(hitsInDatabase.get(2));
-        // hitsInDatabase = hitsInDatabaseMod;
 
         String fourLetterCodeTarget;
         String chainIdFromDB;
 
-        List<HitInSequenceDb> hitsEnrichedOnTop = putGoodHitsOnTopOfList(hitsInDatabase, getHitWithGoodRmsdBackbone());
+        //List<HitInSequenceDb> hitsEnrichedOnTop = putGoodHitsOnTopOfList(hitsInDatabase, getHitWithGoodRmsdBackbone());
         A:
-        for (HitInSequenceDb hitInSequenceDb : hitsEnrichedOnTop) {
+        for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
 
 
             fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
@@ -182,6 +192,7 @@ public class ProtocolBindingVsFolding {
         }
     }
 
+
     private List<HitInSequenceDb> putGoodHitsOnTopOfList(List<HitInSequenceDb> hitsInDatabase, List<String> hitWithGoodRmsdBackbone) {
 
         List<HitInSequenceDb> newList = new ArrayList<>();
@@ -219,10 +230,6 @@ public class ProtocolBindingVsFolding {
         return newList;
     }
 
-
-    // -------------------------------------------------------------------
-    // Implementation
-    // -------------------------------------------------------------------
 
     /**
      * Obtained with a three weeks run on single CPU on my Mac.
@@ -286,5 +293,4 @@ public class ProtocolBindingVsFolding {
 
         return goodHits;
     }
-
 }
