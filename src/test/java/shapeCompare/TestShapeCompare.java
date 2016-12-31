@@ -36,14 +36,15 @@ public class TestShapeCompare {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
+        algoParameters.setFRACTION_NEEDED_ON_QUERY(0.65f);
         char[] fourLetterCode1bmk = "1bmk".toCharArray();
         char[] hetAtomsLigandId1bmk = "SB5".toCharArray();
         int occurrenceId = 1;
         ShapeContainerDefined shapeContainerDefined1bmk = new ShapecontainerDefinedByHetatm(fourLetterCode1bmk, algoParameters, hetAtomsLigandId1bmk, occurrenceId);
         ShapeContainerIfc shapeContainer1bmk = shapeContainerDefined1bmk.getShapecontainer();
 
-        char[] fourLetterCode1a9u = "1a9u".toCharArray();
-        char[] hetAtomsLigandId1a9u = "SB2".toCharArray();
+        char[] fourLetterCode1a9u = "1bl6".toCharArray();
+        char[] hetAtomsLigandId1a9u = "SB6".toCharArray();
 
 
         ShapeContainerDefined shapeContainerDefined1a9u = new ShapecontainerDefinedByHetatm(fourLetterCode1a9u, algoParameters, hetAtomsLigandId1a9u, occurrenceId);
@@ -59,11 +60,11 @@ public class TestShapeCompare {
             e.printStackTrace();
         }
 
-        assertTrue(listBestHitForEachAndEverySeed.size() == 1);
+        assertTrue(listBestHitForEachAndEverySeed.size() == 2);
         float coverageQueryTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getRatioPairedPointInQuery();
-        assertEquals(coverageQueryTopHit, 0.654, 0.001);
+        assertEquals(coverageQueryTopHit, 0.666, 0.001);
         double costTopHit = listBestHitForEachAndEverySeed.get(0).getResultsFromEvaluateCost().getCost();
-        assertEquals(costTopHit, 0.024, 0.001);
+        assertEquals(costTopHit, 0.028, 0.001);
 
 
         /*

@@ -43,7 +43,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         assertTrue(shape.getShape().getSize() == 666);
-        assertTrue(shape.getMiniShape().size() == 45);
+        assertTrue(shape.getMiniShape().size() == 46);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

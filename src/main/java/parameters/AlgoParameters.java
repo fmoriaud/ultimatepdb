@@ -579,6 +579,10 @@ public class AlgoParameters {
         return DOCKING_PEPTIDES_SPLITTING_SEQUENCE_LENGTH;
     }
 
+    public void setFRACTION_NEEDED_ON_QUERY(float FRACTION_NEEDED_ON_QUERY) {
+        this.FRACTION_NEEDED_ON_QUERY = FRACTION_NEEDED_ON_QUERY;
+    }
+
     public float getFRACTION_NEEDED_ON_QUERY() {
         return FRACTION_NEEDED_ON_QUERY;
     }

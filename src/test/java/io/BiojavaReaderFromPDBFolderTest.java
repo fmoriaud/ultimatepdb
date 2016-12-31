@@ -244,4 +244,20 @@ public class BiojavaReaderFromPDBFolderTest {
         assertTrue(peptideBHetatm.size() == 2);
         System.out.println();
     }
+
+
+    @Test
+    public void testReadPDBFileWithOnlyCalpha() throws ParsingConfigFileException {
+
+        String fourLetterCode = "1ian";
+        BiojavaReader reader = new BiojavaReader();
+        Structure mmcifStructure = null;
+        try {
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+        // TODO should throw an exception as it is really bad, only CA, nothing can be done with it
+    }
 }
