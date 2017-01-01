@@ -158,5 +158,15 @@ public class CheckDistanceToOutsideTest {
         assertTrue(countFN == 0);
         assertTrue(countFP == 1);
 
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

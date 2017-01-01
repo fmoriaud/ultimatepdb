@@ -115,6 +115,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     public void testShapeBuilderConstructorProblemeticCase() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         char[] fourLetterCode = "4ddg".toCharArray();
         char[] chainId = "B".toCharArray();
@@ -128,6 +129,17 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
             assertTrue(false);
         }
 
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
     }
 
 
@@ -135,6 +147,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     public void testCaseThatThrewAnException() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         char[] fourLetterCode = "5it7".toCharArray();
         char[] chainId = "OO".toCharArray();
@@ -148,6 +161,17 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -156,6 +180,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     public void testRankId() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         char[] fourLetterCode = "2ce8".toCharArray();
         char[] chainId = "X".toCharArray();
@@ -186,5 +211,16 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         int matchingRankId = rankIds.get(0);
 
         assertTrue(matchingRankId == startingRankId);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

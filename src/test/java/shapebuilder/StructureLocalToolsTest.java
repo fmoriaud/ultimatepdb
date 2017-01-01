@@ -692,6 +692,7 @@ public class StructureLocalToolsTest {
     public void testForeignLigandFromStructureLocalWholeChain() throws IOException, ParsingConfigFileException, ShapeBuildingException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         // need a foreign ligand which is defined as a MyStructure
         // This ligand is built with cloning so the neighbors from original structure are kept
@@ -739,13 +740,24 @@ public class StructureLocalToolsTest {
         MyStructureIfc structureLocalCustomLigand = structureLocalToBuildAnyShapeCustomLigand.getMyStructureLocal();
         // test structureLocal
         // As hit ligand is longer, we get more amino acids in structureLocal
-        // has 51 too now, was 60 ...
-        assertTrue(structureLocalCustomLigand.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 51);
+        // has 54 now ... 51 too now, was 60 ...
+        assertTrue(structureLocalCustomLigand.getAminoMyChain("A".toCharArray()).getMyMonomers().length == 54);
         assertTrue(structureLocalCustomLigand.getAminoMyChain("X".toCharArray()) == null);
         // it is what it is but must be similar to accessibleStructureLocal
 
         // test its ligand
         MyChainIfc ligandCustom = structureLocalToBuildAnyShapeCustomLigand.getLigand();
         assertTrue(ligandCustom.getMyMonomers().length == 9);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

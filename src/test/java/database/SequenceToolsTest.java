@@ -170,6 +170,7 @@ public class SequenceToolsTest {
     public void testFindContacts() throws IOException, ParsingConfigFileException, ShapeBuildingException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
         char[] fourLetterCode = "1be9".toCharArray();
         char[] chainId = "B".toCharArray();
         ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedByWholeChain(fourLetterCode, chainId, algoParameters);
@@ -192,5 +193,16 @@ public class SequenceToolsTest {
             assertTrue(type.equals(expectedValues.get(count)));
             count += 1;
         }
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

@@ -27,6 +27,7 @@ public class CompareCompleteCheckTest {
     public void completeCheckAutoCompareSegmentOfChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         char[] fourLetterCode = "1be9".toCharArray();
         char[] chainId = "B".toCharArray();
@@ -69,6 +70,17 @@ public class CompareCompleteCheckTest {
 
         int hitCount = results.size();
         assertTrue(hitCount == 16);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -82,6 +94,7 @@ public class CompareCompleteCheckTest {
     public void completeCheckAutoCompareChain() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         char[] fourLetterCode = "1be9".toCharArray();
         char[] chainId = "B".toCharArray();
@@ -121,6 +134,17 @@ public class CompareCompleteCheckTest {
 
         int hitCount = results.size();
         assertTrue(hitCount == 4);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -128,6 +152,8 @@ public class CompareCompleteCheckTest {
     public void completeCheckInterfamilyHit() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
         algoParameters.setFRACTION_NEEDED_ON_QUERY(0.65f);
         char[] fourLetterCodeQuery = "1be9".toCharArray();
         char[] chainIdQuery = "B".toCharArray();
@@ -181,6 +207,17 @@ public class CompareCompleteCheckTest {
 
         int hitCount = results.size();
         //assertTrue(hitCount == 20);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 
@@ -188,6 +225,7 @@ public class CompareCompleteCheckTest {
     public void completeCheckCompareVsItSeflWasAWeirdCoverageResult() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String queryFourLetterCode = "1be9";
         String peptideChainId = "B";
@@ -221,5 +259,16 @@ public class CompareCompleteCheckTest {
         double percentageIncreaseCompleteCheck = result.getPercentageIncreaseCompleteCheck();
 
         System.out.println("percentageIncreaseCompleteCheck = " + percentageIncreaseCompleteCheck);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 }

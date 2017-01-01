@@ -23,12 +23,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by Fabrice on 10.12.16.
  */
 public class Validate {
 
 
+    @Ignore
     @Test
     public void statsOnHits() throws IOException, ParsingConfigFileException {
 
@@ -41,6 +44,8 @@ public class Validate {
         // So using cost and coverage, can I split results in two parts: one enriched with low rmsd backbone
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
         algoParameters.setPATH_TO_RESULT_FILES("//Users//Fabrice//Documents//validate//");
 
         // input of a result file
@@ -161,6 +166,17 @@ public class Validate {
         // rmsdbackbone > 1.0
         //minCost = 0.02243371593981088 maxCost = 0.02243371593981088
         //mean = 0.02243371593981088 std = 0.0 median = 0.02243371593981088
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
     /**
@@ -175,6 +191,8 @@ public class Validate {
     public void validate() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
         algoParameters.setPATH_TO_RESULT_FILES("//Users//Fabrice//Documents//validate//");
         ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByWholeChain("1be9".toCharArray(), "B".toCharArray(), algoParameters);
         ShapeContainerIfc queryShape = null;
@@ -288,6 +306,17 @@ public class Validate {
 
 
         }
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
 
 }
