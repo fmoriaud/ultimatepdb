@@ -32,9 +32,9 @@ import shape.ShapeContainerWithPeptide;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
 import shapeCompare.ResultsFromEvaluateCost;
-import ultiJmol1462.MyJmolTools;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
+import ultiJmol1462.ScoreLigandInTargetUsingMolecularForceField;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -87,7 +87,7 @@ public class HitTools {
                 protonate2.compute();
 
                 MyStructureIfc preparedQuery = protonate2.getProtonatedMyStructure();
-                resultsUltiJMolMinimizedHitLigandOnTarget = MyJmolTools.scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
+                resultsUltiJMolMinimizedHitLigandOnTarget = scoreByMinimizingLigandOnFixedReceptor(algoParameters, clonedRotatedPeptide, preparedQuery);
 
                 // handle coverage of query into hit
 
@@ -115,13 +115,41 @@ public class HitTools {
     }
 
 
-    public static Set<char[]> makeListOfChainId(MyStructureIfc myStructure) {
-        Set<char[]> setChainIds = new HashSet<>();
+    /**
+     * Minimize an input of two MyStructureIfc
+     *
+     * @param algoParameters
+     * @param peptide
+     * @param target
+     * @return
+     * @throws ExceptionInScoringUsingBioJavaJMolGUI
+     */
+    public static ResultsUltiJMolMinimizedHitLigandOnTarget scoreByMinimizingLigandOnFixedReceptor(
+            AlgoParameters algoParameters, MyStructureIfc peptide, MyStructureIfc target) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
-        for (MyChainIfc chain : myStructure.getAllChains()) {
-            setChainIds.add(chain.getChainId());
+        ResultsUltiJMolMinimizedHitLigandOnTarget resultsUltiJMolMinimizedHitLigandOnTarget = null;
+
+        try {
+            ScoreLigandInTargetUsingMolecularForceField score = new ScoreLigandInTargetUsingMolecularForceField(target, peptide, algoParameters);
+            score.run();
+
+            float rmsd = score.getRmsdOfLigandBeforeAndAfterMinimization();
+            int longDistanceChangeCount = score.getCountOfLongDistanceChange();
+            float strainedEnergy = score.getStrainedEnergy();
+            float interactionEnergy = score.getInteractionEnergy();
+            boolean convergenceReached = score.isAllconvergenceReached();
+            resultsUltiJMolMinimizedHitLigandOnTarget = new ResultsUltiJMolMinimizedHitLigandOnTarget(longDistanceChangeCount, interactionEnergy, strainedEnergy, rmsd, convergenceReached);
+
+        } catch (Exception e) {
+
+            System.out.println("Exception in scoreByMinimizingLigandOnFixedReceptor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            String message = "Exception in scoreByMinimizingLigandOnFixedReceptor";
+            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
+            throw exception;
         }
-        return setChainIds;
+
+        return resultsUltiJMolMinimizedHitLigandOnTarget;
     }
 
 

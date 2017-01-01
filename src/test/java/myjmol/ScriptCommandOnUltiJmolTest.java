@@ -54,13 +54,18 @@ public class ScriptCommandOnUltiJmolTest {
         Cloner cloner2 = new Cloner(neighbors, algoParameters);
         MyStructureIfc target = cloner2.getClone();
 
-        MyStructureIfc protonatedTarget = null;
+
+        Protonate protonate = new Protonate(target, algoParameters);
         try {
-            protonatedTarget = MyJmolTools.protonateStructure(target, algoParameters);
-            protonatedTarget.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedTarget = protonate.getProtonatedMyStructure();
+        protonatedTarget.setFourLetterCode("1di9".toCharArray());
+
+
         String moleculeV3000 = protonatedTarget.toV3000();
 
         try {

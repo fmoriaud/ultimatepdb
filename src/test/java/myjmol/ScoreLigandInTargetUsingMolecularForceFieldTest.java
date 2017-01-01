@@ -8,12 +8,10 @@ import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
-import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.MyJmolTools;
+import ultiJmol1462.Protonate;
 import ultiJmol1462.ScoreLigandInTargetUsingMolecularForceField;
 
 import java.io.IOException;
@@ -71,13 +69,15 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         Cloner cloner = new Cloner(msqLigand, algoParameters);
         MyStructureIfc myStructureMadeWithLigand = cloner.getClone();
 
-        MyStructureIfc protonatedLigand = null;
+        Protonate protonate = new Protonate(myStructureMadeWithLigand, algoParameters);
         try {
-            protonatedLigand = MyJmolTools.protonateStructure(myStructureMadeWithLigand, algoParameters);
-            protonatedLigand.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedLigand = protonate.getProtonatedMyStructure();
+        protonatedLigand.setFourLetterCode("1di9".toCharArray());
 
         try {
             Thread.sleep(1000L);
@@ -89,13 +89,16 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         Cloner cloner2 = new Cloner(neighbors, algoParameters);
         MyStructureIfc target = cloner2.getClone();
 
-        MyStructureIfc protonatedTarget = null;
+        Protonate protonate2 = new Protonate(target, algoParameters);
         try {
-            protonatedTarget = MyJmolTools.protonateStructure(target, algoParameters);
-            protonatedTarget.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate2.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedTarget = protonate2.getProtonatedMyStructure();
+        protonatedTarget.setFourLetterCode("1di9".toCharArray());
+
 
         try {
             Thread.sleep(1000L);
@@ -173,13 +176,16 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         Cloner cloner = new Cloner(msqLigand, algoParameters);
         MyStructureIfc myStructureMadeWithLigand = cloner.getClone();
 
-        MyStructureIfc protonatedLigand = null;
+        Protonate protonate = new Protonate(myStructureMadeWithLigand, algoParameters);
         try {
-            protonatedLigand = MyJmolTools.protonateStructure(myStructureMadeWithLigand, algoParameters);
-            protonatedLigand.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedLigand = protonate.getProtonatedMyStructure();
+        protonatedLigand.setFourLetterCode("1di9".toCharArray());
+
 
         try {
             Thread.sleep(1000L);
@@ -192,13 +198,15 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         Cloner cloner2 = new Cloner(neighbors, algoParameters);
         MyStructureIfc target = cloner2.getClone();
 
-        MyStructureIfc protonatedTarget = null;
+        Protonate protonate2 = new Protonate(target, algoParameters);
         try {
-            protonatedTarget = MyJmolTools.protonateStructure(target, algoParameters);
-            protonatedTarget.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate2.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedTarget = protonate2.getProtonatedMyStructure();
+        protonatedTarget.setFourLetterCode("1di9".toCharArray());
 
         try {
             Thread.sleep(1000L);

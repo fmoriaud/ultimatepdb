@@ -2,6 +2,7 @@ package pointWithProperties;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
@@ -10,11 +11,9 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
-import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.MyJmolTools;
+import ultiJmol1462.Protonate;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +49,14 @@ public class ComputePropertiesPocketTest {
             assertTrue(false);
         }
 
-        MyStructureIfc protonatedStructure = null;
+        Protonate protonate = new Protonate(mystructure, algoParameters);
         try {
-            protonatedStructure = MyJmolTools.protonateStructure(mystructure, algoParameters);
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedStructure = protonate.getProtonatedMyStructure();
 
         List< HBondDefinedWithAtoms > dehydrons = new ArrayList<>();
         List<PointIfc> listOfLigandPoints = new ArrayList<>();
@@ -111,12 +112,14 @@ public class ComputePropertiesPocketTest {
             assertTrue(false);
         }
 
-        MyStructureIfc protonatedStructure = null;
+        Protonate protonate = new Protonate(mystructure, algoParameters);
         try {
-            protonatedStructure = MyJmolTools.protonateStructure(mystructure, algoParameters);
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedStructure = protonate.getProtonatedMyStructure();
 
         List< HBondDefinedWithAtoms > dehydrons = new ArrayList<>();
         List<PointIfc> listOfLigandPoints = new ArrayList<>();

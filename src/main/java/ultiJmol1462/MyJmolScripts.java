@@ -4,33 +4,12 @@ package ultiJmol1462;
  * Created by Fabrice on 28/09/16.
  */
 
-import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import jmolgui.UltiJmol1462;
-import parameters.AlgoParameters;
-
-import java.util.List;
-
-import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import parameters.AlgoParameters;
-import ultiJmol1462.MyJmolTools;
-
 import java.util.List;
 
 /**
  * Created by Fabrice on 28/09/16.
  */
 public class MyJmolScripts {
-
-    public static Float getEnergyBiojavaJmolNewCode(UltiJmol1462 ultiJMol, AlgoParameters algoParameters) throws ExceptionInScoringUsingBioJavaJMolGUI {
-
-        Float energy = MyJmolTools.waitMinimizationEnergyAvailable(2, ultiJMol);
-        if (energy == null) {
-            String message = "waitMinimizationEnergyAvailable failed";
-            ExceptionInScoringUsingBioJavaJMolGUI exception = new ExceptionInScoringUsingBioJavaJMolGUI(message);
-            throw exception;
-        }
-        return energy;
-    }
 
 
     public static String getScriptMinimizationAll() {

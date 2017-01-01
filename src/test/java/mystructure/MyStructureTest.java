@@ -2,6 +2,7 @@ package mystructure;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.*;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Rule;
@@ -10,13 +11,10 @@ import org.junit.rules.TemporaryFolder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
-import shapeBuilder.ShapeBuildingException;
-import ultiJmol1462.MyJmolTools;
+import ultiJmol1462.Protonate;
 
 import java.io.IOException;
-import java.net.URL;
 
-import static mystructure.TestTools.getBondCount;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -167,13 +165,15 @@ public class MyStructureTest {
         Cloner cloner = new Cloner(neighbors, algoParameters);
         MyStructureIfc myStructureFromNeighbors = cloner.getClone();
 
-        MyStructureIfc protonatedTarget = null;
+        Protonate protonate = new Protonate(myStructureFromNeighbors, algoParameters);
         try {
-            protonatedTarget = MyJmolTools.protonateStructure(myStructureFromNeighbors, algoParameters);
-            protonatedTarget.setFourLetterCode("1di9".toCharArray());
-        } catch (ShapeBuildingException e) {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
+
+        MyStructureIfc protonatedTarget = protonate.getProtonatedMyStructure();
+        protonatedTarget.setFourLetterCode("1di9".toCharArray());
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

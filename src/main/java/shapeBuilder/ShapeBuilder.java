@@ -1,6 +1,7 @@
 package shapeBuilder;
 
 import fingerprint.ShapeFingerprint;
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import math.MathTools;
 import math.ToolsDistance;
 import multithread.ComputeLennardJonesRecursiveTask;
@@ -13,7 +14,7 @@ import parameters.QueryAtomDefinedByIds;
 import pointWithProperties.*;
 import shape.*;
 import shapeReduction.*;
-import ultiJmol1462.MyJmolTools;
+import ultiJmol1462.Protonate;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -58,9 +59,25 @@ public class ShapeBuilder {
 
         Cloner cloner = new Cloner(ligand, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
-        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
 
-        MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
+        Protonate protonate = new Protonate(myStructureLigand, algoParameters);
+        try {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLigand in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc protonatedLigand = protonate.getProtonatedMyStructure();
+
+        Protonate protonate2 = new Protonate(myStructureLocal, algoParameters);
+        try {
+            protonate2.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLocal in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc myStructureLocalProtonated = protonate2.getProtonatedMyStructure();
+
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -83,12 +100,31 @@ public class ShapeBuilder {
             return null;
         }
 
-        MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
+        Protonate protonate = new Protonate(myStructureLocal, algoParameters);
+        try {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLocal in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc myStructureLocalProtonated = protonate.getProtonatedMyStructure();
+
+
 
         MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
         Cloner cloner = new Cloner(ligand, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
-        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
+
+        Protonate protonate2 = new Protonate(myStructureLigand, algoParameters);
+        try {
+            protonate2.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLigand in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc protonatedLigand = protonate2.getProtonatedMyStructure();
+
+
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -117,9 +153,25 @@ public class ShapeBuilder {
         MyMonomerIfc hetAtomsGroup = structureLocalToBuildAnyShape.getLigand().getMyMonomers()[0];
         Cloner cloner = new Cloner(hetAtomsGroup, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
-        MyStructureIfc protonatedLigand = MyJmolTools.protonateStructure(myStructureLigand, algoParameters);
 
-        MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
+        Protonate protonate = new Protonate(myStructureLigand, algoParameters);
+        try {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLigand in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc protonatedLigand = protonate.getProtonatedMyStructure();
+
+        Protonate protonate2 = new Protonate(myStructureLocal, algoParameters);
+        try {
+            protonate2.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLocal in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc myStructureLocalProtonated = protonate2.getProtonatedMyStructure();
+
         // debug
         //String structureToV3000 = myStructureLocal.toV3000();
         //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
@@ -143,7 +195,16 @@ public class ShapeBuilder {
             return null;
         }
 
-        MyStructureIfc myStructureLocalProtonated = MyJmolTools.protonateStructure(myStructureLocal, algoParameters);
+        Protonate protonate = new Protonate(myStructureLocal, algoParameters);
+        try {
+            protonate.compute();
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLocal in getShapeAroundAChain failed");
+            throw exception;
+        }
+        MyStructureIfc myStructureLocalProtonated = protonate.getProtonatedMyStructure();
+
+
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
 
 

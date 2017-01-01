@@ -282,12 +282,12 @@ public class ShapeReductorTools {
 
         if (commonStrikingProperties.size() == 0) {
             System.out.println("none in common !! " + commonStrikingProperties.size());
-            System.out.println();
+            //System.out.println();
         }
 
         if (point1.getStrikingProperties().size() > 2 || point2.getStrikingProperties().size() > 2) {
             System.out.println("More than two " + commonStrikingProperties.size());
-            System.out.println();
+            //System.out.println();
         }
 
         if (point1.getStrikingProperties().size() < point2.getStrikingProperties().size()) {
