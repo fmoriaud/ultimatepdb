@@ -135,7 +135,7 @@ public class ProtocolBindingVsFolding {
             System.out.println("Found " + hitsInDatabaseUsingInteractions.size() + "  sequence hits in the Sequence Database using contacts");
             System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using equivalent");
 
-            //hitsInDatabase = hitsInDatabaseUsingInteractions;
+            hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
 
         String fourLetterCodeTarget;

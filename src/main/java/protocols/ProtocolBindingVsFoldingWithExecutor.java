@@ -142,7 +142,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 notFinished = false;
 
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
         executorService.shutdown();
