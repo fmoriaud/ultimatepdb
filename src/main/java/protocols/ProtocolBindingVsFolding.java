@@ -118,7 +118,7 @@ public class ProtocolBindingVsFolding {
 
         String sequenceToFindAsString = ProtocolTools.makeSequenceString(sequenceToFind);
 
-        int peptideLength = sequenceToFind.size() / 3;
+        int peptideLength = sequenceToFindAsString.length() / 3;
 
         //int minLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMinLength();
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
