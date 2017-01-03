@@ -20,7 +20,7 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
     private AlgoParameters algoParameters;
     private MyStructureIfc protonatedMyStructure;
     private Map<Results, Object> results = new LinkedHashMap<>();
-
+    private String name;
 
 
 
@@ -31,6 +31,7 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
 
         this.myStructure = myStructure;
         this.algoParameters = algoParameters;
+        this.name = "ProtonateTask";
     }
 
 
@@ -52,15 +53,27 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         }
         String myStructureV3000 = myStructure.toV3000();
         ultiJmol.jmolPanel.openStringInline(myStructureV3000);
-
+        System.out.println("myStructureV3000.length() = " + myStructureV3000.length());
         try {
             Thread.sleep(1000L);
         } catch (InterruptedException e) {
             return false;
         }
 
-        String script = MyJmolScripts.getScriptAddHydrogens();
+        StringBuilder sb = new StringBuilder();
+        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 20\n");
+        sb.append("minimize energy ADDHYDROGENS\n");
+
+        String script = sb.toString();
+
+        //String script = MyJmolScripts.getScriptAddHydrogens();
         ultiJmol.jmolPanel.evalString(script);
+
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            return false;
+        }
 
         boolean convergenceReached = false;
 
@@ -132,7 +145,10 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
     }
 
 
-
+    @Override
+    public String getName() {
+        return name;
+    }
 
     //-------------------------------------------------------------
     // Implementation

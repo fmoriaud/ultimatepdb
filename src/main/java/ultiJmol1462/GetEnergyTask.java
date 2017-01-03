@@ -20,7 +20,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
     private String script;
 
     private Map<Results, Object> results = new LinkedHashMap<>();
-
+    private String name;
 
 
 
@@ -31,6 +31,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
 
         this.script = script;
         this.moleculeV3000 = moleculeV3000;
+        this.name = "GetEnergyTask";
     }
 
 
@@ -101,6 +102,10 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
         return results;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 
     //-------------------------------------------------------------
     // Implementation

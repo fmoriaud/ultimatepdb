@@ -44,7 +44,7 @@ public class SafeUltiJmolUsage {
 
             results.put(Results.STATUS, "ultiJmol crash");
             // If exception then ultijmol is disposed and a new one is put in the buffer
-            System.out.println("Exception in  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println("Exception in  SafeUltiJmolUsage " + doMyJmolTaskIfc.getName());
             ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
             try {
                 algoParameters.ultiJMolBuffer.put(new UltiJmol1462());

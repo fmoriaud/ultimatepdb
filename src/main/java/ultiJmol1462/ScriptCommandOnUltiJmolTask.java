@@ -22,6 +22,8 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
     private boolean scriptIsMinimizing = false;
     private Map<Results, Object> results = new LinkedHashMap<>();
 
+    private String name;
+
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
@@ -30,6 +32,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
         this.script = script;
         this.moleculeV3000 = moleculeV3000;
         this.atomCountTarget = atomCountTarget;
+        this.name = "ScriptCommandOnUltiJmolTask";
     }
 
     // -------------------------------------------------------------------
@@ -175,6 +178,10 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
         return results;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 
     //-------------------------------------------------------------
     // Implementation

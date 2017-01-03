@@ -14,9 +14,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 02.01.17.
- */
 public class ShapeBuildingErrorMMFF {
 
     @Test

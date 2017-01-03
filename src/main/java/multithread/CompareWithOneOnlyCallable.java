@@ -27,10 +27,6 @@ import shape.ShapeContainerIfc;
 
 import java.util.concurrent.Callable;
 
-
-/**
- * Created by Fabrice on 31/10/16.
- */
 public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     //-------------------------------------------------------------
     // Class members

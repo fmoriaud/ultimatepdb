@@ -12,4 +12,5 @@ public interface DoMyJmolTaskIfc {
 
     boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol);
     Map<Results, Object> getResults();
+    String getName();
 }

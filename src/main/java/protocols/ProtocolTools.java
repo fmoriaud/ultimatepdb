@@ -95,7 +95,7 @@ public class ProtocolTools {
 
         URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT()*2);
         algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 
         for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
@@ -107,7 +107,7 @@ public class ProtocolTools {
                 e.printStackTrace();
             }
         }
-        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
+        for (int i = 0; i < (algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2); i++) {
             UltiJmol1462 ultiJMol = new UltiJmol1462();
             try {
                 algoParameters.ultiJMolBuffer.put(ultiJMol);
