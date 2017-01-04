@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package scorePairing;
 
 import math.MathTools;
@@ -7,11 +26,10 @@ import shapeCompare.PairingAndNullSpaces;
 
 import java.util.Map;
 
-/**
- * Created by Fabrice on 24/11/16.
- */
 public class CheckDistanceToOutside {
-
+    //-------------------------------------------------------------
+    // Class variables
+    //-------------------------------------------------------------
     private ShapeContainerIfc queryShape;
     private ShapeContainerIfc hitShape;
 
@@ -20,6 +38,9 @@ public class CheckDistanceToOutside {
     private boolean distanceOk = false;
 
 
+    // -------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------
     public CheckDistanceToOutside(PairingAndNullSpaces pairingAndNullSpaces, ShapeContainerIfc queryShape, ShapeContainerIfc hitShape) {
 
         this.queryShape = queryShape;
@@ -28,11 +49,16 @@ public class CheckDistanceToOutside {
     }
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+
     /**
      * Detect if the overlap leads to a ligand on the other side
      * For each paired point 1, take each paired point 2 (not closeby),
      * if in query the paired point 1 is closer to ligand than paired point 2, then it should be the same for the target
      * So same sign is good.
+     *
      * @param pairingAndNullSpaces
      * @param queryShape
      * @param hitShape
@@ -64,7 +90,7 @@ public class CheckDistanceToOutside {
                 Integer idFromMap2b = entry2.getValue();
                 PointWithPropertiesIfc point1b = queryShape.get(idFromMap1b);
                 PointWithPropertiesIfc point2b = hitShape.get(idFromMap2b);
-                if (point2b == null){
+                if (point2b == null) {
                     System.out.println();
                 }
                 float distanceToOutsideOfPoint2Query = point1b.getDistanceToLigand();
@@ -108,6 +134,10 @@ public class CheckDistanceToOutside {
     }
 
 
+    // -------------------------------------------------------------------
+    // Getter and Setter
+    // -------------------------------------------------------------------
+
     /**
      * For Junit tests
      *
@@ -130,5 +160,4 @@ public class CheckDistanceToOutside {
     public boolean isDistanceOk() {
         return distanceOk;
     }
-
 }

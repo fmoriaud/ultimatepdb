@@ -14,7 +14,9 @@ import java.util.Map;
 
 public class ScorePairingWithStaticMethods {
 
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static ResultFromScorePairing computeCost(PairingAndNullSpaces currentNewPairingAndNewNullSpaces, Map<Integer, PointWithPropertiesIfc> queryShape, Map<Integer, PointWithPropertiesIfc> hitShape, AlgoParameters algoParameters) {
 
         int countOfPairedPoint = currentNewPairingAndNewNullSpaces.getPairing().size();
@@ -143,10 +145,10 @@ public class ScorePairingWithStaticMethods {
 
 
             // if aromatic it is hydrophobe as well by definition
-            if (aromaticRingOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 == null){
+            if (aromaticRingOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 == null) {
                 System.out.println(aromaticRingOfPointFromMap1 != null && hydrophobicityOfPointFromMap1 == null);
             }
-            if (aromaticRingOfPointFromMap2 != null && hydrophobicityOfPointFromMap2 == null){
+            if (aromaticRingOfPointFromMap2 != null && hydrophobicityOfPointFromMap2 == null) {
                 System.out.println(aromaticRingOfPointFromMap2 != null && hydrophobicityOfPointFromMap2 == null);
             }
             // if one hydrophobe and not the other one
@@ -218,6 +220,21 @@ public class ScorePairingWithStaticMethods {
     }
 
 
+    public static void translateBarycenterListOfPointToOrigin(RealMatrix matrix, RealVector barycenter) {
+
+        int countOfPoint = matrix.getColumnDimension();
+
+        for (int i = 0; i < countOfPoint; i++) {
+            matrix.addToEntry(0, i, -1.0 * barycenter.getEntry(0));
+            matrix.addToEntry(1, i, -1.0 * barycenter.getEntry(1));
+            matrix.addToEntry(2, i, -1.0 * barycenter.getEntry(2));
+        }
+    }
+
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static float returnCost(Float value1, Float value2) {
 
         if (value1 != null && value2 == null) {
@@ -235,14 +252,4 @@ public class ScorePairingWithStaticMethods {
     }
 
 
-    public static void translateBarycenterListOfPointToOrigin(RealMatrix matrix, RealVector barycenter) {
-
-        int countOfPoint = matrix.getColumnDimension();
-
-        for (int i = 0; i < countOfPoint; i++) {
-            matrix.addToEntry(0, i, -1.0 * barycenter.getEntry(0));
-            matrix.addToEntry(1, i, -1.0 * barycenter.getEntry(1));
-            matrix.addToEntry(2, i, -1.0 * barycenter.getEntry(2));
-        }
-    }
 }
