@@ -42,7 +42,6 @@ import shapeCompare.ResultsFromEvaluateCost;
 import shapeReduction.PairInteger;
 
 public class ScorePairingTools {
-
     //-------------------------------------------------------------
     // Static methods
     //-------------------------------------------------------------

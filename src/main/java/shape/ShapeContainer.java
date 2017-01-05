@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shape;
 
 import java.io.BufferedWriter;
@@ -31,11 +50,10 @@ import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 
 
-public class ShapeContainer implements ShapeContainerIfc { // in case it is used it is ready to be
-    // but should not be, better to create a specific one
-    //------------------------
-    // Class variables
-    //------------------------
+public class ShapeContainer implements ShapeContainerIfc {
+    //-------------------------------------------------------------
+    // Class members
+    //-------------------------------------------------------------
     protected char[] fourLetterCode;
 
 
@@ -52,7 +70,6 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
 
     private List<MyMonomerIfc> foreignMonomerToExclude;
 
-    // TODO add foreign atom to delete for the segment of chain
 
     // -------------------------------------------------------------------
     // Constructor
@@ -141,6 +158,18 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
                                                        AlgoParameters algoParameters, ResultsFromEvaluateCost result) {
         List<String> contributioncontentPDBFileShape = makeContentRotatedPDBFileColoredMiniShape(fileName, algoParameters, result);
         writeLinesToPDBFile(contributioncontentPDBFileShape, fileName, algoParameters);
+    }
+
+
+    @Override
+    public PointWithPropertiesIfc get(int idPoint) {
+        return shape.getPointFromId(idPoint);
+    }
+
+
+    @Override
+    public List<MyMonomerIfc> getForeignMonomerToExclude() {
+        return foreignMonomerToExclude;
     }
 
 
@@ -261,9 +290,6 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
     }
 
 
-    //-------------------------------------------------------------
-    // Implementation
-    //-------------------------------------------------------------
     protected Map<StrikingProperties, List<PointIfc>> groupPointsByStrikingProperty(Map<Integer, PointWithPropertiesIfc> miniShape) {
 
         Map<StrikingProperties, List<PointIfc>> mapPropertyAndPoints = new HashMap<>();
@@ -320,7 +346,7 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
     }
 
 
-    public void writeLinesToPDBFile(List<String> listOfLines, String fileName, AlgoParameters algoParameters) {
+    protected void writeLinesToPDBFile(List<String> listOfLines, String fileName, AlgoParameters algoParameters) {
 
         String pathForThisFile = algoParameters.getPATH_TO_RESULT_FILES();
         String fileNameForThisFile = fileName + ".ent.gz";
@@ -346,39 +372,9 @@ public class ShapeContainer implements ShapeContainerIfc { // in case it is used
     }
 
 
-    //	private MyMonomerIfc generateNewMonomer(MyMonomerIfc inputMyMonomer){
-    //
-    //		List<MyAtomIfc> listMyAtom = new ArrayList<>();
-    //		for (MyAtomIfc inputAtom: inputMyMonomer.getMyAtoms()){
-    //
-    //			float[] coordsInputAtomCloned = inputAtom.getCoords().clone();
-    //
-    //			MyAtom atom = new MyAtom(inputAtom.getElement().clone(), coordsInputAtomCloned, inputAtom.getAtomName().clone(), inputAtom.getOriginalAtomId());
-    //			listMyAtom.add(atom);
-    //		}
-    //
-    //		MyAtomIfc[] myAtoms = listMyAtom.toArray(new MyAtomIfc[listMyAtom.size()]);
-    //		MyMonomerIfc myMonomer = new MyMonomer(myAtoms, inputMyMonomer.getThreeLetterCode().clone(), inputMyMonomer.getResidueID(), inputMyMonomer.getType().clone(), inputMyMonomer.getInsertionLetter(), inputMyMonomer.getSecStruc());
-    //		myMonomer.setParent(inputMyMonomer.getParent());
-    //
-    //		return myMonomer;
-    //	}
-
-
     // -------------------------------------------------------------------
     // Getter and Setter
     // -------------------------------------------------------------------
-
-    @Override
-    public PointWithPropertiesIfc get(int idPoint) {
-        return shape.getPointFromId(idPoint);
-    }
-
-    @Override
-    public List<MyMonomerIfc> getForeignMonomerToExclude() {
-        return foreignMonomerToExclude;
-    }
-
     public CollectionOfPointsWithPropertiesIfc getShape() {
         return shape;
     }

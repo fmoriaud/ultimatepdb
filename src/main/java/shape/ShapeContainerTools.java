@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shape;
 
 import java.text.DecimalFormat;
@@ -12,25 +31,29 @@ import parameters.AlgoParameters;
 import shapeCompare.ResultsFromEvaluateCost;
 
 public class ShapeContainerTools {
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static char[] findThreeLetterCode(MyStructureIfc hetatmLigand) {
         MyChainIfc chain = hetatmLigand.getAllChains()[0];
         MyMonomerIfc monomer = chain.getMyMonomers()[0];
         return monomer.getThreeLetterCode();
     }
 
+
     public static char[] findChainId(MyStructureIfc hetatmLigand) {
         MyChainIfc chain = hetatmLigand.getAllChains()[0];
         return chain.getChainId();
     }
 
-    public static MyChainIfc findFirstChain(MyStructureIfc hetatmLigand){
+
+    public static MyChainIfc findFirstChain(MyStructureIfc hetatmLigand) {
         MyChainIfc chain = hetatmLigand.getAllChains()[0];
         return chain;
     }
 
 
-    public static MyMonomerIfc findFirstMonomer(MyStructureIfc hetatmLigand){
+    public static MyMonomerIfc findFirstMonomer(MyStructureIfc hetatmLigand) {
         MyChainIfc chain = hetatmLigand.getAllChains()[0];
         MyMonomerIfc monomer = chain.getMyMonomers()[0];
         return monomer;
@@ -105,12 +128,10 @@ public class ShapeContainerTools {
                         System.out.println("problem generateConnectLines");
                     }
                 }
-                // CONECT 1023 3769
             }
         }
         return connectLines;
     }
-
 
 
     public static List<String> generateLinesFromMyMonomer(MyMonomerIfc myMonomer, AlgoParameters algoParameters, char[] chainId) {
@@ -176,7 +197,7 @@ public class ShapeContainerTools {
         line += " ";
 
         String atomName = String.valueOf(atom.getAtomName());
-        if (atomName.length() > 4){
+        if (atomName.length() > 4) {
             atomName = atomName.substring(0, 4);
         }
         line += formatStringAlignedLeft(String.valueOf(atomName), 4);
@@ -188,9 +209,9 @@ public class ShapeContainerTools {
 
         line += " "; // 21 is empty
         //System.out.println("Chain ID = " + chainID);
-        if (chainName.length() > 1){
+        if (chainName.length() > 1) {
             line += chainName.substring(0, 1);
-        }else{
+        } else {
             line += chainName;
         }
 
@@ -344,6 +365,9 @@ public class ShapeContainerTools {
     }
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static String formatStringAlignedRight(String input, int finalLength) {
 
         String returnString = "";
