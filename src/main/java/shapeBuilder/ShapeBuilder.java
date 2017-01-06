@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeBuilder;
 
 import fingerprint.ShapeFingerprint;
@@ -31,6 +50,7 @@ public class ShapeBuilder {
     private List<PointWithPropertiesIfc> listShrinkedShapePoints = new ArrayList<>();
     private AlgoParameters algoParameters;
 
+
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
@@ -53,9 +73,8 @@ public class ShapeBuilder {
         if (myStructureLocal == null) {
             return null;
         }
-        
-        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
 
+        MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
 
         Cloner cloner = new Cloner(ligand, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
@@ -78,10 +97,6 @@ public class ShapeBuilder {
         }
         MyStructureIfc myStructureLocalProtonated = protonate2.getProtonatedMyStructure();
 
-        // debug
-        //String structureToV3000 = myStructureLocal.toV3000();
-        //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
-        //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyChainIfc(ligand);
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
@@ -110,7 +125,6 @@ public class ShapeBuilder {
         MyStructureIfc myStructureLocalProtonated = protonate.getProtonatedMyStructure();
 
 
-
         MyChainIfc ligand = structureLocalToBuildAnyShape.getLigand();
         Cloner cloner = new Cloner(ligand, algoParameters);
         MyStructureIfc myStructureLigand = cloner.getClone();
@@ -124,11 +138,6 @@ public class ShapeBuilder {
         }
         MyStructureIfc protonatedLigand = protonate2.getProtonatedMyStructure();
 
-
-        // debug
-        //String structureToV3000 = myStructureLocal.toV3000();
-        //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
-        //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
         if (myStructureLocalProtonated == null) {
             System.out.println("myStructureLocalProtonated == null");
@@ -172,10 +181,6 @@ public class ShapeBuilder {
         }
         MyStructureIfc myStructureLocalProtonated = protonate2.getProtonatedMyStructure();
 
-        // debug
-        //String structureToV3000 = myStructureLocal.toV3000();
-        //String pathToFile = algoParameters.getPATH_TO_OUTPUT_PEPTIDES_PDB_FILES() + "structureLocalSegmentOfChain.mol";
-        //WriteTextFile.writeTextFile(structureToV3000, pathToFile);
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
@@ -220,6 +225,7 @@ public class ShapeBuilder {
 
     /**
      * Assumes myStructureGlobalBrut is already protonated
+     *
      * @param foreignMonomerToExclude
      * @param rotatedLigandOrPeptide
      * @return
@@ -244,8 +250,6 @@ public class ShapeBuilder {
     }
 
 
-
-
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -266,12 +270,6 @@ public class ShapeBuilder {
                     atPosition[1] = box.getMinY() + (float) j * algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM();
                     atPosition[2] = box.getMinZ() + (float) k * algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM();
 
-                    // where do we need LN points to be computed
-                    // on all grid points
-
-                    // inside computation there is acutoff on the value supposed to capture interesting point
-                    // probably not needed tocompute LN points not in between a min and max from Atoms
-                    //double minDistance = 0.2;
                     double minDistance = 1.0;
                     double maxDistance = algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_CONSIDERED();
 
@@ -288,16 +286,11 @@ public class ShapeBuilder {
                     }
 
                     if ((minDistanceOfThisPoint > minDistance) && (minDistanceOfThisPoint < maxDistance)) {
-                        //if (minDistanceOfThisPoint < maxDistance){
-                        //if (minDistanceOfThisPoint < maxDistance){
                         listPositions.add(atPosition);
                     }
                 }
             }
         }
-
-        System.out.println("points in the grid  = " + listPositions.size());
-
 
         // Multithreaded computation of LJ grid
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
@@ -305,8 +298,6 @@ public class ShapeBuilder {
         ComputeLennardJonesRecursiveTask computeLennardJonesMultiThread = new ComputeLennardJonesRecursiveTask(listPositions, 0, listPositions.size() - 1, listPositions.size() / countOfSubpacket, localMyStructure, algoParameters);
         listOfPointsWithLennardJones = pool.invoke(computeLennardJonesMultiThread);
         pool.shutdownNow();
-
-        //System.out.println("Count of Lennard Jones points computed = " + listOfPointsWithLennardJones.size());
 
         List<PointIfc> listOfPointsWithLennardJonesQuery = new ArrayList<>();
 
@@ -328,10 +319,6 @@ public class ShapeBuilder {
                 }
             }
         }
-
-
-        //System.out.println("Count of Lennard Jones points in this shape Query Only = " + listOfPointsWithLennardJonesQuery.size());
-
 
         return listOfPointsWithLennardJonesQuery;
     }
@@ -368,13 +355,6 @@ public class ShapeBuilder {
     }
 
 
-    private List<PointIfc> makeQueryPointsFromMyMonomerIfc(MyMonomerIfc myMonomer) {
-
-        MyChainIfc myChain = new MyChain(myMonomer, myMonomer.getParent().getChainId());
-        return MyStructureTools.makeQueryPointsFromMyChainIfc(myChain);
-    }
-
-
     public Box makeBoxOutOfLocalStructure(MyStructureIfc myStructure) {
 
         Box box = new Box(myStructure, algoParameters);
@@ -388,8 +368,6 @@ public class ShapeBuilder {
 
         List<HBondDefinedWithAtoms> hBonds = intraStructureHBondDetector(myStructureShape);
         List<HBondDefinedWithAtoms> dehydrons = buildDehydrons(hBonds);
-
-        //System.out.println("in myStructureGlobal hbond count = " + hBonds.size() + " dehydron count = " + dehydrons.size());
 
         List<float[]> listPositionWhereToComputeProperties = new ArrayList<>();
         List<Float> listMinDistanceOfThisGridPointToAnyAtomOfPeptide = new ArrayList<>();
@@ -413,7 +391,6 @@ public class ShapeBuilder {
             }
         }
 
-        //System.out.println(listPositionWhereToComputeProperties.size() + " points to compute with ComputeShapePointsMultiThread");
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
         int threshold = listPositionWhereToComputeProperties.size() / countOfSubpacket + 1;
         if (threshold < 2) {
@@ -426,36 +403,10 @@ public class ShapeBuilder {
 
 
         listShrinkedShapePoints = pool.invoke(computeShapePointsMultiThread);
-        //System.out.println(listShrinkedShapePoints.size() + "  were actually computed");
         pool.shutdownNow();
 
         CollectionOfPointsWithPropertiesIfc collectionOfPointsWithProperties = new CollectionOfPointsWithProperties(listShrinkedShapePoints);
 
-        int countHbondDonnor = 0;
-        int countHbondAcceptor = 0;
-        int countDehydron = 0;
-        for (int i = 0; i < collectionOfPointsWithProperties.getSize(); i++) {
-            PointWithPropertiesIfc pointWithtProperties = collectionOfPointsWithProperties.getPointFromId(i);
-            Float hdonnor = pointWithtProperties.get(PropertyName.HbondDonnor);
-            Float hacceptor = pointWithtProperties.get(PropertyName.HbondAcceptor);
-            if (hdonnor != null && hdonnor > 0.1) {
-                countHbondDonnor += 1;
-            }
-            if (hacceptor != null && hacceptor > 0.1) {
-                countHbondAcceptor += 1;
-            }
-            Float dehydron = pointWithtProperties.get(PropertyName.Dehydron);
-
-            if (dehydron != null && dehydron > 0.1) {
-                countDehydron += 1;
-            }
-        }
-
-        //System.out.println("in this shape striking count : " + countHbondDonnor + " donnor grid points " + countHbondAcceptor + " acceptor grid points ");
-
-        if (countDehydron > 0) {
-            //System.out.println("in this shape : " + countDehydron + " dehydron grid points ");
-        }
         return collectionOfPointsWithProperties;
     }
 
@@ -467,7 +418,6 @@ public class ShapeBuilder {
         for (HBondDefinedWithAtoms hbond : hBonds) {
 
             int countHydrophobicAtom = ShapeBuildingTools.getCountOfHydrophobicAtomsInTheNeighborhoodOfMyAtomForDehydronsUseOnly(hbond.getMyAtomHydrogen(), algoParameters);
-            //System.out.println(countHydrophobicAtom + "  " + algoParameters.getDEHYDRON_CUTOFF_COUNT_OF_HYDROPHOBIC_ATOM_SURRONDING_HBOND());
             if (countHydrophobicAtom <= algoParameters.getDEHYDRON_CUTOFF_COUNT_OF_HYDROPHOBIC_ATOM_SURRONDING_HBOND()) {
                 dehydrons.add(hbond);
             }
@@ -544,20 +494,15 @@ public class ShapeBuilder {
 
         GenerateTriangles generateTriangles = new GenerateTriangles(miniShape, algoParameters);
         List<TriangleInteger> listTriangleOfPointsFromMinishape = generateTriangles.generateTriangles();
-        // To release RAM
-        generateTriangles = null;
 
         Set<TriangleInteger> treesetOfTriangle = new HashSet<>();
         for (TriangleInteger triangleInteger : listTriangleOfPointsFromMinishape) {
             treesetOfTriangle.add(triangleInteger);
-            //System.out.println(triangleInteger.toString());
         }
         List<TriangleInteger> listTriangleInteger = new ArrayList<>();
         for (TriangleInteger triangleInteger : treesetOfTriangle) {
             listTriangleInteger.add(triangleInteger);
         }
-        // To release RAM
-        treesetOfTriangle = null;
         listTriangleOfPointsFromMinishape = listTriangleInteger;
         return listTriangleOfPointsFromMinishape;
     }
@@ -565,7 +510,6 @@ public class ShapeBuilder {
 
     private Map<Integer, PointWithPropertiesIfc> buildMinishape(List<PointIfc> listOfPointsFromChainLigand, AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints) {
 
-        long startTime = System.currentTimeMillis();
         Map<Integer, PointWithPropertiesIfc> miniShape = null;
         if (enumShapeReductor == EnumShapeReductor.CLUSTERING) {
             ShapeReductorIfc shapeReductor = new ShapeReductorByClustering(shapeCollectionPoints, algoParameters);
@@ -575,22 +519,13 @@ public class ShapeBuilder {
             ShapeReductorIfc shapeReductor = new ShapeReductorBySelectingPoints(shapeCollectionPoints, algoParameters);
             miniShape = shapeReductor.computeReducedCollectionOfPointsWithProperties();
         }
-
-        long compTime = System.currentTimeMillis() - startTime;
-        double comptimeSeconds = compTime / 1000.0;
-
-        //System.out.println("mini shape size = " + miniShape.size() + " done in " + comptimeSeconds + " s ");
-        //Map<Integer, PointWithProperties> shrinkedMiniShape = shrinkMiniShapeAccordingToFinalMaxDistanceToLigand(miniShape, algoParameters);
-        //System.out.println("mini shape after = " + shrinkedMiniShape.size());
         return miniShape;
     }
 
 
     private CollectionOfPointsWithPropertiesIfc simplifyShape(AlgoParameters algoParameters, CollectionOfPointsWithPropertiesIfc shapeCollectionPoints) {
 
-        //System.out.println("before NONE removal : " + shapeCollectionPoints.getSize());
         CollectionOfPointsWithPropertiesIfc shrinkedShapeForNONEPoint = removePointsOfStrikingPropertiesNoneIfCloseEnoughToAnotherPointWithAnyStrikingPropertiesNotNone(shapeCollectionPoints);
-        //System.out.println("after NONE removal : " + shrinkedShapeForNONEPoint.getSize());
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = shrinkShapeAccordingToFinalMaxDistanceToLigand(shrinkedShapeForNONEPoint, algoParameters);
         return shrinkedShapeBasedOnDistanceToLigand;
@@ -670,7 +605,6 @@ public class ShapeBuilder {
 
         List<HBondDefinedWithAtoms> hbonds = new ArrayList<>();
         for (MyAtomIfc donnor : donnors) {
-            // find Hs
             if (donnor.getBonds() != null) {
                 for (MyBondIfc bond : donnor.getBonds()) {
                     MyAtomIfc bondedAtom = bond.getBondedAtom();
@@ -687,7 +621,6 @@ public class ShapeBuilder {
 
 
     private void identifyHbonds(float thresholdDistanceHydrogenToAcceptor, List<HBondDefinedWithAtoms> hbonds, MyAtomIfc donnor, MyAtomIfc acceptor, MyAtomIfc hydrogen) {
-        // check if distance acceptor and H donnor
 
         if (donnor.getParent() != acceptor.getParent()) { // Intra skipped because of Tyr OH to its own O
             float distanceBetweenHydrogenAndAcceptor = MathTools.computeDistance(acceptor.getCoords(), hydrogen.getCoords());
@@ -793,6 +726,4 @@ public class ShapeBuilder {
 
         return true;
     }
-
-
 }

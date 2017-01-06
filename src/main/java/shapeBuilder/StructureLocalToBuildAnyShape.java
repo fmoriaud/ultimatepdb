@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeBuilder;
 
 import mystructure.*;
@@ -6,9 +25,6 @@ import parameters.QueryAtomDefinedByIds;
 
 import java.util.*;
 
-/**
- * Created by Fabrice on 16/11/16.
- */
 public class StructureLocalToBuildAnyShape {
     //-------------------------------------------------------------
     // Class variables
@@ -20,10 +36,10 @@ public class StructureLocalToBuildAnyShape {
     private MyStructureIfc myStructureLocal;
     private List<MyMonomerIfc> monomerToDiscard;
 
+
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-
     /**
      * Constructor to get a StructureLocal using a whole structure, some monomer to exclude and a foreign ligand
      * neighbors by representative atom distance must be recomputed
@@ -39,12 +55,6 @@ public class StructureLocalToBuildAnyShape {
         this.myStructureGlobalBrut = myStructureGlobalBrut;
         this.algoParameters = algoParameters;
 
-
-        // As it is different I write something new
-
-        // the neighbors are the one by distance from rotatedLigandOrPeptideForeigner in myStructureGlobalBrut
-        // no need to remove the ones from rotatedLigandOrPeptideForeigner as we cloned it.
-
         Cloner cloner = new Cloner(rotatedLigandOrPeptideForeigner, algoParameters);
         MyStructureIfc clonedLigand = cloner.getClone();
 
@@ -57,21 +67,6 @@ public class StructureLocalToBuildAnyShape {
         myStructureLocal = clonedMyStructure;
 
         ligand = clonedLigand.getAllChains()[0];
-
-        //MyMonomerIfc[] myMonomomers = foreignMonomerToExclude.getMyMonomers();
-        //monomerToDiscard = foreignMonomerToExclude;
-
-        // Set<MyMonomerIfc> monomerToKeep = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInput(foreignMonomerToExclude);
-
-        // The way to go is the cloner with definition of what to keep
-        //Cloner cloner2 = new Cloner(myStructureGlobalBrut, monomerToKeep, algoParameters);
-        //MyStructureIfc clonedMyStructure = cloner2.getClone();
-
-        //if (clonedMyStructure.getAllAminochains().length == 0) {
-        //    ShapeBuildingException exception = new ShapeBuildingException("getShapeAroundAChain return no amino chain: likely that the chain has no neighboring chain in that case");
-        //    throw exception;
-        //}
-        // myStructureLocal = clonedMyStructure;
     }
 
 
@@ -88,18 +83,11 @@ public class StructureLocalToBuildAnyShape {
         this.myStructureGlobalBrut = myStructureGlobalBrut;
         this.algoParameters = algoParameters;
 
-        // then convert chainid in something general as monomer defining ligand
-        // is it needed to recompute neighbors by distance
-
-        // convert definition of ligand into an array of MyMonomerIfc
-        // should be possible to do that for all StructureLocal
-
         MyMonomerIfc[] myMonomomers = myStructureGlobalBrut.getAminoMyChain(chainId).getMyMonomers();
 
         Set<MyMonomerIfc> monomerToKeep = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInput(myMonomomers);
         monomerToDiscard = MyStructureTools.makeListFromArray(myMonomomers);
 
-        // The way to go is the cloner with definition of what to keep
         Cloner cloner = new Cloner(myStructureGlobalBrut, monomerToKeep, algoParameters);
         MyStructureIfc clonedMyStructure = cloner.getClone();
 
@@ -142,11 +130,9 @@ public class StructureLocalToBuildAnyShape {
         Set<MyMonomerIfc> monomerToKeep = makeMyMonomersLocalAroundAndExcludingMyMonomersFromInput(myMonomomers);
         monomerToDiscard = new ArrayList<>();
 
-        // make a hetchain with one monomer
         Cloner cloner = new Cloner(myStructureGlobalBrut, monomerToKeep, algoParameters);
         MyStructureIfc clonedMyStructure = cloner.getClone();
 
-        // The way to go is the cloner with definition of what to keep
         Cloner clonerLigand = new Cloner(hetAtomsGroup, algoParameters);
         MyStructureIfc clonedLigand = clonerLigand.getClone();
         ligand = clonedLigand.getAllChains()[0];
@@ -156,7 +142,6 @@ public class StructureLocalToBuildAnyShape {
             throw exception;
         }
         myStructureLocal = clonedMyStructure;
-        // TODO put hetgroup in a MychainIfc and store as ligand
     }
 
 
@@ -185,9 +170,8 @@ public class StructureLocalToBuildAnyShape {
             throw exception;
         }
 
-        // This is cloned and some atoms are deleted
         ligand = makeChainSegment(wholeChain, startingRankId, peptideLength, algoParameters);
-        // this is not cloned and still has neighbors by distance
+
         MyChainIfc extractedSegment = extractSubChain(wholeChain, startingRankId, peptideLength, algoParameters);
         monomerToDiscard = MyStructureTools.makeListFromArray(extractedSegment.getMyMonomers());
 
@@ -197,7 +181,6 @@ public class StructureLocalToBuildAnyShape {
         }
 
         myStructureLocal = makeStructureLocalForSegmentAroundAndExcludingMyMonomersFromInputMyChain(myStructureGlobalBrut, extractedSegment, algoParameters);
-
     }
 
 
@@ -223,7 +206,6 @@ public class StructureLocalToBuildAnyShape {
         }
         MyChainIfc correspondingChain = new MyChain(monomersContainingAtomsDefinedByIds);
         myStructureLocal = makeStructureLocalAroundAndWithChain(correspondingChain, chainToIgnore);
-
     }
 
 
@@ -360,7 +342,6 @@ public class StructureLocalToBuildAnyShape {
     // Implementation only for segment of chain
     //-------------------------------------------------------------
     private void makeCaOnBothSideWithNoBoundAtomsStructureLocal(MyChainIfc extractedSegment, MyStructureIfc clonedMyStructure, MyStructureIfc myStructureGlobalBrut) {
-
 
         // Find residue neighbor of Nterminal in Structurelocal
         char[] type = extractedSegment.getMyMonomers()[0].getType();
@@ -658,7 +639,6 @@ public class StructureLocalToBuildAnyShape {
                 caFound = true;
             }
         }
-
 
         if (bondCountCterminal == 2 && bondCountCterminalSameMonomer == true && oFound == true && caFound == true) {
             return true;
