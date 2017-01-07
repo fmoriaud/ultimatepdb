@@ -154,7 +154,7 @@ public class CompareCompleteCheckTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        algoParameters.setFRACTION_NEEDED_ON_QUERY(0.65f);
+        algoParameters.setFRACTION_NEEDED_ON_QUERY(0.75f);
         char[] fourLetterCodeQuery = "1be9".toCharArray();
         char[] chainIdQuery = "B".toCharArray();
 
@@ -167,9 +167,9 @@ public class CompareCompleteCheckTest {
         }
 
         // TODO need another one
-        char[] fourLetterCodeTarget = "1a3l".toCharArray();
+        char[] fourLetterCodeTarget = "5cp7".toCharArray();
         char[] chainIdTarget = "H".toCharArray();
-        int startingRankId = 110;
+        int startingRankId = 104;
         int peptideLength = 5;
         ShapeContainerDefined shapecontainerDefinedTarget = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget, chainIdTarget, startingRankId, peptideLength, algoParameters);
         ShapeContainerIfc targetShape = null;
@@ -178,15 +178,6 @@ public class CompareCompleteCheckTest {
         } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
-
-        /*
-        &&&&&& Comparing starts 1A3L
-                &&&&&& Comparing ends 1A3L found 85 hits to minimize
-                &&&&&& Minimizing 1A3L rankId = 0
-        PDB = 1A3L chain id = H index = 110 sequence = [GLN, GLY, THR, SER, VAL] cost = 0.10354941739683103 minishape size = 67 shape size = 1166
-        RatioPairedPointToHitPoints = 0.83 CountOfLongDistanceChange = 0 InteractionEFinal = 10.956764221191406 RmsdLigand = 0.8019495606422424 LigandStrainedEnergy = 78.31669616699219
-        all convergence reached true RmsdBackbone = 1.4588981 Rank = 0
-                */
 
         CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> results = null;
@@ -197,16 +188,16 @@ public class CompareCompleteCheckTest {
         }
 
         int countHitDeletedBecauseOforiginalCost = compareCompleteCheck.getCountHitDeletedBecauseOforiginalCost();
-        //assertTrue(countHitDeletedBecauseOforiginalCost == 16);
+        assertTrue(countHitDeletedBecauseOforiginalCost == 0);
 
         int countHitDeletedBecauseOfHitLigandClashesInQuery = compareCompleteCheck.getCountHitDeletedBecauseOfHitLigandClashesInQuery();
-        //assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 0);
+        assertTrue(countHitDeletedBecauseOfHitLigandClashesInQuery == 0);
 
         int countHitDeletedBecauseOfPercentageIncreaseCompleteCheck = compareCompleteCheck.getCountHitDeletedBecauseOfPercentageIncreaseCompleteCheck();
-        //assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 0);
+        assertTrue(countHitDeletedBecauseOfPercentageIncreaseCompleteCheck == 1);
 
         int hitCount = results.size();
-        //assertTrue(hitCount == 20);
+        assertTrue(hitCount == 1);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);
