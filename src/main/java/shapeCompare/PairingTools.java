@@ -1,26 +1,42 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeCompare;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
+import hits.Hit;
 import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
-
-import hits.Hit;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithProperties;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 
 public class PairingTools {
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static PairingAndNullSpaces deepCopyNewPairingAndNewNullSpacesAndExtendIfNeeded(PairingAndNullSpaces inputPairingAndNewNullSpaces, Map<Integer, PointWithProperties> shape1, Map<Integer, PointWithProperties> shape2) {
 
         PairingAndNullSpaces newPairingAndNewNullSpaces = PairingTools.deepCopyNewPairingAndNewNullSpaces(inputPairingAndNewNullSpaces);
@@ -30,43 +46,6 @@ public class PairingTools {
 
         return newPairingAndNewNullSpaces;
     }
-
-
-    private static void dealWithShape1(Map<Integer, PointWithProperties> shape, PairingAndNullSpaces newPairingAndNewNullSpaces) {
-
-        for (Integer pointShape : shape.keySet()) {
-            boolean inPairing = newPairingAndNewNullSpaces.getPairing().containsKey(pointShape);
-            boolean inNullSpace = newPairingAndNewNullSpaces.getNullSpaceOfMap1().contains(pointShape);
-            if ((!inPairing) && (!inNullSpace)) {
-                newPairingAndNewNullSpaces.getNullSpaceOfMap1().add(pointShape);
-            }
-        }
-    }
-
-
-    private static void dealWithShape2(Map<Integer, PointWithProperties> shape, PairingAndNullSpaces newPairingAndNewNullSpaces) {
-
-        for (Integer pointShape : shape.keySet()) {
-            boolean inPairing = newPairingAndNewNullSpaces.getPairing().containsValue(pointShape);
-            boolean inNullSpace = newPairingAndNewNullSpaces.getNullSpaceOfMap2().contains(pointShape);
-            if ((!inPairing) && (!inNullSpace)) {
-                newPairingAndNewNullSpaces.getNullSpaceOfMap2().add(pointShape);
-            }
-        }
-    }
-
-
-    //	public static PairingAndNullSpaces createPairingAndNullSpacesWithEmptyPairing(CollectionOfPointsWithProperties shape1, CollectionOfPointsWithProperties shape2){
-    //
-    //		Map<Integer,Integer> pairing = new HashMap<>();
-    //		List<Integer> nullSpaceOfMap1 = new ArrayList<>();
-    //		nullSpaceOfMap1.addAll(shape1.keySet());
-    //		List<Integer> nullSpaceOfMap2 = new ArrayList<>();
-    //		nullSpaceOfMap2.addAll(shape2.keySet());
-    //
-    //		PairingAndNullSpaces pairingAndNullSpaces = new PairingAndNullSpaces(pairing, nullSpaceOfMap1, nullSpaceOfMap2);
-    //		return pairingAndNullSpaces;
-    //	}
 
 
     public static List<Hit> generateHitsListFromResultList(List<ResultsFromEvaluateCost> resultList, ShapeContainerIfc targetShape, ShapeContainerIfc queryShape, AlgoParameters algoParameters) {
@@ -124,156 +103,6 @@ public class PairingTools {
         PairingAndNullSpaces newPairingAndNewNullSpaces = new PairingAndNullSpaces(deepCopyPairing, deepCopyNullSpaceMap1, deepCopyNullSpaceMap2);
 
         return newPairingAndNewNullSpaces;
-    }
-
-
-    public static Map<Integer, Integer> deepCopyPairing(Map<Integer, Integer> pairingToCopy) {
-
-        Map<Integer, Integer> deepCopyPairing = new TreeMap<Integer, Integer>();
-
-        for (Entry<Integer, Integer> entry : pairingToCopy.entrySet()) {
-            deepCopyPairing.put(Integer.valueOf(entry.getKey().intValue()), Integer.valueOf(entry.getValue().intValue()));
-        }
-
-        if (pairingToCopy.size() != deepCopyPairing.size()) {
-            System.out.println("Critical error in deepCopyPairing: size of pairing differs");
-            System.exit(0);
-        }
-
-        return deepCopyPairing;
-    }
-
-
-    public static List<Integer> deepCopyNullSpaces(List<Integer> nullSpacesToCopy) {
-
-        List<Integer> deepCopyNullSpace = new ArrayList<Integer>();
-
-
-        for (Integer point : nullSpacesToCopy) {
-            deepCopyNullSpace.add(Integer.valueOf(point.intValue()));
-        }
-
-        if (nullSpacesToCopy.size() != deepCopyNullSpace.size()) {
-            System.out.println("Critical error in deepCopyNullSpaces: size of NullSpaceMap1 differs");
-            System.exit(0);
-        }
-
-        return deepCopyNullSpace;
-    }
-
-
-    public static PairingAndNullSpaces razorBladeOfAPairing(PairingAndNullSpaces inputPairingAndNewNullSpaces, List<Integer> listPairsWithHighDistance, Map<Integer, Integer> mapOfIdInDistanceMatrixAndPairID) {
-
-
-        //System.out.println("size of list before razor blading = " + mapOfIdInDistanceMatrixAndPairID.size());
-        //System.out.println("size of listPairsWithHighDistance = " + listPairsWithHighDistance.size());
-
-        PairingAndNullSpaces cutInputPairingAndNewNullSpaces = PairingTools.deepCopyNewPairingAndNewNullSpaces(inputPairingAndNewNullSpaces);
-
-        //System.out.println("size of the pairting = " + inputPairing.getPairing().size());
-        //System.out.println("size of list of HighDistance = " + listPairsWithHighDistance.size());
-
-        for (Integer iDOfPairByPointInMap1 : listPairsWithHighDistance) {
-            //Integer idOfPairToRemoveInMapping = mapOfIdInDistanceMatrixAndPairID.get(iDOfPairByPointInMap1);
-
-            Integer idOfPartnerInMapping = inputPairingAndNewNullSpaces.getPairing().get(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-
-            if (idOfPartnerInMapping == null) {
-                System.out.println("Error: pair from listPairsWithHighDistance is not a pair  " + iDOfPairByPointInMap1 + "   " + idOfPartnerInMapping);
-                continue;
-            }
-
-            // put in null space the high distances points
-            cutInputPairingAndNewNullSpaces.getNullSpaceOfMap1().add(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-            cutInputPairingAndNewNullSpaces.getNullSpaceOfMap2().add(Integer.valueOf(idOfPartnerInMapping.intValue()));
-            cutInputPairingAndNewNullSpaces.getPairing().remove(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-            //}
-        }
-
-
-        //System.out.println("after razor blade pair count is " + cutInputPairingAndNewNullSpaces.getPairing().size());
-        return cutInputPairingAndNewNullSpaces;
-    }
-
-
-    public static PairingAndNullSpaces highDistanceToOutsideDifferenceCutter(PairingAndNullSpaces inputPairingAndNewNullSpaces, List<Integer> listOfPairsWithAHighDistanceToOutsideDifference) {
-        PairingAndNullSpaces cutInputPairingAndNewNullSpaces = PairingTools.deepCopyNewPairingAndNewNullSpaces(inputPairingAndNewNullSpaces);
-
-        for (Integer iDOfPairByPointInMap1 : listOfPairsWithAHighDistanceToOutsideDifference) {
-            //Integer idOfPairToRemoveInMapping = mapOfIdInDistanceMatrixAndPairID.get(iDOfPairByPointInMap1);
-
-            Integer idOfPartnerInMapping = inputPairingAndNewNullSpaces.getPairing().get(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-
-            if (idOfPartnerInMapping == null) {
-                //System.out.println("Error: pair from listPairsWithHighDistance is not a pair  " + iDOfPairByPointInMap1 + "   " +  idOfPartnerInMapping);
-                // Normal that there are missing, they could have been withdrawn by razorblading before
-            } else {
-
-                // put in null space the high distances points
-                cutInputPairingAndNewNullSpaces.getNullSpaceOfMap1().add(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-                cutInputPairingAndNewNullSpaces.getNullSpaceOfMap2().add(Integer.valueOf(idOfPartnerInMapping.intValue()));
-                cutInputPairingAndNewNullSpaces.getPairing().remove(Integer.valueOf(iDOfPairByPointInMap1.intValue()));
-                //}
-            }
-        }
-
-        return cutInputPairingAndNewNullSpaces;
-    }
-
-
-    public static boolean isMatrixAndTranslationNearlyPerfect(RealMatrix bestRotationMatrix, RealVector bestTranslationVector) {
-
-        double thresholdRotDiag = 0.95;
-        double thresholdRotOutDiag = 0.20;
-        double thresholdTranslation = 1.5;
-
-        if (bestRotationMatrix.getEntry(0, 0) < thresholdRotDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(0, 0) bad = " + bestRotationMatrix.getEntry(0, 0));
-            return false;
-        }
-        if (bestRotationMatrix.getEntry(1, 1) < thresholdRotDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(1, 1) bad = " + bestRotationMatrix.getEntry(1, 1));
-
-            return false;
-        }
-        if (bestRotationMatrix.getEntry(2, 2) < thresholdRotDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(2, 2) bad = " + bestRotationMatrix.getEntry(2, 2));
-
-            return false;
-        }
-        if (Math.abs(bestRotationMatrix.getEntry(0, 1)) > thresholdRotOutDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(0, 1) bad = " + bestRotationMatrix.getEntry(0, 1));
-
-            return false;
-        }
-        if (Math.abs(bestRotationMatrix.getEntry(0, 2)) > thresholdRotOutDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(0, 2) bad = " + bestRotationMatrix.getEntry(0, 2));
-
-            return false;
-        }
-        if (Math.abs(bestRotationMatrix.getEntry(1, 2)) > thresholdRotOutDiag) {
-            //System.out.println("bestRotationMatrix.getEntry(1, 2) bad = " + bestRotationMatrix.getEntry(1, 2));
-
-            return false;
-        }
-        if (Math.abs(bestTranslationVector.getEntry(0)) > thresholdTranslation) {
-            //System.out.println("bestTranslationVector.getEntry(0) bad = " + bestTranslationVector.getEntry(0));
-
-            return false;
-        }
-
-        if (Math.abs(bestTranslationVector.getEntry(1)) > thresholdTranslation) {
-            //System.out.println("bestTranslationVector.getEntry(1) bad = " + bestTranslationVector.getEntry(1));
-
-            return false;
-        }
-        if (Math.abs(bestTranslationVector.getEntry(2)) > thresholdTranslation) {
-            //System.out.println("bestTranslationVector.getEntry(2) bad = " + bestTranslationVector.getEntry(2));
-
-            return false;
-        }
-
-        return true;
     }
 
 
@@ -351,69 +180,6 @@ public class PairingTools {
     }
 
 
-    public static boolean validate(PairingAndNullSpaces newPairingAndNewNullSpacesToTest, PairingAndNullSpaces lastAcceptedNewPairingAndNewNullSpaces) {
-
-        boolean isValid = validate(newPairingAndNewNullSpacesToTest);
-        if (isValid == false) {
-            return false;
-        }
-        // the sum of pairs and null point of Map1 should be constant
-        boolean checkedSumOfPairsAndNullPointOfMap1 = true;
-        boolean checkedSumOfPairsAndNullPointOfMap2 = true;
-
-        int sumOfPairsAndNullPointOfMap1 = newPairingAndNewNullSpacesToTest.getPairing().size() + newPairingAndNewNullSpacesToTest.getNullSpaceOfMap1().size();
-        int sumOfPairsAndNullPointOfMap2 = newPairingAndNewNullSpacesToTest.getPairing().size() + newPairingAndNewNullSpacesToTest.getNullSpaceOfMap2().size();
-
-        int lastAcceptedNewPairingSize = lastAcceptedNewPairingAndNewNullSpaces.getPairing().size();
-        int initialSumOfPairsAndNullPointOfMap1 = lastAcceptedNewPairingSize + lastAcceptedNewPairingAndNewNullSpaces.getNullSpaceOfMap1().size();
-        int initialSumOfPairsAndNullPointOfMap2 = lastAcceptedNewPairingSize + lastAcceptedNewPairingAndNewNullSpaces.getNullSpaceOfMap2().size();
-
-        if (sumOfPairsAndNullPointOfMap1 != initialSumOfPairsAndNullPointOfMap1) {
-            System.out.println("sumOfPairsAndNullPointOfMap1 " + sumOfPairsAndNullPointOfMap1 + "  " + initialSumOfPairsAndNullPointOfMap1);
-            System.out.println(newPairingAndNewNullSpacesToTest.getNullSpaceOfMap1());
-            checkedSumOfPairsAndNullPointOfMap1 = false;
-        }
-        if (sumOfPairsAndNullPointOfMap2 != initialSumOfPairsAndNullPointOfMap2) {
-            System.out.println("sumOfPairsAndNullPointOfMap2 " + sumOfPairsAndNullPointOfMap2 + "  " + initialSumOfPairsAndNullPointOfMap2);
-            System.out.println(newPairingAndNewNullSpacesToTest.getNullSpaceOfMap2());
-            checkedSumOfPairsAndNullPointOfMap2 = false;
-        }
-
-        if (checkedSumOfPairsAndNullPointOfMap1 == false) {
-
-            System.out.println("Problem found : validation checkedSumOfPairsAndNullPointOfMap1 not OK");
-
-            System.exit(0);
-            return false;
-        }
-
-        if (checkedSumOfPairsAndNullPointOfMap2 == false) {
-
-            System.out.println("Problem found : validation checkedSumOfPairsAndNullPointOfMap2 not OK");
-
-            System.exit(0);
-            return false;
-        }
-        return true;
-    }
-
-
-    public static class HighestCoverageQueryComparator implements Comparator<Hit> {
-
-        @Override
-        public int compare(Hit hit1, Hit hit2) {
-
-            if (hit1.getResultsFromEvaluateCost().getRatioPairedPointInQuery() < hit2.getResultsFromEvaluateCost().getRatioPairedPointInQuery()) {
-                return 1;
-            }
-            if (hit1.getResultsFromEvaluateCost().getRatioPairedPointInQuery() > hit2.getResultsFromEvaluateCost().getRatioPairedPointInQuery()) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
-
     public static class LowestCostHitComparator implements Comparator<Hit> {
 
         @Override
@@ -423,38 +189,6 @@ public class PairingTools {
                 return 1;
             }
             if (hit1.getResultsFromEvaluateCost().getCost() < hit2.getResultsFromEvaluateCost().getCost()) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
-
-    public static class LowestCostPairingComparator implements Comparator<ResultsFromEvaluateCost> {
-
-        @Override
-        public int compare(ResultsFromEvaluateCost cost1, ResultsFromEvaluateCost cost2) {
-
-            if (cost1.getCost() > cost2.getCost()) {
-                return 1;
-            }
-            if (cost1.getCost() < cost2.getCost()) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
-
-    public static class HighestPairCountPairingComparator implements Comparator<ResultsFromEvaluateCost> {
-
-        @Override
-        public int compare(ResultsFromEvaluateCost cost1, ResultsFromEvaluateCost cost2) {
-
-            if (cost1.getPairingAndNullSpaces().getPairing().size() < cost2.getPairingAndNullSpaces().getPairing().size()) {
-                return 1;
-            }
-            if (cost1.getPairingAndNullSpaces().getPairing().size() > cost2.getPairingAndNullSpaces().getPairing().size()) {
                 return -1;
             }
             return 0;
@@ -481,14 +215,29 @@ public class PairingTools {
     }
 
 
-    //	public static RealVector alignPointFromShape2toShape1(ResultsFromEvaluateCost result, RealVector pointFromShape2){
-    //
-    //		RealVector translatedToOriginPoint = pointFromShape2.add(result.getTranslationVectorToTranslateShape2ToOrigin().copy());
-    //		RealVector rotatedPoint = result.getRotationMatrix().operate(translatedToOriginPoint);
-    //		RealVector translatedBackPoint = rotatedPoint.subtract(result.getTranslationVectorToTranslateShape2ToOrigin());
-    //
-    //		RealVector translatedToShape1 = translatedBackPoint.add(result.getTranslationVector());
-    //
-    //		return translatedToShape1;
-    //	}
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    private static void dealWithShape1(Map<Integer, PointWithProperties> shape, PairingAndNullSpaces newPairingAndNewNullSpaces) {
+
+        for (Integer pointShape : shape.keySet()) {
+            boolean inPairing = newPairingAndNewNullSpaces.getPairing().containsKey(pointShape);
+            boolean inNullSpace = newPairingAndNewNullSpaces.getNullSpaceOfMap1().contains(pointShape);
+            if ((!inPairing) && (!inNullSpace)) {
+                newPairingAndNewNullSpaces.getNullSpaceOfMap1().add(pointShape);
+            }
+        }
+    }
+
+
+    private static void dealWithShape2(Map<Integer, PointWithProperties> shape, PairingAndNullSpaces newPairingAndNewNullSpaces) {
+
+        for (Integer pointShape : shape.keySet()) {
+            boolean inPairing = newPairingAndNewNullSpaces.getPairing().containsValue(pointShape);
+            boolean inNullSpace = newPairingAndNewNullSpaces.getNullSpaceOfMap2().contains(pointShape);
+            if ((!inPairing) && (!inNullSpace)) {
+                newPairingAndNewNullSpaces.getNullSpaceOfMap2().add(pointShape);
+            }
+        }
+    }
 }

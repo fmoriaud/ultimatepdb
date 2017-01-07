@@ -108,6 +108,25 @@ public class ShapeContainerTools {
     }
 
 
+    public static List<String> generateLinesFromMyMonomer(MyMonomerIfc myMonomer, AlgoParameters algoParameters, char[] chainId) {
+        List<String> listOfLines = new ArrayList<>();
+        MyMonomerIfc monomer;
+        Cloner cloner = new Cloner(myMonomer, algoParameters);
+        monomer = cloner.getClone().getAllChains()[0].getMyMonomers()[0];
+
+        try {
+            listOfLines = makePDBFileTestOutputFromAMonomer(monomer, 0, chainId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listOfLines;
+    }
+
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static List<String> generateConnectLines(MyChainIfc myChain) {
 
         List<String> connectLines = new ArrayList<>();
@@ -131,22 +150,6 @@ public class ShapeContainerTools {
             }
         }
         return connectLines;
-    }
-
-
-    public static List<String> generateLinesFromMyMonomer(MyMonomerIfc myMonomer, AlgoParameters algoParameters, char[] chainId) {
-        List<String> listOfLines = new ArrayList<>();
-        MyMonomerIfc monomer;
-        Cloner cloner = new Cloner(myMonomer, algoParameters);
-        monomer = cloner.getClone().getAllChains()[0].getMyMonomers()[0];
-
-        try {
-            listOfLines = makePDBFileTestOutputFromAMonomer(monomer, 0, chainId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return listOfLines;
     }
 
 
@@ -365,9 +368,6 @@ public class ShapeContainerTools {
     }
 
 
-    // -------------------------------------------------------------------
-    // Implementation
-    // -------------------------------------------------------------------
     private static String formatStringAlignedRight(String input, int finalLength) {
 
         String returnString = "";

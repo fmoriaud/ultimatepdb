@@ -1,9 +1,31 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeCompare;
 
 import math.MathTools;
 import multithread.ExtendPairingRecursiveTask;
 import multithread.FindMatchingTriangleRecursiveTask;
-import mystructure.*;
+import mystructure.Cloner;
+import mystructure.MyChainIfc;
+import mystructure.MyMonomerIfc;
+import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
 import pointWithProperties.PointWithPropertiesIfc;
 import scorePairing.ScorePairing;
@@ -15,11 +37,10 @@ import shapeReduction.TriangleInteger;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-/**
- * Created by Fabrice on 14/11/16.
- */
 public class CompareTools {
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static List<ResultsFromEvaluateCost> compare(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
 
         List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
@@ -49,7 +70,6 @@ public class CompareTools {
 
     public static MyStructureIfc getLigandOrPeptideInReferenceOfQuery(ShapeContainerIfc shapeContainerAnyShape, ResultsFromEvaluateCost result, AlgoParameters algoParameters) {
 
-
         MyStructureIfc clonedRotatedPeptideOrLigand = null;
         if (shapeContainerAnyShape instanceof ShapeContainerWithPeptide) {
             ShapeContainerWithPeptide shapeContainerWithPeptide = (ShapeContainerWithPeptide) shapeContainerAnyShape;
@@ -68,6 +88,7 @@ public class CompareTools {
         return clonedRotatedPeptideOrLigand;
     }
 
+
     /**
      * Compare two shapes based on triangle only.
      * Selection by diversity of hit. Filter based on distance to outside.
@@ -79,14 +100,10 @@ public class CompareTools {
      */
     public static List<ResultsFromEvaluateCost> compareShapesBasedOnTriangles(ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
 
-
         List<TriangleInteger> listTriangleShape1 = shapeContainerQuery.getListTriangleOfPointsFromMinishape();
         List<TriangleInteger> listTriangleShape2 = shapeContainerAnyShape.getListTriangleOfPointsFromMinishape();
 
-
         List<PairingAndNullSpaces> listPairingTriangleSeed = getTrianglePairingAndNullSpaces(listTriangleShape1, listTriangleShape2, shapeContainerQuery, shapeContainerAnyShape, algoParameters);
-
-        System.out.println("scoring " + listPairingTriangleSeed.size() + " pairs of triangles");
 
         ScorePairing scorePairingBasedOnMinishape = new ScorePairing(shapeContainerQuery.getMiniShape(), shapeContainerAnyShape.getMiniShape(), algoParameters);
         List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = null;
@@ -97,16 +114,12 @@ public class CompareTools {
             return resultsPairingTriangleSeed;
         }
 
-//		List<ResultsFromEvaluateCost> diverseList = new ArrayList<>();
-//		diverseList.add(resultsPairingTriangleSeed.get(0));
-
         selectResultsByDiversityOfTransAndRotUsingHashSet(resultsPairingTriangleSeed);
 
         Iterator<ResultsFromEvaluateCost> it = resultsPairingTriangleSeed.iterator();
         while (it.hasNext()) {
 
             ResultsFromEvaluateCost nextResult = it.next();
-            float ratioPairedPointInQuery = nextResult.getRatioPairedPointInQuery();
 
             boolean isDistanceToOutsideOk = checkDistanceToOutside(nextResult, shapeContainerQuery.getMiniShape(), shapeContainerAnyShape.getMiniShape());
 
@@ -120,6 +133,9 @@ public class CompareTools {
     }
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static List<PairingAndNullSpaces> getTrianglePairingAndNullSpaces(List<TriangleInteger> listTriangleShape1, List<TriangleInteger> listTriangleShape2, ShapeContainerIfc shapeContainerQuery, ShapeContainerIfc shapeContainerAnyShape, AlgoParameters algoParameters) {
 
         int countOfSubpacket = algoParameters.getSUB_THREAD_COUNT_FORK_AND_JOIN();
@@ -174,8 +190,7 @@ public class CompareTools {
     private static boolean checkDistanceToOutside(ResultsFromEvaluateCost result, Map<Integer, PointWithPropertiesIfc> queryMiniShape, Map<Integer, PointWithPropertiesIfc> hitMiniShape) {
 
         PairingAndNullSpaces currentNewPairingAndNewNullSpaces = result.getPairingAndNullSpaces();
-        // This regression should detect very firmly if the hit ligand is on the same side as the query ligand
-        //SimpleRegression regression = new SimpleRegression();
+
         int countCasesDifferentSign = 0;
         int countConsideredCases = 0;
 
@@ -219,18 +234,12 @@ public class CompareTools {
                         countCasesDifferentSign += 1;
                     }
                 }
-
-                //System.out.println(deltaQuery + "  " + deltaHit );
-                //regression.addData(deltaQuery, deltaHit);
             }
         }
 
         float percentageDifferentSign = (float) countCasesDifferentSign / countConsideredCases;
-        //System.out.println("percentageDifferentSign = " + percentageDifferentSign + " countConsideredCases =  " + countConsideredCases);
 
-        //System.out.println("percentageDifferentSign = " + percentageDifferentSign);
         if (percentageDifferentSign > 0.4) {
-            //System.out.println("hit deleted");
             return false;
         }
         return true;

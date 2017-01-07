@@ -61,6 +61,9 @@ public class ShapeBuildingTools {
     }
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private static boolean isMyAtomHydrophobic(MyAtomIfc myAtom) {
 
         Float hydrophobicity = AtomProperties.findHydrophobicityForMyAtom(myAtom);

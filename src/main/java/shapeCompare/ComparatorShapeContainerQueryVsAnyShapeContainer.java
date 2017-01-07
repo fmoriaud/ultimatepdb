@@ -1,9 +1,23 @@
-package shapeCompare;
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+package shapeCompare;
 
 import fingerprint.CannotCompareDistributionException;
 import fingerprint.DistributionComparisonTools;
@@ -12,17 +26,14 @@ import parameters.AlgoParameters;
 import scorePairing.CheckDistanceToOutside;
 import shape.ShapeContainerIfc;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 public class ComparatorShapeContainerQueryVsAnyShapeContainer {
-    //------------------------
-    // Constant
-    //------------------------
-    public boolean debug = false;
-    private List<Hit> emptyList = new ArrayList<>();
-
-
-    //------------------------
+    //-------------------------------------------------------------
     // Class variables
-    //------------------------
+    //-------------------------------------------------------------
     ShapeContainerIfc shapeContainerQuery;
     ShapeContainerIfc shapeContainerAnyShape;
     AlgoParameters algoParameters;
@@ -66,8 +77,6 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
 
         List<ResultsFromEvaluateCost> resultsExtendedPairing = CompareTools.compare(shapeContainerQuery, shapeContainerAnyShape, algoParameters);
 
-        // Remove hit where hit is not enough matching query based on covergage
-        //int before = resultsExtendedPairing.size();
         Iterator<ResultsFromEvaluateCost> it = resultsExtendedPairing.iterator();
         while (it.hasNext()) {
 
@@ -88,33 +97,6 @@ public class ComparatorShapeContainerQueryVsAnyShapeContainer {
         List<Hit> hitsExtendedPairing = PairingTools.generateHitsListFromResultList(resultsExtendedPairing, shapeContainerAnyShape, shapeContainerQuery, algoParameters);
         Collections.sort(hitsExtendedPairing, new PairingTools.LowestCostHitComparator());
 
-//		System.out.println("hits : ");
-//		for (Hit hit: hitsExtendedPairing){
-//			System.out.println(hit.getResultsFromEvaluateCost().getCoverage());
-//		}
-        if (hitsExtendedPairing.size() > 0) {
-            System.out.println("hitsExtendedPairing.size() > 0");
-        }
         return hitsExtendedPairing;
     }
-
-
-
-
-//	private boolean isItTooCloseToOneAlreadyThere(List<ResultsFromEvaluateCost> listResults, ResultsFromEvaluateCost candidateResult){
-//
-//		for (ResultsFromEvaluateCost resultFromList: listResults){
-//
-//			double distanceR = computeDistanceOnRotMatrix(resultFromList, candidateResult);
-//			double distanceT = computeDistanceOnTranslation(resultFromList, candidateResult);
-//
-//			//System.out.println("distance R = " + distanceR + "  distanceT = " + distanceT);
-//			if (distanceT < 2.0 * algoParameters.getCELL_DIMENSION_OF_THE_PROBABILITY_MAP_ANGSTROM() && distanceR < 60.0 / 180.0){ // 2.8 / 6.0
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
-
 }
