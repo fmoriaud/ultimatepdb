@@ -61,16 +61,13 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         String script = MyJmolScripts.getScriptMinimizationWholeLigandAndTargetAtomCloseBy(atomCountTarget, atomIds);
 
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmolComplexTargetAtomCloseByFree = new ScriptCommandOnUltiJmol(script, mergedMyStructure.toV3000(), algoParameters, atomCountTarget);
-        try {
-            scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
 
-        }
+        scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.execute();
+
         Map<Results, Object> results = scriptCommandOnUltiJmolComplexTargetAtomCloseByFree.getResults();
         boolean convergenReached = (boolean) results.get(Results.CONVERGENCE_REACHED);
 
-        if (convergenReached == false){
+        if (convergenReached == false) {
             allconvergenceReached = false;
         }
         System.out.println("Convergence reached : " + convergenReached);
@@ -90,7 +87,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         getEnergyTarget.execute();
 
-        if (getEnergyTarget.isConvergenceReached() == false){
+        if (getEnergyTarget.isConvergenceReached() == false) {
             allconvergenceReached = false;
         }
         results = getEnergyTarget.getResults();
@@ -108,7 +105,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         getEnergyComplex.execute();
 
-        if (getEnergyComplex.isConvergenceReached() == false){
+        if (getEnergyComplex.isConvergenceReached() == false) {
             allconvergenceReached = false;
         }
 
@@ -126,7 +123,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         GetEnergy getEnergy = new GetEnergy(script, ligandFromMinimizedComplex, algoParameters);
 
         getEnergy.execute();
-        if (getEnergy.isConvergenceReached() == false){
+        if (getEnergy.isConvergenceReached() == false) {
             allconvergenceReached = false;
         }
 
@@ -153,16 +150,12 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         // strained energy
         script = MyJmolScripts.getScriptMinimizationAll();
         ScriptCommandOnUltiJmol scriptCommandOnUltiJmolLigand = new ScriptCommandOnUltiJmol(script, protonatedLigand.toV3000(), algoParameters, null);
-        try {
-            scriptCommandOnUltiJmolLigand.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        scriptCommandOnUltiJmolLigand.execute();
 
-        }
         results = scriptCommandOnUltiJmolLigand.getResults();
 
-
         boolean convergenceReached = (Boolean) results.get(Results.CONVERGENCE_REACHED);
-        if (convergenceReached == false){
+        if (convergenceReached == false) {
             allconvergenceReached = false;
         }
         String ligandFullyRelaxedV3000 = (String) results.get(Results.STRUCTURE_V3000);
@@ -175,12 +168,9 @@ public class ScoreLigandInTargetUsingMolecularForceField {
 
         script = MyJmolScripts.getScriptMinimizationAll();
         GetEnergy getEnergy2 = new GetEnergy(script, ligandFullyRelaxedV3000, algoParameters);
-        try {
-            getEnergy2.execute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-        }
-        if (getEnergy2.isConvergenceReached() == false){
+        getEnergy2.execute();
+
+        if (getEnergy2.isConvergenceReached() == false) {
             allconvergenceReached = false;
         }
         results = getEnergy2.getResults();
@@ -188,9 +178,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         System.out.println("ligandFullyRelaxedEnergy = " + ligandFullyRelaxedEnergy);
 
         strainedEnergy = ligandFromMinimizedComplexEnergy - ligandFullyRelaxedEnergy;
-
     }
-
 
 
     private List<Integer> atomIdsTargetCloseToLigand(MyStructureIfc protonatedTarget, MyStructureIfc protonatedLigand, AlgoParameters algoParameters) {
