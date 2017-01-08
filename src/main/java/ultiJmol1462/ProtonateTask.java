@@ -41,7 +41,7 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
     // Public && Interface method
     // -------------------------------------------------------------------
     @Override
-    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) {
+    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         Cloner cloner = new Cloner(myStructure, algoParameters);
         protonatedMyStructure = cloner.getClone();
@@ -92,12 +92,8 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
             countIteration += 1;
             // Energy there is a relative indicator
             // Only relates to what is unfixed in the minimization
-            float currentEnergy = 0;
-            try {
-                currentEnergy = getEnergyBiojavaJmolNewCode(ultiJmol);
-            } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                return false;
-            }
+            float currentEnergy = getEnergyBiojavaJmolNewCode(ultiJmol);
+
             System.out.println("currentEnergy = " + currentEnergy);
 
             // when too high then I should give up

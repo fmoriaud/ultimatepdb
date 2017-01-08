@@ -1,5 +1,6 @@
 package ultiJmol1462;
 
+import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import jmolgui.UltiJmol1462;
 
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
 public interface DoMyJmolTaskIfc {
 
 
-    boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol);
+    boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI;
     Map<Results, Object> getResults();
     String getName();
 }

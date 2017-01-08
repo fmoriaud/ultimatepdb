@@ -39,7 +39,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
     // Public && Interface method
     // -------------------------------------------------------------------
     @Override
-    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) {
+    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
 
         ultiJmol.jmolPanel.openStringInline(moleculeV3000);
@@ -59,13 +59,8 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
             return false;
         }
 
-        Float energyAsInitialAsPossible = null;
-        try {
-            energyAsInitialAsPossible = waitMinimizationEnergyAvailable(ultiJmol);
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-            exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-            return false;
-        }
+        Float energyAsInitialAsPossible = waitMinimizationEnergyAvailable(ultiJmol);
+
         if (energyAsInitialAsPossible == null) {
             return false;
         }

@@ -39,7 +39,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
     // Public && Interface method
     // -------------------------------------------------------------------
     @Override
-    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) {
+    public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
         try {
             Thread.sleep(1000L);
@@ -78,12 +78,8 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
                 countIteration += 1;
                 // Energy there is a relative indicator
                 // Only relates to what is unfixed in the minimization
-                float currentEnergy = 0;
-                try {
-                    currentEnergy = getEnergyBiojavaJmolNewCode(ultiJmol);
-                } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                    return false;
-                }
+                float currentEnergy = getEnergyBiojavaJmolNewCode(ultiJmol);
+
                 System.out.println("currentEnergy = " + currentEnergy);
 
                 // when too high then I should give up
@@ -109,12 +105,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
             } else {
                 convergenceReached = true;
             }
-            Float finalEnergy = null;
-            try {
-                finalEnergy = waitMinimizationEnergyAvailable(2, ultiJmol);
-            } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
-                exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
-            }
+            Float finalEnergy = waitMinimizationEnergyAvailable(2, ultiJmol);
 
             try {
                 Thread.sleep(1000L);
@@ -149,7 +140,7 @@ public class ScriptCommandOnUltiJmolTask implements DoMyJmolTaskIfc {
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
                 String ligand = ultiJmol.jmolPanel.getViewer().getData("*", "V3000");
                 results.put(Results.LIGAND, ligand);
