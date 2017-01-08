@@ -190,6 +190,9 @@ public class ProtocolBindingVsFolding {
                 }
             }
         }
+
+        System.out.println("Program finished.");
+        System.exit(0);
     }
 
 

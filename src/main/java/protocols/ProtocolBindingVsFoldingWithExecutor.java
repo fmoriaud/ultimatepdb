@@ -19,23 +19,16 @@ Author:
   */
 package protocols;
 
-import database.HitInSequenceDb;
-import database.SequenceTools;
 import multithread.CompareWithOneOnlyCallable;
-import mystructure.MyChainIfc;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
-import shape.ShapeContainerWithPeptide;
-import shapeBuilder.ShapeBuildingException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.logging.FileHandler;
 
 public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
@@ -69,8 +62,6 @@ public class ProtocolBindingVsFoldingWithExecutor {
 
         List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
-            //ShapecontainerDefinedByWholeChain targetWholechain = (ShapecontainerDefinedByWholeChain) target;
-            //MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, targetWholechain.getFourLetterCode());
             boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
             CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
             callablesToLauch.add(compare);
@@ -79,14 +70,10 @@ public class ProtocolBindingVsFoldingWithExecutor {
         List<Future<Boolean>> allFuture = new ArrayList<>();
         for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
-
                 Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
 
-                // ControllerLoger.logger.log(Level.INFO, "&&&&&& Added to Executor ");
-
             } catch (RejectedExecutionException e) {
-
                 try {
                     Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
                     continue;
@@ -111,5 +98,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
             }
         }
         executorService.shutdown();
+        System.out.println("Program finished.");
+        System.exit(0);
     }
 }
