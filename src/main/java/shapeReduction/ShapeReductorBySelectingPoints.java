@@ -17,8 +17,6 @@ public class ShapeReductorBySelectingPoints implements ShapeReductorIfc {
     private AlgoParameters algoParameters;
 
 
-
-
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
@@ -26,8 +24,6 @@ public class ShapeReductorBySelectingPoints implements ShapeReductorIfc {
         this.shapeCollectionPoints = shapeCollectionPoints;
         this.algoParameters = algoParameters;
     }
-
-
 
 
     // -------------------------------------------------------------------

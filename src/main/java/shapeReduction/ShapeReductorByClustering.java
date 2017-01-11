@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeReduction;
 
 import java.util.*;
@@ -71,11 +90,8 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
     private Map<Integer, PointWithPropertiesIfc> generateMiniShape(Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints) {
 
-        // input map is ok each shape contains points with the correct property
         Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties = doClustering(mapPropertyAndMapSectorAndPoints);
         Map<PointWithPropertiesIfc, PointWithPropertiesIfc> pairsPointCloseBy = findPointsTooCloseWithASharedStrikingProperties(collectionOfPointsWithProperties);
-
-        // They are closeby with q
 
         for (Entry<PointWithPropertiesIfc, PointWithPropertiesIfc> pairPoint : pairsPointCloseBy.entrySet()) {
             Integer idOfPoint = mapPointToOriginalId.get(ShapeReductorTools.returnPointWithLowerPriorityWhenThereIsAMatchingProperty(pairPoint.getKey(), pairPoint.getValue()));
@@ -89,8 +105,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
 
     /**
-     * Note: it is generating for matching 1-2 and 2-1. Is it needed ?
-     *
      * @param collectionOfPointsWithProperties
      * @return
      */
@@ -130,60 +144,23 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
     private Map<Integer, PointWithPropertiesIfc> doClustering(Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints) {
 
-        // debug code
-        // One possibility is that the point was in two setors
-/*
-        for (Entry<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> sectorAndPointsDebug : mapPropertyAndMapSectorAndPoints.entrySet()) {
-
-            Map<PointWithPropertiesIfc, Integer> counts = new LinkedHashMap<>();
-
-            Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> pointsInThisSector = sectorAndPointsDebug.getValue();
-
-            for (Entry<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> entry : pointsInThisSector.entrySet()) {
-                Map<Integer, PointWithPropertiesIfc> pointsWithProperty = entry.getValue();
-
-                for (Entry<Integer, PointWithPropertiesIfc> entry2 : pointsWithProperty.entrySet()) {
-                    PointWithPropertiesIfc point2 = entry2.getValue();
-                    if (counts.containsKey(point2)) {
-                        Integer currentcount = counts.get(point2);
-                        counts.put(point2, currentcount += 1);
-                    } else {
-                        counts.put(point2, 1);
-                    }
-                }
-            }
-            for (Entry<PointWithPropertiesIfc, Integer> entry: counts.entrySet()){
-                if (entry.getValue() != 1){
-                    System.out.println("entry.getValue() != 1");
-                }
-            }
-        }
-        */
-
-
         Map<Integer, PointWithPropertiesIfc> miniShape = new LinkedHashMap<>();
 
         for (Entry<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapSectorAndPoint : mapPropertyAndMapSectorAndPoints.entrySet()) {
 
             List<PointWithPropertiesIfc> listBarycenters = new ArrayList<>();
-            // loop in a map of points of a given property
             for (Entry<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> sectorAndPoints : mapSectorAndPoint.getValue().entrySet()) {
 
-                // find the represenative point which is the point closest to barycenter
                 PointWithPropertiesIfc pointWithProperties = ShapeReductorTools.getPointClosestToBarycenter(sectorAndPoints.getValue(), miniShape);
                 if (pointWithProperties != null) {
-
                     listBarycenters.add(pointWithProperties);
                 }
-                // TODO FMM That is an important change the points in Minishape can have simplified properties
-
             }
 
             if (listBarycenters.size() == 0) {
                 continue;
             }
 
-            // For the sake of reproducibility centers of sectors, called barycenters are sorted according to sector centers
             Collections.sort(listBarycenters, new PointOnlyDistanceToBarycenterComparator(this.barycenterShape));
 
             ClusteringByLinkageWithAnUpdatedAndSortedCollectionOfClusterPairs completeLinkageClustering = new ClusteringByLinkageWithAnUpdatedAndSortedCollectionOfClusterPairs(listBarycenters, algoParameters, ClusteringLinkageType.SINGLE_LINKAGE);
@@ -192,14 +169,13 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
                 System.out.println("completeLinkageClustering of property : " + mapSectorAndPoint.getKey().toString() + " from " + listBarycenters.size() + " to " + clusteredPoints.size());
             }
 
-            // I want only one point per cluster !!!!!!!!!!!!!!!!!!!!!
             for (List<PointWithPropertiesIfc> clusterForThisProperty : clusteredPoints) {
 
                 PointWithPropertiesIfc onePointPerCluster = ShapeReductorTools.selectOnePointFromAClusterButNotAlreadyInMinishapeIfPossible(clusterForThisProperty, miniShape);
                 if (onePointPerCluster != null) {
                     Integer idOfPoint = mapPointToOriginalId.get(onePointPerCluster);
                     //onePointPerCluster.setMiniShapeStrikingProperty(mapSectorAndPoint.getKey()); // not used afterwards but maybe useful
-                    if (miniShape.containsKey(idOfPoint)){
+                    if (miniShape.containsKey(idOfPoint)) {
                         System.out.println("miniShape.containsKey(idOfPoint) so will override, which one to choose ?? ");
                     }
                     miniShape.put(idOfPoint, onePointPerCluster);
@@ -208,23 +184,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
         }
         return miniShape;
     }
-
-
-//	private void setOnlyOneProperty(PointWithProperties inputPoint, StrikingProperties strikingPropertyToKeepOnly){
-//
-//		List<StrikingProperties> listWithOnlyOneStrikingProperties = new ArrayList<>();
-//
-//		for (StrikingProperties strikingProperties: inputPoint.getStrikingProperties()){
-//			if (strikingProperties.name().equals(strikingPropertyToKeepOnly.name())){
-//				listWithOnlyOneStrikingProperties.add(strikingProperties);
-//				break;
-//			}
-//		}
-//		if (listWithOnlyOneStrikingProperties.size() == 0){
-//			System.out.println("a point with chosen property is not available " + strikingPropertyToKeepOnly.name());
-//		}
-//		inputPoint.setStrikingProperties(listWithOnlyOneStrikingProperties);
-//	}
 
 
     private void removePointsOfStrikingPropertiesNoneIfCloseEnoughToAnotherPointWithAnyStrikingPropertiesNotNone(Map<Integer, PointWithPropertiesIfc> collectionOfPointsWithProperties) {
@@ -256,54 +215,15 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
             }
         }
 
-
         for (Integer pointToRemove : setSomeNonePointsToRemove) {
             collectionOfPointsWithProperties.remove(pointToRemove);
         }
-
-        //		int sizeAfter = collectionOfPointsWithProperties.size();
-        //		System.out.println("found " + setSomeNonePointsToRemove.size() + " NONE points that can be removed because close enough a point with properties not NONE");
-        //		System.out.println("sizeBefore = " + sizeBefore + " sizeAfter = " + sizeAfter);
-        //		System.out.println();
     }
 
 
-    //	private List<PointWithProperties> orderByPointID(List<PointWithProperties> listPointWithProperties, List<PointWithProperties> listShapePoints){
-    //
-    //		List<IdAndPointWithProperties> listToBeSorted = new ArrayList<>();
-    //
-    //		for (PointWithProperties point: listPointWithProperties){
-    //			Integer pointId = listShapePoints.indexOf(point);
-    //			listToBeSorted.add(new IdAndPointWithProperties(pointId, point));
-    //		}
-    //
-    //		Collections.sort(listToBeSorted, new LowestIdIdAndPointWithPropertiesComparator());
-    //
-    //		List<PointWithProperties> listOrdered = new ArrayList<>();
-    //		for (IdAndPointWithProperties point: listToBeSorted){
-    //			listOrdered.add(point.point);
-    //		}
-    //
-    //		return listOrdered;
-    //	}
-
-
-    public static class LowestIdIdAndPointWithPropertiesComparator implements Comparator<IdAndPointWithProperties> {
-
-        @Override
-        public int compare(IdAndPointWithProperties point1, IdAndPointWithProperties point2) {
-
-            if (point1.id < point2.id) {
-                return 1;
-            }
-            if (point1.id > point2.id) {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
-
+    // -------------------------------------------------------------------
+    // Private & Implementation Methods
+    // -------------------------------------------------------------------
     /**
      * Each sector is multiply by different striking properties found in
      *
@@ -322,9 +242,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
     }
 
 
-    // -------------------------------------------------------------------
-    // Private & Implementation Methods
-    // -------------------------------------------------------------------
     private Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> multiplySectorByProperty(Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapSectorAndPoints, Map<PhiThetaRadiusInterval, List<StrikingProperties>> mapSectorAndListProperties) {
 
         Map<StrikingProperties, Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>>> mapPropertyAndMapSectorAndPoints = new LinkedHashMap<>();
@@ -345,25 +262,20 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
             PhiThetaRadiusInterval sector = entry.getKey();
             Map<Integer, PointWithPropertiesIfc> points = entry.getValue();
 
-            // from one sector I do as many as there are striking properties and I add to the returned map
             List<StrikingProperties> strikingPropertiesFoundInThisSector = mapSectorAndListProperties.get(sector);
 
             for (StrikingProperties strikingProperty : strikingPropertiesFoundInThisSector) {
                 Map<Integer, PointWithPropertiesIfc> pointsWithTheStrikingProperty = StrikingPropertiesTools.extractPointsHavingTheProperty(points, strikingProperty);
 
-                // I have enough to create new entry in mapPropertyAndMapSectorAndPoints
                 Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> mapWhereIwantToAdd = mapPropertyAndMapSectorAndPoints.get(strikingProperty);
                 mapWhereIwantToAdd.put(sector, pointsWithTheStrikingProperty);
             }
-
         }
-
         return mapPropertyAndMapSectorAndPoints;
     }
 
 
     private Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> groupPoints() {
-
 
         double deltaOnlyForTheta = Math.PI / (double) algoParameters.getCOUNT_OF_INCREMENT_ANGLE();
 
@@ -375,16 +287,9 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
         double maxRinThisShape = findMaxRadiusInThisShape(barycenterShape);
         radiusValues = doBinningRadiusValues(maxRinThisShape);
-        //System.out.println("radiusValues.size = " + radiusValues.size());
-
-        // Now I built Sector object that is a Map with a key and an interval
-        // it is easy a bijection
-        // that is how I get the interval I want
-        // TODO: bin according to R : I'll see about merging later on
 
         SectorsIfc sectors = generateSector(deltaOnlyForTheta, phiValues, tethaValues, radiusValues);
 
-        // create the Map to return
         Map<PhiThetaRadiusInterval, Map<Integer, PointWithPropertiesIfc>> groupPoints = new LinkedHashMap<>();
 
         Iterator<PhiThetaRadiusInterval> it = sectors.iterator();
@@ -399,7 +304,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
             Integer pointIDToBeKept = i;
 
-            // coords x y z of point
             float[] point = shapeCollectionPoints.getPointFromId(i).getCoords().getCoords();
 
             float[] pointRelativeToBarycenter = MathTools.v1minusV2(point, barycenterShape.getCoords());
@@ -465,9 +369,6 @@ public class ShapeReductorByClustering implements ShapeReductorIfc {
 
 
     private List<Float> doBinningRadiusValues(double maxRinThisShape) {
-
-        //int countOfSectorRadius = (int) Math.round(maxRinThisShape / algoParameters.getFIRST_RADIUS_INCREMENT_IN_SHAPE_REDUCTION());
-        //countOfSectorRadius += 2;
 
         List<Float> radiusValues = new ArrayList<>();
 

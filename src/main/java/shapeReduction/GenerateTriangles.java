@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeReduction;
 
 import java.util.ArrayList;
@@ -19,9 +38,6 @@ public class GenerateTriangles {
     private AlgoParameters algoParameters;
 
     private boolean debug = false;
-    //private static Double edgeMaxFound = null; // trick so it is set only the first time used
-    private double fractionMax = 0.7;
-    private double fractionForMin = 0.3;
 
     private float absoluteEdgeMin = 4.0f;
     private float absoluteEdgeMax = 10.0f;
@@ -116,8 +132,8 @@ public class GenerateTriangles {
 
         // loop on each edge
         for (TriangleEdge edge : listEdges) {
-            int vertice1 = edge.point1;
-            int vertice2 = edge.point2;
+            int vertice1 = edge.getPoint1();
+            int vertice2 = edge.getPoint2();
             //PointWithProperties pointVertice1 = miniShape.get(vertice1);
             //PointWithProperties pointVertice2 = miniShape.get(vertice2);
             // TODO done to big easier to code but not optimized
@@ -142,7 +158,7 @@ public class GenerateTriangles {
                             double[] arrayTriangleIdAndOppositeEdgeLength = new double[3];
                             arrayTriangleIdAndOppositeEdgeLength[0] = distance2;
                             arrayTriangleIdAndOppositeEdgeLength[1] = distance1;
-                            arrayTriangleIdAndOppositeEdgeLength[2] = edge.edgeLength;
+                            arrayTriangleIdAndOppositeEdgeLength[2] = edge.getEdgeLength();
                             TriangleInteger triangleInteger = new TriangleInteger(listPointsInTriangle);
                             triangleInteger.setArrayTriangleIdAndOppositeEdgeLength(arrayTriangleIdAndOppositeEdgeLength);
 
@@ -163,26 +179,6 @@ public class GenerateTriangles {
         }
         List<TriangleEdge> listEdges = new ArrayList<>();
 
-
-        //		if (edgeMaxFound == null){
-        //			edgeMaxFound = Double.MIN_VALUE;
-        //
-        //			for (int i=0; i<listOfIDinMap.size(); i++){
-        //				for (int j=0; j<listOfIDinMap.size(); j++){
-        //					if (j>i){
-        //						Integer pointId1 = listOfIDinMap.get(i);
-        //						Integer pointId2 = listOfIDinMap.get(j);
-        //						double distance = MathTools.computeDistance(miniShape.get(pointId1).getCoords().getCoords(), miniShape.get(pointId2).getCoords().getCoords());
-        //
-        //						if (distance > edgeMaxFound){
-        //							edgeMaxFound = distance;
-        //						}
-        //					}
-        //				}
-        //			}
-        //		}
-
-        //System.out.println("edgeMaxFound = " + edgeMaxFound);
         for (int i = 0; i < listOfIDinMap.size(); i++) {
             for (int j = 0; j < listOfIDinMap.size(); j++) {
                 if (j > i) {
@@ -223,16 +219,6 @@ public class GenerateTriangles {
         double angleRadian2 = MathTools.computeAngle(v2v1, v2v3);
         double angleRadian3 = MathTools.computeAngle(v3v1, v3v2);
 
-        //		System.out.println("angle degres1 = " + angleRadian1 * 180 / Math.PI);
-        //		System.out.println("angle degres2 = " + angleRadian2 * 180 / Math.PI);
-        //		System.out.println("angle degres3 = " + angleRadian3 * 180 / Math.PI);
-
-        double sum = (angleRadian1 + angleRadian2 + angleRadian3);
-        if ((sum > Math.PI + 0.001) && (sum < Math.PI - 0.001)) {
-            System.out.println("sum should be 180 " + (angleRadian1 + angleRadian2 + angleRadian3) * 180 / Math.PI);
-            System.exit(0);
-        }
-
         if ((Math.abs(angleRadian1) > algoParameters.getANGLE_MIN()) && (Math.abs(angleRadian1) < algoParameters.getANGLE_MAX())) {
             if ((Math.abs(angleRadian2) > algoParameters.getANGLE_MIN()) && (Math.abs(angleRadian2) < algoParameters.getANGLE_MAX())) {
                 if ((Math.abs(angleRadian3) > algoParameters.getANGLE_MIN()) && (Math.abs(angleRadian3) < algoParameters.getANGLE_MAX())) {
@@ -249,6 +235,5 @@ public class GenerateTriangles {
         }
         return false;
     }
-
 }
 
