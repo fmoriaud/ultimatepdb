@@ -1,17 +1,31 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
-import jmolgui.UltiJmol1462;
-import math.AddToMap;
-import mystructure.*;
-import org.jmol.minimize.Minimizer;
+import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/**
- * Created by Fabrice on 28/09/16.
- */
 public class Protonate {
     // -------------------------------------------------------------------
     // Class variables
@@ -26,7 +40,6 @@ public class Protonate {
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
-
     /**
      * Assume there are no hydrogens
      * Uses a MyJmol from algoParameters
@@ -45,7 +58,6 @@ public class Protonate {
     // -------------------------------------------------------------------
     public void compute() throws ExceptionInScoringUsingBioJavaJMolGUI {
 
-
         SafeUltiJmolUsage safeUltiJmolUsage = new SafeUltiJmolUsage(algoParameters);
         ProtonateTask protonateTask = new ProtonateTask(myStructure, algoParameters);
         safeUltiJmolUsage.setDoMyJmolTaskIfc(protonateTask);
@@ -54,7 +66,6 @@ public class Protonate {
         results = safeUltiJmolUsage.getResults();
 
         protonatedMyStructure = (MyStructureIfc) results.get(Results.PROTONATED_STRUCTURE);
-
     }
 
 

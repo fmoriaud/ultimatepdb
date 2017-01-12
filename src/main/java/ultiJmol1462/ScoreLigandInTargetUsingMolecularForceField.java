@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
@@ -13,7 +32,6 @@ import java.util.Map;
  * Created by Fabrice on 25/09/16.
  */
 public class ScoreLigandInTargetUsingMolecularForceField {
-
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------
@@ -27,6 +45,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     private float strainedEnergy;
 
     private boolean allconvergenceReached = true;
+
 
     // -------------------------------------------------------------------
     // Constructors
@@ -200,10 +219,7 @@ public class ScoreLigandInTargetUsingMolecularForceField {
         }
 
         float thresholdDistance = 5.0f;
-        // atomIds in Target
-        // So as when I merge, I add first target, that will work for the selection
 
-        // I assume first atom has id = 1
         List<Integer> atomIds = new ArrayList<>();
 
         int idAtomTarget = 0;
@@ -222,18 +238,16 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     }
 
 
-    //------------------------
+    // -------------------------------------------------------------------
     // Getter and Setter
-    //------------------------
+    // -------------------------------------------------------------------
     public float getInteractionEnergy() {
         return interactionEnergy;
     }
 
-
     public float getRmsdOfLigandBeforeAndAfterMinimization() {
         return rmsdOfLigandBeforeAndAfterMinimization;
     }
-
 
     public int getCountOfLongDistanceChange() {
         return countOfLongDistanceChange;
@@ -246,5 +260,4 @@ public class ScoreLigandInTargetUsingMolecularForceField {
     public boolean isAllconvergenceReached() {
         return allconvergenceReached;
     }
-
 }

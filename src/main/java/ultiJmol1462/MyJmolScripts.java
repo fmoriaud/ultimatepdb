@@ -1,20 +1,32 @@
-package ultiJmol1462;
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
 
-/**
- * Created by Fabrice on 28/09/16.
- */
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+package ultiJmol1462;
 
 import java.util.List;
 
-/**
- * Created by Fabrice on 28/09/16.
- */
 public class MyJmolScripts {
-
-
+    //-------------------------------------------------------------
+    // Static methods
+    //-------------------------------------------------------------
     public static String getScriptMinimizationAll() {
 
-        // Build script
         boolean onlyHydrogen = false;
         StringBuilder sb = new StringBuilder();
         sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
@@ -27,14 +39,12 @@ public class MyJmolScripts {
             sb.append("minimize select {*}\n");
         }
         String script = sb.toString();
-
         return script;
     }
 
 
     public static String getScriptMinimizationOnlyHydrogens() {
 
-        // Build script
         boolean onlyHydrogen = true;
         StringBuilder sb = new StringBuilder();
         sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
@@ -47,62 +57,6 @@ public class MyJmolScripts {
             sb.append("minimize select {*}\n");
         }
         String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getScriptMinimizationWholeLigandTargetFixed(int atomCountTarget) {
-
-        // Build script
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("select {" + selectStringTarget + "}\n");
-        sb.append("spacefill 50\n");
-        sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("minimize FIX {" + selectStringTarget + "} select {*}\n");
-
-        String script = sb.toString();
-
-        return script;
-    }
-
-
-    public static String getScriptAddHydrogens() {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 20\n");
-        sb.append("minimize energy ADDHYDROGENS\n");
-
-        String script = sb.toString();
-        return script;
-    }
-
-
-    public static String getScriptMinimizationWholeLigandAndTargetHydrogens(int atomCountTarget) {
-
-        // Build script
-        StringBuilder sb = new StringBuilder();
-        sb.append("set forcefield \"MMFF94\"\n" + "set minimizationsteps 50\n");
-        sb.append("set logLevel 0\nset undo ON\n set echo off\n set useMinimizationThread ON\n");
-        String selectStringTargetNonHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and not { hydrogen }";
-        String selectStringTargetHydrogens = "atomno > 0 and atomno < " + (atomCountTarget + 1) + " and { hydrogen }";
-
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("select {" + selectStringTargetNonHydrogens + "}\n");
-        sb.append("spacefill 50\n");
-        sb.append("select {" + selectLigand + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("select {" + selectStringTargetHydrogens + "}\n");
-        sb.append("spacefill 400\n");
-        sb.append("minimize FIX {" + selectStringTargetNonHydrogens + "} select {*}\n");
-
-        String script = sb.toString();
-
         return script;
     }
 
@@ -147,27 +101,5 @@ public class MyJmolScripts {
 
         return script;
     }
-
-
-    public static String getPostScriptDeleteTarget(int atomCountTarget) {
-
-        StringBuilder sb = new StringBuilder();
-        String selectStringTarget = "atomno > 0 and atomno < " + (atomCountTarget + 1);
-
-        sb.append("delete (" + selectStringTarget + ") \n");
-
-        return sb.toString();
-    }
-
-
-    public static String getPostScriptDeleteLigand(int atomCountTarget) {
-
-        StringBuilder sb = new StringBuilder();
-        String selectLigand = "{atomno > " + (atomCountTarget) + "}";
-        sb.append("delete (" + selectLigand + ") \n");
-
-        return sb.toString();
-    }
-
 }
 

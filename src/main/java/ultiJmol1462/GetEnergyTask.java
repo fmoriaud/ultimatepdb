@@ -1,18 +1,32 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import jmolgui.UltiJmol1462;
 import org.jmol.minimize.Minimizer;
-import parameters.AlgoParameters;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * Created by Fabrice on 05/11/16.
- */
 public class GetEnergyTask implements DoMyJmolTaskIfc {
-
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------
@@ -21,7 +35,6 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
 
     private Map<Results, Object> results = new LinkedHashMap<>();
     private String name;
-
 
 
     // -------------------------------------------------------------------
@@ -41,15 +54,13 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
     @Override
     public boolean doAndReturnConvergenceStatus(UltiJmol1462 ultiJmol) throws ExceptionInScoringUsingBioJavaJMolGUI {
 
-
         ultiJmol.jmolPanel.openStringInline(moleculeV3000);
 
         try {
             Thread.sleep(2000L);
         } catch (InterruptedException e) {
-           return false;
+            return false;
         }
-
 
         String newScript = script.replace("set minimizationsteps 50", "set minimizationsteps 0");
 
@@ -88,7 +99,6 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
         } catch (InterruptedException e) {
             return false;
         }
-
         return true;
     }
 
@@ -102,6 +112,7 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
         return name;
     }
 
+
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -113,13 +124,10 @@ public class GetEnergyTask implements DoMyJmolTaskIfc {
         long waitTimeMillisecond = 1000;
         Minimizer minimizer = ultiJmol.jmolPanel.getViewer().getMinimizer(true);
 
-        // if not ok jmol returns 0.0 which is very unlikely
         while (minimizer == null || minimizer.getMinimizationEnergy() == null || Math.abs(minimizer.getMinimizationEnergy()) < 0.01) {
             try {
                 Thread.sleep(waitTimeMillisecond);
                 countIteration += 1;
-                //System.out.println(countIteration);
-                //System.out.println(countIteration);
                 if (countIteration > maxIteration) {
                     return null;
                 }

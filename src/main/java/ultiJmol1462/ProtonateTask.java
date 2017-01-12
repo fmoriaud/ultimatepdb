@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package ultiJmol1462;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
@@ -9,9 +28,6 @@ import parameters.AlgoParameters;
 
 import java.util.*;
 
-/**
- * Created by Fabrice on 05/11/16.
- */
 public class ProtonateTask implements DoMyJmolTaskIfc {
     // -------------------------------------------------------------------
     // Class variables
@@ -23,7 +39,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
     private String name;
 
 
-
     // -------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------
@@ -33,8 +48,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         this.algoParameters = algoParameters;
         this.name = "ProtonateTask";
     }
-
-
 
 
     // -------------------------------------------------------------------
@@ -66,7 +79,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
 
         String script = sb.toString();
 
-        //String script = MyJmolScripts.getScriptAddHydrogens();
         ultiJmol.jmolPanel.evalString(script);
 
         try {
@@ -74,8 +86,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         } catch (InterruptedException e) {
             return false;
         }
-
-        boolean convergenceReached = false;
 
         Float energy = 1E8f;
         int countIteration = 0;
@@ -90,13 +100,10 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
             }
 
             countIteration += 1;
-            // Energy there is a relative indicator
-            // Only relates to what is unfixed in the minimization
             float currentEnergy = getEnergyBiojavaJmolNewCode(ultiJmol);
 
             System.out.println("currentEnergy = " + currentEnergy);
 
-            // when too high then I should give up
             if (currentEnergy > 1E8) {
                 return false;
             }
@@ -132,7 +139,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         results.put(Results.PROTONATED_STRUCTURE, protonatedMyStructure);
         return true;
     }
-
 
 
     @Override
@@ -192,18 +198,9 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
 
     private void addHydrogenInformation(MyStructureIfc myStructureThatCouldHaveHydrogens, MyStructureIfc myStructureWithBondsAndHydrogenAtoms) {
 
-        // remove hydrogens and bond to hydrogens: sometimes there are and also for Xray structure
-        //		for (MyChainIfc chain: myStructure.getAllChains()){
-        //			for (MyMonomerIfc monomer: chain.getMyMonomers()){
-        //
-        //			}
-        //		}
-
         MyStructureTools.removeAllExplicitHydrogens(myStructureThatCouldHaveHydrogens);
         Map<MyAtomIfc, MyAtomIfc> mapToGetCorrespondingAtomWithInformation = buildCorrespondanceHeavyAtomsMapBasedOnAtomXYZ(myStructureWithBondsAndHydrogenAtoms, myStructureThatCouldHaveHydrogens);
 
-        // I loop on existing bonds and create bonds with new references
-        // I do it here as it is a special MyStructure with only one chain: so not good to put that in a library and not needed
         MyChainIfc chain = myStructureWithBondsAndHydrogenAtoms.getAllAminochains()[0];
         MyMonomerIfc onlyMonomerInMyStructure = chain.getMyMonomers()[0];
 
@@ -212,7 +209,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
             if (Arrays.equals(atom.getElement(), "H".toCharArray())) {
                 continue;
             }
-            // translate this bonds into myStructure
             MyAtomIfc atomInMyStructure = mapToGetCorrespondingAtomWithInformation.get(atom);
 
             MyBondIfc[] bonds = atom.getBonds();
@@ -236,7 +232,6 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
             }
             MyBondIfc[] correspondingBondsArray = correspondingBonds.toArray(new MyBondIfc[correspondingBonds.size()]);
             atomInMyStructure.setBonds(correspondingBondsArray);
-
         }
 
         // Now I add Hydrogens
@@ -244,9 +239,7 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         int countAtom = atomCountWithoutHydrogen;
         Map<MyAtomIfc, List<MyAtomIfc>> mapHeavyAtomAndHydrogen = buildMapHeavyAtomAndHydrogen(myStructureWithBondsAndHydrogenAtoms);
 
-        int heavyAtomCount = 1;
         for (Map.Entry<MyAtomIfc, List<MyAtomIfc>> entry : mapHeavyAtomAndHydrogen.entrySet()) {
-
 
             MyAtomIfc heavyAtomInMyStructure = mapToGetCorrespondingAtomWithInformation.get(entry.getKey());
             if (heavyAtomInMyStructure == null) {
@@ -254,22 +247,12 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
                 continue;
             }
 
-
             int hydrogenCountForThisHeavyAtom = 1;
 
             for (MyAtomIfc hydrogenAtom : entry.getValue()) {
 
-                //String atomName = "H" + hydrogenCountForThisHeavyAtom + String.valueOf(heavyAtomInMyStructure.getAtomName());
-
                 countAtom += 1;
-                char[] heavyAtomNameToUse;
-                if (heavyAtomInMyStructure.getAtomName().length == 0) {
-                    heavyAtomNameToUse = ("_" + String.valueOf(heavyAtomCount)).toCharArray(); // structure coming from V3000 doesnt have atom names !!
-                } else {
-                    heavyAtomNameToUse = heavyAtomInMyStructure.getAtomName();
-                }
                 char[] hydrogenName = MyStructureTools.makeHydrogenAtomName(hydrogenCountForThisHeavyAtom, String.valueOf(heavyAtomInMyStructure.getAtomName()));
-
 
                 MyAtomIfc newHydrogen = null;
                 try {
@@ -379,5 +362,4 @@ public class ProtonateTask implements DoMyJmolTaskIfc {
         }
         return true;
     }
-
 }
