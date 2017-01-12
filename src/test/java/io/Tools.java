@@ -1,14 +1,33 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package io;
 
 import genericBuffer.GenericBuffer;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
+import mystructure.EnumMyReaderBiojava;
 import org.apache.commons.io.FileUtils;
 import org.biojava.nbio.structure.*;
 import parameters.AlgoParameters;
 import protocols.CommandLineTools;
 import protocols.ParsingConfigFileException;
-import mystructure.EnumMyReaderBiojava;
 import shapeCompare.ProcrustesAnalysis;
 
 import java.io.File;
@@ -22,7 +41,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -32,7 +50,9 @@ import static org.junit.Assert.assertTrue;
  * TODO Then Test should run off line
  */
 public class Tools {
-
+    //-------------------------------------------------------------
+    // Static variables
+    //-------------------------------------------------------------
     /**
      * A test database myDBtest so database test can be run without overriding the main database called myDB
      */
@@ -55,16 +75,6 @@ public class Tools {
         String builtTestFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb" + File.separator;
         final File baseDir = new File(builtTestFolder);
 
-        // if baseDir already exists then empty it
-        /*
-        if (baseDir.exists()) {
-            try {
-                FileUtils.deleteDirectory(baseDir);
-            } catch (IOException e) {
-
-            }
-        }
-        */
         String builttestPDBFolder = builtTestFolder + File.separator + "pdb";
         baseDir.mkdirs();
         final File pdbDir = new File(builttestPDBFolder);
@@ -77,7 +87,6 @@ public class Tools {
         testChemcompFolder = builtTestFolder;
         testPDBFolder = builttestPDBFolder;
 
-        //URL url = BiojavaReaderFromPathToMmcifFileTest.class.getClassLoader().getResource("1di9.cif.gz");
         String resourcesPDBFolder = null;
         try {
             URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("pdb/1di9.cif.gz");
@@ -114,28 +123,6 @@ public class Tools {
             e.printStackTrace();
         }
         return testChemcompFolder;
-    }
-
-    /**
-     * Tested method to get a PDB file from path
-     * The chemcomp are automatically downloaded
-     *
-     * @param url
-     * @throws ParsingConfigFileException
-     * @throws IOException
-     */
-    private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException, ExceptionInIOPackage {
-        Path path = null;
-        try {
-            path = Paths.get(url.toURI());
-        } catch (URISyntaxException e1) {
-            assertTrue(false);
-        }
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-        Structure structure = null;
-        BiojavaReaderIfc reader = new BiojavaReader();
-        structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-        return structure;
     }
 
 
@@ -233,4 +220,31 @@ public class Tools {
         assertTrue(atLeastOneBond);
         return true;
     }
+
+
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
+    /**
+     * Tested method to get a PDB file from path
+     * The chemcomp are automatically downloaded
+     *
+     * @param url
+     * @throws ParsingConfigFileException
+     * @throws IOException
+     */
+    private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException, ExceptionInIOPackage {
+        Path path = null;
+        try {
+            path = Paths.get(url.toURI());
+        } catch (URISyntaxException e1) {
+            assertTrue(false);
+        }
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+        Structure structure = null;
+        BiojavaReaderIfc reader = new BiojavaReader();
+        structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+        return structure;
+    }
+
 }

@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package database;
 
 import convertformat.AdapterBioJavaStructure;
@@ -5,9 +24,10 @@ import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.*;
-import org.biojava.nbio.structure.Group;
-import org.biojava.nbio.structure.GroupType;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyChainIfc;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -22,16 +42,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 30/09/16.
- */
 public class SequenceToolsTest {
-
 
     @Test
     public void testGenerateSequenceFromMyStructureWithThreeUMPcovalentToNucleosides() throws ParsingConfigFileException, IOException {
@@ -189,7 +204,7 @@ public class SequenceToolsTest {
         expectedValues.add(QueryMonomerToTargetContactType.SIDECHAIN);
 
         int count = 0;
-        for (QueryMonomerToTargetContactType type: contacts) {
+        for (QueryMonomerToTargetContactType type : contacts) {
             assertTrue(type.equals(expectedValues.get(count)));
             count += 1;
         }

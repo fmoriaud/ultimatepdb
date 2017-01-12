@@ -71,6 +71,9 @@ public class ExtendPairing {
     }
 
 
+    // -------------------------------------------------------------------
+    // Implementation
+    // -------------------------------------------------------------------
     private ResultsFromEvaluateCost generatePairingAndNullSpaceUsingMatchingPointWithPropertiesNostaticlist(ResultsFromEvaluateCost resultSeed, final CollectionOfPointsWithPropertiesIfc shape1, final CollectionOfPointsWithPropertiesIfc shape2, AlgoParameters algoParameters) {
 
         // Both points has StrikingProperties not none and they all match (also if only one of course)
@@ -444,26 +447,6 @@ public class ExtendPairing {
             } else {
                 pointAlreadyFoundInShape1.add(point1);
                 pointAlreadyFoundInShape2.add(point2);
-            }
-        }
-    }
-
-
-    private void cleanListPairsFromPointsInvolvedInSeedPairings(PairingAndNullSpaces pairing, List<PairPointWithDistance> listPairsWithShortDistance) {
-
-        Iterator<PairPointWithDistance> itr = listPairsWithShortDistance.iterator();
-        A:
-        while (itr.hasNext()) {
-            PairPointWithDistance pairInteger = itr.next();
-
-            for (Map.Entry<Integer, Integer> entry : pairing.getPairing().entrySet()) {
-                Integer pointFromShape1 = entry.getKey();
-                Integer pointFromShape2 = entry.getValue();
-
-                if (pairInteger.getPairInteger().point1 == pointFromShape1.intValue() || pairInteger.getPairInteger().point2 == pointFromShape2.intValue()) {
-                    itr.remove();
-                    continue A;
-                }
             }
         }
     }

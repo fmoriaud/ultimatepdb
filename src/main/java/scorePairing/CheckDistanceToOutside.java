@@ -52,7 +52,6 @@ public class CheckDistanceToOutside {
     // -------------------------------------------------------------------
     // Implementation
     // -------------------------------------------------------------------
-
     /**
      * Detect if the overlap leads to a ligand on the other side
      * For each paired point 1, take each paired point 2 (not closeby),
