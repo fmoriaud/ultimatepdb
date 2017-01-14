@@ -55,6 +55,7 @@ public class ProtocolTools {
 
     public static void compareCompleteCheckAndWriteToResultFolder(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) {
 
+        System.out.println(String.valueOf(targetShape.getFourLetterCode()));
         CompareCompleteCheck compareCompleteCheck = new CompareCompleteCheck(queryShape, targetShape, algoParameters);
         List<Hit> hits = null;
         try {
