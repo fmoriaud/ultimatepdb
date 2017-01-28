@@ -131,9 +131,9 @@ public class Tools {
         AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
         // add a ultiJmol which is needed in the ShapeBuilder
 
-        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT()*2);
 
-        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
+        for (int i = 0; i < (algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2); i++) {
 
             UltiJmol1462 ultiJMol = new UltiJmol1462();
             try {

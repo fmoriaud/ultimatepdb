@@ -34,7 +34,6 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     private final ShapeContainerIfc shapeContainerQuery;
     private final ShapeContainerDefined shapeContainerDefinedTarget;
     private final AlgoParameters algoParameters;
-    private MyStructureIfc myStructureTarget;
     private final boolean minimizeAllIfTrueOrOnlyOneIfFalse;
 
 
@@ -59,6 +58,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     }
 
 
+    /*
     public CompareWithOneOnlyCallable(boolean minimizeAllIfTrueOrOnlyOneIfFalse, ShapeContainerIfc shapeContainerQuery, MyStructureIfc myStructureTarget, ShapeContainerDefined shapeContainerDefined, AlgoParameters algoParameters) {
 
         this.shapeContainerQuery = shapeContainerQuery;
@@ -67,7 +67,7 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
         this.myStructureTarget = myStructureTarget;
         this.minimizeAllIfTrueOrOnlyOneIfFalse = minimizeAllIfTrueOrOnlyOneIfFalse;
     }
-
+*/
 
     //-------------------------------------------------------------
     // Public & Override methods
@@ -75,14 +75,14 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     @Override
     public Boolean call() throws Exception {
 
-        ShapeContainerIfc targetShape = null;
-        if (myStructureTarget != null) {
-            targetShape = shapeContainerDefinedTarget.getShapecontainer(myStructureTarget);
-        } else {
-            targetShape = shapeContainerDefinedTarget.getShapecontainer();
-        }
+        //ShapeContainerIfc targetShape = null;
+        // if (myStructureTarget != null) {
+        //     targetShape = shapeContainerDefinedTarget.getShapecontainer(myStructureTarget);
+        // } else {
+        ShapeContainerIfc targetShape = shapeContainerDefinedTarget.getShapecontainer();
+        //}
 
-        System.out.println("Finish Built a shape container");
+        //System.out.println("Finish Built a shape container");
         ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, shapeContainerQuery, targetShape, algoParameters);
 
         return true;
