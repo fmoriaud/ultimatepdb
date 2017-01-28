@@ -76,6 +76,7 @@ public class SafeUltiJmolUsage {
 
         try {
             ultiJmol.jmolPanel.evalString("zap");
+            ultiJmol.jmolPanel.evalString("cache CLEAR");
             try {
                 Thread.sleep(2000L);
             } catch (InterruptedException e) {
