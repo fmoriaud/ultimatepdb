@@ -35,8 +35,7 @@ import shapeCompare.ProcrustesAnalysis;
 
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 
 public class ProtocolTools {
@@ -96,7 +95,7 @@ public class ProtocolTools {
 
         URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
-        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT()*2);
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
         algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 
         for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
@@ -121,22 +120,21 @@ public class ProtocolTools {
     }
 
 
+    /*
     public static ExecutorService getExecutorService(int consumersCount) {
 
         ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(consumersCount);
         return threadPoolExecutor;
     }
+*/
 
 
-
-
-/*
     public static ExecutorService getExecutorService(int consumersCount) {
         int corePoolSize = 0; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
         // could happen when searching database for a potetial hit, that could last as long
         // as the time to search the whole system
-        int maxCountRunnableInBoundQueue = 10000; // 10000;
+        int maxCountRunnableInBoundQueue = 50; // 10000;
 
         ExecutorService threadPoolExecutor =
                 new ThreadPoolExecutor(
@@ -149,5 +147,5 @@ public class ProtocolTools {
 
         return threadPoolExecutor;
     }
-*/
+
 }

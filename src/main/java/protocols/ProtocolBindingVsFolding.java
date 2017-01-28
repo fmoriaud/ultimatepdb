@@ -142,8 +142,13 @@ public class ProtocolBindingVsFolding {
         String chainIdFromDB;
 
         //List<HitInSequenceDb> hitsEnrichedOnTop = putGoodHitsOnTopOfList(hitsInDatabase, getHitWithGoodRmsdBackbone());
-        A:
+
         for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
+            if (hitInSequenceDb.getFourLetterCode().toLowerCase().equals("5cew") || hitInSequenceDb.getFourLetterCode().toLowerCase().equals("3cfe")){
+                System.out.println(hitInSequenceDb);
+            }
+        }
+        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
 
 
             fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
