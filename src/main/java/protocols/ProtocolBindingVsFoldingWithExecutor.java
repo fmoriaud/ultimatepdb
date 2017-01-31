@@ -25,10 +25,7 @@ import shape.ShapeContainerIfc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.*;
 
 public class ProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
@@ -83,7 +80,12 @@ public class ProtocolBindingVsFoldingWithExecutor {
             }
         }
         executorService.shutdown();
-
+        try {
+            executorService.awaitTermination(10000, TimeUnit.DAYS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        /*
         boolean notFinished = true;
         while (true && notFinished) {
 
@@ -98,7 +100,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 //e.printStackTrace();
             }
         }
-
+*/
         System.out.println("Program finished.");
         System.exit(0);
     }
