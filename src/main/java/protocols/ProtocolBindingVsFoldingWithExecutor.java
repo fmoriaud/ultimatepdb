@@ -82,7 +82,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 }
             }
         }
-
+        executorService.shutdown();
         boolean notFinished = true;
         while (true && notFinished) {
 
@@ -97,7 +97,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
                 //e.printStackTrace();
             }
         }
-        executorService.shutdown();
+
         System.out.println("Program finished.");
         System.exit(0);
     }
