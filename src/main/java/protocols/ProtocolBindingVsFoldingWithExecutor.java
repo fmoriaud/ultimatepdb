@@ -60,17 +60,17 @@ public class ProtocolBindingVsFoldingWithExecutor {
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
 
-        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
+        final List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
         for (ShapeContainerDefined target : targets) {
             boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
-            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
+            final CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
             callablesToLauch.add(compare);
         }
 
-        List<Future<Boolean>> allFuture = new ArrayList<>();
+        final List<Future<Boolean>> allFuture = new ArrayList<>();
         for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
-                Future<Boolean> future = executorService.submit(callableToLauch);
+                final Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
 
             } catch (RejectedExecutionException e) {
@@ -83,6 +83,7 @@ public class ProtocolBindingVsFoldingWithExecutor {
             }
         }
         executorService.shutdown();
+
         boolean notFinished = true;
         while (true && notFinished) {
 
