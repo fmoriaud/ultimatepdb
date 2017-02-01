@@ -136,6 +136,7 @@ public class ProtocolTools {
         // as the time to search the whole system
         int maxCountRunnableInBoundQueue = 50; // 10000;
 
+        /*
         ExecutorService threadPoolExecutor =
                 new ThreadPoolExecutor(
                         corePoolSize,
@@ -144,8 +145,14 @@ public class ProtocolTools {
                         TimeUnit.MILLISECONDS,
                         new LinkedBlockingQueue<Runnable>(maxCountRunnableInBoundQueue)
                 );
+                */
 
+        BlockingQueue<Runnable> queue = new SynchronousQueue<>();
+        ExecutorService threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, consumersCount,
+                keepAliveTime, TimeUnit.MILLISECONDS,
+                queue);
         return threadPoolExecutor;
-    }
 
+
+    }
 }
