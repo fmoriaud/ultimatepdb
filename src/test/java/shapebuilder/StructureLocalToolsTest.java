@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapebuilder;
 
 import convertformat.AdapterBioJavaStructure;
@@ -8,7 +27,6 @@ import io.IOTools;
 import io.Tools;
 import mystructure.*;
 import org.biojava.nbio.structure.Structure;
-import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;
@@ -18,22 +36,15 @@ import shape.ShapeContainerIfc;
 import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import shapeBuilder.StructureLocalToBuildAnyShape;
-import shapeBuilder.StructureLocalTools;
 import shapeCompare.CompareTools;
 import shapeCompare.ResultsFromEvaluateCost;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 11/10/16.
- */
 public class StructureLocalToolsTest {
 
 
@@ -522,8 +533,8 @@ public class StructureLocalToolsTest {
         assertTrue(monomerOnRightLigand.getMyAtomFromMyAtomName("N".toCharArray()) != null);
 
         // Check peptide bonds
-        for (int i=0; i<peptideLength-1; i++){
-            MyAtomIfc n1 = ligand.getMyMonomerByRank(i+1).getMyAtomFromMyAtomName("N".toCharArray());
+        for (int i = 0; i < peptideLength - 1; i++) {
+            MyAtomIfc n1 = ligand.getMyMonomerByRank(i + 1).getMyAtomFromMyAtomName("N".toCharArray());
             MyAtomIfc c0 = ligand.getMyMonomerByRank(i).getMyAtomFromMyAtomName("C".toCharArray());
             boolean foundPeptideBond = false;
             for (MyBondIfc bond : n1.getBonds()) {
@@ -536,7 +547,6 @@ public class StructureLocalToolsTest {
 
         System.out.println();
     }
-
 
 
     @Test

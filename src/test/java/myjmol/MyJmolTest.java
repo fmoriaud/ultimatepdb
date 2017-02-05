@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package myjmol;
 
 import convertformat.AdapterBioJavaStructure;
@@ -6,6 +25,9 @@ import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
 import jmolgui.UltiJmol1462;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,14 +35,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
-import mystructure.EnumMyReaderBiojava;
-import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
-import mystructure.ReadingStructurefileException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 

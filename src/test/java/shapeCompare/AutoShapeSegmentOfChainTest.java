@@ -1,25 +1,38 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package shapeCompare;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import io.Tools;
-import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
-import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
-import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.*;
+import protocols.CommandLineException;
+import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
+import protocols.ShapecontainerDefinedBySegmentOfChain;
 import shape.ShapeContainerIfc;
-import shape.ShapeContainerWithPeptide;
-import shapeBuilder.EnumShapeReductor;
 import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
@@ -28,9 +41,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 14/10/16.
- */
 public class AutoShapeSegmentOfChainTest {
 
     @Test

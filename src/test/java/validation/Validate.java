@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package validation;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
@@ -20,14 +39,10 @@ import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 10.12.16.
- */
 public class Validate {
 
 
@@ -112,8 +127,6 @@ public class Validate {
                 for (int j = 0; j < thirsLineContent.length; j++) {
                     if (thirsLineContent[j].equals("RmsdBackbone")) {
                         Double rmsdBackbone = Double.valueOf(thirsLineContent[j + 2]);
-
-
 
 
                         if (rmsdBackbone > 1.0) {

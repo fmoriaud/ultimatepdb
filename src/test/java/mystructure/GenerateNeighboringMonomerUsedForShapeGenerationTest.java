@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package mystructure;
 
 import io.Tools;
@@ -29,7 +48,7 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
         }
 
         float minDistanceToBeneighbor = 10;
-        for (int i=1; i<10; i++){
+        for (int i = 1; i < 10; i++) {
 
             float y = 0f;
             float z = 0f;
@@ -38,8 +57,8 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
             // set coordinates to representative myAtom
             // set their x,y,z on a x axis, so distance is 1D and therefore easy to check
             List<Float> xCoordinates = new ArrayList<>();
-            for (MyChainIfc chain: myStructure.getAllChains()){
-                for (MyMonomerIfc monomer: chain.getMyMonomers()){
+            for (MyChainIfc chain : myStructure.getAllChains()) {
+                for (MyMonomerIfc monomer : chain.getMyMonomers()) {
                     MyAtomIfc repAtom = MyStructureTools.getRepresentativeMyAtom(monomer);
 
                     x += minDistanceToBeneighbor * 2 / i;
@@ -60,8 +79,8 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
 
             MyChainIfc[] aminoChains = myStructureCloned.getAllAminochains();
             int id = 0;
-            for (MyChainIfc chain: aminoChains){
-                for (MyMonomerIfc startingMonomer: chain.getMyMonomers()){
+            for (MyChainIfc chain : aminoChains) {
+                for (MyMonomerIfc startingMonomer : chain.getMyMonomers()) {
                     MyChainIfc[] neighbors = generator.computeAminoNeighborsOfAGivenResidue(startingMonomer);
 
                     int expected = expectedNeighborCount(id, xCoordinates, minDistanceToBeneighbor);
@@ -75,13 +94,13 @@ public class GenerateNeighboringMonomerUsedForShapeGenerationTest {
     }
 
 
-    private int expectedNeighborCount(int id, List<Float> xCoordinates, double threshold){
+    private int expectedNeighborCount(int id, List<Float> xCoordinates, double threshold) {
 
         int neighborCount = 0;
         Float currentX = xCoordinates.get(id);
-        for (Float x: xCoordinates){
-            float dist = Math.abs(x-currentX);
-            if (dist > 0.0001 && dist < threshold){
+        for (Float x : xCoordinates) {
+            float dist = Math.abs(x - currentX);
+            if (dist > 0.0001 && dist < threshold) {
                 neighborCount += 1;
             }
         }

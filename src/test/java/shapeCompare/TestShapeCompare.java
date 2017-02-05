@@ -1,18 +1,40 @@
-package shapeCompare;
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
 
-import java.io.IOException;
-import java.util.List;
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+package shapeCompare;
 
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import io.Tools;
-import org.junit.Test;
-import parameters.AlgoParameters;
-import protocols.*;
-import shape.ShapeContainerIfc;
-import shapeBuilder.ShapeBuildingException;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.ReadingStructurefileException;
+import org.junit.Test;
+import parameters.AlgoParameters;
+import protocols.CommandLineException;
+import protocols.ParsingConfigFileException;
+import protocols.ShapeContainerDefined;
+import protocols.ShapecontainerDefinedByHetatm;
+import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +44,7 @@ public class TestShapeCompare {
 
     /**
      * Use ShapeContainerDefined fro both Shape.
+     *
      * @throws ExceptionInScoringUsingBioJavaJMolGUI
      * @throws ReadingStructurefileException
      * @throws ExceptionInMyStructurePackage

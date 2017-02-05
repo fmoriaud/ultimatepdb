@@ -1,3 +1,22 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package mystructure;
 
 import org.junit.Before;
@@ -17,7 +36,7 @@ public class MyChainTest {
     private MyMonomer monomer1, monomer2;
 
     @Before
-    public void prepare(){
+    public void prepare() {
         char[] element = "C".toCharArray();
         float[] coords = new float[3];
         char[] atomName = "CA".toCharArray();
@@ -46,7 +65,6 @@ public class MyChainTest {
     }
 
 
-
     @Test
     public void testConstructorWithAListOfMyMonomersWithNoParents() {
         List<MyMonomerIfc> myMonomers = new ArrayList<>();
@@ -56,7 +74,6 @@ public class MyChainTest {
         assertTrue(myChain.getMyMonomers().length == 2);
         assertTrue(Arrays.equals(myChain.getChainId(), MyStructureConstants.CHAIN_ID_DEFAULT.toCharArray()));
     }
-
 
 
     @Test
@@ -77,7 +94,6 @@ public class MyChainTest {
     }
 
 
-
     @Test
     public void testRemoveMyMonomer() {
 
@@ -96,7 +112,6 @@ public class MyChainTest {
         myChain.removeMyMonomer(monomer2);
         assertTrue(myChain.getMyMonomers().length == 0);
     }
-
 
 
     @Test
