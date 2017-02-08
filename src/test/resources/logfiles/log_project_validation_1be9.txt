@@ -1,0 +1,169 @@
+&&&&& Start Read 1be9 1200243558531534
+&&&&&& Finished Read 1be9 1200243558531534
+&&&&&& Start shape container 1be9 1200243558531534
+&&&&&& Made shape container 1be9 1200243558531534
+PDB = 1A3G chain id = A index = 27 sequence = [TYR, GLY, THR, SER, VAL] cost = 0.04832439733940265 minishape size = 61 shape size = 1346
+RatioPairedPointInQuery = 0.75857145 CountOfLongDistanceChange = 0 InteractionEFinal = 35.1370849609375 RmsdLigand = 0.6094951033592224 LigandStrainedEnergy = 80.63636779785156
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.14139406226920387 RmsdBackbone = 2.5358913 Rank = 0
+PDB = 4AB4 chain id = B index = 53 sequence = [GLU, ALA, THR, SER, VAL] cost = 0.04344426936043981 minishape size = 100 shape size = 1689
+RatioPairedPointInQuery = 0.7785714 CountOfLongDistanceChange = 0 InteractionEFinal = -12.449295043945312 RmsdLigand = 0.35763999819755554 LigandStrainedEnergy = 38.329654693603516
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.11232464645158005 RmsdBackbone = 2.1503112 Rank = 0
+PDB = 1ACO chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.04247704108758848 minishape size = 84 shape size = 1575
+RatioPairedPointInQuery = 0.8 CountOfLongDistanceChange = 0 InteractionEFinal = 7.1203155517578125 RmsdLigand = 0.5817116498947144 LigandStrainedEnergy = 116.62461853027344
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.07992088398187086 RmsdBackbone = 5.9071045 Rank = 0
+PDB = 6ACN chain id = A index = 264 sequence = [ALA, THR, THR, SER, VAL] cost = 0.0429206332143268 minishape size = 81 shape size = 1540
+RatioPairedPointInQuery = 0.7828571 CountOfLongDistanceChange = 0 InteractionEFinal = -11.072761535644531 RmsdLigand = 0.286232054233551 LigandStrainedEnergy = 39.378196716308594
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.08175609496689792 RmsdBackbone = 6.194365 Rank = 0
+PDB = 8ACN chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.0468870606707747 minishape size = 88 shape size = 1513
+RatioPairedPointInQuery = 0.7614286 CountOfLongDistanceChange = 0 InteractionEFinal = -2.40618896484375 RmsdLigand = 0.5243855714797974 LigandStrainedEnergy = 60.94966125488281
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = -0.08057668277770388 RmsdBackbone = 5.9203196 Rank = 0
+PDB = 2AGX chain id = D index = 101 sequence = [CYS, THR, THR, SER, VAL] cost = 0.04484791947093412 minishape size = 65 shape size = 2022
+RatioPairedPointInQuery = 0.89857143 CountOfLongDistanceChange = 0 InteractionEFinal = -13.243690490722656 RmsdLigand = 0.3538641631603241 LigandStrainedEnergy = 40.634422302246094
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.13253388722189996 RmsdBackbone = 1.074749 Rank = 0
+PDB = 2AGX chain id = D index = 101 sequence = [CYS, THR, THR, SER, VAL] cost = 0.04707065178144033 minishape size = 65 shape size = 2022
+RatioPairedPointInQuery = 0.75857145 CountOfLongDistanceChange = 0 InteractionEFinal = 19.029037475585938 RmsdLigand = 0.37701669335365295 LigandStrainedEnergy = 54.319725036621094
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.1322932009808784 RmsdBackbone = 6.0883574 Rank = 1
+PDB = 2AGX chain id = H index = 113 sequence = [CYS, THR, THR, SER, VAL] cost = 0.047901314264976964 minishape size = 61 shape size = 1955
+RatioPairedPointInQuery = 0.7942857 CountOfLongDistanceChange = 0 InteractionEFinal = 8.487747192382812 RmsdLigand = 0.2751774489879608 LigandStrainedEnergy = 38.62776184082031
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.14144075429681663 RmsdBackbone = 6.368425 Rank = 0
+PDB = 2AGW chain id = H index = 110 sequence = [CYS, THR, THR, SER, VAL] cost = 0.04692078643030934 minishape size = 69 shape size = 1953
+RatioPairedPointInQuery = 0.80142856 CountOfLongDistanceChange = 0 InteractionEFinal = 12.693878173828125 RmsdLigand = 0.5506957769393921 LigandStrainedEnergy = 86.99422454833984
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.09598545128732686 RmsdBackbone = 6.584615 Rank = 0
+PDB = 2AGW chain id = H index = 110 sequence = [CYS, THR, THR, SER, VAL] cost = 0.04758462107402251 minishape size = 69 shape size = 1953
+RatioPairedPointInQuery = 0.8157143 CountOfLongDistanceChange = 0 InteractionEFinal = -11.59552001953125 RmsdLigand = 0.5584497451782227 LigandStrainedEnergy = 84.2400894165039
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.14169801545150765 RmsdBackbone = 2.0206823 Rank = 1
+PDB = 2AGZ chain id = H index = 103 sequence = [CYS, THR, THR, SER, VAL] cost = 0.04441309168510525 minishape size = 64 shape size = 2057
+RatioPairedPointInQuery = 0.8385714 CountOfLongDistanceChange = 0 InteractionEFinal = -4.737068176269531 RmsdLigand = 0.31146150827407837 LigandStrainedEnergy = 40.329673767089844
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.13234743113640485 RmsdBackbone = 6.4948716 Rank = 0
+PDB = 5AJN chain id = A index = 61 sequence = [PRO, ALA, THR, SER, VAL] cost = 0.04359429580478452 minishape size = 100 shape size = 1260
+RatioPairedPointInQuery = 0.7728571 CountOfLongDistanceChange = 0 InteractionEFinal = 8.403961181640625 RmsdLigand = 0.4642318785190582 LigandStrainedEnergy = 52.771400451660156
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.11720653342965269 RmsdBackbone = 1.6285775 Rank = 0
+PDB = 1AMI chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.04093753985721255 minishape size = 82 shape size = 1552
+RatioPairedPointInQuery = 0.7885714 CountOfLongDistanceChange = 0 InteractionEFinal = 8.847366333007812 RmsdLigand = 0.5941627621650696 LigandStrainedEnergy = 102.1339340209961
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.1683266567179891 RmsdBackbone = 5.8960333 Rank = 0
+PDB = 1AMI chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.04375829198845811 minishape size = 82 shape size = 1552
+RatioPairedPointInQuery = 0.75285715 CountOfLongDistanceChange = 0 InteractionEFinal = 16.160324096679688 RmsdLigand = 0.48230651021003723 LigandStrainedEnergy = 82.80255889892578
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.10766936188706427 RmsdBackbone = 6.3190017 Rank = 1
+PDB = 4AOY chain id = D index = 280 sequence = [MET, MET, THR, SER, VAL] cost = 0.04791691307722346 minishape size = 118 shape size = 1525
+RatioPairedPointInQuery = 0.7757143 CountOfLongDistanceChange = 0 InteractionEFinal = 15.247024536132812 RmsdLigand = 0.5623243451118469 LigandStrainedEnergy = 81.5127944946289
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.18693752003524058 RmsdBackbone = 2.1986384 Rank = 0
+PDB = 4ATQ chain id = A index = 65 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04541526523959678 minishape size = 74 shape size = 1683
+RatioPairedPointInQuery = 0.75857145 CountOfLongDistanceChange = 0 InteractionEFinal = 13.582901000976562 RmsdLigand = 0.25851985812187195 LigandStrainedEnergy = 32.953025817871094
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.12117885557641261 RmsdBackbone = 5.3799405 Rank = 0
+PDB = 4ATQ chain id = A index = 65 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04628104831074705 minishape size = 74 shape size = 1683
+RatioPairedPointInQuery = 0.7885714 CountOfLongDistanceChange = 0 InteractionEFinal = 13.320358276367188 RmsdLigand = 0.5107486844062805 LigandStrainedEnergy = 69.75491333007812
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = -0.11097119410185403 RmsdBackbone = 5.630298 Rank = 1
+PDB = 4ATQ chain id = B index = 66 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04524640990299792 minishape size = 74 shape size = 1729
+RatioPairedPointInQuery = 0.7985714 CountOfLongDistanceChange = 0 InteractionEFinal = 15.66485595703125 RmsdLigand = 0.47076770663261414 LigandStrainedEnergy = 49.11430358886719
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.1588711137591942 RmsdBackbone = 5.4834695 Rank = 0
+PDB = 4ATQ chain id = B index = 66 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.049800892349118345 minishape size = 74 shape size = 1729
+RatioPairedPointInQuery = 0.7842857 CountOfLongDistanceChange = 0 InteractionEFinal = 10.990745544433594 RmsdLigand = 0.42344585061073303 LigandStrainedEnergy = 45.586673736572266
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.07733769675185447 RmsdBackbone = 5.6006827 Rank = 1
+PDB = 4ATQ chain id = I index = 63 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.049818444575396116 minishape size = 76 shape size = 1713
+RatioPairedPointInQuery = 0.7842857 CountOfLongDistanceChange = 0 InteractionEFinal = 6.782196044921875 RmsdLigand = 0.3905342221260071 LigandStrainedEnergy = 41.12614059448242
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.10796588810420807 RmsdBackbone = 5.632109 Rank = 0
+PDB = 4ATP chain id = B index = 66 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04884275605917553 minishape size = 75 shape size = 1705
+RatioPairedPointInQuery = 0.7614286 CountOfLongDistanceChange = 0 InteractionEFinal = 5.212577819824219 RmsdLigand = 0.23442621529102325 LigandStrainedEnergy = 31.605182647705078
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.026014774198527168 RmsdBackbone = 5.5335817 Rank = 0
+PDB = 4ATP chain id = K index = 65 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04613395784209493 minishape size = 79 shape size = 1727
+RatioPairedPointInQuery = 0.7828571 CountOfLongDistanceChange = 0 InteractionEFinal = -1.7861404418945312 RmsdLigand = 0.22470127046108246 LigandStrainedEnergy = 28.725757598876953
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.046187246796563095 RmsdBackbone = 5.789972 Rank = 0
+PDB = 4ATP chain id = K index = 65 sequence = [ALA, VAL, THR, SER, VAL] cost = 0.04803560691189512 minishape size = 79 shape size = 1727
+RatioPairedPointInQuery = 0.7871429 CountOfLongDistanceChange = 0 InteractionEFinal = 7.886138916015625 RmsdLigand = 0.29623943567276 LigandStrainedEnergy = 33.085506439208984
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.1059882948388039 RmsdBackbone = 5.4741673 Rank = 1
+PDB = 4AUB chain id = C index = 281 sequence = [ARG, VAL, THR, SER, VAL] cost = 0.0493581163847997 minishape size = 97 shape size = 1610
+RatioPairedPointInQuery = 0.76 CountOfLongDistanceChange = 0 InteractionEFinal = 12.426513671875 RmsdLigand = 0.29812338948249817 LigandStrainedEnergy = 45.4871826171875
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = -0.10681355081322126 RmsdBackbone = 3.6459432 Rank = 0
+PDB = 4AYZ chain id = B index = 30 sequence = [VAL, SER, THR, SER, VAL] cost = 0.04789505870228302 minishape size = 83 shape size = 1304
+RatioPairedPointInQuery = 0.7728571 CountOfLongDistanceChange = 0 InteractionEFinal = -3.5393524169921875 RmsdLigand = 0.5641059279441833 LigandStrainedEnergy = 47.20124053955078
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = -0.0032942029413250847 RmsdBackbone = 0.9686086 Rank = 0
+PDB = 1B0K chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.043827295485255005 minishape size = 85 shape size = 1570
+RatioPairedPointInQuery = 0.78571427 CountOfLongDistanceChange = 0 InteractionEFinal = 7.4084930419921875 RmsdLigand = 0.7861409783363342 LigandStrainedEnergy = 95.30160522460938
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.11510035846944952 RmsdBackbone = 6.233066 Rank = 0
+PDB = 1B6S chain id = D index = 183 sequence = [LEU, ARG, THR, SER, VAL] cost = 0.04584279994550427 minishape size = 91 shape size = 1930
+RatioPairedPointInQuery = 0.76714283 CountOfLongDistanceChange = 0 InteractionEFinal = -10.7781982421875 RmsdLigand = 0.5670481324195862 LigandStrainedEnergy = 162.8693084716797
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.09341146316420451 RmsdBackbone = 6.2388344 Rank = 0
+PDB = 2BA1 chain id = E index = 149 sequence = [MET, ILE, THR, SER, VAL] cost = 0.042930434052143356 minishape size = 124 shape size = 1718
+RatioPairedPointInQuery = 0.79714286 CountOfLongDistanceChange = 0 InteractionEFinal = 7.17730712890625 RmsdLigand = 0.392518550157547 LigandStrainedEnergy = 46.10222625732422
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.04454214296804392 RmsdBackbone = 2.9046075 Rank = 0
+PDB = 2BA1 chain id = E index = 149 sequence = [MET, ILE, THR, SER, VAL] cost = 0.0460910537252529 minishape size = 124 shape size = 1718
+RatioPairedPointInQuery = 0.75714284 CountOfLongDistanceChange = 0 InteractionEFinal = 1.3078842163085938 RmsdLigand = 0.18815527856349945 LigandStrainedEnergy = 31.89215850830078
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.05239341219451639 RmsdBackbone = 2.8286116 Rank = 1
+PDB = 1BE9 chain id = B index = 0 sequence = [LYS, GLN, THR, SER, VAL] cost = 1.170976459980011E-4 minishape size = 58 shape size = 927
+RatioPairedPointInQuery = 1.0 CountOfLongDistanceChange = 0 InteractionEFinal = -61.1749267578125 RmsdLigand = 0.3336072862148285 LigandStrainedEnergy = 62.97663879394531
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.0 RmsdBackbone = 0.0032745937 Rank = 0
+PDB = 1BE9 chain id = B index = 0 sequence = [LYS, GLN, THR, SER, VAL] cost = 0.03076110623320755 minishape size = 58 shape size = 927
+RatioPairedPointInQuery = 0.75 CountOfLongDistanceChange = 0 InteractionEFinal = -21.745262145996094 RmsdLigand = 0.30677491426467896 LigandStrainedEnergy = 46.30461883544922
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.09671571368618746 RmsdBackbone = 1.8396049 Rank = 1
+PDB = 1BE9 chain id = B index = 0 sequence = [LYS, GLN, THR, SER, VAL] cost = 0.03545923692027106 minishape size = 58 shape size = 927
+RatioPairedPointInQuery = 0.80857146 CountOfLongDistanceChange = 0 InteractionEFinal = -21.220840454101562 RmsdLigand = 0.5085288882255554 LigandStrainedEnergy = 70.3856430053711
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.16186859587001934 RmsdBackbone = 1.342881 Rank = 2
+PDB = 1BE9 chain id = B index = 0 sequence = [LYS, GLN, THR, SER, VAL] cost = 0.03808899916918207 minishape size = 58 shape size = 927
+RatioPairedPointInQuery = 0.7757143 CountOfLongDistanceChange = 0 InteractionEFinal = -31.127166748046875 RmsdLigand = 0.544991135597229 LigandStrainedEnergy = 59.929649353027344
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = -0.17734603500939408 RmsdBackbone = 1.6080427 Rank = 3
+PDB = 1BE9 chain id = B index = 0 sequence = [LYS, GLN, THR, SER, VAL] cost = 0.044665167415207555 minishape size = 58 shape size = 927
+RatioPairedPointInQuery = 0.81714284 CountOfLongDistanceChange = 0 InteractionEFinal = -27.73455810546875 RmsdLigand = 0.4845844805240631 LigandStrainedEnergy = 39.018768310546875
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.14884476228238258 RmsdBackbone = 1.5079768 Rank = 4
+PDB = 1BHJ chain id = A index = 79 sequence = [SER, VAL, THR, SER, VAL] cost = 0.04794823275314948 minishape size = 89 shape size = 1358
+RatioPairedPointInQuery = 0.7985714 CountOfLongDistanceChange = 0 InteractionEFinal = 16.151016235351562 RmsdLigand = 0.4967721402645111 LigandStrainedEnergy = 46.30835723876953
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.17548685214318555 RmsdBackbone = 6.185511 Rank = 0
+PDB = 1BM3 chain id = H index = 105 sequence = [GLN, GLY, THR, SER, VAL] cost = 0.049640959495414284 minishape size = 52 shape size = 1156
+RatioPairedPointInQuery = 0.8314286 CountOfLongDistanceChange = 0 InteractionEFinal = 6.208953857421875 RmsdLigand = 0.70501708984375 LigandStrainedEnergy = 86.92025756835938
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.16399184360298225 RmsdBackbone = 1.0363703 Rank = 0
+PDB = 1BMF chain id = E index = 294 sequence = [SER, ILE, THR, SER, VAL] cost = 0.042495439918536056 minishape size = 113 shape size = 1637
+RatioPairedPointInQuery = 0.75714284 CountOfLongDistanceChange = 0 InteractionEFinal = 0.9541168212890625 RmsdLigand = 0.5815870761871338 LigandStrainedEnergy = 55.5948486328125
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.013491006936217477 RmsdBackbone = 1.1085186 Rank = 0
+PDB = 4BOS chain id = B index = 15 sequence = [LEU, PHE, THR, SER, VAL] cost = 0.04643365915636627 minishape size = 103 shape size = 1672
+RatioPairedPointInQuery = 0.76 CountOfLongDistanceChange = 0 InteractionEFinal = 176.0020751953125 RmsdLigand = 0.7389132380485535 LigandStrainedEnergy = 536.452880859375
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.18083036115696144 RmsdBackbone = 2.3113167 Rank = 0
+PDB = 5BUK chain id = B index = 155 sequence = [LEU, GLU, THR, SER, VAL] cost = 0.0483058557088427 minishape size = 72 shape size = 1429
+RatioPairedPointInQuery = 0.76857144 CountOfLongDistanceChange = 0 InteractionEFinal = 35.448646545410156 RmsdLigand = 0.534666895866394 LigandStrainedEnergy = 79.36643981933594
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.03297395314281191 RmsdBackbone = 5.8476424 Rank = 0
+PDB = 2C3C chain id = B index = 339 sequence = [LEU, GLN, THR, SER, VAL] cost = 0.049648726313625983 minishape size = 68 shape size = 1465
+RatioPairedPointInQuery = 0.79571426 CountOfLongDistanceChange = 2 InteractionEFinal = 9.61474609375 RmsdLigand = 0.8432967662811279 LigandStrainedEnergy = 175.66075134277344
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.18297030952711266 RmsdBackbone = 6.0859437 Rank = 0
+PDB = 1C97 chain id = A index = 263 sequence = [ALA, THR, THR, SER, VAL] cost = 0.0423605298063382 minishape size = 74 shape size = 1652
+RatioPairedPointInQuery = 0.75 CountOfLongDistanceChange = 0 InteractionEFinal = 6.9388885498046875 RmsdLigand = 0.5374572277069092 LigandStrainedEnergy = 103.21709442138672
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = -0.0438795847701868 RmsdBackbone = 5.8401017 Rank = 0
+PDB = 3CFD chain id = B index = 111 sequence = [GLN, GLY, THR, SER, VAL] cost = 0.046826558170661746 minishape size = 56 shape size = 1073
+RatioPairedPointInQuery = 0.76285714 CountOfLongDistanceChange = 0 InteractionEFinal = 0.8946075439453125 RmsdLigand = 0.482401579618454 LigandStrainedEnergy = 41.94957733154297
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.19526104765422445 RmsdBackbone = 1.4509134 Rank = 0
+PDB = 3CFE chain id = B index = 111 sequence = [GLN, GLY, THR, SER, VAL] cost = 0.043102439121786525 minishape size = 53 shape size = 1092
+RatioPairedPointInQuery = 0.77428573 CountOfLongDistanceChange = 0 InteractionEFinal = 1.06103515625 RmsdLigand = 0.5422753095626831 LigandStrainedEnergy = 65.61183166503906
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.10152186962991036 RmsdBackbone = 1.2834195 Rank = 0
+PDB = 4CGY chain id = A index = 64 sequence = [VAL, MET, THR, SER, VAL] cost = 0.0421987132618483 minishape size = 112 shape size = 1827
+RatioPairedPointInQuery = 0.81285715 CountOfLongDistanceChange = 0 InteractionEFinal = 7.382102966308594 RmsdLigand = 0.43844032287597656 LigandStrainedEnergy = 40.057037353515625
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.08579775480904758 RmsdBackbone = 6.365121 Rank = 0
+PDB = 5CHO chain id = C index = 34 sequence = [SER, PHE, THR, SER, VAL] cost = 0.04684982892208377 minishape size = 78 shape size = 1610
+RatioPairedPointInQuery = 0.80142856 CountOfLongDistanceChange = 0 InteractionEFinal = 8.982589721679688 RmsdLigand = 0.6632486581802368 LigandStrainedEnergy = 117.52845764160156
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.0900599880340625 RmsdBackbone = 1.5407459 Rank = 0
+PDB = 5CHO chain id = C index = 34 sequence = [SER, PHE, THR, SER, VAL] cost = 0.049080704225830954 minishape size = 78 shape size = 1610
+RatioPairedPointInQuery = 0.79714286 CountOfLongDistanceChange = 0 InteractionEFinal = 56.22027587890625 RmsdLigand = 0.7392451763153076 LigandStrainedEnergy = 139.93917846679688
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.1600495736271146 RmsdBackbone = 5.761185 Rank = 1
+PDB = 5CHO chain id = E index = 32 sequence = [SER, PHE, THR, SER, VAL] cost = 0.039012759331399804 minishape size = 80 shape size = 1555
+RatioPairedPointInQuery = 0.8314286 CountOfLongDistanceChange = 0 InteractionEFinal = 51.340362548828125 RmsdLigand = 0.6212900280952454 LigandStrainedEnergy = 136.12115478515625
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.09098865870165966 RmsdBackbone = 6.26866 Rank = 0
+PDB = 5CHO chain id = E index = 32 sequence = [SER, PHE, THR, SER, VAL] cost = 0.0392707704867293 minishape size = 80 shape size = 1555
+RatioPairedPointInQuery = 0.7814286 CountOfLongDistanceChange = 0 InteractionEFinal = 46.31217956542969 RmsdLigand = 0.5395665168762207 LigandStrainedEnergy = 133.09703063964844
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.17676557245135388 RmsdBackbone = 6.161086 Rank = 1
+PDB = 5CHO chain id = E index = 32 sequence = [SER, PHE, THR, SER, VAL] cost = 0.041431465895190256 minishape size = 80 shape size = 1555
+RatioPairedPointInQuery = 0.7814286 CountOfLongDistanceChange = 0 InteractionEFinal = 9.885269165039062 RmsdLigand = 0.5001639723777771 LigandStrainedEnergy = 64.52840423583984
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = -0.00971287915073532 RmsdBackbone = 6.27322 Rank = 2
+PDB = 5CHO chain id = F index = 32 sequence = [SER, PHE, THR, SER, VAL] cost = 0.04987265174652076 minishape size = 69 shape size = 1597
+RatioPairedPointInQuery = 0.78571427 CountOfLongDistanceChange = 0 InteractionEFinal = 6.028106689453125 RmsdLigand = 0.26056110858917236 LigandStrainedEnergy = 75.53292846679688
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = 0.1388945865964074 RmsdBackbone = 2.0262518 Rank = 0
+PDB = 3CKN chain id = A index = 194 sequence = [LEU, LEU, THR, SER, VAL] cost = 0.04970067646058779 minishape size = 88 shape size = 1292
+RatioPairedPointInQuery = 0.7714286 CountOfLongDistanceChange = 1 InteractionEFinal = 46.4805908203125 RmsdLigand = 0.7458251714706421 LigandStrainedEnergy = 285.5978088378906
+ all convergence reached trueComplete Check clashesCount = 2 percentageIncreaseCompleteCheck = 0.16523164705614432 RmsdBackbone = 6.026898 Rank = 0
+PDB = 5CK3 chain id = D index = 57 sequence = [VAL, PRO, THR, SER, VAL] cost = 0.04726085101738773 minishape size = 70 shape size = 1244
+RatioPairedPointInQuery = 0.75714284 CountOfLongDistanceChange = 0 InteractionEFinal = 11.338157653808594 RmsdLigand = 0.49849116802215576 LigandStrainedEnergy = 51.195106506347656
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.04543043425635362 RmsdBackbone = 1.7052405 Rank = 0
+PDB = 5CP7 chain id = H index = 104 sequence = [GLN, GLY, THR, SER, VAL] cost = 0.04527408242533248 minishape size = 55 shape size = 1120
+RatioPairedPointInQuery = 0.87 CountOfLongDistanceChange = 0 InteractionEFinal = -13.103858947753906 RmsdLigand = 0.4661998748779297 LigandStrainedEnergy = 53.89253234863281
+ all convergence reached trueComplete Check clashesCount = 0 percentageIncreaseCompleteCheck = -0.004301974203760562 RmsdBackbone = 0.79269457 Rank = 0
+PDB = 1CQX chain id = B index = 188 sequence = [GLN, TYR, THR, SER, VAL] cost = 0.04637533811228246 minishape size = 102 shape size = 1750
+RatioPairedPointInQuery = 0.79 CountOfLongDistanceChange = 0 InteractionEFinal = 8.114959716796875 RmsdLigand = 0.6994321346282959 LigandStrainedEnergy = 106.17816162109375
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = 0.010981187793638486 RmsdBackbone = 1.125274 Rank = 0
+PDB = 5CR4 chain id = A index = 109 sequence = [LEU, LYS, THR, SER, VAL] cost = 0.04954888919724005 minishape size = 68 shape size = 1268
+RatioPairedPointInQuery = 0.76428574 CountOfLongDistanceChange = 0 InteractionEFinal = 10.458694458007812 RmsdLigand = 0.6061610579490662 LigandStrainedEnergy = 84.83403015136719
+ all convergence reached trueComplete Check clashesCount = 1 percentageIncreaseCompleteCheck = -0.12217873215578494 RmsdBackbone = 5.668294 Rank = 0

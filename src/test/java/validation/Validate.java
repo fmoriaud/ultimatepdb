@@ -23,8 +23,10 @@ import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
+import io.BiojavaReaderFromPDBFolderTest;
 import io.ReadTextFile;
 import io.Tools;
+import math.RocCurve;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,16 +41,26 @@ import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
 public class Validate {
 
-
-    @Ignore
+    /**
+     * This test load the logfile of the run using 1be9 with chain B as query
+     * It identifies hits which have a hit peptide with a rmsd lower than 1A compared to query peptide
+     * It computes the area under the ROC curve. Hits below 1A are considered positives and below negatives
+     * Scoring function is optimized to maximized the ROC AUC.
+     *
+     * @throws IOException
+     * @throws ParsingConfigFileException
+     */
     @Test
     public void statsOnHits() throws IOException, ParsingConfigFileException {
+
 
         // Hypothesis
         // above a given coverage of query
@@ -61,22 +73,16 @@ public class Validate {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        algoParameters.setPATH_TO_RESULT_FILES("//Users//Fabrice//Documents//validate//");
+        URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("logfiles//log_project_validation_1be9.txt");
 
-        // input of a result file
-        //String pathToResultFile = "//Users//Fabrice//Documents//resultsPubli//1be9//log_Project copy.txt";
-        String pathToResultFile = "//Users//Fabrice//Documents//resultsPubli//1be9//log_Project_14122016.txt";
-
-
-        String resultFileContent = ReadTextFile.readTextFile(pathToResultFile);
-        // find hits with rmsd backbone less than 1.0A, for instance
+        String resultFileContent = ReadTextFile.readTextFile(url.getPath());
 
         double minCost = Double.MAX_VALUE;
         double maxCost = Double.MIN_VALUE;
 
-        // Get a DescriptiveStatistics instance
         DescriptiveStatistics stats = new DescriptiveStatistics();
-
+        List<Double> pointsPositives = new ArrayList<>();
+        List<Double> pointsNegatives = new ArrayList<>();
 
         String[] lines = resultFileContent.split("\\n");
         A:
@@ -87,10 +93,13 @@ public class Validate {
             String chainId = null;
             Integer rankId = null;
             Double cost = null;
-            Double RatioPairedPointInQuery = null;
-
+            Double ratioPairedPointInQuery = null;
+            Double percentageIncreaseCompleteCheck = null;
+            Double interactionEFinal = null;
             // find first line
             // get what is needed for a Hit
+
+            Double rmsdBackbone = null;
             if (line.contains("PDB =")) {
 
                 String[] lineContentPDB = lines[i].split(" ");
@@ -114,11 +123,15 @@ public class Validate {
                 String[] secondLineContent = lines[i + 1].split(" ");
                 for (int j = 0; j < secondLineContent.length; j++) {
                     if (secondLineContent[j].equals("RatioPairedPointInQuery")) {
-                        RatioPairedPointInQuery = Double.valueOf(secondLineContent[j + 2]);
-                        if (RatioPairedPointInQuery < 0.85) {
+                        ratioPairedPointInQuery = Double.valueOf(secondLineContent[j + 2]);
+                        if (ratioPairedPointInQuery < 0.85) {
                             //continue A;
                         }
                     }
+                    if (secondLineContent[j].equals("InteractionEFinal")) {
+                        interactionEFinal = Double.valueOf(secondLineContent[j + 2]);
+                    }
+
                 }
 
 
@@ -126,59 +139,40 @@ public class Validate {
                 String[] thirsLineContent = lines[i + 2].split(" ");
                 for (int j = 0; j < thirsLineContent.length; j++) {
                     if (thirsLineContent[j].equals("RmsdBackbone")) {
-                        Double rmsdBackbone = Double.valueOf(thirsLineContent[j + 2]);
-
-
-                        if (rmsdBackbone > 1.0) {
-                            continue A;
-                        }
-                        if (cost < minCost) {
-                            minCost = cost;
-                        }
-                        if (cost > maxCost) {
-                            maxCost = cost;
-                        }
-                        stats.addValue(cost);
-
-                        System.out.println("From file : " + fourLetterCode + " " + chainId + " " + rankId + " " + "rmsdBackbone = " + rmsdBackbone + " cost = " + cost + " RatioPairedPointInQuery = " + RatioPairedPointInQuery);
-
-                        //System.out.println(fourLetterCode + " " + chainId + " " + rankId + "");
-
+                        rmsdBackbone = Double.valueOf(thirsLineContent[j + 2]);
                     }
+                    if (thirsLineContent[j].equals("percentageIncreaseCompleteCheck")) {
+                        percentageIncreaseCompleteCheck = Double.valueOf(thirsLineContent[j + 2]);
+                    }
+
                 }
 
+                double costFuntion = computeCost(cost, percentageIncreaseCompleteCheck, interactionEFinal);
+                if (rmsdBackbone != null) {
+
+                    if (rmsdBackbone > 1.0) {
+                        pointsNegatives.add(costFuntion);
+                    } else {
+                        pointsPositives.add(costFuntion);
+                    }
+                }
 
             }
         }
 
+        RocCurve rocCurve = new RocCurve(pointsPositives, pointsNegatives, RocCurve.ROCMOD.COST);
+        double rocauc = rocCurve.getAUC();
+        System.out.println("rocauc = " + rocauc);
+
+        /*
         System.out.println("minCost = " + minCost + " maxCost = " + maxCost);
         // Compute some statistics
         double mean = stats.getMean();
         double std = stats.getStandardDeviation();
         double median = stats.getPercentile(50);
         System.out.println("mean = " + mean + " std = " + std + " median = " + median);
+        */
 
-        // With current
-        // coverage any
-        // rmsdbackbone < 1.0
-        //minCost = 2.0627570851507445E-4 maxCost = 0.06361719435097728
-        //mean = 0.04331737193190198 std = 0.015712292942489853 median = 0.04640045794123616
-
-        // coverage > 85%
-        // rmsdbackbone < 1.0
-        //minCost = 2.0627570851507445E-4 maxCost = 0.06021795808354686
-        // mean = 0.03166813617652109 std = 0.021620985818557835 median = 0.035794879526032934
-
-
-        // coverage any
-        // rmsdbackbone > 1.0
-        //minCost = 0.02243371593981088 maxCost = 0.10234928242929589
-        //mean = 0.05783326077520913 std = 0.011907010252593919 median = 0.05521930805200214
-
-        // coverage > 85%
-        // rmsdbackbone > 1.0
-        //minCost = 0.02243371593981088 maxCost = 0.02243371593981088
-        //mean = 0.02243371593981088 std = 0.0 median = 0.02243371593981088
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);
@@ -190,6 +184,13 @@ public class Validate {
             e.printStackTrace();
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+    }
+
+    private double computeCost(double cost, double percentageIncreaseCompleteCheck, double interactionEFinal) {
+
+        // the more negative percentageIncreaseCompleteCheck is then the cost should be reduced
+        double newCost = cost + 0.2 * percentageIncreaseCompleteCheck + 0.02 * interactionEFinal;
+        return newCost;
     }
 
     /**

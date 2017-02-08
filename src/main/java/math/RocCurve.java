@@ -38,7 +38,7 @@ public class RocCurve {
 
     private int countOfIntervalsOnXaxis = 100;
 
-    private static enum ROCMOD {
+    public static enum ROCMOD {
         SCORE,
         COST;
     }
