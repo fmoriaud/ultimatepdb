@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.Protonate;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class ProtonateTest {
         Protonate protonate = new Protonate(mystructure, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
@@ -122,7 +123,7 @@ public class ProtonateTest {
         Protonate protonate = new Protonate(mystructure, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
@@ -175,7 +176,7 @@ public class ProtonateTest {
         Protonate protonate = new Protonate(mystructure, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();

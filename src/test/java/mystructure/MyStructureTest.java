@@ -30,6 +30,7 @@ import org.junit.rules.TemporaryFolder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.Protonate;
 
 import java.io.IOException;
@@ -187,7 +188,7 @@ public class MyStructureTest {
         Protonate protonate = new Protonate(myStructureFromNeighbors, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
 

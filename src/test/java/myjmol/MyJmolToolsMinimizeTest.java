@@ -31,6 +31,7 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.ResultsUltiJMolMinimizedHitLigandOnTarget;
 
@@ -75,7 +76,7 @@ public class MyJmolToolsMinimizeTest {
         Protonate protonate = new Protonate(myStructureMadeWithLigand, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
 
@@ -89,7 +90,7 @@ public class MyJmolToolsMinimizeTest {
         Protonate protonate2 = new Protonate(target, algoParameters);
         try {
             protonate2.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
         MyStructureIfc protonatedTarget = protonate2.getProtonatedMyStructure();

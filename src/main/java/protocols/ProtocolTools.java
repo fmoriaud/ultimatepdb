@@ -29,6 +29,7 @@ import math.ProcrustesAnalysisIfc;
 import mystructure.EnumMyReaderBiojava;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
 import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.ProcrustesAnalysis;
@@ -72,7 +73,7 @@ public class ProtocolTools {
                 HitTools.minimizeHitInQuery(hit, queryShape, targetShape, algoParameters);
             } catch (NullResultFromAComparisonException e) {
                 e.printStackTrace();
-            } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+            } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
                 exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
                 continue A;
             }

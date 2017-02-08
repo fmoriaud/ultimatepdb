@@ -30,6 +30,7 @@ import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
+import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.MyJmolScripts;
 import ultiJmol1462.Protonate;
 import ultiJmol1462.Results;
@@ -78,7 +79,7 @@ public class ScriptCommandOnUltiJmolTest {
         Protonate protonate = new Protonate(target, algoParameters);
         try {
             protonate.compute();
-        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
             assertTrue(false);
         }
 

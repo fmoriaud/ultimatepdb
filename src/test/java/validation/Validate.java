@@ -298,10 +298,7 @@ public class Validate {
                         try {
                             HitTools.minimizeHitInQuery(hitToConsider, queryShape, targetShape, algoParameters);
 
-
-                        } catch (NullResultFromAComparisonException e) {
-                            e.printStackTrace();
-                        } catch (ExceptionInScoringUsingBioJavaJMolGUI exceptionInScoringUsingBioJavaJMolGUI) {
+                        } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException | NullResultFromAComparisonException exceptionInScoringUsingBioJavaJMolGUI) {
                             exceptionInScoringUsingBioJavaJMolGUI.printStackTrace();
                             continue A;
                         }

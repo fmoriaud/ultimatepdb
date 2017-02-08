@@ -29,6 +29,7 @@ import shape.HasPeptideIfc;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithLigand;
 import shape.ShapeContainerWithPeptide;
+import shapeBuilder.ShapeBuildingException;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.PairingTools;
 import shapeCompare.ResultsFromEvaluateCost;
@@ -43,7 +44,7 @@ public class HitTools {
     //-------------------------------------------------------------
     // Static methods
     //-------------------------------------------------------------
-    public static void minimizeHitInQuery(Hit hit, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) throws NullResultFromAComparisonException, ExceptionInScoringUsingBioJavaJMolGUI {
+    public static void minimizeHitInQuery(Hit hit, ShapeContainerIfc queryShape, ShapeContainerIfc targetShape, AlgoParameters algoParameters) throws NullResultFromAComparisonException, ExceptionInScoringUsingBioJavaJMolGUI, ShapeBuildingException {
 
         double cost = hit.getResultsFromEvaluateCost().getCost();
         System.out.println("distance residual = " + hit.getResultsFromEvaluateCost().getDistanceResidual());
