@@ -139,9 +139,7 @@ public class ShapeBuilder {
         MyStructureIfc protonatedLigand = protonate2.getProtonatedMyStructure();
 
         List<PointIfc> listOfPointsFromChainLigand = MyStructureTools.makeQueryPointsFromMyStructureIfc(protonatedLigand);
-        if (myStructureLocalProtonated == null) {
-            System.out.println("myStructureLocalProtonated == null");
-        }
+
         Box box = makeBoxOutOfLocalStructure(myStructureLocalProtonated);
         CollectionOfPointsWithPropertiesIfc shapeCollectionPoints = computeShape(listOfPointsFromChainLigand, myStructureLocalProtonated, box, algoParameters);
 

@@ -22,6 +22,7 @@ package ultiJmol1462;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
+import shapeBuilder.ShapeBuildingException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class Protonate {
     // -------------------------------------------------------------------
     // Public && Interface method
     // -------------------------------------------------------------------
-    public void compute() throws ExceptionInScoringUsingBioJavaJMolGUI {
+    public void compute() throws ExceptionInScoringUsingBioJavaJMolGUI, ShapeBuildingException {
 
         SafeUltiJmolUsage safeUltiJmolUsage = new SafeUltiJmolUsage(algoParameters);
         ProtonateTask protonateTask = new ProtonateTask(myStructure, algoParameters);
@@ -66,6 +67,10 @@ public class Protonate {
         results = safeUltiJmolUsage.getResults();
 
         protonatedMyStructure = (MyStructureIfc) results.get(Results.PROTONATED_STRUCTURE);
+        if (protonatedMyStructure == null) {
+            ShapeBuildingException exception = new ShapeBuildingException("Protonate myStructureLigand in getShapeAroundAChain failed");
+            throw exception;
+        }
     }
 
 
