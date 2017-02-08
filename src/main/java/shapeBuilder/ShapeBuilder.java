@@ -360,6 +360,10 @@ public class ShapeBuilder {
     }
 
 
+
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
     private CollectionOfPointsWithPropertiesIfc computeShape(List<PointIfc> listOfLigandPoints, MyStructureIfc myStructureShape, Box box, AlgoParameters algoParameters) {
 
         double maxDistanceBetweenGridPointAndLigand = algoParameters.getDISTANCE_FROM_PEPTIDE_TO_WHICH_INTERACTINGPROTEIN_IS_CONSIDERED();

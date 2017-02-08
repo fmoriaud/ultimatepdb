@@ -55,24 +55,18 @@ public class SafeUltiJmolUsage {
             ultiJmol = algoParameters.ultiJMolBuffer.get();
 
             Boolean convergenceStatus = doMyJmolTaskIfc.doAndReturnConvergenceStatus(ultiJmol);
+            if (convergenceStatus == false) {
+                handleUltiJmolCrash(ultiJmol);
+            }
             results.putAll(doMyJmolTaskIfc.getResults());
             results.put(Results.CONVERGENCE_REACHED, convergenceStatus);
 
         } catch (Exception e) {
 
-            results.put(Results.STATUS, "ultiJmol crash");
-            // If exception then ultijmol is disposed and a new one is put in the buffer
-            System.out.println("Exception in  SafeUltiJmolUsage " + doMyJmolTaskIfc.getName());
-            ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
-            try {
-                algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+            handleUltiJmolCrash(ultiJmol);
             return;
-
         }
+
 
         try {
             ultiJmol.jmolPanel.evalString("zap");
@@ -87,6 +81,23 @@ public class SafeUltiJmolUsage {
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+    }
+
+
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
+    private void handleUltiJmolCrash(UltiJmol1462 ultiJmol) {
+        results.put(Results.STATUS, "ultiJmol crash");
+        // If exception then ultijmol is disposed and a new one is put in the buffer
+        System.out.println("Exception in  SafeUltiJmolUsage " + doMyJmolTaskIfc.getName());
+        ultiJmol.frame.dispose(); // it is destroyed so not returned to factory
+        try {
+            algoParameters.ultiJMolBuffer.put(new UltiJmol1462());
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
     }
 
