@@ -143,62 +143,19 @@ public class ProtocolBindingVsFolding {
 
         //List<HitInSequenceDb> hitsEnrichedOnTop = putGoodHitsOnTopOfList(hitsInDatabase, getHitWithGoodRmsdBackbone());
 
+        /*
         for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
-            if (hitInSequenceDb.getFourLetterCode().toLowerCase().equals("5cew") || hitInSequenceDb.getFourLetterCode().toLowerCase().equals("3cfe")){
-                System.out.println(hitInSequenceDb);
+            if (hitInSequenceDb.getFourLetterCode().toLowerCase().equals("5cuf") || hitInSequenceDb.getFourLetterCode().toLowerCase().equals("3cfe")){
+                System.out.println(hitInSequenceDb.toString());
             }
         }
-        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
-
-
-            fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
-            chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
-            List<Integer> listRankIds = hitInSequenceDb.getListRankIds();
-
-            BiojavaReader reader = new BiojavaReader();
-            Structure mmcifStructure = null;
-            try {
-                mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
-            } catch (IOException | ExceptionInIOPackage e) {
-                continue A;
-            }
-            AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-            MyStructureIfc mystructure = null;
-            try {
-                mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-            } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-                continue A;
-            }
-
-            char[] chainId = chainIdFromDB.toCharArray();
-            B:
-            for (int i = 0; i < listRankIds.size(); i++) {
-
-                Integer matchingRankId = listRankIds.get(i);
-
-                ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget.toLowerCase().toCharArray(), chainId, matchingRankId, peptideLength, algoParameters);
-
-                ShapeContainerIfc targetShape = null;
-                try {
-                    targetShape = shapeContainerDefined.getShapecontainer(mystructure);
-
-                } catch (ShapeBuildingException e) {
-                    continue B;
-                }
-                System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
-
-                boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
-                try {
-                    ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
-                } catch (Exception e) {
-                    continue B;
-                }
-            }
-        }
+        */
+        ProtocolTools.executeComparisons(queryShape, peptideLength, hitsInDatabase, algoParameters);
 
         System.out.println("Program finished.");
         System.exit(0);
     }
+
 
 
     private List<HitInSequenceDb> putGoodHitsOnTopOfList(List<HitInSequenceDb> hitsInDatabase, List<String> hitWithGoodRmsdBackbone) {

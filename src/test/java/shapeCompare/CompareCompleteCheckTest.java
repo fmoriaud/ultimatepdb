@@ -23,10 +23,7 @@ import hits.Hit;
 import io.Tools;
 import org.junit.Test;
 import parameters.AlgoParameters;
-import protocols.ParsingConfigFileException;
-import protocols.ShapeContainerDefined;
-import protocols.ShapecontainerDefinedBySegmentOfChain;
-import protocols.ShapecontainerDefinedByWholeChain;
+import protocols.*;
 import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuildingException;
 
@@ -268,6 +265,57 @@ public class CompareCompleteCheckTest {
         double percentageIncreaseCompleteCheck = result.getPercentageIncreaseCompleteCheck();
 
         System.out.println("percentageIncreaseCompleteCheck = " + percentageIncreaseCompleteCheck);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+    }
+
+
+    @Test
+    public void completeCheckExceptionThrown() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
+        algoParameters.setFRACTION_NEEDED_ON_QUERY(0.75f);
+        char[] fourLetterCodeQuery = "1be9".toCharArray();
+        char[] chainIdQuery = "B".toCharArray();
+
+        ShapeContainerDefined shapecontainerDefinedQuery = new ShapecontainerDefinedByWholeChain(fourLetterCodeQuery, chainIdQuery, algoParameters);
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = shapecontainerDefinedQuery.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+
+        // TODO need another one
+        //5CUF A 5 273
+        //5CUF B 5 273
+        //5CUF C 5 275
+        //5CUF D 5 275
+        //5CUF E 5 274
+        char[] fourLetterCodeTarget = "5cuf".toCharArray();
+        char[] chainIdTarget = "C".toCharArray();
+        int startingRankId = 275;
+        int peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefinedTarget = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget, chainIdTarget, startingRankId, peptideLength, algoParameters);
+        ShapeContainerIfc targetShape = null;
+        try {
+            targetShape = shapecontainerDefinedTarget.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            e.printStackTrace();
+        }
+        ProtocolTools.compareCompleteCheckAndWriteToResultFolder(false, queryShape, targetShape, algoParameters);
+
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);

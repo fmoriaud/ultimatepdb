@@ -19,14 +19,23 @@ Author:
   */
 package protocols;
 
+import convertformat.AdapterBioJavaStructure;
+import convertformat.ExceptionInConvertFormat;
+import database.HitInSequenceDb;
 import genericBuffer.GenericBuffer;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.Hit;
 import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
+import io.BiojavaReader;
+import io.ExceptionInIOPackage;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import mystructure.EnumMyReaderBiojava;
+import mystructure.ExceptionInMyStructurePackage;
+import mystructure.MyStructureIfc;
+import mystructure.ReadingStructurefileException;
+import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuildingException;
@@ -34,6 +43,7 @@ import shapeCompare.CompareCompleteCheck;
 import shapeCompare.NullResultFromAComparisonException;
 import shapeCompare.ProcrustesAnalysis;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.*;
@@ -43,6 +53,59 @@ public class ProtocolTools {
     // -------------------------------------------------------------------
     // Static Methods
     // -------------------------------------------------------------------
+    public static void executeComparisons(ShapeContainerIfc queryShape, int peptideLength, List<HitInSequenceDb> hitsInDatabase, AlgoParameters algoParameters) {
+        String fourLetterCodeTarget;
+        String chainIdFromDB;
+        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
+
+
+            fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
+            chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
+            List<Integer> listRankIds = hitInSequenceDb.getListRankIds();
+
+            BiojavaReader reader = new BiojavaReader();
+            Structure mmcifStructure = null;
+            try {
+                mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            } catch (IOException | ExceptionInIOPackage e) {
+                continue A;
+            }
+            AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+            MyStructureIfc mystructure = null;
+            try {
+                mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+                continue A;
+            }
+
+            char[] chainId = chainIdFromDB.toCharArray();
+            B:
+            for (int i = 0; i < listRankIds.size(); i++) {
+
+                Integer matchingRankId = listRankIds.get(i);
+
+                ShapeContainerDefined shapeContainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCodeTarget.toLowerCase().toCharArray(), chainId, matchingRankId, peptideLength, algoParameters);
+
+                ShapeContainerIfc targetShape = null;
+                try {
+                    targetShape = shapeContainerDefined.getShapecontainer(mystructure);
+
+                } catch (ShapeBuildingException e) {
+                    continue B;
+                }
+                System.out.println(fourLetterCodeTarget + " " + chainIdFromDB + " " + matchingRankId + " " + peptideLength + " : ");
+
+                boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
+                try {
+                    ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
+                } catch (Exception e) {
+                    continue B;
+                }
+            }
+        }
+    }
+
+
     public static String makeSequenceString(List<char[]> sequenceToFind) {
 
         StringBuilder sb = new StringBuilder();

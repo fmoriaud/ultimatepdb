@@ -43,6 +43,20 @@ public class HitInSequenceDb {
 
 
     // -------------------------------------------------------------------
+    // override
+    // -------------------------------------------------------------------
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fourLetterCode + " " + chainIdFromDB + " " + peptideLength + " ");
+        for (Integer rankid : listRankIds) {
+            sb.append(rankid + " ");
+        }
+        return sb.toString();
+    }
+
+
+    // -------------------------------------------------------------------
     // Getter & Setter
     // -------------------------------------------------------------------
     public List<Integer> getListRankIds() {
