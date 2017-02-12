@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -78,9 +79,23 @@ public class Tools {
         String builttestPDBFolder = builtTestFolder + File.separator + "pdb";
         baseDir.mkdirs();
         final File pdbDir = new File(builttestPDBFolder);
+        if (Files.exists(Paths.get(builttestPDBFolder))) {
+            try {
+                FileUtils.deleteDirectory(pdbDir);
+            } catch (IOException e) {
+            }
+        }
         pdbDir.mkdir();
+
         String builttestChemcompFolder = builtTestFolder + File.separator + "chemcomp";
         final File chemcompDir = new File(builttestChemcompFolder);
+        if (Files.exists(Paths.get(builttestChemcompFolder))) {
+            try {
+                FileUtils.deleteDirectory(chemcompDir);
+            } catch (IOException e) {
+            }
+        }
+
         chemcompDir.mkdirs();
 
         pdbDir.mkdir();
