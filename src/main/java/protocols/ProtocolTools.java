@@ -53,11 +53,12 @@ public class ProtocolTools {
     // -------------------------------------------------------------------
     // Static Methods
     // -------------------------------------------------------------------
-    public static void executeComparisons(ShapeContainerIfc queryShape, int peptideLength, List<HitInSequenceDb> hitsInDatabase, AlgoParameters algoParameters) {
+    public static int executeComparisons(ShapeContainerIfc queryShape, int peptideLength, List<HitInSequenceDb> hitsInDatabase, AlgoParameters algoParameters) {
         String fourLetterCodeTarget;
         String chainIdFromDB;
-        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
 
+        int comparisonsDoneCount = 0;
+        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
 
             fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
             chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
@@ -98,11 +99,13 @@ public class ProtocolTools {
                 boolean minimizeAllIfTrueOrOnlyOneIfFalse = true;
                 try {
                     ProtocolTools.compareCompleteCheckAndWriteToResultFolder(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, targetShape, algoParameters);
+                    comparisonsDoneCount += 1;
                 } catch (Exception e) {
                     continue B;
                 }
             }
         }
+        return comparisonsDoneCount;
     }
 
 

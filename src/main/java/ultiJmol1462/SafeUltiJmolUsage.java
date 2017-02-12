@@ -57,6 +57,7 @@ public class SafeUltiJmolUsage {
             Boolean convergenceStatus = doMyJmolTaskIfc.doAndReturnConvergenceStatus(ultiJmol);
             if (convergenceStatus == false) {
                 handleUltiJmolCrash(ultiJmol);
+                return;
             }
             results.putAll(doMyJmolTaskIfc.getResults());
             results.put(Results.CONVERGENCE_REACHED, convergenceStatus);
