@@ -161,6 +161,38 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
     }
 
 
+
+    @Test
+    public void testShapeBuilderConstructorOtherProblemeticCase() throws IOException, ParsingConfigFileException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
+        char[] fourLetterCode = "5cuf".toCharArray();
+        char[] chainId = "D".toCharArray();
+        int startingRankId = 275;
+        int peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined = new ShapecontainerDefinedBySegmentOfChain(fourLetterCode, chainId, startingRankId, peptideLength, algoParameters);
+        ShapeContainerIfc shape = null;
+        try {
+            shape = shapecontainerDefined.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+
+    }
+
     @Test
     public void testCaseThatThrewAnException() throws IOException, ParsingConfigFileException {
 
