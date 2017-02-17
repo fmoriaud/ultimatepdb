@@ -11,6 +11,8 @@ public class UltimatepdbDialog extends JDialog{
     //------------------------------------------------------------------------------
     // DATA MEMBERS
     //------------------------------------------------------------------------------
+    private Controller controller;
+
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER;
 
 
@@ -19,6 +21,7 @@ public class UltimatepdbDialog extends JDialog{
     //------------------------------------------------------------------------------
     public UltimatepdbDialog(){
 
+        controller = new Controller();
         setModal(true);
         createPanel();
         setTitle("UltimatePDB");
@@ -51,5 +54,7 @@ public class UltimatepdbDialog extends JDialog{
 
 
     private void indexMMcifPDBFolder(JTextField pATH_to_remediated_pdb_mmcif_folder) {
+
+
     }
 }
