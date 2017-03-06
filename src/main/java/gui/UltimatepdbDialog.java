@@ -10,7 +10,9 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class UltimatepdbDialog extends JDialog {
@@ -35,12 +37,18 @@ public class UltimatepdbDialog extends JDialog {
 
         algoParameters = ProtocolTools.prepareAlgoParameters();
 
-        pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         controller = new Controller();
         setModal(true);
         createPanel();
         setTitle("UltimatePDB");
         pack();
+
+        String pathFromXmlFile = algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER();
+        Path pdbFolder = Paths.get(pathFromXmlFile);
+        if (Files.exists(pdbFolder)){
+            pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(pathFromXmlFile);
+            updateWithPDBpath(pdbFolder.toFile());
+        }
     }
 
 
@@ -104,20 +112,25 @@ public class UltimatepdbDialog extends JDialog {
         int returnVal = fileChooser.showDialog(this, "Select MMcif PDB root folder");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
-            indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
-            if (indexPDBFileInFolder.size() > 0){
-                tabbedPane.addTab("Run", panelRun);
-            }else{
-                pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
-                tabbedPane.remove(panelRun);
-            }
-            pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
+
+            updateWithPDBpath(file);
 
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
         }
+    }
 
+    private void updateWithPDBpath(File file) {
+
+        pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
+        indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
+        if (indexPDBFileInFolder.size() > 0){
+            tabbedPane.addTab("Run", panelRun);
+        }else{
+            pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
+            tabbedPane.remove(panelRun);
+        }
+        pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
     }
 }
