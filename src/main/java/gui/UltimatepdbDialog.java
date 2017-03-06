@@ -22,6 +22,8 @@ public class UltimatepdbDialog extends JDialog {
     private Controller controller;
     private JTabbedPane tabbedPane;
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(10);
+    private JTextField pdbCount = new JTextField(10);
+    private JPanel panelRun;
 
     private Map<String, java.util.List<Path>> indexPDBFileInFolder;
 
@@ -53,35 +55,41 @@ public class UltimatepdbDialog extends JDialog {
 
 
         // PDB Panel
-        JPanel panel = new JPanel();
-        panel.setLayout(new MigLayout("fill", "[][grow][]"));
+        JPanel panelPDB = new JPanel();
+        panelPDB.setLayout(new MigLayout("fill", "[][grow][]"));
         // "fill, ins dialog", "[][grow][]", "[][]"
         Label labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new Label("Path to PDB MMcif root folder :");
-
         JButton browseToPDBMMcifFolder = new JButton("Browse...");
 
+        Label labelPDBcount = new Label("PDB MMcif files found :");
+
+
         browseToPDBMMcifFolder.addActionListener(e -> indexMMcifPDBFolder(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER));
-        panel.add(labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER);
-        panel.add(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER, "grow");
-        panel.add(browseToPDBMMcifFolder, "wrap");
+        panelPDB.add(labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER);
+        panelPDB.add(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER, "grow");
+        panelPDB.add(browseToPDBMMcifFolder, "wrap");
+
+        panelPDB.add(labelPDBcount);
+        panelPDB.add(pdbCount, "wrap");
+
 
         TitledBorder border = new TitledBorder(null, "Setup MMcif files", TitledBorder.LEADING, TitledBorder.TOP, null, null);
-        panel.setBorder(border);
-        tabbedPane.addTab("PDB", panel);
+        panelPDB.setBorder(border);
+        tabbedPane.addTab("PDB", panelPDB);
 
         // Path to results folder
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new MigLayout("fill", "[][grow][]"));
+        panelRun = new JPanel();
+        panelRun.setLayout(new MigLayout("fill", "[][grow][]"));
         Label labelPATH_TO_RESULTS = new Label("Path to result folder :");
         JTextField pATH_TO_RESULTS_FOLDER = new JTextField(10);
 
         JButton browseToResultsFolder = new JButton("Browse...");
-        panel2.add(labelPATH_TO_RESULTS);
-        panel2.add(pATH_TO_RESULTS_FOLDER, "grow");
-        panel2.add(browseToResultsFolder, "wrap");
-        TitledBorder border2 = new TitledBorder(null, "Setup MMcif files", TitledBorder.LEADING, TitledBorder.TOP, null, null);
-        panel2.setBorder(border2);
-        tabbedPane.addTab("Results", panel2);
+        panelRun.add(labelPATH_TO_RESULTS);
+        panelRun.add(pATH_TO_RESULTS_FOLDER, "grow");
+        panelRun.add(browseToResultsFolder, "wrap");
+        TitledBorder border2 = new TitledBorder(null, "Path to results folder", TitledBorder.LEADING, TitledBorder.TOP, null, null);
+        panelRun.setBorder(border2);
+        //tabbedPane.addTab("Run", panelRun);
 
         add(tabbedPane);
     }
@@ -98,7 +106,10 @@ public class UltimatepdbDialog extends JDialog {
             File file = fileChooser.getSelectedFile();
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
             indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
-            System.out.println("Found : " + indexPDBFileInFolder.size() + " mmCif Files");
+            if (indexPDBFileInFolder.size() > 0){
+                tabbedPane.addTab("Run", panelRun);
+            }
+            pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
 
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
