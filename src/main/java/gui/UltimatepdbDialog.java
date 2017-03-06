@@ -108,11 +108,15 @@ public class UltimatepdbDialog extends JDialog {
             indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
             if (indexPDBFileInFolder.size() > 0){
                 tabbedPane.addTab("Run", panelRun);
+            }else{
+                pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
+                tabbedPane.remove(panelRun);
             }
             pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
 
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
+            tabbedPane.remove(panelRun);
         }
 
     }
