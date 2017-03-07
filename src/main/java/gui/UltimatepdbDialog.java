@@ -23,7 +23,7 @@ public class UltimatepdbDialog extends JDialog {
     private AlgoParameters algoParameters;
     private Controller controller;
     private JTabbedPane tabbedPane;
-    private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(10);
+    private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
     private JPanel panelRun;
 
@@ -35,6 +35,8 @@ public class UltimatepdbDialog extends JDialog {
     //------------------------------------------------------------------------------
     public UltimatepdbDialog() throws ParsingConfigFileException {
 
+        pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.getPreferredSize().height) );
         algoParameters = ProtocolTools.prepareAlgoParameters();
 
         controller = new Controller();
