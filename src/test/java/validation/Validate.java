@@ -73,7 +73,7 @@ public class Validate {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("logfiles//log_project_validation_1be9.txt");
+        URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("logfiles//log_project_1be9B_1thread_complete_24days.txt");
 
         String resultFileContent = ReadTextFile.readTextFile(url.getPath());
 
@@ -150,7 +150,7 @@ public class Validate {
                 double costFuntion = computeCost(cost, percentageIncreaseCompleteCheck, interactionEFinal);
                 if (rmsdBackbone != null) {
 
-                    if (rmsdBackbone > 1.0) {
+                    if (rmsdBackbone > 2.0) {
                         pointsNegatives.add(costFuntion);
                     } else {
                         pointsPositives.add(costFuntion);
@@ -189,7 +189,7 @@ public class Validate {
     private double computeCost(double cost, double percentageIncreaseCompleteCheck, double interactionEFinal) {
 
         // the more negative percentageIncreaseCompleteCheck is then the cost should be reduced
-        double newCost = cost + 0.2 * percentageIncreaseCompleteCheck + 0.02 * interactionEFinal;
+        double newCost = cost + 0.1 * percentageIncreaseCompleteCheck;// + 0.5 * interactionEFinal;// - 0.02 * percentageIncreaseCompleteCheck;// + 0.02 * interactionEFinal;
         return newCost;
     }
 
