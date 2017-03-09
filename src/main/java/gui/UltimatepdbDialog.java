@@ -1,10 +1,27 @@
+/*
+Author:
+      Fabrice Moriaud <fmoriaud@ultimatepdb.org>
+
+  Copyright (c) 2016 Fabrice Moriaud
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 package gui;
 
 import io.IOTools;
 import net.miginfocom.swing.MigLayout;
-import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
-import protocols.ProtocolTools;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,17 +30,17 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Map;
 
 public class UltimatepdbDialog extends JDialog {
 
     //------------------------------------------------------------------------------
     // DATA MEMBERS
     //------------------------------------------------------------------------------
-    private AlgoParameters algoParameters;
     private Controller controller;
     private JTabbedPane tabbedPane;
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(30);
+    private JTextField pATH_TO_RESULT_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
     private JPanel panelRun;
 
@@ -36,8 +53,9 @@ public class UltimatepdbDialog extends JDialog {
     public UltimatepdbDialog() throws ParsingConfigFileException {
 
         pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setMaximumSize(
-                new Dimension(Integer.MAX_VALUE, pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.getPreferredSize().height) );
-        algoParameters = ProtocolTools.prepareAlgoParameters();
+                new Dimension(Integer.MAX_VALUE, pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.getPreferredSize().height));
+        pATH_TO_RESULT_FOLDER.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, pATH_TO_RESULT_FOLDER.getPreferredSize().height));
 
         controller = new Controller();
         setModal(true);
@@ -45,11 +63,15 @@ public class UltimatepdbDialog extends JDialog {
         setTitle("UltimatePDB");
         pack();
 
-        String pathFromXmlFile = algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER();
+        String pathFromXmlFile = controller.getAlgoParameters().getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER();
         Path pdbFolder = Paths.get(pathFromXmlFile);
-        if (Files.exists(pdbFolder)){
-            pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(pathFromXmlFile);
+        if (Files.exists(pdbFolder)) {
             updateWithPDBpath(pdbFolder.toFile());
+        }
+        String pathFromXmlFileResult = controller.getAlgoParameters().getPATH_TO_RESULT_FILES();
+        Path resultFolder = Paths.get(pathFromXmlFileResult);
+        if (Files.exists(resultFolder)) {
+            pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
     }
 
@@ -91,11 +113,13 @@ public class UltimatepdbDialog extends JDialog {
         panelRun = new JPanel();
         panelRun.setLayout(new MigLayout("fill", "[][grow][]"));
         Label labelPATH_TO_RESULTS = new Label("Path to result folder :");
-        JTextField pATH_TO_RESULTS_FOLDER = new JTextField(10);
+
 
         JButton browseToResultsFolder = new JButton("Browse...");
+        browseToResultsFolder.addActionListener(e -> updateResultFolder(pATH_TO_RESULT_FOLDER));
+
         panelRun.add(labelPATH_TO_RESULTS);
-        panelRun.add(pATH_TO_RESULTS_FOLDER, "grow");
+        panelRun.add(pATH_TO_RESULT_FOLDER, "grow");
         panelRun.add(browseToResultsFolder, "wrap");
         TitledBorder border2 = new TitledBorder(null, "Path to results folder", TitledBorder.LEADING, TitledBorder.TOP, null, null);
         panelRun.setBorder(border2);
@@ -105,31 +129,54 @@ public class UltimatepdbDialog extends JDialog {
     }
 
 
+    private void updateResultFolder(JTextField pATH_to_remediated_pdb_mmcif_folder) {
+
+        File folder = browseFolder(pATH_to_remediated_pdb_mmcif_folder.getText(), " Browse to result folder");
+        if (folder != null) {
+            pATH_to_remediated_pdb_mmcif_folder.setText(folder.getAbsolutePath());
+        } else {
+            pATH_to_remediated_pdb_mmcif_folder.setText("");
+        }
+    }
+
     private void indexMMcifPDBFolder(JTextField pATH_to_remediated_pdb_mmcif_folder) {
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setCurrentDirectory(new File(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.getText()));
+        File pdbFolder = browseFolder(pATH_to_remediated_pdb_mmcif_folder.getText(), "Select MMcif PDB root folder");
 
-        int returnVal = fileChooser.showDialog(this, "Select MMcif PDB root folder");
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-
-            updateWithPDBpath(file);
-
+        if (pdbFolder != null) {
+            updateWithPDBpath(pdbFolder);
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
         }
     }
 
+
+    private File browseFolder(String defaultPath, String dialogTitle) {
+
+        File file = null;
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setCurrentDirectory(new File(defaultPath));
+
+        int returnVal = fileChooser.showDialog(this, dialogTitle);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = fileChooser.getSelectedFile();
+        }
+        return file;
+    }
+
+
     private void updateWithPDBpath(File file) {
 
-        pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
+
+        Integer pdbFileNumber = controller.countPDBFiles(file.getAbsolutePath());
         indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
-        if (indexPDBFileInFolder.size() > 0){
+        if (pdbFileNumber != null && pdbFileNumber > 0) {
+            pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
             tabbedPane.addTab("Run", panelRun);
-        }else{
+        } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
         }
