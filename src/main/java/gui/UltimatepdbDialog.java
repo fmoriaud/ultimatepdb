@@ -33,16 +33,24 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class UltimatepdbDialog extends JDialog {
-
     //------------------------------------------------------------------------------
     // DATA MEMBERS
     //------------------------------------------------------------------------------
     private Controller controller;
     private JTabbedPane tabbedPane;
+
+
+    private JPanel panelPDB;
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(30);
+
+    private JPanel panelQuery;
+    private JTextField query4letterCode = new JTextField(4);
+    private String defaulPDB4letterCode = "1be9";
+    private JButton validate4LetterCode;
+
+    private JPanel panelRun;
     private JTextField pATH_TO_RESULT_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
-    private JPanel panelRun;
 
     private Map<String, java.util.List<Path>> indexPDBFileInFolder;
 
@@ -56,6 +64,9 @@ public class UltimatepdbDialog extends JDialog {
                 new Dimension(Integer.MAX_VALUE, pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.getPreferredSize().height));
         pATH_TO_RESULT_FOLDER.setMaximumSize(
                 new Dimension(Integer.MAX_VALUE, pATH_TO_RESULT_FOLDER.getPreferredSize().height));
+
+        query4letterCode.setText(defaulPDB4letterCode);
+        validate4LetterCode = new JButton("Validate");
 
         controller = new Controller();
         setModal(true);
@@ -73,6 +84,8 @@ public class UltimatepdbDialog extends JDialog {
         if (Files.exists(resultFolder)) {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
+
+
     }
 
 
@@ -81,13 +94,76 @@ public class UltimatepdbDialog extends JDialog {
     //------------------------------------------------------------------------------
     private void createPanel() {
 
-
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
+        buildPDBpanel();
+        tabbedPane.addTab("PDB", panelPDB);
 
-        // PDB Panel
-        JPanel panelPDB = new JPanel();
+        buildQueryPanel();
+        tabbedPane.addTab("Query", panelQuery);
+        buildRunPanel();
+
+        add(tabbedPane);
+    }
+
+
+    private void buildQueryPanel() {
+
+        panelQuery = new JPanel();
+        panelQuery.setLayout(new MigLayout("fill", "[][]"));
+
+        panelQuery.add(query4letterCode, "split 2");
+        panelQuery.add(validate4LetterCode, "wrap");
+
+        validate4LetterCode.addActionListener(e -> initializeTabbedPane(query4letterCode.getText()));
+
+
+        TitledBorder border = new TitledBorder(null, "Define query", TitledBorder.LEADING, TitledBorder.TOP, null, null);
+
+        panelQuery.setBorder(border);
+
+    }
+
+    private void initializeTabbedPane(String text) {
+
+        FindQueriesFrom4LetterCode find = new FindQueriesFrom4LetterCode(text, controller.getAlgoParameters());
+        String[] chains = find.getChains();
+
+        JTabbedPane tabbedPane = builtTabbedPane(chains);
+        panelQuery.add(tabbedPane, "span, grow");
+    }
+
+
+    private JTabbedPane builtTabbedPane(String[] chains) {
+
+        String BUTTONPANEL = "Chain";
+        String TEXTPANEL = "HetAtm";
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        JPanel card1 = new JPanel();
+        JTextField chainsText = new JTextField();
+        StringBuilder sb = new StringBuilder();
+        for (String chain : chains) {
+            sb.append(chain + " ");
+        }
+        chainsText.setText(sb.toString());
+        card1.add(chainsText);
+
+        JPanel card2 = new JPanel();
+        card2.add(new JTextField("TextField", 20));
+
+        tabbedPane.addTab(BUTTONPANEL, card1);
+        tabbedPane.addTab(TEXTPANEL, card2);
+
+        return tabbedPane;
+    }
+
+
+    private void buildPDBpanel() {
+
+        panelPDB = new JPanel();
         panelPDB.setLayout(new MigLayout("fill", "[][grow][]"));
         // "fill, ins dialog", "[][grow][]", "[][]"
         Label labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new Label("Path to PDB MMcif root folder :");
@@ -107,13 +183,14 @@ public class UltimatepdbDialog extends JDialog {
 
         TitledBorder border = new TitledBorder(null, "Setup MMcif files", TitledBorder.LEADING, TitledBorder.TOP, null, null);
         panelPDB.setBorder(border);
-        tabbedPane.addTab("PDB", panelPDB);
+    }
 
-        // Path to results folder
+
+    private void buildRunPanel() {
+
         panelRun = new JPanel();
         panelRun.setLayout(new MigLayout("fill", "[][grow][]"));
         Label labelPATH_TO_RESULTS = new Label("Path to result folder :");
-
 
         JButton browseToResultsFolder = new JButton("Browse...");
         browseToResultsFolder.addActionListener(e -> updateResultFolder(pATH_TO_RESULT_FOLDER));
@@ -123,9 +200,6 @@ public class UltimatepdbDialog extends JDialog {
         panelRun.add(browseToResultsFolder, "wrap");
         TitledBorder border2 = new TitledBorder(null, "Path to results folder", TitledBorder.LEADING, TitledBorder.TOP, null, null);
         panelRun.setBorder(border2);
-        //tabbedPane.addTab("Run", panelRun);
-
-        add(tabbedPane);
     }
 
 
@@ -148,6 +222,8 @@ public class UltimatepdbDialog extends JDialog {
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
+            tabbedPane.remove(panelQuery);
+
         }
     }
 
@@ -175,10 +251,14 @@ public class UltimatepdbDialog extends JDialog {
         indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
         if (pdbFileNumber != null && pdbFileNumber > 0) {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
+            tabbedPane.addTab("Query", panelQuery);
             tabbedPane.addTab("Run", panelRun);
+
+
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
+            tabbedPane.remove(panelQuery);
         }
         pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
     }
