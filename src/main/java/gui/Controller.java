@@ -66,6 +66,17 @@ public class Controller {
     }
 
 
+    public void updateSequenceDBaccordingtoMMcifFiles() {
+
+        // need to have something to check if the mmcif files indexed was not changed
+
+        // need to know if the parsed PDB files returned nothing so I wouldnt do again if file not changed
+    }
+
+
+    // -------------------------------------------------------------------
+    // Getter and Setter
+    // -------------------------------------------------------------------
     public AlgoParameters getAlgoParameters() {
 
         return algoParameters;

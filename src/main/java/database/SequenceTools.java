@@ -276,7 +276,7 @@ public class SequenceTools {
         List<String> listSequence = new ArrayList<>();
 
         Connection connexion = DatabaseTools.getNewConnection();
-        Statement stmt;
+        Statement stmt = null;
         try {
             stmt = connexion.createStatement();
             String findEntry = "SELECT * from " + SequenceTools.tableName;
@@ -307,6 +307,11 @@ public class SequenceTools {
             System.out.println("Exception in reading whole content of DB. Program terminated");
             System.exit(0);
 
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+            }
         }
 
         int sequenceToFindLength = sequenceToFind.length() / 3;
@@ -384,15 +389,13 @@ public class SequenceTools {
     public static int findNumberOfEntries() {
 
         Connection connexion = DatabaseTools.getNewConnection();
-        Statement stmt;
+        Statement stmt = null;
 
         try {
             stmt = connexion.createStatement();
-        } catch (SQLException e) {
-            return 0;
-        }
-        String findEntry = "SELECT * from " + tableName;
-        try {
+
+            String findEntry = "SELECT * from " + tableName;
+
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
             int i = 0;
             while (resultFindEntry.next()) {
@@ -401,7 +404,14 @@ public class SequenceTools {
             return i;
         } catch (SQLException e) {
             return 0;
+        } finally {
+            try {
+                stmt.close();
+                DatabaseTools.shutdown();
+            } catch (SQLException e) {
+            }
         }
+
     }
 
 
@@ -423,7 +433,7 @@ public class SequenceTools {
         List<String> listSequence = new ArrayList<>();
 
         Connection connexion = DatabaseTools.getNewConnection();
-        Statement stmt;
+        Statement stmt = null;
         try {
             stmt = connexion.createStatement();
             String findEntry = "SELECT * from " + tableName;
@@ -453,6 +463,11 @@ public class SequenceTools {
             System.out.println("Exception in reading whole content of DB. Program terminated");
             System.exit(0);
 
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+            }
         }
 
         int sequenceToFindLength = sequenceToFind.length() / 3;
