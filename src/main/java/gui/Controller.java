@@ -67,6 +67,7 @@ public class Controller {
 
 
     public AlgoParameters getAlgoParameters() {
+
         return algoParameters;
     }
 }

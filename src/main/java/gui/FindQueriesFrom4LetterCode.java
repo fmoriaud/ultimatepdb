@@ -21,7 +21,6 @@ package gui;
 
 import io.IOTools;
 import mystructure.MyChainIfc;
-import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 import parameters.AlgoParameters;
 

@@ -19,6 +19,7 @@ Author:
   */
 package gui;
 
+import database.SequenceTools;
 import io.IOTools;
 import net.miginfocom.swing.MigLayout;
 import protocols.ParsingConfigFileException;
@@ -51,6 +52,7 @@ public class UltimatepdbDialog extends JDialog {
     private JPanel panelRun;
     private JTextField pATH_TO_RESULT_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
+    private JTextField sequenceDBCount = new JTextField(10);
 
     private Map<String, java.util.List<Path>> indexPDBFileInFolder;
 
@@ -85,7 +87,7 @@ public class UltimatepdbDialog extends JDialog {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
 
-
+        updateWithSeqDB();
     }
 
 
@@ -170,16 +172,17 @@ public class UltimatepdbDialog extends JDialog {
         JButton browseToPDBMMcifFolder = new JButton("Browse...");
 
         Label labelPDBcount = new Label("PDB MMcif files found :");
+        panelPDB.add(labelPDBcount);
+        panelPDB.add(pdbCount, "wrap");
 
-
-        browseToPDBMMcifFolder.addActionListener(e -> indexMMcifPDBFolder(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER));
+        browseToPDBMMcifFolder.addActionListener(e -> updateIndexMMcifPDBFolder(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER));
         panelPDB.add(labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER);
         panelPDB.add(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER, "grow");
         panelPDB.add(browseToPDBMMcifFolder, "wrap");
 
-        panelPDB.add(labelPDBcount);
-        panelPDB.add(pdbCount, "wrap");
-
+        Label labelSequenceDBcount = new Label("PDB chains indexed in DB :");
+        panelPDB.add(labelSequenceDBcount);
+        panelPDB.add(sequenceDBCount, "wrap");
 
         TitledBorder border = new TitledBorder(null, "Setup MMcif files", TitledBorder.LEADING, TitledBorder.TOP, null, null);
         panelPDB.setBorder(border);
@@ -213,7 +216,7 @@ public class UltimatepdbDialog extends JDialog {
         }
     }
 
-    private void indexMMcifPDBFolder(JTextField pATH_to_remediated_pdb_mmcif_folder) {
+    private void updateIndexMMcifPDBFolder(JTextField pATH_to_remediated_pdb_mmcif_folder) {
 
         File pdbFolder = browseFolder(pATH_to_remediated_pdb_mmcif_folder.getText(), "Select MMcif PDB root folder");
 
@@ -225,6 +228,12 @@ public class UltimatepdbDialog extends JDialog {
             tabbedPane.remove(panelQuery);
 
         }
+    }
+
+    private void updateWithSeqDB() {
+
+        int numberChainInDB = SequenceTools.findNumberOfEntries();
+        sequenceDBCount.setText(String.valueOf(numberChainInDB));
     }
 
 

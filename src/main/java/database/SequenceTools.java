@@ -381,6 +381,30 @@ public class SequenceTools {
     }
 
 
+    public static int findNumberOfEntries() {
+
+        Connection connexion = DatabaseTools.getNewConnection();
+        Statement stmt;
+
+        try {
+            stmt = connexion.createStatement();
+        } catch (SQLException e) {
+            return 0;
+        }
+        String findEntry = "SELECT * from " + tableName;
+        try {
+            ResultSet resultFindEntry = stmt.executeQuery(findEntry);
+            int i = 0;
+            while (resultFindEntry.next()) {
+                i++;
+            }
+            return i;
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
+
     /**
      * Find Hits in SequenceDB which are segment of sequence chain in the DB
      *
