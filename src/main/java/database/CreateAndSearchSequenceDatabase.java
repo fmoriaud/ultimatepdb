@@ -32,9 +32,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Fabrice on 29/09/16.
- */
 public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceDatabaseIfc {
     //-------------------------------------------------------------
     // Class variables
@@ -96,6 +93,7 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     private void updateOveridingExistingDatabase(boolean override) {
 
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
 
             String fourLetterCode = entry.getKey();

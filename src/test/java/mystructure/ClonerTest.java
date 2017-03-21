@@ -45,16 +45,16 @@ public class ClonerTest {
     @Test
     public void testClonerWithMyMonomerAndConvertionToV3000() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

@@ -125,16 +125,16 @@ public class MyStructureTest {
     @Test
     public void testToV3000ProteinStructure() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
@@ -159,8 +159,10 @@ public class MyStructureTest {
     @Test
     public void testToV3000Neighors() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -168,8 +170,7 @@ public class MyStructureTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+       int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;

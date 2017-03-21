@@ -21,6 +21,7 @@ package io;
 
 import org.biojava.nbio.structure.*;
 import org.junit.Test;
+import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
@@ -34,10 +35,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testReadFromPDBFolderProtein() throws ParsingConfigFileException {
+    public void testReadFromPDBFolderProtein() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -49,10 +52,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException {
+    public void testReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -89,10 +94,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
+    public void testReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2hhf";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -126,10 +133,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testBondsReadFromResourcesProtein() throws ParsingConfigFileException {
+    public void testBondsReadFromResourcesProtein() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -156,10 +165,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testBondsReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException {
+    public void testBondsReadFromResourcesDNARNAHybrid() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -192,10 +203,12 @@ public class BiojavaReaderFromPDBFolderTest {
      * @throws ParsingConfigFileException
      */
     @Test
-    public void testBondsReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException {
+    public void testBondsReadFromResourcesProteinWithLPeptideLinkingResidue() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2hhf";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -227,10 +240,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testReadFromResourcesProtein() throws ParsingConfigFileException {
+    public void testReadFromResourcesProtein() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -259,10 +274,12 @@ public class BiojavaReaderFromPDBFolderTest {
 
 
     @Test
-    public void testReadPDBFileWithOnlyCalpha() throws ParsingConfigFileException {
+    public void testReadPDBFileWithOnlyCalpha() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1ian";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);

@@ -45,9 +45,10 @@ public class ProtonateTest {
     @Test
     public void testProteinStructureWhichIsAlreadyProtonated() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         String fourLetterCode = "2n0u";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -55,7 +56,6 @@ public class ProtonateTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
 
@@ -100,8 +100,10 @@ public class ProtonateTest {
     @Test
     public void testRNADNA() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -109,7 +111,6 @@ public class ProtonateTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -153,8 +154,10 @@ public class ProtonateTest {
     @Test
     public void testProtonateStructureWhichHasAHetAtomGroupThatWasInsertedInchain() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "5b59";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -162,7 +165,6 @@ public class ProtonateTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

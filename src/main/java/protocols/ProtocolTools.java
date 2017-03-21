@@ -64,7 +64,7 @@ public class ProtocolTools {
             chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
             List<Integer> listRankIds = hitInSequenceDb.getListRankIds();
 
-            BiojavaReader reader = new BiojavaReader();
+            BiojavaReader reader = new BiojavaReader(algoParameters);
             Structure mmcifStructure = null;
             try {
                 mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());

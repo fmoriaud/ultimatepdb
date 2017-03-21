@@ -55,7 +55,7 @@ public class ScriptCommandOnUltiJmolTest {
 
         // Prepare input as environment of MSQ in 1di9
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure1di9 = null;
         try {
             mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);

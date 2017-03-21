@@ -22,6 +22,7 @@ package io;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Ignore;
 import org.junit.Test;
+import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
@@ -34,10 +35,12 @@ public class BiojavaReaderGiveupOnTooBigFilesTest {
     // But if added locally to the test resources it can be run
     @Ignore
     @Test
-    public void testReadFromPDBFolderProtein() throws ParsingConfigFileException {
+    public void testReadFromPDBFolderProtein() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "3j3y";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         boolean exceptionThrown = false;
         try {

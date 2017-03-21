@@ -56,12 +56,16 @@ public class Controller {
     //-------------------------------------------------------------
     // Public & Override methods
     //-------------------------------------------------------------
-    public Integer countPDBFiles(String pathToPDBFolder) {
+    public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder){
 
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
+        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
+        algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder);
+
         if (indexPDBFileInFolder == null) {
             return 0;
         }
+
         return indexPDBFileInFolder.size();
     }
 

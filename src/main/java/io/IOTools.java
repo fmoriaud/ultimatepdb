@@ -43,7 +43,7 @@ public class IOTools {
      * @return Can return null
      */
     public static MyStructureIfc getMyStructureIfc(AlgoParameters algoParameters, char[] fourLetterCode) {
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             // TODO change to char[]

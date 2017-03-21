@@ -53,7 +53,7 @@ public class ComputePropertiesPocketTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2kh4";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -115,7 +115,7 @@ public class ComputePropertiesPocketTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);

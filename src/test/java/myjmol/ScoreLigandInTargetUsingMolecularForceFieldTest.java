@@ -46,8 +46,10 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
     @Test
     public void findInteractionEnergyLigandFarAway() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -55,7 +57,6 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
@@ -169,8 +170,10 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
     @Test
     public void findInteractionEnergyOriginalLigandIn() throws IOException, ParsingConfigFileException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -178,7 +181,6 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

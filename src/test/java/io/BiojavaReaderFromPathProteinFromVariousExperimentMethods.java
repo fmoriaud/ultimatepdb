@@ -22,6 +22,7 @@ package io;
 import org.biojava.nbio.structure.ExperimentalTechnique;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
+import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
@@ -33,10 +34,12 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
 
 
     @Test
-    public void testReadFromResourcesProteinSolutionNMR() throws ParsingConfigFileException {
+    public void testReadFromResourcesProteinSolutionNMR() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2n8y";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -51,10 +54,12 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
 
 
     @Test
-    public void testReadFromResourcesProteinSolidstateNMR() throws ParsingConfigFileException {
+    public void testReadFromResourcesProteinSolidstateNMR() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2n3d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -70,10 +75,12 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
 
 
     @Test
-    public void testReadFromResourcesProteinElectronMicroscopy() throws ParsingConfigFileException {
+    public void testReadFromResourcesProteinElectronMicroscopy() throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "5irz";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -91,8 +98,10 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileNeutronDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "5e5j";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -109,8 +118,10 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileProteinFiberDiffractionThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "2zwh";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -126,8 +137,10 @@ public class BiojavaReaderFromPathProteinFromVariousExperimentMethods {
     @Test
     public void readFileHybridThatThrowABiojavaException() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         String fourLetterCode = "5ebj";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);

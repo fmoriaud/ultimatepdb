@@ -19,7 +19,9 @@ Author:
   */
 package parameters;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
@@ -41,6 +43,12 @@ public class AlgoParameters {
     public GenericBuffer<UltiJmol1462> ultiJMolBuffer;
     public GenericBuffer<ProcrustesAnalysisIfc> procrustesAnalysisBuffer;
     public MyStructureBuffer myStructureBuffer;
+
+
+    //-------------------------------------------------------------
+    // PDB files indexing
+    //-------------------------------------------------------------
+    private Map<String, List<Path>> indexPDBFileInFolder;
 
 
     // ****************************
@@ -270,6 +278,14 @@ public class AlgoParameters {
     // -------------------------------------------------------------------
     // Getter and Setter
     // -------------------------------------------------------------------
+    public Map<String, List<Path>> getIndexPDBFileInFolder() {
+        return indexPDBFileInFolder;
+    }
+
+    public void setIndexPDBFileInFolder(Map<String, List<Path>> indexPDBFileInFolder) {
+        this.indexPDBFileInFolder = indexPDBFileInFolder;
+    }
+
     public float getMIN_DISTANCE_TO_BE_NEIBHOR_IN_JMOL_MINIMIZATION() {
         return MIN_DISTANCE_TO_BE_NEIBHOR_IN_JMOL_MINIMIZATION;
     }

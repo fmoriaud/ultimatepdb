@@ -54,7 +54,7 @@ public class UltimatepdbDialog extends JDialog {
     private JTextField pdbCount = new JTextField(10);
     private JTextField sequenceDBCount = new JTextField(10);
 
-    private Map<String, java.util.List<Path>> indexPDBFileInFolder;
+
 
 
     //------------------------------------------------------------------------------
@@ -255,20 +255,18 @@ public class UltimatepdbDialog extends JDialog {
 
     private void updateWithPDBpath(File file) {
 
+        int pdbFileNumber = controller.updatePDBFileFoldersAndIndexing(file.getAbsolutePath());
 
-        Integer pdbFileNumber = controller.countPDBFiles(file.getAbsolutePath());
-        indexPDBFileInFolder = IOTools.indexPDBFileInFolder(file.getAbsolutePath());
-        if (pdbFileNumber != null && pdbFileNumber > 0) {
+        if (pdbFileNumber > 0) {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
             tabbedPane.addTab("Query", panelQuery);
             tabbedPane.addTab("Run", panelRun);
-
 
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
             tabbedPane.remove(panelQuery);
         }
-        pdbCount.setText(String.valueOf(indexPDBFileInFolder.size()));
+        pdbCount.setText(String.valueOf(pdbFileNumber));
     }
 }

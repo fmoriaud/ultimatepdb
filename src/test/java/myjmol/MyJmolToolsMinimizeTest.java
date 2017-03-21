@@ -48,9 +48,11 @@ public class MyJmolToolsMinimizeTest {
     @Test
     public void testScoreByMinimizingLigandOnFixedReceptor() throws IOException, ParsingConfigFileException, ExceptionInMyStructurePackage {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+
         // Get a structure with a ligand
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -58,7 +60,6 @@ public class MyJmolToolsMinimizeTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);

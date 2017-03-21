@@ -40,8 +40,10 @@ public class AdapterBiojavaStructureNucleosideCovalentlyBoundTest {
     @Test
     public void testGenerateSequenceFromMyStructureWithProblemInStoringInSequenceDB() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "5a07";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
@@ -49,7 +51,7 @@ public class AdapterBiojavaStructureNucleosideCovalentlyBoundTest {
             assertTrue(false);
         }
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;

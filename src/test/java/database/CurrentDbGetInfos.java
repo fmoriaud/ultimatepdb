@@ -83,7 +83,7 @@ public class CurrentDbGetInfos {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
-
+        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         System.out.println("PDB Four Letter codes in Big DB count = " + indexPDBFileInFolder.size());
 
         // TODO Add test to see how many of intra chains of length 5 ?

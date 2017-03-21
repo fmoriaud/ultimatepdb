@@ -44,16 +44,16 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
     @Test
     public void testconvertStructureToMyStructureWithPTRcovalentLigand() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "2mrk";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -77,16 +77,16 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
     @Test
     public void testconvertStructureToMyStructureWithORGcovalentLigand() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "3kw9";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -117,16 +117,16 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
     @Test
     public void testconvertStructureToMyStructureWithcovalentPSOLigandToNucleosides() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "203d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
@@ -154,16 +154,16 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
     @Test
     public void testconvertStructureToMyStructureWithThreeUMPcovalentToNucleosides() throws ParsingConfigFileException, IOException {
 
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         String fourLetterCode = "229d";
-        BiojavaReader reader = new BiojavaReader();
+        BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
             mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;

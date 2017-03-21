@@ -181,6 +181,8 @@ public class Tools {
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(testPDBFolder);
         algoParameters.setPATH_TO_CHEMCOMP_FOLDER(testChemcompFolder);
         algoParameters.setPATH_TO_RESULT_FILES(testChemcompFolder);
+
+
         return algoParameters;
     }
 
@@ -249,15 +251,17 @@ public class Tools {
      * @throws IOException
      */
     private static Structure getStructure(URL url) throws ParsingConfigFileException, IOException, ExceptionInIOPackage {
+
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
+
         Path path = null;
         try {
             path = Paths.get(url.toURI());
         } catch (URISyntaxException e1) {
             assertTrue(false);
         }
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         Structure structure = null;
-        BiojavaReaderIfc reader = new BiojavaReader();
+        BiojavaReaderIfc reader = new BiojavaReader(algoParameters);
         structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         return structure;
     }

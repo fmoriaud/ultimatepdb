@@ -148,6 +148,17 @@ public class DatabaseTools {
     }
 
 
+
+    /**
+     * Analyse a PDB file and enter in DB
+     * If no chains are found an empty entry is added with the four letter code
+     * @param connexion
+     * @param override
+     * @param fourLetterCode
+     * @param algoParameters
+     * @param sequenceTableName
+     * @return
+     */
     public static boolean addInSequenceDB(Connection connexion, boolean override, String fourLetterCode, AlgoParameters algoParameters, String sequenceTableName) {
 
         boolean alreadyFound = isFourLetterCodeAlreadyFoundInDB(connexion, fourLetterCode, sequenceTableName);
@@ -166,6 +177,9 @@ public class DatabaseTools {
             return false;
         }
         MyChainIfc[] chainsForShapeBuilding = myStructure.getAllChainsRelevantForShapeBuilding();
+
+        int numberChainsForThisPDB = 0;
+
         Chains:
         for (MyChainIfc chain : chainsForShapeBuilding) {
 
@@ -188,26 +202,35 @@ public class DatabaseTools {
                 sequence = truncatedSequence;
             }
 
-            try {
-                String insertTableSQL = "INSERT INTO " + sequenceTableName + " "
-                        + "(fourLettercode, chainId, chainType, sequenceString) VALUES"
-                        + "(?,?,?,?)";
-                PreparedStatement preparedStatement = connexion.prepareStatement(insertTableSQL);
-                preparedStatement.setString(1, String.valueOf(fourLetterCode));
-                preparedStatement.setString(2, String.valueOf(chainName));
-                preparedStatement.setString(3, String.valueOf(chainType));
-                preparedStatement.setString(4, sequence);
-
-                int ok = preparedStatement.executeUpdate();
-                preparedStatement.close();
-                System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
-
-            } catch (SQLException e1) {
-                System.out.println("Failed to enter entry in " + sequenceTableName + " table ");
-                return false;
-            }
+            numberChainsForThisPDB += enterInDb(connexion, fourLetterCode, sequenceTableName, numberChainsForThisPDB, chainType, chainName, sequence);
+        }
+        if (numberChainsForThisPDB == 0){
+            enterInDb(connexion, fourLetterCode, sequenceTableName, numberChainsForThisPDB, "".toCharArray(), "".toCharArray(), "");
         }
         return true;
+    }
+
+
+    private static int enterInDb(Connection connexion, String fourLetterCode, String sequenceTableName, int numberChainsForThisPDB, char[] chainType, char[] chainName, String sequence) {
+        try {
+            String insertTableSQL = "INSERT INTO " + sequenceTableName + " "
+                    + "(fourLettercode, chainId, chainType, sequenceString) VALUES"
+                    + "(?,?,?,?)";
+            PreparedStatement preparedStatement = connexion.prepareStatement(insertTableSQL);
+            preparedStatement.setString(1, String.valueOf(fourLetterCode));
+            preparedStatement.setString(2, String.valueOf(chainName));
+            preparedStatement.setString(3, String.valueOf(chainType));
+            preparedStatement.setString(4, sequence);
+
+            int ok = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
+            numberChainsForThisPDB += 1;
+        } catch (SQLException e1) {
+            System.out.println("Failed to enter entry in " + sequenceTableName + " table ");
+            return 0;
+        }
+        return 1;
     }
 
 

@@ -41,7 +41,6 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * Declared as static with a loose instanciation so it it is created only once
      */
     private static DownloadChemCompProvider downloadChemCompProvider = null;
-    private static Map<String, List<Path>> indexPDBFileInFolder = null;
 
     private AlgoParameters algoParameters;
 
@@ -54,7 +53,8 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * Class to read a Biojava mmcif file. internet access is needed to get bond orders from cif files.
      * Also work if no internet, then a Biojava default routine is used, not sure results for bond orders will be the same.
      **/
-    public BiojavaReader() {
+    public BiojavaReader(AlgoParameters algoParameters) {
+        this.algoParameters = algoParameters;
     }
 
 
@@ -80,8 +80,8 @@ public class BiojavaReader implements BiojavaReaderIfc {
 
         fourLetterCode = fourLetterCode.toUpperCase(); // it can handle uppercase and lowercase
         // done only once
-        if (indexPDBFileInFolder == null) {
-            indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToDividedPDBFolder);
+        if (algoParameters.getIndexPDBFileInFolder() == null) {
+            algoParameters.setIndexPDBFileInFolder(IOTools.indexPDBFileInFolder(pathToDividedPDBFolder));
         }
         // done only once
         initializeOnceDowloadChemCompProvider(pathToChemcompFolder);
@@ -89,9 +89,9 @@ public class BiojavaReader implements BiojavaReaderIfc {
         FileParsingParameters params = getFileParsingParameters();
 
         Path actualPathToFileInPDBFolder = null;
-        if (indexPDBFileInFolder.containsKey(fourLetterCode)) {
+        if (algoParameters.getIndexPDBFileInFolder().containsKey(fourLetterCode)) {
             // TODO Currently takes the first one found, if more than one the a filter would be needed
-            actualPathToFileInPDBFolder = indexPDBFileInFolder.get(fourLetterCode).get(0);
+            actualPathToFileInPDBFolder = algoParameters.getIndexPDBFileInFolder().get(fourLetterCode).get(0);
         }
 
         File file = actualPathToFileInPDBFolder.toFile();
