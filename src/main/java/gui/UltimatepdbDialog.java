@@ -20,9 +20,7 @@ Author:
 package gui;
 
 import database.HashTablesTools;
-import database.SequenceTools;
 import io.FileListingVisitorForPDBCifGzFiles;
-import io.IOTools;
 import io.MMcifFileInfos;
 import net.miginfocom.swing.MigLayout;
 import protocols.ParsingConfigFileException;
@@ -30,7 +28,6 @@ import protocols.ParsingConfigFileException;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.List;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -59,8 +56,6 @@ public class UltimatepdbDialog extends JDialog {
     private JTextField pATH_TO_RESULT_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
     private JTextField sequenceDBCount = new JTextField(10);
-
-    private JTextField countOfFileToUpdate = new JTextField(10);
 
     private JButton updateSequenceDB;
     private JProgressBar pbar;
@@ -95,9 +90,8 @@ public class UltimatepdbDialog extends JDialog {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
 
-        int countOfFilesToUpdate = updateWithSeqDB();
-        countOfFileToUpdate.setText(String.valueOf(countOfFilesToUpdate));
-
+        int countOfFilesToUpdate = countFilesAlreadyIndexed();
+        sequenceDBCount.setText(String.valueOf(countOfFilesToUpdate));
     }
 
 
@@ -288,18 +282,18 @@ public class UltimatepdbDialog extends JDialog {
             //pbar.updateUI();
             //panelPDB.updateUI();
         }
-        int countOfFilesToUpdate = updateWithSeqDB();
-        countOfFileToUpdate.setText(String.valueOf(countOfFilesToUpdate));
+        int countOfFilesToUpdate = countFilesAlreadyIndexed();
+        sequenceDBCount.setText(String.valueOf(countOfFilesToUpdate));
     }
 
 
-    private int updateWithSeqDB() {
+    private int countFilesAlreadyIndexed() {
 
-        int numberChainInDB = SequenceTools.findNumberOfEntries();
-        sequenceDBCount.setText(String.valueOf(numberChainInDB));
-        int countOfFilesToUpdate = HashTablesTools.countFilesWhichAreAlreadyIndexedInSequenceDB(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters().getIndexPDBFileInFolder());
+        //int numberChainInDB = SequenceTools.findNumberOfEntries();
 
-        return countOfFilesToUpdate;
+        int countOfFilesAlreadyIndexed = HashTablesTools.countFilesWhichAreAlreadyIndexedInSequenceDB(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters().getIndexPDBFileInFolder());
+
+        return countOfFilesAlreadyIndexed;
     }
 
 
