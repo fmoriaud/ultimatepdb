@@ -20,6 +20,7 @@ Author:
 package io;
 
 
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.nio.file.Path;
  */
 public interface BiojavaReaderIfc {
 
-    Structure read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
+    Pair<String, Structure> read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
 
-    Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
+    Pair<String, Structure> readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
 }

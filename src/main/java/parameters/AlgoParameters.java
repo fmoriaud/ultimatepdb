@@ -25,6 +25,7 @@ import java.util.Map;
 
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
+import io.MMcifFileInfos;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 
@@ -48,7 +49,7 @@ public class AlgoParameters {
     //-------------------------------------------------------------
     // PDB files indexing
     //-------------------------------------------------------------
-    private Map<String, List<Path>> indexPDBFileInFolder;
+    private Map<String, List<MMcifFileInfos>> indexPDBFileInFolder;
 
 
     // ****************************
@@ -278,11 +279,11 @@ public class AlgoParameters {
     // -------------------------------------------------------------------
     // Getter and Setter
     // -------------------------------------------------------------------
-    public Map<String, List<Path>> getIndexPDBFileInFolder() {
+    public Map<String, List<MMcifFileInfos>> getIndexPDBFileInFolder() {
         return indexPDBFileInFolder;
     }
 
-    public void setIndexPDBFileInFolder(Map<String, List<Path>> indexPDBFileInFolder) {
+    public void setIndexPDBFileInFolder(Map<String, List<MMcifFileInfos>> indexPDBFileInFolder) {
         this.indexPDBFileInFolder = indexPDBFileInFolder;
     }
 

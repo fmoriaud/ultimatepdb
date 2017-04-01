@@ -44,7 +44,7 @@ public class BiojavaReaderGiveupOnTooBigFilesTest {
         Structure mmcifStructure = null;
         boolean exceptionThrown = false;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             exceptionThrown = true;
             assertTrue(e.getMessage().contains("File too big to be handled. Size ="));

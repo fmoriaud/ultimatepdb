@@ -54,7 +54,7 @@ public class FindQueriesFrom4LetterCode {
 
         List<String> aminoChain = new ArrayList<>();
 
-        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray()).getValue();
         MyChainIfc[] aminoChains = myStructure.getAllAminochains();
 
         for (MyChainIfc chain: aminoChains){

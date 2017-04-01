@@ -40,7 +40,6 @@ public class SequenceTools {
     //-------------------------------------------------------------
     // Static variables
     //-------------------------------------------------------------
-    public static String tableName = "sequence";
 
 
     //-------------------------------------------------------------
@@ -275,24 +274,24 @@ public class SequenceTools {
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
 
-        Connection connexion = DatabaseTools.getNewConnection();
+        Connection connexion = HashTablesTools.getConnection();
         Statement stmt = null;
         try {
             stmt = connexion.createStatement();
-            String findEntry = "SELECT * from " + SequenceTools.tableName;
+            String findEntry = "SELECT * from " + HashTablesTools.tableSequenceName;
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
 
             char[] aminochainType = "AA".toCharArray();
             while (resultFindEntry.next()) {
 
-                String chainType = resultFindEntry.getString(3);
+                String chainType = resultFindEntry.getString(4);
                 if (!Arrays.equals(aminochainType, chainType.toCharArray())) {
                     continue;
                 }
 
-                listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
-                listChainIdFromDB.add(resultFindEntry.getString(2));
-                listSequence.add(resultFindEntry.getString(4));
+                listFourLetterCodeFromDB.add(resultFindEntry.getString(2));
+                listChainIdFromDB.add(resultFindEntry.getString(3));
+                listSequence.add(resultFindEntry.getString(5));
 
                 if (listSequence.size() != listChainIdFromDB.size() ||
                         listSequence.size() != listFourLetterCodeFromDB.size() ||
@@ -337,7 +336,7 @@ public class SequenceTools {
             }
         }
 
-        DatabaseTools.shutdown();
+        HashTablesTools.shutdown();
         return hitsInSequenceDb;
     }
 
@@ -388,13 +387,13 @@ public class SequenceTools {
 
     public static int findNumberOfEntries() {
 
-        Connection connexion = DatabaseTools.getNewConnection();
+        Connection connexion = HashTablesTools.getConnection();
         Statement stmt = null;
 
         try {
             stmt = connexion.createStatement();
 
-            String findEntry = "SELECT * from " + tableName;
+            String findEntry = "SELECT * from " + HashTablesTools.tableSequenceName;
 
             ResultSet resultFindEntry = stmt.executeQuery(findEntry);
             int i = 0;
@@ -407,7 +406,7 @@ public class SequenceTools {
         } finally {
             try {
                 stmt.close();
-                DatabaseTools.shutdown();
+                HashTablesTools.shutdown();
             } catch (SQLException e) {
             }
         }
@@ -432,7 +431,7 @@ public class SequenceTools {
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
 
-        Connection connexion = DatabaseTools.getNewConnection();
+        Connection connexion = HashTablesTools.getConnection();
         Statement stmt = null;
         try {
             stmt = connexion.createStatement();
@@ -441,14 +440,14 @@ public class SequenceTools {
             char[] aminochainType = "AA".toCharArray();
             while (resultFindEntry.next()) {
 
-                String chainType = resultFindEntry.getString(3);
+                String chainType = resultFindEntry.getString(4);
                 if (!Arrays.equals(aminochainType, chainType.toCharArray())) {
                     continue;
                 }
 
-                listFourLetterCodeFromDB.add(resultFindEntry.getString(1));
-                listChainIdFromDB.add(resultFindEntry.getString(2));
-                listSequence.add(resultFindEntry.getString(4));
+                listFourLetterCodeFromDB.add(resultFindEntry.getString(2));
+                listChainIdFromDB.add(resultFindEntry.getString(3));
+                listSequence.add(resultFindEntry.getString(5));
 
                 if (listSequence.size() != listChainIdFromDB.size() ||
                         listSequence.size() != listFourLetterCodeFromDB.size() ||
@@ -493,7 +492,7 @@ public class SequenceTools {
             }
         }
 
-        DatabaseTools.shutdown();
+        HashTablesTools.shutdown();
         return hitsInSequenceDb;
     }
 

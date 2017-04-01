@@ -19,8 +19,12 @@ Author:
   */
 package database;
 
+import io.FileListingVisitorForPDBCifGzFiles;
 import parameters.AlgoParameters;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 
 /**
@@ -31,19 +35,16 @@ public class AddInSequenceDB implements DoMyDbTaskIfc {
     // Class variables
     //-------------------------------------------------------------
     private AlgoParameters algoParameters;
-    private String fourLetterCode;
-    private boolean override;
-    private String sequenceTableName;
-
+    private String tableName;
+    private String tableFailureName;
 
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public AddInSequenceDB(AlgoParameters algoParameters, String fourLetterCode, boolean override, String sequenceTableName) {
+    public AddInSequenceDB(AlgoParameters algoParameters, String tableName, String tableFailureName) {
         this.algoParameters = algoParameters;
-        this.fourLetterCode = fourLetterCode;
-        this.override = override;
-        this.sequenceTableName = sequenceTableName;
+        this.tableName = tableName;
+        this.tableFailureName = tableFailureName;
     }
 
 
@@ -51,8 +52,15 @@ public class AddInSequenceDB implements DoMyDbTaskIfc {
     // Interface & Public methods
     //-------------------------------------------------------------
     @Override
-    public boolean doAndReturnSuccessValue(Connection connexion) {
+    public boolean doAndReturnSuccessValue(Connection connexion, Path pathToFile) {
 
-        return DatabaseTools.addInSequenceDB(connexion, override, fourLetterCode, algoParameters, sequenceTableName);
+        try {
+            String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(pathToFile.getFileName().toString());
+
+            HashTablesTools.addAFile(pathToFile, fourLetterCode, connexion, tableName, tableFailureName, algoParameters);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            return false;
+        }
+        return true;
     }
 }

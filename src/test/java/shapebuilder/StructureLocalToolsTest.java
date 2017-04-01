@@ -59,7 +59,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -169,7 +169,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -275,7 +275,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -378,7 +378,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -486,7 +486,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -558,7 +558,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -611,7 +611,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -657,7 +657,7 @@ public class StructureLocalToolsTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
@@ -708,7 +708,7 @@ public class StructureLocalToolsTest {
         // This ligand is built with cloning so the neighbors from original structure are kept
         char[] fourLetterCodeTarget = "2ce8".toCharArray();
         char[] chainIdTarget = "X".toCharArray();
-        MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeTarget);
+        MyStructureIfc myStructureTarget = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeTarget).getValue();
         MyChainIfc foreignLigandChain = myStructureTarget.getAminoMyChain(chainIdTarget);
         Cloner cloner = new Cloner(foreignLigandChain, algoParameters);
         MyStructureIfc foreignLigandFromTarget = cloner.getClone();
@@ -716,7 +716,7 @@ public class StructureLocalToolsTest {
 
         char[] fourLetterCodeQuery = "2ce9".toCharArray();
         char[] chainIdQuery = "X".toCharArray();
-        MyStructureIfc myStructureQuery = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeQuery);
+        MyStructureIfc myStructureQuery = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeQuery).getValue();
 
         StructureLocalToBuildAnyShape structureLocalToBuildAnyShapeQuery = null;
         try {

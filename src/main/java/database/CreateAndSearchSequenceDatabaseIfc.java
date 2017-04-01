@@ -19,13 +19,13 @@ Author:
   */
 package database;
 
+import parameters.AlgoParameters;
+
 public interface CreateAndSearchSequenceDatabaseIfc {
 
     void createDatabase();
 
-    void updateDatabaseKeepingFourLetterCodeEntries();
-
-    void updateDatabaseAndOverride();
+    void updateDatabase(String pathToMMcifFiles);
 
     String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName);
 

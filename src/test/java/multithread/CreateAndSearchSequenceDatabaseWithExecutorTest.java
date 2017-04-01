@@ -20,6 +20,7 @@ Author:
 package multithread;
 
 import database.CreateAndSearchSequenceDatabaseWithExecutor;
+import database.HashTablesTools;
 import io.Tools;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutorTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
         algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(6);
 
-        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, Tools.testTableName);
+        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName);
         createAndSearchSequenceDatabaseWithExecutor.createDatabase();
 
         // Read an entry from it

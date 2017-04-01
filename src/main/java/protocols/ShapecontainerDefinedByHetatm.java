@@ -55,7 +55,7 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     @Override
     public ShapeContainerIfc getShapecontainer() throws ShapeBuildingException {
 
-        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode);
+        myStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode).getValue();
         if (myStructure == null) {
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;

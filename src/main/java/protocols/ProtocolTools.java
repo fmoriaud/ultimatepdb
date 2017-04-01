@@ -67,7 +67,7 @@ public class ProtocolTools {
             BiojavaReader reader = new BiojavaReader(algoParameters);
             Structure mmcifStructure = null;
             try {
-                mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+                mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER()).getValue();
             } catch (IOException | ExceptionInIOPackage e) {
                 continue A;
             }

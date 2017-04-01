@@ -20,11 +20,18 @@ Author:
 package database;
 
 import io.Tools;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,21 +39,82 @@ import static org.junit.Assert.assertNotNull;
 public class CreateAndSearchSequenceDatabaseTest {
 
     @Test
-    public void testCreateDatabaseTest() throws IOException, ParsingConfigFileException {
+    public void testCreateDatabaseHashTest() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
-        CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, Tools.testTableName);
+        CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName);
         createAndSearchSequenceDatabase.createDatabase();
-
-        // Read an entry from it
-        String sequence1di9 = createAndSearchSequenceDatabase.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase("1DI9", "A");
-
-        // Check sequence length
-        assertNotNull(sequence1di9);
-        assertEquals((sequence1di9.length() / 3), 348);
-
+        createAndSearchSequenceDatabase.updateDatabase(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         createAndSearchSequenceDatabase.shutdownDb();
+
+        System.out.println();
+        System.out.println("getContentInfosTestDB");
+
+        Connection connexion = HashTablesTools.getConnection();
+        Statement stmt = null;
+        try {
+            stmt = connexion.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String findEntrySequenceDb = "SELECT * from " + HashTablesTools.tableSequenceTestName;
+
+        ResultSet resultFindEntry = null;
+        try {
+            resultFindEntry = stmt.executeQuery(findEntrySequenceDb);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Set<String> uniqueHashCode = new HashSet<>();
+        Set<String> uniqueFourLetterCode = new HashSet<>();
+        int entriesCountSequenceDb = 0;
+        try {
+            while (resultFindEntry.next()) {
+
+                String hashCode = resultFindEntry.getString(1);
+                String fourLetterCode = resultFindEntry.getString(2);
+                uniqueFourLetterCode.add(fourLetterCode);
+                uniqueHashCode.add(hashCode);
+
+                entriesCountSequenceDb += 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        stmt = null;
+        try {
+            stmt = connexion.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String findEntrySequenceFailureDb = "SELECT * from " + HashTablesTools.tableSequenceFailureTestName;
+
+        resultFindEntry = null;
+        try {
+            resultFindEntry = stmt.executeQuery(findEntrySequenceFailureDb);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int entriesCountSequenceFailureDb = 0;
+        try {
+            while (resultFindEntry.next()) {
+
+                entriesCountSequenceFailureDb += 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(HashTablesTools.tableSequenceTestName + " :");
+        System.out.println("Total entries hash & chain = " + entriesCountSequenceDb);
+        System.out.println("uniqueFourLetterCode = " + uniqueFourLetterCode.size());
+        System.out.println("uniqueHashCode = " + uniqueHashCode.size());
+        System.out.print("entriesCountSequenceFailureDb = " + entriesCountSequenceFailureDb);
+
+        assertEquals(uniqueFourLetterCode.size(), uniqueHashCode.size());
+        HashTablesTools.shutdown();
     }
 }
 

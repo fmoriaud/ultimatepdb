@@ -58,7 +58,7 @@ public class ScriptCommandOnUltiJmolTest {
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Structure mmcifStructure1di9 = null;
         try {
-            mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+            mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }

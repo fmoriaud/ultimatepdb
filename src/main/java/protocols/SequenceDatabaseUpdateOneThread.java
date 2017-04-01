@@ -19,12 +19,12 @@ Author:
   */
 package protocols;
 
+
 import database.CreateAndSearchSequenceDatabase;
 import database.HashTablesTools;
-import database.SequenceTools;
 import parameters.AlgoParameters;
 
-public class SequenceDatabaseBuildOneThread {
+public class SequenceDatabaseUpdateOneThread {
 
     // -------------------------------------------------------------------
     // Public && Interface method
@@ -34,7 +34,7 @@ public class SequenceDatabaseBuildOneThread {
         AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
 
         CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
-        createAndSearchSequenceDatabase.createDatabase();
+        createAndSearchSequenceDatabase.updateDatabase(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
 
         createAndSearchSequenceDatabase.shutdownDb();
     }

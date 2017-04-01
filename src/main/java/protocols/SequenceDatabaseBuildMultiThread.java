@@ -20,6 +20,7 @@ Author:
 package protocols;
 
 import database.CreateAndSearchSequenceDatabaseWithExecutor;
+import database.HashTablesTools;
 import database.SequenceTools;
 import parameters.AlgoParameters;
 
@@ -42,9 +43,9 @@ public class SequenceDatabaseBuildMultiThread {
 
         AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
         algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(6);
-        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, SequenceTools.tableName);
+        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         createAndSearchSequenceDatabaseWithExecutor.createDatabase();
-
+        createAndSearchSequenceDatabaseWithExecutor.updateDatabase(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
     }
 }

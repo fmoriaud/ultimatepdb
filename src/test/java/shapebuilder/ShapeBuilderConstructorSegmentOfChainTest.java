@@ -255,7 +255,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         int maxLength = 1000;
 
         boolean useSimilarSequences = false;
-        List<HitInSequenceDb> sequenceHit = SequenceTools.find(Tools.testTableName, minLength, maxLength, peptideSequence, useSimilarSequences);
+        List<HitInSequenceDb> sequenceHit = SequenceTools.find(Tools.testSequenceTableName, minLength, maxLength, peptideSequence, useSimilarSequences);
         List<Integer> rankIds = sequenceHit.get(0).getListRankIds();
         int matchingRankId = rankIds.get(0);
 

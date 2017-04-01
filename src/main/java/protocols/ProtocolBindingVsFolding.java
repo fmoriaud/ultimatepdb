@@ -19,14 +19,10 @@ Author:
   */
 package protocols;
 
-import convertformat.AdapterBioJavaStructure;
-import convertformat.ExceptionInConvertFormat;
+import database.HashTablesTools;
 import database.HitInSequenceDb;
 import database.SequenceTools;
-import io.BiojavaReader;
-import io.ExceptionInIOPackage;
 import mystructure.*;
-import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shape.ShapeContainerWithPeptide;
@@ -124,7 +120,7 @@ public class ProtocolBindingVsFolding {
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
         boolean useSimilarSequences = false;
 
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(SequenceTools.tableName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
 
 
         if (queryShape instanceof ShapeContainerWithPeptide) {

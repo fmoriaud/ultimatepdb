@@ -19,6 +19,7 @@ Author:
   */
 package database;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 
 /**
@@ -26,5 +27,5 @@ import java.sql.Connection;
  */
 public interface DoMyDbTaskIfc {
 
-    boolean doAndReturnSuccessValue(Connection connexion);
+    boolean doAndReturnSuccessValue(Connection connexion, Path pathToFile);
 }

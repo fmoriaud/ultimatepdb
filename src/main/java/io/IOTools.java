@@ -24,6 +24,7 @@ import convertformat.ExceptionInConvertFormat;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 
@@ -37,17 +38,38 @@ public class IOTools {
     // Static methods
     //-------------------------------------------------------------
 
+    public static Pair<String, MyStructureIfc> getMyStructureIfc(AlgoParameters algoParameters, Path pathToFile) {
+
+        BiojavaReader reader = new BiojavaReader(algoParameters);
+        Pair<String, Structure> pairPathStructure = null;
+        try {
+            pairPathStructure = reader.read(pathToFile, algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+        } catch (IOException | ExceptionInIOPackage e) {
+            return null;
+        }
+        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
+        MyStructureIfc mystructure = null;
+        try {
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue());
+        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
+            return null;
+        }
+        Pair<String, MyStructureIfc> pairPathMyStructure = new Pair(pairPathStructure.getKey(), mystructure);
+        return pairPathMyStructure;
+    }
+
+
     /**
      * @param algoParameters
      * @param fourLetterCode that must be lower case
      * @return Can return null
      */
-    public static MyStructureIfc getMyStructureIfc(AlgoParameters algoParameters, char[] fourLetterCode) {
+    public static Pair<String, MyStructureIfc> getMyStructureIfc(AlgoParameters algoParameters, char[] fourLetterCode) {
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pairPathStructure = null;
         try {
             // TODO change to char[]
-            mmcifStructure = reader.readFromPDBFolder(String.valueOf(fourLetterCode), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+            pairPathStructure = reader.readFromPDBFolder(String.valueOf(fourLetterCode), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
         } catch (IOException | ExceptionInIOPackage e) {
             return null;
         }
@@ -55,17 +77,18 @@ public class IOTools {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue());
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             return null;
         }
-        return mystructure;
+        Pair<String, MyStructureIfc> pairPathMyStructure = new Pair(pairPathStructure.getKey(), mystructure);
+        return pairPathMyStructure;
     }
 
 
-    public static Map<String, List<Path>> indexPDBFileInFolder(String pathToDividedPDBFolder) {
+    public static Map<String, List<MMcifFileInfos>> indexPDBFileInFolder(String pathToDividedPDBFolder) {
 
-        Map<String, List<Path>> indexPDBFileInFolder = null;
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = null;
         try {
             FileListingVisitorForPDBCifGzFiles fileListingVisitor = new FileListingVisitorForPDBCifGzFiles(pathToDividedPDBFolder);
             indexPDBFileInFolder = fileListingVisitor.getIndexFiles();

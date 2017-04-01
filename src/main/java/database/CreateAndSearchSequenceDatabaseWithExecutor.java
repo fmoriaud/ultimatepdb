@@ -20,6 +20,7 @@ Author:
 package database;
 
 import io.IOTools;
+import io.MMcifFileInfos;
 import multithread.StoreInSequenceDbPDBFileCallable;
 import parameters.AlgoParameters;
 import protocols.ProtocolTools;
@@ -40,17 +41,18 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     //-------------------------------------------------------------
     private Connection connexion;
     private AlgoParameters algoParameters;
-    private String sequenceTableName;
-
+    private String tableName;
+    private String tableFailureName;
 
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters, String sequenceTableName) {
+    public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters, String tableName, String tableFailureName) {
 
-        this.connexion = DatabaseTools.getConnection();
+        this.connexion = HashTablesTools.getConnection();
         this.algoParameters = algoParameters;
-        this.sequenceTableName = sequenceTableName;
+        this.tableName = tableName;
+        this.tableFailureName = tableFailureName;
     }
 
 
@@ -60,36 +62,29 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     @Override
     public void createDatabase() {
 
-        DatabaseTools.createDBandTableSequence(connexion, sequenceTableName);
+        HashTablesTools.createTables(connexion, tableName, tableFailureName);
         updateOveridingExistingDatabase(true);
     }
 
 
     @Override
-    public void updateDatabaseKeepingFourLetterCodeEntries() {
+    public void updateDatabase(String pathToMMcifFiles) {
 
-        updateOveridingExistingDatabase(false);
-    }
-
-
-    @Override
-    public void updateDatabaseAndOverride() {
-
-        updateOveridingExistingDatabase(true);
+        HashTablesTools.addFilesToDb(connexion, pathToMMcifFiles, algoParameters, tableName, tableFailureName);
     }
 
 
     @Override
     public String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName) {
 
-        return DatabaseTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName, sequenceTableName);
+        return HashTablesTools.returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(connexion, fourLetterCode, chainName, tableName);
     }
 
 
     @Override
     public void shutdownDb() {
 
-        DatabaseTools.shutdown();
+        HashTablesTools.shutdown();
     }
 
 
@@ -98,19 +93,21 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     //-------------------------------------------------------------
     private void updateOveridingExistingDatabase(boolean override) {
 
-        Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
         algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
-        for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
-            String fourLetterCode = entry.getKey();
-            DoMyDbTaskIfc doMyDbTaskIfc = new AddInSequenceDB(algoParameters, fourLetterCode, override, sequenceTableName);
+        for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
 
-            StoreInSequenceDbPDBFileCallable callable = new StoreInSequenceDbPDBFileCallable(doMyDbTaskIfc, connexion);
-            callablesToLauch.add(callable);
+            for (MMcifFileInfos fileInfos : entry.getValue()) {
+                DoMyDbTaskIfc doMyDbTaskIfc = new AddInSequenceDB(algoParameters, tableName, tableFailureName);
+
+                StoreInSequenceDbPDBFileCallable callable = new StoreInSequenceDbPDBFileCallable(doMyDbTaskIfc, connexion, fileInfos.getPathToFile());
+                callablesToLauch.add(callable);
+            }
         }
 
         List<Future<Boolean>> allFuture = new ArrayList<>();

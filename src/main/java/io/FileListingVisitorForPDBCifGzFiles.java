@@ -19,6 +19,7 @@ Author:
   */
 package io;
 
+import database.HashTablesTools;
 import math.AddToMap;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class FileListingVisitorForPDBCifGzFiles {
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------
-    private Map<String, List<Path>> indexFiles = new LinkedHashMap<>();
+    private Map<String, List<MMcifFileInfos>> indexFiles = new LinkedHashMap<>();
 
 
     // -------------------------------------------------------------------
@@ -56,7 +58,7 @@ public class FileListingVisitorForPDBCifGzFiles {
     // -------------------------------------------------------------------
     // Public & Interface Methods
     // -------------------------------------------------------------------
-    public Map<String, List<Path>> getIndexFiles() {
+    public Map<String, List<MMcifFileInfos>> getIndexFiles() {
 
         return indexFiles;
     }
@@ -71,7 +73,16 @@ public class FileListingVisitorForPDBCifGzFiles {
 
             String fourLetterCode = makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(aFile.getFileName().toString());
             if (fourLetterCode != null) {
-                AddToMap.addElementToAMapOfList(indexFiles, fourLetterCode, aFile);
+
+                try {
+                    String hash = HashTablesTools.getMD5hash(aFile.toFile().getAbsolutePath());
+                    MMcifFileInfos fileInfo = new MMcifFileInfos(aFile, hash);
+
+                    AddToMap.addElementToAMapOfList(indexFiles, fourLetterCode, fileInfo);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             return FileVisitResult.CONTINUE;
@@ -92,7 +103,7 @@ public class FileListingVisitorForPDBCifGzFiles {
      * @param fileName
      * @return
      */
-    private String makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(String fileName) {
+    public static String makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(String fileName) {
 
         String[] splitFileName = fileName.split("\\.");
 

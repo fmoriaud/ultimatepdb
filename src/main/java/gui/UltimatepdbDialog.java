@@ -19,19 +19,25 @@ Author:
   */
 package gui;
 
+import database.HashTablesTools;
 import database.SequenceTools;
+import io.FileListingVisitorForPDBCifGzFiles;
 import io.IOTools;
+import io.MMcifFileInfos;
 import net.miginfocom.swing.MigLayout;
 import protocols.ParsingConfigFileException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.List;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 public class UltimatepdbDialog extends JDialog {
     //------------------------------------------------------------------------------
@@ -54,8 +60,10 @@ public class UltimatepdbDialog extends JDialog {
     private JTextField pdbCount = new JTextField(10);
     private JTextField sequenceDBCount = new JTextField(10);
 
+    private JTextField countOfFileToUpdate = new JTextField(10);
 
-
+    private JButton updateSequenceDB;
+    private JProgressBar pbar;
 
     //------------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -69,7 +77,7 @@ public class UltimatepdbDialog extends JDialog {
 
         query4letterCode.setText(defaulPDB4letterCode);
         validate4LetterCode = new JButton("Validate");
-
+        updateSequenceDB = new JButton("update");
         controller = new Controller();
         setModal(true);
         createPanel();
@@ -87,7 +95,9 @@ public class UltimatepdbDialog extends JDialog {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
 
-        updateWithSeqDB();
+        int countOfFilesToUpdate = updateWithSeqDB();
+        countOfFileToUpdate.setText(String.valueOf(countOfFilesToUpdate));
+
     }
 
 
@@ -171,20 +181,36 @@ public class UltimatepdbDialog extends JDialog {
         Label labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new Label("Path to PDB MMcif root folder :");
         JButton browseToPDBMMcifFolder = new JButton("Browse...");
 
-        Label labelPDBcount = new Label("PDB MMcif files found :");
-        panelPDB.add(labelPDBcount);
-        panelPDB.add(pdbCount, "wrap");
 
         browseToPDBMMcifFolder.addActionListener(e -> updateIndexMMcifPDBFolder(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER));
         panelPDB.add(labelPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER);
         panelPDB.add(pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER, "grow");
         panelPDB.add(browseToPDBMMcifFolder, "wrap");
 
-        Label labelSequenceDBcount = new Label("PDB chains indexed in DB :");
+        Label labelPDBcount = new Label("PDB MMcif files found :");
+        panelPDB.add(labelPDBcount);
+        panelPDB.add(pdbCount, "wrap");
+
+        JSeparator separator = new JSeparator();
+        //separator.setOrientation(SwingConstants.HORIZONTAL);
+        separator.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(1, 0, 0)));
+        separator.setPreferredSize(new Dimension(200, 1));
+        panelPDB.add(separator, "span, span, wrap");
+
+        Label labelSequenceDBcount = new Label("PDB chains indexed in sequence DB :");
         panelPDB.add(labelSequenceDBcount);
-        panelPDB.add(sequenceDBCount, "wrap");
+        panelPDB.add(sequenceDBCount);
+        //panelPDB.add(countOfFileToUpdate, "wrap");
+        panelPDB.add(updateSequenceDB);
+        updateSequenceDB.addActionListener(e -> updateSequenceDb());
 
         TitledBorder border = new TitledBorder(null, "Setup MMcif files", TitledBorder.LEADING, TitledBorder.TOP, null, null);
+
+        // pbar = new JProgressBar();
+        //pbar.setMinimum(0);
+        //pbar.setMaximum(100);
+        // panelPDB.add(pbar, "wrap");
+
         panelPDB.setBorder(border);
     }
 
@@ -230,10 +256,50 @@ public class UltimatepdbDialog extends JDialog {
         }
     }
 
-    private void updateWithSeqDB() {
+
+    private void updateSequenceDb() {
+
+
+        Map<String, java.util.List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(controller.getAlgoParameters().getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        //pbar.setMaximum(0);
+        //pbar.setMaximum(indexPDBFileInFolder.size());
+        int current = 0;
+        int fileAddedCount = 0;
+        for (Map.Entry<String, java.util.List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
+            for (MMcifFileInfos fileInfos : entry.getValue()) {
+                try {
+
+                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile().getFileName().toString());
+                    boolean fileAdded = HashTablesTools.addAFile(fileInfos.getPathToFile(), fourLetterCode, HashTablesTools.getConnection(), HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters());
+                    if (fileAdded) {
+                        fileAddedCount += 1;
+                    }
+                } catch (NoSuchAlgorithmException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            current += 1;
+            System.out.println(current + "  " + fileAddedCount);
+            //sequenceDBCount.setText(String.valueOf(current));
+            //sequenceDBCount.updateUI();
+            //panelPDB.updateUI();
+            //tabbedPane.updateUI();
+            //pbar.setValue(current);
+            //pbar.updateUI();
+            //panelPDB.updateUI();
+        }
+        int countOfFilesToUpdate = updateWithSeqDB();
+        countOfFileToUpdate.setText(String.valueOf(countOfFilesToUpdate));
+    }
+
+
+    private int updateWithSeqDB() {
 
         int numberChainInDB = SequenceTools.findNumberOfEntries();
         sequenceDBCount.setText(String.valueOf(numberChainInDB));
+        int countOfFilesToUpdate = HashTablesTools.countFilesWhichAreAlreadyIndexedInSequenceDB(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters().getIndexPDBFileInFolder());
+
+        return countOfFilesToUpdate;
     }
 
 

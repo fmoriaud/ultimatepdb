@@ -20,6 +20,7 @@ Author:
 package gui;
 
 import io.IOTools;
+import io.MMcifFileInfos;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import protocols.ProtocolTools;
@@ -58,7 +59,7 @@ public class Controller {
     //-------------------------------------------------------------
     public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder){
 
-        Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
         algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder);
 

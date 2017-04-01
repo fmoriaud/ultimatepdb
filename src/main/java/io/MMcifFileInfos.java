@@ -17,41 +17,35 @@ Author:
   You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-package multithread;
-
-import database.DoMyDbTaskIfc;
+package io;
 
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.util.concurrent.Callable;
 
-public class StoreInSequenceDbPDBFileCallable implements Callable<Boolean> {
-    //-------------------------------------------------------------
-    // Class members
-    //-------------------------------------------------------------
-    private DoMyDbTaskIfc doMyDbTaskIfc;
-    private Connection connexion;
+public class MMcifFileInfos {
+    // -------------------------------------------------------------------
+    // Class variables
+    // -------------------------------------------------------------------
     private Path pathToFile;
+    private String hash;
 
 
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public StoreInSequenceDbPDBFileCallable(DoMyDbTaskIfc doMyDbTaskIfc, Connection connexion, Path pathToFile) {
+    public MMcifFileInfos(Path pathToFile, String hash){
 
-        this.doMyDbTaskIfc = doMyDbTaskIfc;
-        this.connexion = connexion;
         this.pathToFile = pathToFile;
+        this.hash = hash;
     }
 
+    // -------------------------------------------------------------------
+    // Getter and Setter
+    // -------------------------------------------------------------------
+    public String getHash() {
+        return hash;
+    }
 
-    //-------------------------------------------------------------
-    // Public & Override methods
-    //-------------------------------------------------------------
-    @Override
-    public Boolean call() throws Exception {
-
-        boolean success = doMyDbTaskIfc.doAndReturnSuccessValue(connexion, pathToFile);
-        return success;
+    public Path getPathToFile() {
+        return pathToFile;
     }
 }

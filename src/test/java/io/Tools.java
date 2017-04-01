@@ -57,7 +57,8 @@ public class Tools {
     /**
      * A test database myDBtest so database test can be run without overriding the main database called myDB
      */
-    public static String testTableName = "sequenceTest";
+    public static String testSequenceTableName = "sequenceTest";
+    public static String testPDBFilesHashName = "pdbfileshashTest";
     /**
      * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
      */
@@ -107,10 +108,10 @@ public class Tools {
             URL url = BiojavaReaderFromPDBFolderTest.class.getClassLoader().getResource("pdb/1di9.cif.gz");
             File pdb1di9file = new File(url.toURI());
             resourcesPDBFolder = pdb1di9file.getParent();
-            Map<String, List<Path>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(new File(resourcesPDBFolder).toString());
-            for (Map.Entry<String, List<Path>> entry : indexPDBFileInFolder.entrySet()) {
+            Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(new File(resourcesPDBFolder).toString());
+            for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
                 try {
-                    FileUtils.copyFileToDirectory(new File(entry.getValue().get(0).toString()), pdbDir);
+                    FileUtils.copyFileToDirectory(new File(entry.getValue().get(0).getPathToFile().toString()), pdbDir);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -262,7 +263,7 @@ public class Tools {
         }
         Structure structure = null;
         BiojavaReaderIfc reader = new BiojavaReader(algoParameters);
-        structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER());
+        structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER()).getValue();
         return structure;
     }
 

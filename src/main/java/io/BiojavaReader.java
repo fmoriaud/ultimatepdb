@@ -19,6 +19,7 @@ Author:
   */
 package io;
 
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.MMCIFFileReader;
@@ -76,7 +77,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Structure readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
+    public Pair<String, Structure> readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
 
         fourLetterCode = fourLetterCode.toUpperCase(); // it can handle uppercase and lowercase
         // done only once
@@ -91,7 +92,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
         Path actualPathToFileInPDBFolder = null;
         if (algoParameters.getIndexPDBFileInFolder().containsKey(fourLetterCode)) {
             // TODO Currently takes the first one found, if more than one the a filter would be needed
-            actualPathToFileInPDBFolder = algoParameters.getIndexPDBFileInFolder().get(fourLetterCode).get(0);
+            actualPathToFileInPDBFolder = algoParameters.getIndexPDBFileInFolder().get(fourLetterCode).get(0).getPathToFile();
         }
 
         File file = actualPathToFileInPDBFolder.toFile();
@@ -100,8 +101,9 @@ public class BiojavaReader implements BiojavaReaderIfc {
             ExceptionInIOPackage exception = new ExceptionInIOPackage("File too big to be handled. Size = " + (fileLength / 1000000) + " MB and max is 20 MB");
             throw exception;
         }
-        Structure cifStructure = read(actualPathToFileInPDBFolder, pathToChemcompFolder);
-        return cifStructure;
+        Pair<String, Structure> pathAndStructure = read(actualPathToFileInPDBFolder, pathToChemcompFolder);
+
+        return pathAndStructure;
     }
 
 
@@ -117,7 +119,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Structure read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
+    public Pair<String, Structure> read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
 
         // done only once
         initializeOnceDowloadChemCompProvider(pathToChemcompFolder);
@@ -139,8 +141,8 @@ public class BiojavaReader implements BiojavaReaderIfc {
             ExceptionInIOPackage exception = new ExceptionInIOPackage("NumberFormatException in mMCIFileReader.getStructure()");
             throw exception;
         }
-
-        return structure;
+        Pair<String, Structure> pathAndStructure = new Pair(pathToFile.toString(), structure);
+        return pathAndStructure;
     }
 
 
