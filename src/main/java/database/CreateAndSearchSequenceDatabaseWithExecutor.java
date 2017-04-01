@@ -93,7 +93,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     //-------------------------------------------------------------
     private void updateOveridingExistingDatabase(boolean override) {
 
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
         algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);

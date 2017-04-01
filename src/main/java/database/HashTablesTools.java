@@ -212,7 +212,7 @@ public class HashTablesTools {
     public static void addFilesToDb(Connection connexion, String pathToMMcifFiles, AlgoParameters algoParameters, String tableName, String tableFailureName) {
 
 
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToMMcifFiles);
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
             for (MMcifFileInfos fileInfos : entry.getValue()) {
                 try {

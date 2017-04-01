@@ -92,7 +92,7 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     //-------------------------------------------------------------
     private void updateExistingDatabase() {
 
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
         algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
 

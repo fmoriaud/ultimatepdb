@@ -260,7 +260,7 @@ public class UltimatepdbDialog extends JDialog {
     private void updateSequenceDb() {
 
 
-        Map<String, java.util.List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(controller.getAlgoParameters().getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        Map<String, java.util.List<MMcifFileInfos>> indexPDBFileInFolder = controller.getAlgoParameters().getIndexPDBFileInFolder();
         //pbar.setMaximum(0);
         //pbar.setMaximum(indexPDBFileInFolder.size());
         int current = 0;

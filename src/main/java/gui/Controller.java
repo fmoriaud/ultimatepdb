@@ -59,15 +59,18 @@ public class Controller {
     //-------------------------------------------------------------
     public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder){
 
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
-        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
+        if (algoParameters.getIndexPDBFileInFolder() == null) {
+            Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
+            algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
+        }
+
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder);
 
-        if (indexPDBFileInFolder == null) {
+        if (algoParameters.getIndexPDBFileInFolder() == null) {
             return 0;
         }
 
-        return indexPDBFileInFolder.size();
+        return algoParameters.getIndexPDBFileInFolder().size();
     }
 
 
