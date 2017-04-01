@@ -66,6 +66,9 @@ public class HashTablesTools {
             //Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
 
             connection = DriverManager.getConnection(dbURL);
+
+            // if table dont exist then create them
+            createTablesIfTheyDontExists(connection);
             return connection;
         } catch (Exception except) {
             except.printStackTrace();
@@ -73,6 +76,22 @@ public class HashTablesTools {
         return null;
     }
 
+
+    private static void createTablesIfTheyDontExists(Connection connection){
+
+        DatabaseMetaData dbm = null;
+        try {
+            dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, HashTablesTools.tableSequenceName, null);
+            if (tables.next()){
+
+            }else{
+                createTables(connection, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void shutdown() {
         try {
