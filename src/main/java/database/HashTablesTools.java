@@ -36,9 +36,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HashTablesTools {
     //-------------------------------------------------------------
@@ -122,7 +120,7 @@ public class HashTablesTools {
         Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
 
         // build all hash
-        System.out.println("starting hash list");
+        //System.out.println("starting hash list");
         List<String> filesHash = new ArrayList<>();
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
             for (MMcifFileInfos fileInfos : entry.getValue()) {
@@ -130,7 +128,7 @@ public class HashTablesTools {
 
             }
         }
-        System.out.println("finished hash list " + filesHash.size());
+        //System.out.println("finished hash list " + filesHash.size());
         ResultSet resultFindEntryFailureDb = null;
         try {
             Statement stmt = connection.createStatement();
@@ -154,6 +152,7 @@ public class HashTablesTools {
 
         int countOfFilesAlreadyFoundInFailureHashDb = 0;
         int countOfFilesAlreadyFoundInSequenceDb = 0;
+
         try {
             System.out.println("starting hgo through failure db");
             while (resultFindEntryFailureDb.next()) {
@@ -165,14 +164,18 @@ public class HashTablesTools {
                 }
             }
             System.out.println("starting hgo through sequence db");
+            Set<String> uniqueHash = new HashSet<>();
+
             while (resultFindEntrySequenceDb.next()) {
 
                 String hash = resultFindEntrySequenceDb.getString(1);
                 if (filesHash.contains(hash)) {
                     // then it is found
-                    countOfFilesAlreadyFoundInSequenceDb += 1;
+                    uniqueHash.add(hash);
+
                 }
             }
+            countOfFilesAlreadyFoundInSequenceDb = uniqueHash.size();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -207,26 +210,6 @@ public class HashTablesTools {
             stmt.close();
         } catch (SQLException e1) {
             System.out.println("Table " + tableName + " already exists in myDB !");
-        }
-    }
-
-
-    public static void addFilesToDb(Connection connexion, String pathToMMcifFiles, AlgoParameters algoParameters, String tableName, String tableFailureName) {
-
-
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
-        for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
-            for (MMcifFileInfos fileInfos : entry.getValue()) {
-                try {
-
-                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile());
-                    addAFile(fileInfos.getPathToFile(), fourLetterCode, connexion, tableName, tableFailureName, algoParameters);
-
-
-                } catch (NoSuchAlgorithmException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -274,8 +257,7 @@ public class HashTablesTools {
         MyChainIfc[] chainsForShapeBuilding = pairPathMyStructure.getValue().getAllChainsRelevantForShapeBuilding();
 
         int countEntries = 0;
-        Chains:
-        for (MyChainIfc chain : chainsForShapeBuilding) {
+        Chains: for (MyChainIfc chain : chainsForShapeBuilding) {
 
             MyMonomerType monomerType = MyMonomerType.getEnumType(chain.getMyMonomers()[0].getType());
             char[] chainType = "  ".toCharArray();

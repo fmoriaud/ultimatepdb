@@ -94,7 +94,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
         Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
 
-        int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+        int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2;
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 1;
 

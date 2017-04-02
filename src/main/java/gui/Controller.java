@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class Controller {
 
-    public static String pathToSerFile = "//Users//Fabrice//Documents//ultimate//index.ser";
+
     /**
      * The indexing of files is serialized and saved to disk
      * In case the user wants to reuse it assuming the files were not changed
@@ -41,6 +41,10 @@ public class Controller {
     // DATA MEMBERS
     //------------------------------------------------------------------------------
     private AlgoParameters algoParameters;
+
+    private UserSettings userSettings;
+    private String pathToSerFile;
+    private String pathToUserSettings;
 
     /**
      * The Controller takes all GUI input and process them
@@ -56,12 +60,28 @@ public class Controller {
         } catch (ParsingConfigFileException e) {
             e.printStackTrace();
         }
+        pathToSerFile = algoParameters.getPATH_TO_RESULT_FILES() + "index.ser";
+        pathToUserSettings = algoParameters.getPATH_TO_RESULT_FILES() + "userSettings.ser";
 
+
+        File file = new File(pathToUserSettings);
+        if (file.exists()) {
+            try {
+                FileInputStream fin = new FileInputStream(pathToUserSettings);
+                ObjectInputStream ois = new ObjectInputStream(fin);
+                userSettings = (UserSettings) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+
+            }
+        } else {
+            userSettings = new UserSettings(true);
+        }
     }
 
     //-------------------------------------------------------------
     // Public & Override methods
     //-------------------------------------------------------------
+
     public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder, boolean useSerfileIfExists) {
 
 
@@ -116,7 +136,33 @@ public class Controller {
     // Getter and Setter
     // -------------------------------------------------------------------
     public AlgoParameters getAlgoParameters() {
-
         return algoParameters;
+    }
+
+
+    public String getPathToSerFile() {
+        return pathToSerFile;
+    }
+
+
+    public void setUserSettings(UserSettings userSettings) {
+
+        this.userSettings = userSettings;
+        File file = new File(pathToUserSettings);
+
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(
+                    new FileOutputStream(pathToUserSettings));
+            oos.writeObject(userSettings);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public UserSettings getUserSettings() {
+        return userSettings;
     }
 }

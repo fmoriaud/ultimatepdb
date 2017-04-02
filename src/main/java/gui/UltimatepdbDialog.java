@@ -19,15 +19,25 @@ Author:
   */
 package gui;
 
+import database.CreateAndSearchSequenceDatabaseWithExecutor;
 import database.HashTablesTools;
 import io.FileListingVisitorForPDBCifGzFiles;
 import io.MMcifFileInfos;
+import javajs.swing.*;
 import net.miginfocom.swing.MigLayout;
 import protocols.ParsingConfigFileException;
 
 import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,7 +56,7 @@ public class UltimatepdbDialog extends JDialog {
 
     private JPanel panelPDB;
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(30);
-    private Checkbox useSerFile;
+    private JCheckBox useSerFile;
 
     private JPanel panelQuery;
     private JTextField query4letterCode = new JTextField(4);
@@ -75,14 +85,11 @@ public class UltimatepdbDialog extends JDialog {
         validate4LetterCode = new JButton("Validate");
         updateSequenceDB = new JButton("update");
 
-        File file = new File(Controller.pathToSerFile);
-        if (file.exists()) {
-            useSerFile = new Checkbox("use last PDB indexing", null, true);
-        }else{
-            useSerFile = new Checkbox("use last PDB indexing", null, false);
-        }
-
         controller = new Controller();
+
+        useSerFile = new JCheckBox("use last PDB indexing", null, controller.getUserSettings().isKeepSequenceSerFile());
+
+
         setModal(true);
         createPanel();
         setTitle("UltimatePDB");
@@ -91,7 +98,7 @@ public class UltimatepdbDialog extends JDialog {
         String pathFromXmlFile = controller.getAlgoParameters().getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER();
         Path pdbFolder = Paths.get(pathFromXmlFile);
         if (Files.exists(pdbFolder)) {
-            updateWithPDBpath(pdbFolder.toFile(), useSerFile.getState());
+            updateWithPDBpath(pdbFolder.toFile(), useSerFile.isSelected());
         }
         String pathFromXmlFileResult = controller.getAlgoParameters().getPATH_TO_RESULT_FILES();
         Path resultFolder = Paths.get(pathFromXmlFileResult);
@@ -194,6 +201,17 @@ public class UltimatepdbDialog extends JDialog {
         panelPDB.add(labelPDBcount);
         panelPDB.add(pdbCount, "wrap");
 
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+                boolean selected = abstractButton.getModel().isSelected();
+                System.out.println(selected);
+                controller.setUserSettings(new UserSettings(selected));
+            }
+        };
+        useSerFile.setSelected(controller.getUserSettings().isKeepSequenceSerFile());
+        useSerFile.addActionListener(actionListener);
+
         panelPDB.add(useSerFile, "wrap");
         JSeparator separator = new JSeparator();
         //separator.setOrientation(SwingConstants.HORIZONTAL);
@@ -201,7 +219,7 @@ public class UltimatepdbDialog extends JDialog {
         separator.setPreferredSize(new Dimension(200, 1));
         panelPDB.add(separator, "span, span, wrap");
 
-        Label labelSequenceDBcount = new Label("PDB chains indexed in sequence DB :");
+        Label labelSequenceDBcount = new Label("PDB files indexed in DB :");
         panelPDB.add(labelSequenceDBcount);
         panelPDB.add(sequenceDBCount);
         //panelPDB.add(countOfFileToUpdate, "wrap");
@@ -251,7 +269,7 @@ public class UltimatepdbDialog extends JDialog {
         File pdbFolder = browseFolder(pATH_to_remediated_pdb_mmcif_folder.getText(), "Select MMcif PDB root folder");
 
         if (pdbFolder != null) {
-            updateWithPDBpath(pdbFolder, useSerFile.getState());
+            updateWithPDBpath(pdbFolder, useSerFile.isSelected());
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
@@ -263,37 +281,10 @@ public class UltimatepdbDialog extends JDialog {
 
     private void updateSequenceDb() {
 
+        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(controller.getAlgoParameters(), HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
+        createAndSearchSequenceDatabaseWithExecutor.updateDatabase();
+        createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
 
-        Map<String, java.util.List<MMcifFileInfos>> indexPDBFileInFolder = controller.getAlgoParameters().getIndexPDBFileInFolder();
-        //pbar.setMaximum(0);
-        //pbar.setMaximum(indexPDBFileInFolder.size());
-        int current = 0;
-        int fileAddedCount = 0;
-        for (Map.Entry<String, java.util.List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
-            for (MMcifFileInfos fileInfos : entry.getValue()) {
-                try {
-
-                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile());
-
-                    System.out.println("lalal : " + fourLetterCode + "  " + fileInfos.getPathToFile());
-                    boolean fileAdded = HashTablesTools.addAFile(fileInfos.getPathToFile(), fourLetterCode, HashTablesTools.getConnection(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName), HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters());
-                    if (fileAdded) {
-                        fileAddedCount += 1;
-                    }
-                } catch (NoSuchAlgorithmException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            current += 1;
-            System.out.println(current + "  " + fileAddedCount);
-            //sequenceDBCount.setText(String.valueOf(current));
-            //sequenceDBCount.updateUI();
-            //panelPDB.updateUI();
-            //tabbedPane.updateUI();
-            //pbar.setValue(current);
-            //pbar.updateUI();
-            //panelPDB.updateUI();
-        }
         int countOfFilesToUpdate = countFilesAlreadyIndexed();
         sequenceDBCount.setText(String.valueOf(countOfFilesToUpdate));
     }
