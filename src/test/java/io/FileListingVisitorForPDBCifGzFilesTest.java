@@ -17,12 +17,20 @@ Author:
   You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-package database;
+package io;
 
-import java.nio.file.Path;
-import java.sql.Connection;
+import org.junit.Test;
 
-public interface DoMyDbTaskIfc {
+import static org.junit.Assert.assertEquals;
 
-    boolean doAndReturnSuccessValue(Connection connexion, String pathToFile);
+public class FileListingVisitorForPDBCifGzFilesTest {
+
+    @Test
+    public void testmakeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles() {
+
+        String pathToFile = "/rootFolder/flolder2/407d.cif.gz";
+        String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(pathToFile);
+        assertEquals(fourLetterCode, "407D");
+    }
+
 }

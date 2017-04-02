@@ -25,6 +25,7 @@ import java.util.Map;
 
 import genericBuffer.GenericBuffer;
 import genericBuffer.MyStructureBuffer;
+import io.IOTools;
 import io.MMcifFileInfos;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
@@ -280,6 +281,11 @@ public class AlgoParameters {
     // Getter and Setter
     // -------------------------------------------------------------------
     public Map<String, List<MMcifFileInfos>> getIndexPDBFileInFolder() {
+
+        if (indexPDBFileInFolder == null){
+            Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(PATH_TO_REMEDIATED_PDB_MMCIF_FOLDER);
+            setIndexPDBFileInFolder(indexPDBFileInFolder);
+        }
         return indexPDBFileInFolder;
     }
 

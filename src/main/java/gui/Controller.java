@@ -25,17 +25,22 @@ import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 import protocols.ProtocolTools;
 
+import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
 public class Controller {
+
+    public static String pathToSerFile = "//Users//Fabrice//Documents//ultimate//index.ser";
+    /**
+     * The indexing of files is serialized and saved to disk
+     * In case the user wants to reuse it assuming the files were not changed
+     */
     //------------------------------------------------------------------------------
     // DATA MEMBERS
     //------------------------------------------------------------------------------
-    // TODO put indexPDBFileInFolder in algoParameters
     private AlgoParameters algoParameters;
-
 
     /**
      * The Controller takes all GUI input and process them
@@ -57,9 +62,44 @@ public class Controller {
     //-------------------------------------------------------------
     // Public & Override methods
     //-------------------------------------------------------------
-    public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder) {
+    public int updatePDBFileFoldersAndIndexing(String pathToPDBFolder, boolean useSerfileIfExists) {
 
-        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
+
+        Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = null;
+        // check if map is serialized
+        File file = new File(pathToSerFile);
+        if (useSerfileIfExists && file.exists()) {
+
+            try {
+                FileInputStream fin = new FileInputStream(file.getAbsolutePath());
+                ObjectInputStream ois = new ObjectInputStream(fin);
+                indexPDBFileInFolder = (Map<String, List<MMcifFileInfos>>) ois.readObject();
+                System.out.println("From ser file " + indexPDBFileInFolder.size());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            indexPDBFileInFolder = IOTools.indexPDBFileInFolder(pathToPDBFolder);
+            System.out.println("From reindexing " + indexPDBFileInFolder.size());
+        }
+
+        // serialize map
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(
+                    new FileOutputStream(pathToSerFile));
+            oos.writeObject(indexPDBFileInFolder);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
 
         algoParameters.setPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(pathToPDBFolder);
@@ -69,14 +109,6 @@ public class Controller {
         }
 
         return algoParameters.getIndexPDBFileInFolder().size();
-    }
-
-
-    public void updateSequenceDBaccordingtoMMcifFiles() {
-
-        // need to have something to check if the mmcif files indexed was not changed
-
-        // need to know if the parsed PDB files returned nothing so I wouldnt do again if file not changed
     }
 
 

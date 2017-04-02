@@ -19,6 +19,7 @@ Author:
   */
 package shapebuilder;
 
+import database.HashTablesTools;
 import database.HitInSequenceDb;
 import database.SequenceTools;
 import io.Tools;
@@ -255,7 +256,7 @@ public class ShapeBuilderConstructorSegmentOfChainTest {
         int maxLength = 1000;
 
         boolean useSimilarSequences = false;
-        List<HitInSequenceDb> sequenceHit = SequenceTools.find(Tools.testSequenceTableName, minLength, maxLength, peptideSequence, useSimilarSequences);
+        List<HitInSequenceDb> sequenceHit = SequenceTools.find(HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName, minLength, maxLength, peptideSequence, useSimilarSequences);
         List<Integer> rankIds = sequenceHit.get(0).getListRankIds();
         int matchingRankId = rankIds.get(0);
 

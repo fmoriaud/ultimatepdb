@@ -19,23 +19,19 @@ Author:
   */
 package protocols;
 
-
-import database.CreateAndSearchSequenceDatabase;
+import database.CreateAndSearchSequenceDatabaseWithExecutor;
 import database.HashTablesTools;
 import parameters.AlgoParameters;
 
-public class SequenceDatabaseUpdateOneThread {
+public class SequenceDatabaseUpdateMultithread {
 
-    // -------------------------------------------------------------------
-    // Public && Interface method
-    // -------------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
         AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
+        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(6);
+        CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
+        createAndSearchSequenceDatabaseWithExecutor.updateDatabase();
 
-        CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
-        createAndSearchSequenceDatabase.updateDatabase();
-
-        createAndSearchSequenceDatabase.shutdownDb();
+        createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
     }
 }

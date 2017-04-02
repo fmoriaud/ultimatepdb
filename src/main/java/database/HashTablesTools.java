@@ -55,7 +55,7 @@ public class HashTablesTools {
     //-------------------------------------------------------------
     // Static methods
     //-------------------------------------------------------------
-    public static Connection getConnection() {
+    public static Connection getConnection(String tableName, String tableFailureName) {
 
         if (connection != null) {
             return connection;
@@ -68,7 +68,7 @@ public class HashTablesTools {
             connection = DriverManager.getConnection(dbURL);
 
             // if table dont exist then create them
-            createTablesIfTheyDontExists(connection);
+            createTablesIfTheyDontExists(connection, tableName, tableFailureName);
             return connection;
         } catch (Exception except) {
             except.printStackTrace();
@@ -77,16 +77,18 @@ public class HashTablesTools {
     }
 
 
-    private static void createTablesIfTheyDontExists(Connection connection){
+    public static void createTablesIfTheyDontExists(Connection connection, String tableName, String tableFailureName) {
 
-        DatabaseMetaData dbm = null;
+        ResultSet resultTables = null;
         try {
-            dbm = connection.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, HashTablesTools.tableSequenceName, null);
-            if (tables.next()){
-
-            }else{
-                createTables(connection, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
+            Statement stmt = connection.createStatement();
+            String findEntry = "SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'";
+            resultTables = stmt.executeQuery(findEntry);
+            if (resultTables.next()) {
+                System.out.println("tables exists");
+            } else {
+                System.out.println("tables dont exists");
+                createTables(connection, tableName, tableFailureName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,7 +119,7 @@ public class HashTablesTools {
 
     public static int countFilesWhichAreAlreadyIndexedInSequenceDB(String tableName, String tableFailureName, Map<String, List<MMcifFileInfos>> indexPDBFileInFolder) {
 
-        Connection connection = HashTablesTools.getConnection();
+        Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
 
         // build all hash
         System.out.println("starting hash list");
@@ -132,7 +134,7 @@ public class HashTablesTools {
         ResultSet resultFindEntryFailureDb = null;
         try {
             Statement stmt = connection.createStatement();
-            String findEntry = "SELECT pdbfilehash from " + tableFailureName;
+            String findEntry = "SELECT * from " + tableFailureName;
             resultFindEntryFailureDb = stmt.executeQuery(findEntry);
 
         } catch (SQLException e) {
@@ -142,7 +144,7 @@ public class HashTablesTools {
         ResultSet resultFindEntrySequenceDb = null;
         try {
             Statement stmt = connection.createStatement();
-            String findEntry = "SELECT pdbfilehash from " + tableName;
+            String findEntry = "SELECT * from " + tableName;
             resultFindEntrySequenceDb = stmt.executeQuery(findEntry);
 
         } catch (SQLException e) {
@@ -154,7 +156,7 @@ public class HashTablesTools {
         int countOfFilesAlreadyFoundInSequenceDb = 0;
         try {
             System.out.println("starting hgo through failure db");
-            if (resultFindEntryFailureDb.next()) {
+            while (resultFindEntryFailureDb.next()) {
 
                 String hash = resultFindEntryFailureDb.getString(1);
                 if (filesHash.contains(hash)) {
@@ -163,7 +165,7 @@ public class HashTablesTools {
                 }
             }
             System.out.println("starting hgo through sequence db");
-            if (resultFindEntrySequenceDb.next()) {
+            while (resultFindEntrySequenceDb.next()) {
 
                 String hash = resultFindEntrySequenceDb.getString(1);
                 if (filesHash.contains(hash)) {
@@ -217,7 +219,7 @@ public class HashTablesTools {
             for (MMcifFileInfos fileInfos : entry.getValue()) {
                 try {
 
-                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile().getFileName().toString());
+                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile());
                     addAFile(fileInfos.getPathToFile(), fourLetterCode, connexion, tableName, tableFailureName, algoParameters);
 
 
@@ -248,9 +250,9 @@ public class HashTablesTools {
     }
 
 
-    public static boolean addAFile(Path pathToFile, String fourLetterCode, Connection connexion, String tableName, String tableFailureName, AlgoParameters algoParameters) throws IOException, NoSuchAlgorithmException {
+    public static boolean addAFile(String pathToFile, String fourLetterCode, Connection connexion, String tableName, String tableFailureName, AlgoParameters algoParameters) throws IOException, NoSuchAlgorithmException {
 
-        String hash = HashTablesTools.getMD5hash(pathToFile.toFile().getAbsolutePath());
+        String hash = HashTablesTools.getMD5hash(pathToFile);
 
         // TODO add check to failure db
         boolean alreadyParsed = false;
@@ -260,7 +262,7 @@ public class HashTablesTools {
             return false;
         }
         if (alreadyParsed == true) {
-            //System.out.println("Already parsed in DB, nothing to do");
+            System.out.println("Already parsed in DB, nothing to do");
             return false;
         }
         Pair<String, MyStructureIfc> pairPathMyStructure = IOTools.getMyStructureIfc(algoParameters, pathToFile);
@@ -316,7 +318,7 @@ public class HashTablesTools {
 
             int ok = preparedStatement.executeUpdate();
             preparedStatement.close();
-            //System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
+            System.out.println(ok + " raw created " + String.valueOf(fourLetterCode) + "  " + String.valueOf(chainName) + "  " + String.valueOf(chainType)); // + " " + sequence);
             return 1;
         } catch (SQLException e1) {
             System.out.println("Failed to enter entry in " + tableName + " table ");

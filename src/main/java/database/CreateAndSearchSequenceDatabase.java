@@ -49,9 +49,16 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
+
+    /**
+     * Create and update the sequence databases.
+     * @param algoParameters
+     * @param tableName
+     * @param tableFailureName
+     */
     public CreateAndSearchSequenceDatabase(AlgoParameters algoParameters, String tableName, String tableFailureName) {
 
-        this.connexion = HashTablesTools.getConnection();
+        this.connexion = HashTablesTools.getConnection(tableName, tableFailureName);
         this.algoParameters = algoParameters;
         this.tableName = tableName;
         this.tableFailureName = tableFailureName;
@@ -69,8 +76,9 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     }
 
     @Override
-    public void updateDatabase(String pathToMMcifFiles) {
+    public void updateDatabase() {
 
+        HashTablesTools.createTablesIfTheyDontExists(connexion, tableName, tableFailureName);
         updateExistingDatabase();
     }
 
@@ -93,16 +101,14 @@ public class CreateAndSearchSequenceDatabase implements CreateAndSearchSequenceD
     private void updateExistingDatabase() {
 
         Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
-        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
+
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
 
             for (MMcifFileInfos fileInfos : entry.getValue()) {
                 try {
-                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile().getFileName().toString());
+                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile());
                     HashTablesTools.addAFile(fileInfos.getPathToFile(), fourLetterCode, connexion, tableName, tableFailureName, algoParameters);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
+                } catch (IOException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
             }

@@ -25,7 +25,7 @@ public interface CreateAndSearchSequenceDatabaseIfc {
 
     void createDatabase();
 
-    void updateDatabase(String pathToMMcifFiles);
+    void updateDatabase();
 
     String returnSequenceInDbifFourLetterCodeAndChainfoundInDatabase(String fourLetterCode, String chainName);
 

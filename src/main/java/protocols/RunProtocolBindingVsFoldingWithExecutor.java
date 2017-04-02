@@ -90,7 +90,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
         int peptideLength = sequenceToFindAsString.length() / 3;
 
         boolean useSimilarSequences = false;
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
 
         if (queryShape instanceof ShapeContainerWithPeptide) {

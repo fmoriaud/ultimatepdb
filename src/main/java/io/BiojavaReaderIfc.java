@@ -31,7 +31,7 @@ import java.nio.file.Path;
  */
 public interface BiojavaReaderIfc {
 
-    Pair<String, Structure> read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
+    Pair<String, Structure> read(String pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
 
     Pair<String, Structure> readFromPDBFolder(String fourLetterCode, String pathToDividedPDBFolder, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage;
 }

@@ -54,11 +54,7 @@ public class Tools {
     //-------------------------------------------------------------
     // Static variables
     //-------------------------------------------------------------
-    /**
-     * A test database myDBtest so database test can be run without overriding the main database called myDB
-     */
-    public static String testSequenceTableName = "sequenceTest";
-    public static String testPDBFilesHashName = "pdbfileshashTest";
+
     /**
      * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
      */
@@ -263,7 +259,7 @@ public class Tools {
         }
         Structure structure = null;
         BiojavaReaderIfc reader = new BiojavaReader(algoParameters);
-        structure = reader.read(path.toAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER()).getValue();
+        structure = reader.read(path.toFile().getAbsolutePath(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER()).getValue();
         return structure;
     }
 

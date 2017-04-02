@@ -76,7 +76,7 @@ public class FileListingVisitorForPDBCifGzFiles {
 
                 try {
                     String hash = HashTablesTools.getMD5hash(aFile.toFile().getAbsolutePath());
-                    MMcifFileInfos fileInfo = new MMcifFileInfos(aFile, hash);
+                    MMcifFileInfos fileInfo = new MMcifFileInfos(aFile.toFile().getAbsolutePath(), hash);
 
                     AddToMap.addElementToAMapOfList(indexFiles, fourLetterCode, fileInfo);
                 } catch (NoSuchAlgorithmException e) {
@@ -105,6 +105,7 @@ public class FileListingVisitorForPDBCifGzFiles {
      */
     public static String makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(String fileName) {
 
+        fileName = Paths.get(fileName).toFile().getName();
         String[] splitFileName = fileName.split("\\.");
 
         if (splitFileName == null) {

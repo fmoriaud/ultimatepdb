@@ -19,20 +19,21 @@ Author:
   */
 package io;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 
-public class MMcifFileInfos {
+public class MMcifFileInfos implements Serializable {
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------
-    private Path pathToFile;
+    private String pathToFile;
     private String hash;
 
 
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public MMcifFileInfos(Path pathToFile, String hash){
+    public MMcifFileInfos(String pathToFile, String hash){
 
         this.pathToFile = pathToFile;
         this.hash = hash;
@@ -45,7 +46,7 @@ public class MMcifFileInfos {
         return hash;
     }
 
-    public Path getPathToFile() {
+    public String getPathToFile() {
         return pathToFile;
     }
 }

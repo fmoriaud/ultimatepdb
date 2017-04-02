@@ -44,14 +44,13 @@ public class CreateAndSearchSequenceDatabaseTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName);
-        createAndSearchSequenceDatabase.createDatabase();
-        createAndSearchSequenceDatabase.updateDatabase(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+        createAndSearchSequenceDatabase.updateDatabase();
         createAndSearchSequenceDatabase.shutdownDb();
 
         System.out.println();
         System.out.println("getContentInfosTestDB");
 
-        Connection connexion = HashTablesTools.getConnection();
+        Connection connexion = HashTablesTools.getConnection(HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName);
         Statement stmt = null;
         try {
             stmt = connexion.createStatement();

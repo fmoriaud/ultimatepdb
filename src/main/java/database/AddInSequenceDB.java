@@ -27,9 +27,6 @@ import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 
-/**
- * Created by Fabrice on 06/11/16.
- */
 public class AddInSequenceDB implements DoMyDbTaskIfc {
     //-------------------------------------------------------------
     // Class variables
@@ -52,10 +49,10 @@ public class AddInSequenceDB implements DoMyDbTaskIfc {
     // Interface & Public methods
     //-------------------------------------------------------------
     @Override
-    public boolean doAndReturnSuccessValue(Connection connexion, Path pathToFile) {
+    public boolean doAndReturnSuccessValue(Connection connexion, String pathToFile) {
 
         try {
-            String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(pathToFile.getFileName().toString());
+            String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(pathToFile);
 
             HashTablesTools.addAFile(pathToFile, fourLetterCode, connexion, tableName, tableFailureName, algoParameters);
         } catch (IOException | NoSuchAlgorithmException e) {

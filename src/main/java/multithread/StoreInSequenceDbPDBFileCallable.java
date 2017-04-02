@@ -31,13 +31,13 @@ public class StoreInSequenceDbPDBFileCallable implements Callable<Boolean> {
     //-------------------------------------------------------------
     private DoMyDbTaskIfc doMyDbTaskIfc;
     private Connection connexion;
-    private Path pathToFile;
+    private String pathToFile;
 
 
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public StoreInSequenceDbPDBFileCallable(DoMyDbTaskIfc doMyDbTaskIfc, Connection connexion, Path pathToFile) {
+    public StoreInSequenceDbPDBFileCallable(DoMyDbTaskIfc doMyDbTaskIfc, Connection connexion, String pathToFile) {
 
         this.doMyDbTaskIfc = doMyDbTaskIfc;
         this.connexion = connexion;
@@ -52,6 +52,7 @@ public class StoreInSequenceDbPDBFileCallable implements Callable<Boolean> {
     public Boolean call() throws Exception {
 
         boolean success = doMyDbTaskIfc.doAndReturnSuccessValue(connexion, pathToFile);
+        System.out.println("doMyDbTaskIfc.doAndReturnSuccessValue = " + success);
         return success;
     }
 }

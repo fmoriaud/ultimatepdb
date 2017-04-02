@@ -38,7 +38,7 @@ public class IOTools {
     // Static methods
     //-------------------------------------------------------------
 
-    public static Pair<String, MyStructureIfc> getMyStructureIfc(AlgoParameters algoParameters, Path pathToFile) {
+    public static Pair<String, MyStructureIfc> getMyStructureIfc(AlgoParameters algoParameters, String pathToFile) {
 
         BiojavaReader reader = new BiojavaReader(algoParameters);
         Pair<String, Structure> pairPathStructure = null;

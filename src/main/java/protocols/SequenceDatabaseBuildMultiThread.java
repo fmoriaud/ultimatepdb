@@ -24,9 +24,6 @@ import database.HashTablesTools;
 import database.SequenceTools;
 import parameters.AlgoParameters;
 
-/**
- * Created by Fabrice on 11/11/16.
- */
 public class SequenceDatabaseBuildMultiThread {
 
     // -------------------------------------------------------------------
@@ -45,7 +42,7 @@ public class SequenceDatabaseBuildMultiThread {
         algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(6);
         CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         createAndSearchSequenceDatabaseWithExecutor.createDatabase();
-        createAndSearchSequenceDatabaseWithExecutor.updateDatabase(algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER());
+
         createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
     }
 }

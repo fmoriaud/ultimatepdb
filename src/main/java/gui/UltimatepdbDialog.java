@@ -46,6 +46,7 @@ public class UltimatepdbDialog extends JDialog {
 
     private JPanel panelPDB;
     private JTextField pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER = new JTextField(30);
+    private Checkbox useSerFile;
 
     private JPanel panelQuery;
     private JTextField query4letterCode = new JTextField(4);
@@ -73,6 +74,14 @@ public class UltimatepdbDialog extends JDialog {
         query4letterCode.setText(defaulPDB4letterCode);
         validate4LetterCode = new JButton("Validate");
         updateSequenceDB = new JButton("update");
+
+        File file = new File(Controller.pathToSerFile);
+        if (file.exists()) {
+            useSerFile = new Checkbox("use last PDB indexing", null, true);
+        }else{
+            useSerFile = new Checkbox("use last PDB indexing", null, false);
+        }
+
         controller = new Controller();
         setModal(true);
         createPanel();
@@ -82,7 +91,7 @@ public class UltimatepdbDialog extends JDialog {
         String pathFromXmlFile = controller.getAlgoParameters().getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER();
         Path pdbFolder = Paths.get(pathFromXmlFile);
         if (Files.exists(pdbFolder)) {
-            updateWithPDBpath(pdbFolder.toFile());
+            updateWithPDBpath(pdbFolder.toFile(), useSerFile.getState());
         }
         String pathFromXmlFileResult = controller.getAlgoParameters().getPATH_TO_RESULT_FILES();
         Path resultFolder = Paths.get(pathFromXmlFileResult);
@@ -90,8 +99,8 @@ public class UltimatepdbDialog extends JDialog {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
 
-        int countOfFilesToUpdate = countFilesAlreadyIndexed();
-        sequenceDBCount.setText(String.valueOf(countOfFilesToUpdate));
+        int countOfFilesAlreadyIndexed = countFilesAlreadyIndexed();
+        sequenceDBCount.setText(String.valueOf(countOfFilesAlreadyIndexed));
     }
 
 
@@ -185,6 +194,7 @@ public class UltimatepdbDialog extends JDialog {
         panelPDB.add(labelPDBcount);
         panelPDB.add(pdbCount, "wrap");
 
+        panelPDB.add(useSerFile, "wrap");
         JSeparator separator = new JSeparator();
         //separator.setOrientation(SwingConstants.HORIZONTAL);
         separator.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(1, 0, 0)));
@@ -241,7 +251,7 @@ public class UltimatepdbDialog extends JDialog {
         File pdbFolder = browseFolder(pATH_to_remediated_pdb_mmcif_folder.getText(), "Select MMcif PDB root folder");
 
         if (pdbFolder != null) {
-            updateWithPDBpath(pdbFolder);
+            updateWithPDBpath(pdbFolder, useSerFile.getState());
         } else {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText("");
             tabbedPane.remove(panelRun);
@@ -263,8 +273,10 @@ public class UltimatepdbDialog extends JDialog {
             for (MMcifFileInfos fileInfos : entry.getValue()) {
                 try {
 
-                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile().getFileName().toString());
-                    boolean fileAdded = HashTablesTools.addAFile(fileInfos.getPathToFile(), fourLetterCode, HashTablesTools.getConnection(), HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters());
+                    String fourLetterCode = FileListingVisitorForPDBCifGzFiles.makeFourLetterCodeUpperCaseFromFileNameForMmcifGzFiles(fileInfos.getPathToFile());
+
+                    System.out.println("lalal : " + fourLetterCode + "  " + fileInfos.getPathToFile());
+                    boolean fileAdded = HashTablesTools.addAFile(fileInfos.getPathToFile(), fourLetterCode, HashTablesTools.getConnection(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName), HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters());
                     if (fileAdded) {
                         fileAddedCount += 1;
                     }
@@ -313,9 +325,9 @@ public class UltimatepdbDialog extends JDialog {
     }
 
 
-    private void updateWithPDBpath(File file) {
+    private void updateWithPDBpath(File file, boolean useSerfileIfExists) {
 
-        int pdbFileNumber = controller.updatePDBFileFoldersAndIndexing(file.getAbsolutePath());
+        int pdbFileNumber = controller.updatePDBFileFoldersAndIndexing(file.getAbsolutePath(), useSerfileIfExists);
 
         if (pdbFileNumber > 0) {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());

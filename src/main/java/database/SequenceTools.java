@@ -274,7 +274,7 @@ public class SequenceTools {
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
 
-        Connection connexion = HashTablesTools.getConnection();
+        Connection connexion = HashTablesTools.getConnection(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         Statement stmt = null;
         try {
             stmt = connexion.createStatement();
@@ -385,35 +385,6 @@ public class SequenceTools {
     }
 
 
-    public static int findNumberOfEntries() {
-
-        Connection connexion = HashTablesTools.getConnection();
-        Statement stmt = null;
-
-        try {
-            stmt = connexion.createStatement();
-
-            String findEntry = "SELECT * from " + HashTablesTools.tableSequenceName;
-
-            ResultSet resultFindEntry = stmt.executeQuery(findEntry);
-            int i = 0;
-            while (resultFindEntry.next()) {
-                i++;
-            }
-            return i;
-        } catch (SQLException e) {
-            return 0;
-        } finally {
-            try {
-                stmt.close();
-                HashTablesTools.shutdown();
-            } catch (SQLException e) {
-            }
-        }
-
-    }
-
-
     /**
      * Find Hits in SequenceDB which are segment of sequence chain in the DB
      *
@@ -423,7 +394,7 @@ public class SequenceTools {
      * @param useSimilarSequences if true then equivalent residues are considered in the matching
      * @return list of Hit in the DB which have a rankid which is the same as the startingid to make segment of chain
      */
-    public static List<HitInSequenceDb> find(String tableName, int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences) {
+    public static List<HitInSequenceDb> find(String tableName, String tableFailureName, int minLength, int maxLength, String sequenceToFind, boolean useSimilarSequences) {
 
         List<HitInSequenceDb> hitsInSequenceDb = new ArrayList<>();
 
@@ -431,7 +402,7 @@ public class SequenceTools {
         List<String> listChainIdFromDB = new ArrayList<>();
         List<String> listSequence = new ArrayList<>();
 
-        Connection connexion = HashTablesTools.getConnection();
+        Connection connexion = HashTablesTools.getConnection(tableName, tableFailureName);
         Statement stmt = null;
         try {
             stmt = connexion.createStatement();

@@ -19,13 +19,11 @@ Author:
   */
 package database;
 
-import io.IOTools;
 import io.MMcifFileInfos;
 import multithread.StoreInSequenceDbPDBFileCallable;
 import parameters.AlgoParameters;
 import protocols.ProtocolTools;
 
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     //-------------------------------------------------------------
     public CreateAndSearchSequenceDatabaseWithExecutor(AlgoParameters algoParameters, String tableName, String tableFailureName) {
 
-        this.connexion = HashTablesTools.getConnection();
+        this.connexion = HashTablesTools.getConnection(tableName, tableFailureName);
         this.algoParameters = algoParameters;
         this.tableName = tableName;
         this.tableFailureName = tableFailureName;
@@ -63,15 +61,16 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     public void createDatabase() {
 
         HashTablesTools.createTables(connexion, tableName, tableFailureName);
-        updateOveridingExistingDatabase(true);
+        updateExistingDatabase();
     }
 
 
     @Override
-    public void updateDatabase(String pathToMMcifFiles) {
+    public void updateDatabase() {
 
-        HashTablesTools.addFilesToDb(connexion, pathToMMcifFiles, algoParameters, tableName, tableFailureName);
-    }
+        HashTablesTools.createTablesIfTheyDontExists(connexion, tableName, tableFailureName);
+        updateExistingDatabase();
+     }
 
 
     @Override
@@ -91,13 +90,13 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
-    private void updateOveridingExistingDatabase(boolean override) {
+    private void updateExistingDatabase() {
 
         Map<String, List<MMcifFileInfos>> indexPDBFileInFolder = algoParameters.getIndexPDBFileInFolder();
-        algoParameters.setIndexPDBFileInFolder(indexPDBFileInFolder);
+
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
-        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
+        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 1;
 
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
@@ -116,7 +115,9 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
             try {
 
                 Future<Boolean> future = executorService.submit(callableToLauch);
+                System.out.println("executorService.submit");
                 allFuture.add(future);
+                System.out.println("allFuture.add");
 
             } catch (RejectedExecutionException e) {
 

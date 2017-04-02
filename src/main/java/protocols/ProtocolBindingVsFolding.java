@@ -120,7 +120,7 @@ public class ProtocolBindingVsFolding {
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
         boolean useSimilarSequences = false;
 
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
+        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
 
 
         if (queryShape instanceof ShapeContainerWithPeptide) {

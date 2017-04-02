@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -89,13 +90,13 @@ public class BiojavaReader implements BiojavaReaderIfc {
 
         FileParsingParameters params = getFileParsingParameters();
 
-        Path actualPathToFileInPDBFolder = null;
+        String actualPathToFileInPDBFolder = null;
         if (algoParameters.getIndexPDBFileInFolder().containsKey(fourLetterCode)) {
             // TODO Currently takes the first one found, if more than one the a filter would be needed
             actualPathToFileInPDBFolder = algoParameters.getIndexPDBFileInFolder().get(fourLetterCode).get(0).getPathToFile();
         }
 
-        File file = actualPathToFileInPDBFolder.toFile();
+        File file = Paths.get(actualPathToFileInPDBFolder).toFile();
         long fileLength = file.length();
         if (fileLength > 20000000) {
             ExceptionInIOPackage exception = new ExceptionInIOPackage("File too big to be handled. Size = " + (fileLength / 1000000) + " MB and max is 20 MB");
@@ -119,7 +120,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
      * @throws IOException
      */
     @Override
-    public Pair<String, Structure> read(Path pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
+    public Pair<String, Structure> read(String pathToFile, String pathToChemcompFolder) throws IOException, ExceptionInIOPackage {
 
         // done only once
         initializeOnceDowloadChemCompProvider(pathToChemcompFolder);
@@ -127,7 +128,7 @@ public class BiojavaReader implements BiojavaReaderIfc {
         FileParsingParameters params = getFileParsingParameters();
         mMCIFileReader.setFileParsingParameters(params);
 
-        File file = pathToFile.toFile();
+        File file = Paths.get(pathToFile).toFile();
         long fileLength = file.length();
         if (fileLength > 20000000) {
             ExceptionInIOPackage exception = new ExceptionInIOPackage("File too big to be handled. Size = " + (fileLength / 1000000) + " MB and max is 20 MB");
