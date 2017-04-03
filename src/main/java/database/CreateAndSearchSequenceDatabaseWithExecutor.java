@@ -70,7 +70,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
         HashTablesTools.createTablesIfTheyDontExists(connexion, tableName, tableFailureName);
         updateExistingDatabase();
-     }
+    }
 
 
     @Override
@@ -96,7 +96,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2;
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
-        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 1;
+        int timeMilliSecondsToWaitIfQueueIsFullBeforeAddingMore = 1000;
 
         List<StoreInSequenceDbPDBFileCallable> callablesToLauch = new ArrayList<>();
         for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
@@ -120,9 +120,10 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
                 System.out.println("allFuture.add");
 
             } catch (RejectedExecutionException e) {
-
+                System.out.println("Rejected ......................");
+                e.printStackTrace();
                 try {
-                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                    Thread.sleep(timeMilliSecondsToWaitIfQueueIsFullBeforeAddingMore);
                     continue;
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
@@ -134,7 +135,7 @@ public class CreateAndSearchSequenceDatabaseWithExecutor implements CreateAndSea
         while (true && notFinished) {
 
             try {
-                Thread.sleep(100000);
+                Thread.sleep(1000);
                 for (Future<Boolean> future : allFuture) {
                     future.get();
                 }

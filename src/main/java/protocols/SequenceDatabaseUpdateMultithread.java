@@ -28,7 +28,7 @@ public class SequenceDatabaseUpdateMultithread {
     public static void main(String[] args) throws ParsingConfigFileException {
 
         AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
-        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(6);
+        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(1);
         CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         createAndSearchSequenceDatabaseWithExecutor.updateDatabase();
 

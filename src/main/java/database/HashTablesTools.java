@@ -128,7 +128,7 @@ public class HashTablesTools {
 
             }
         }
-        //System.out.println("finished hash list " + filesHash.size());
+        System.out.println("finished hash list " + filesHash.size());
         ResultSet resultFindEntryFailureDb = null;
         try {
             Statement stmt = connection.createStatement();
@@ -153,6 +153,11 @@ public class HashTablesTools {
         int countOfFilesAlreadyFoundInFailureHashDb = 0;
         int countOfFilesAlreadyFoundInSequenceDb = 0;
 
+        int totalcountOfFilesAlreadyFoundInFailureHashDb = 0;
+        int totalcountOfFilesAlreadyFoundInSequenceDb = 0;
+
+        Set<String> uniqueHashFailure = new HashSet<>();
+        Set<String> totaluniqueHashFailure = new HashSet<>();
         try {
             System.out.println("starting hgo through failure db");
             while (resultFindEntryFailureDb.next()) {
@@ -160,25 +165,37 @@ public class HashTablesTools {
                 String hash = resultFindEntryFailureDb.getString(1);
                 if (filesHash.contains(hash)) {
                     // then it is found
-                    countOfFilesAlreadyFoundInFailureHashDb += 1;
+                    uniqueHashFailure.add(hash);
                 }
+                totaluniqueHashFailure.add(hash);
             }
+            countOfFilesAlreadyFoundInFailureHashDb = uniqueHashFailure.size();
+            totalcountOfFilesAlreadyFoundInFailureHashDb = totaluniqueHashFailure.size();
+            
             System.out.println("starting hgo through sequence db");
-            Set<String> uniqueHash = new HashSet<>();
+            Set<String> uniqueHashIndexed = new HashSet<>();
+            Set<String> totaluniqueHashIndexed = new HashSet<>();
 
             while (resultFindEntrySequenceDb.next()) {
 
                 String hash = resultFindEntrySequenceDb.getString(1);
                 if (filesHash.contains(hash)) {
                     // then it is found
-                    uniqueHash.add(hash);
-
+                    uniqueHashIndexed.add(hash);
                 }
+                totaluniqueHashIndexed.add(hash);
             }
-            countOfFilesAlreadyFoundInSequenceDb = uniqueHash.size();
+            countOfFilesAlreadyFoundInSequenceDb = uniqueHashIndexed.size();
+            totalcountOfFilesAlreadyFoundInSequenceDb = totaluniqueHashIndexed.size();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        System.out.println("countOfFilesAlreadyFoundInFailureHashDb = " + countOfFilesAlreadyFoundInFailureHashDb);
+        System.out.println("totalcountOfFilesAlreadyFoundInFailureHashDb = " + totalcountOfFilesAlreadyFoundInFailureHashDb);
+        System.out.println("countOfFilesAlreadyFoundInSequenceDb = " + countOfFilesAlreadyFoundInSequenceDb);
+        System.out.println("totalcountOfFilesAlreadyFoundInSequenceDb = " + totalcountOfFilesAlreadyFoundInSequenceDb);
+
 
         return countOfFilesAlreadyFoundInFailureHashDb + countOfFilesAlreadyFoundInSequenceDb;
     }

@@ -214,7 +214,7 @@ public class ProtocolTools {
                 );
                 */
 
-        BlockingQueue<Runnable> queue = new SynchronousQueue<>();
+        BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
         ExecutorService threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, consumersCount,
                 keepAliveTime, TimeUnit.MILLISECONDS,
                 queue);

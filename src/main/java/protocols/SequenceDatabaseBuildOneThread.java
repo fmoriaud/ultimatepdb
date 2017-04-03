@@ -37,5 +37,6 @@ public class SequenceDatabaseBuildOneThread {
         createAndSearchSequenceDatabase.createDatabase();
 
         createAndSearchSequenceDatabase.shutdownDb();
+        System.out.println("SequenceDatabaseBuildOneThread is finished");
     }
 }
