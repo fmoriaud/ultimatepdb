@@ -319,7 +319,9 @@ public class UltimatepdbDialog extends JDialog {
     private void updateWithPDBpath(File file, boolean useSerfileIfExists) {
 
         int pdbFileNumber = controller.updatePDBFileFoldersAndIndexing(file.getAbsolutePath(), useSerfileIfExists);
-
+        controller.setUserSettings(new UserSettings(true)); // when an indexing of pdb file is done then
+        useSerFile.setSelected(true);
+        // we keep it by default
         if (pdbFileNumber > 0) {
             pATH_TO_REMEDIATED_PDB_MMCIF_FOLDER.setText(file.getAbsolutePath());
             tabbedPane.addTab("Query", panelQuery);

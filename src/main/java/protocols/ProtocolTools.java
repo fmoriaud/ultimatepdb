@@ -197,7 +197,7 @@ public class ProtocolTools {
 
 
     public static ExecutorService getExecutorService(int consumersCount) {
-        int corePoolSize = 0; // no need to keep idle ones
+        int corePoolSize = 4; // no need to keep idle ones
         long keepAliveTime = 500000000; // no need to terminate if thread gets no job, that
         // could happen when searching database for a potetial hit, that could last as long
         // as the time to search the whole system
