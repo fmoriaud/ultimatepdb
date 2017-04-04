@@ -171,7 +171,7 @@ public class HashTablesTools {
             }
             countOfFilesAlreadyFoundInFailureHashDb = uniqueHashFailure.size();
             totalcountOfFilesAlreadyFoundInFailureHashDb = totaluniqueHashFailure.size();
-            
+
             System.out.println("starting hgo through sequence db");
             Set<String> uniqueHashIndexed = new HashSet<>();
             Set<String> totaluniqueHashIndexed = new HashSet<>();

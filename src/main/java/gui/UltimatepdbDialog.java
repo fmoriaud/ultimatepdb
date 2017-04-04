@@ -123,7 +123,7 @@ public class UltimatepdbDialog extends JDialog {
         tabbedPane.addTab("PDB", panelPDB);
 
         buildQueryPanel();
-        tabbedPane.addTab("Query", panelQuery);
+       // tabbedPane.addTab("Query", panelQuery);
         buildRunPanel();
 
         add(tabbedPane);
@@ -219,7 +219,7 @@ public class UltimatepdbDialog extends JDialog {
         separator.setPreferredSize(new Dimension(200, 1));
         panelPDB.add(separator, "span, span, wrap");
 
-        Label labelSequenceDBcount = new Label("PDB files indexed in DB :");
+        Label labelSequenceDBcount = new Label("PDB files in sequence DB :");
         panelPDB.add(labelSequenceDBcount);
         panelPDB.add(sequenceDBCount);
         //panelPDB.add(countOfFileToUpdate, "wrap");
