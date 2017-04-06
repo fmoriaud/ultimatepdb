@@ -52,7 +52,7 @@ public class StoreInSequenceDbPDBFileCallable implements Callable<Boolean> {
     public Boolean call() throws Exception {
 
         boolean success = doMyDbTaskIfc.doAndReturnSuccessValue(connexion, pathToFile);
-        System.out.println("doMyDbTaskIfc.doAndReturnSuccessValue = " + success);
+        //System.out.println("doMyDbTaskIfc.doAndReturnSuccessValue = " + success);
         return success;
     }
 }

@@ -67,8 +67,10 @@ public class UltimatepdbDialog extends JDialog {
     private JTextField pATH_TO_RESULT_FOLDER = new JTextField(30);
     private JTextField pdbCount = new JTextField(10);
     private JTextField sequenceDBCount = new JTextField(10);
+    private JTextField sequenceDBMatchesCount = new JTextField(10);
 
     private JButton updateSequenceDB;
+    private JButton checkMatchesSequenceDB;
     private JProgressBar pbar;
 
     //------------------------------------------------------------------------------
@@ -84,7 +86,7 @@ public class UltimatepdbDialog extends JDialog {
         query4letterCode.setText(defaulPDB4letterCode);
         validate4LetterCode = new JButton("Validate");
         updateSequenceDB = new JButton("update");
-
+        checkMatchesSequenceDB = new JButton("check Matches only");
         controller = new Controller();
 
         useSerFile = new JCheckBox("use last PDB indexing", null, controller.getUserSettings().isKeepSequenceSerFile());
@@ -106,7 +108,7 @@ public class UltimatepdbDialog extends JDialog {
             pATH_TO_RESULT_FOLDER.setText(pathFromXmlFileResult);
         }
 
-        int countOfFilesAlreadyIndexed = countFilesAlreadyIndexed();
+        int countOfFilesAlreadyIndexed = HashTablesTools.countFilesInDB(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         sequenceDBCount.setText(String.valueOf(countOfFilesAlreadyIndexed));
     }
 
@@ -221,8 +223,11 @@ public class UltimatepdbDialog extends JDialog {
 
         Label labelSequenceDBcount = new Label("PDB files in sequence DB :");
         panelPDB.add(labelSequenceDBcount);
-        panelPDB.add(sequenceDBCount);
+        panelPDB.add(sequenceDBCount, "span");
         //panelPDB.add(countOfFileToUpdate, "wrap");
+        checkMatchesSequenceDB.addActionListener(e -> checkMatches());
+        panelPDB.add(checkMatchesSequenceDB);
+        panelPDB.add(sequenceDBMatchesCount);
         panelPDB.add(updateSequenceDB);
         updateSequenceDB.addActionListener(e -> updateSequenceDb());
 
@@ -286,7 +291,13 @@ public class UltimatepdbDialog extends JDialog {
         createAndSearchSequenceDatabaseWithExecutor.shutdownDb();
 
         int countOfFilesToUpdate = countFilesAlreadyIndexed();
-        sequenceDBCount.setText(String.valueOf(countOfFilesToUpdate));
+        sequenceDBMatchesCount.setText(String.valueOf(countOfFilesToUpdate));
+    }
+
+    private void checkMatches() {
+
+        int countOfFilesAlreadyIndexed = HashTablesTools.countFilesWhichAreAlreadyIndexedInSequenceDB(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, controller.getAlgoParameters().getIndexPDBFileInFolder());
+        sequenceDBMatchesCount.setText(String.valueOf(countOfFilesAlreadyIndexed));
     }
 
 

@@ -115,7 +115,173 @@ public class HashTablesTools {
     }
 
 
+    public static int countFilesInDB(String tableName, String tableFailureName) {
+
+        Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
+
+        int countOfFiles = 0;
+
+        Statement stmt = null;
+        ResultSet resultFindEntry = null;
+        String hash = null;
+
+        try {
+            stmt = connection.createStatement();
+            String findEntry = "SELECT * from " + tableFailureName;
+            resultFindEntry = stmt.executeQuery(findEntry);
+
+            while (resultFindEntry.next()) {
+                countOfFiles += 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Set uniqueHash = new HashSet();
+        try {
+            stmt = connection.createStatement();
+            String findEntry = "SELECT * from " + tableName;
+            resultFindEntry = stmt.executeQuery(findEntry);
+
+            while (resultFindEntry.next()) {
+                hash = resultFindEntry.getString(1);
+                uniqueHash.add(hash);
+            }
+            countOfFiles += uniqueHash.size();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        HashTablesTools.shutdown();
+        return countOfFiles;
+    }
+
+
+    public static int countFilesWhichAreAlreadyIndexedInSequenceDB_notgood_either(String tableName, String tableFailureName, Map<String, List<MMcifFileInfos>> indexPDBFileInFolder) {
+
+        Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
+
+        int countOfHashFoundInFailureDB = 0;
+        int countOfHashFoundInSequenceDB = 0;
+        // fastest
+        Statement stmt = null;
+        ResultSet resultFindEntryFailureDb = null;
+        for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
+            A:
+            for (MMcifFileInfos fileInfos : entry.getValue()) {
+
+                try {
+                    stmt = connection.createStatement();
+                    String findEntry = "SELECT * from " + tableFailureName + " WHERE pdbfilehash = '" + fileInfos.getHash() + "'";
+                    resultFindEntryFailureDb = stmt.executeQuery(findEntry);
+
+                    if (resultFindEntryFailureDb.next()) {
+                        countOfHashFoundInFailureDB += 1;
+                        stmt.close();
+                        continue A;
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                // if here not found in failureDB
+                try {
+                    stmt = connection.createStatement();
+                    String findEntry = "SELECT * from " + tableName + " WHERE pdbfilehash = '" + fileInfos.getHash() + "'";
+                    resultFindEntryFailureDb = stmt.executeQuery(findEntry);
+
+                    if (resultFindEntryFailureDb.next()) {
+                        countOfHashFoundInSequenceDB += 1;
+                        stmt.close();
+                        continue A;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        HashTablesTools.shutdown();
+        return countOfHashFoundInFailureDB + countOfHashFoundInSequenceDB;
+    }
+
+
     public static int countFilesWhichAreAlreadyIndexedInSequenceDB(String tableName, String tableFailureName, Map<String, List<MMcifFileInfos>> indexPDBFileInFolder) {
+
+        Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
+
+        // build all hash
+        //System.out.println("starting hash list");
+
+
+        ResultSet resultFindEntryFailureDb = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String findEntry = "SELECT * from " + tableFailureName;
+            resultFindEntryFailureDb = stmt.executeQuery(findEntry);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ResultSet resultFindEntrySequenceDb = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String findEntry = "SELECT * from " + tableName;
+            resultFindEntrySequenceDb = stmt.executeQuery(findEntry);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Statement stmt = null;
+        ResultSet resultFindEntry = null;
+
+        int countOfHashFoundInFailureDB = 0;
+        int countOfHashFoundInSequenceDB = 0;
+
+        for (Map.Entry<String, List<MMcifFileInfos>> entry : indexPDBFileInFolder.entrySet()) {
+            A:
+            for (MMcifFileInfos fileInfos : entry.getValue()) {
+
+                try {
+                    stmt = connection.createStatement();
+                    String findEntry = "SELECT * from " + tableFailureName + " WHERE pdbfilehash = '" + fileInfos.getHash() + "'";
+                    resultFindEntry = stmt.executeQuery(findEntry);
+
+                    if (resultFindEntry.next()) {
+                        countOfHashFoundInFailureDB += 1;
+                        stmt.close();
+                        continue A;
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                // if here not found in failureDB
+                try {
+                    stmt = connection.createStatement();
+                    String findEntry = "SELECT * from " + tableName + " WHERE pdbfilehash = '" + fileInfos.getHash() + "'";
+                    resultFindEntry = stmt.executeQuery(findEntry);
+
+                    if (resultFindEntry.next()) {
+                        countOfHashFoundInSequenceDB += 1;
+                        stmt.close();
+                        continue A;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println("countOfHashFoundInSequenceDB = " + countOfHashFoundInSequenceDB);
+        System.out.println("countOfHashFoundInFailureDB = " + countOfHashFoundInFailureDB);
+
+        return countOfHashFoundInSequenceDB + countOfHashFoundInFailureDB;
+    }
+
+
+    public static int countFilesWhichAreAlreadyIndexedInSequenceDB_old(String tableName, String tableFailureName, Map<String, List<MMcifFileInfos>> indexPDBFileInFolder) {
 
         Connection connection = HashTablesTools.getConnection(tableName, tableFailureName);
 
@@ -262,7 +428,7 @@ public class HashTablesTools {
             return false;
         }
         if (alreadyParsed == true) {
-            System.out.println("Already parsed in DB, nothing to do");
+            //System.out.println("Already parsed in DB, nothing to do");
             return false;
         }
         Pair<String, MyStructureIfc> pairPathMyStructure = IOTools.getMyStructureIfc(algoParameters, pathToFile);
@@ -274,7 +440,8 @@ public class HashTablesTools {
         MyChainIfc[] chainsForShapeBuilding = pairPathMyStructure.getValue().getAllChainsRelevantForShapeBuilding();
 
         int countEntries = 0;
-        Chains: for (MyChainIfc chain : chainsForShapeBuilding) {
+        Chains:
+        for (MyChainIfc chain : chainsForShapeBuilding) {
 
             MyMonomerType monomerType = MyMonomerType.getEnumType(chain.getMyMonomers()[0].getType());
             char[] chainType = "  ".toCharArray();
