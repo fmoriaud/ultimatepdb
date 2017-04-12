@@ -35,8 +35,8 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
-    private MyStructureIfc peptide;
-    private MyChainIfc peptideMyChain;
+    private transient MyStructureIfc peptide;
+    private transient MyChainIfc peptideMyChain;
     private int startingRankId;
     private List<char[]> peptideSequence;
     private char[] peptideChainId;

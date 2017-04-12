@@ -59,16 +59,16 @@ public class ShapeContainer implements ShapeContainerIfc, Serializable {
 
     protected CollectionOfPointsWithPropertiesIfc shape;
     private List<PointIfc> listPointDefininingLigandUsedToComputeShape;
-    private MyStructureIfc myStructureUsedToComputeShape;
+    private transient MyStructureIfc myStructureUsedToComputeShape;
     protected Map<Integer, PointWithPropertiesIfc> miniShape;
-    private List<TriangleInteger> listTriangleOfPointsFromMinishape;
+    private transient List<TriangleInteger> listTriangleOfPointsFromMinishape;
 
     private List<Integer> histogramStrikingProperties;
     private List<Integer> histogramD2;
 
     private boolean debug = false;
 
-    private List<MyMonomerIfc> foreignMonomerToExclude;
+    private transient List<MyMonomerIfc> foreignMonomerToExclude;
 
 
     // -------------------------------------------------------------------
