@@ -24,8 +24,10 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -38,9 +40,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Fabrice on 25/09/16.
- */
 public class ScoreLigandInTargetUsingMolecularForceFieldTest {
 
     @Test
@@ -49,25 +48,11 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
+        MyMonomerIfc msqLigand = pathAndMyStructure.getValue().getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
 
         // translate ligand for checking
 
@@ -173,25 +158,11 @@ public class ScoreLigandInTargetUsingMolecularForceFieldTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
+        MyMonomerIfc msqLigand = pathAndMyStructure.getValue().getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
 
         // translate ligand for checking
         Cloner cloner = new Cloner(msqLigand, algoParameters);

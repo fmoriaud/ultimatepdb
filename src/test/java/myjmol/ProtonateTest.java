@@ -24,8 +24,10 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -46,28 +48,12 @@ public class ProtonateTest {
     public void testProteinStructureWhichIsAlreadyProtonated() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-
-        String fourLetterCode = "2n0u";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
+        String fourLetterCode = "2n0u";
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        Protonate protonate = new Protonate(mystructure, algoParameters);
+        Protonate protonate = new Protonate(pathAndMyStructure.getValue(), algoParameters);
         try {
             protonate.compute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
@@ -75,7 +61,7 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        MyChainIfc chainBeforeProtonation = mystructure.getAminoMyChain("A".toCharArray());
+        MyChainIfc chainBeforeProtonation = pathAndMyStructure.getValue().getAminoMyChain("A".toCharArray());
         MyMonomerIfc gln23BeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(23);
         assertTrue(gln23BeforeProtonation.getMyAtoms().length == 9);
 
@@ -103,25 +89,11 @@ public class ProtonateTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
 
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        Protonate protonate = new Protonate(mystructure, algoParameters);
+        Protonate protonate = new Protonate(pathAndMyStructure.getValue(), algoParameters);
         try {
             protonate.compute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
@@ -129,7 +101,7 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        MyChainIfc chainBeforeProtonation = mystructure.getNucleosideChain("B".toCharArray());
+        MyChainIfc chainBeforeProtonation = pathAndMyStructure.getValue().getNucleosideChain("B".toCharArray());
         MyMonomerIfc dc11BBeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(11);
         assertTrue(dc11BBeforeProtonation.getMyAtoms().length == 16);
 
@@ -157,25 +129,11 @@ public class ProtonateTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
 
         String fourLetterCode = "5b59";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        Protonate protonate = new Protonate(mystructure, algoParameters);
+        Protonate protonate = new Protonate(pathAndMyStructure.getValue(), algoParameters);
         try {
             protonate.compute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
@@ -183,7 +141,7 @@ public class ProtonateTest {
         }
         MyStructureIfc protonatedMyStructure = protonate.getProtonatedMyStructure();
 
-        MyChainIfc chainBeforeProtonation = mystructure.getAminoMyChain("A".toCharArray());
+        MyChainIfc chainBeforeProtonation = pathAndMyStructure.getValue().getAminoMyChain("A".toCharArray());
         MyMonomerIfc kto201BeforeProtonation = chainBeforeProtonation.getMyMonomerFromResidueId(201);
         assertTrue(kto201BeforeProtonation.getMyAtoms().length == 26);
 

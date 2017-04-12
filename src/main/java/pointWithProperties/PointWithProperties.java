@@ -19,12 +19,13 @@ Author:
   */
 package pointWithProperties;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 
-public class PointWithProperties implements PointWithPropertiesIfc {
+public class PointWithProperties implements PointWithPropertiesIfc, Serializable {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------

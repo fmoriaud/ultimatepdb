@@ -113,7 +113,7 @@ public class CompareCompleteCheck {
             // we use myStructureLocalQuery but the entire MyStructure would be better if the ligand is much bigger but
             // it is unlikely
             // 618 32 the same as shape container query in the test
-            ShapeContainerIfc shapeContainerCompleteCheck = ShapeContainerFactory.getShapeAroundForeignLigand(EnumShapeReductor.CLUSTERING, myStructureLocalQuery, foreignMonomerToExclude, rotatedLigandOrPeptide, algoParameters);
+            ShapeContainerIfc shapeContainerCompleteCheck = ShapeContainerFactory.getShapeAroundForeignLigand(EnumShapeReductor.CLUSTERING, myStructureLocalQuery, foreignMonomerToExclude, rotatedLigandOrPeptide, algoParameters, shapeContainerQuery.getPdbFileHash());
 
             // Now I want to pair and score shapeContainerAnyShape to shapeContainerCompleteCheck
             // using the rotation and translation form query to hit.

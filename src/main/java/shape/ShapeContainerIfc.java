@@ -53,4 +53,5 @@ public interface ShapeContainerIfc {
 	PointWithPropertiesIfc get(int idPoint);
 
 	List<MyMonomerIfc> getForeignMonomerToExclude();
+	String getPdbFileHash();
 }

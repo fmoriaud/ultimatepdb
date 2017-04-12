@@ -253,7 +253,7 @@ public class Cloner {
         ExpTechniquesEnum expTechnique = ExpTechniquesEnum.UNDEFINED;
         MyStructureIfc clone = null;
         try {
-            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains, "");
         } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
             exceptionInMyStructurePackage.printStackTrace();
         }
@@ -303,7 +303,7 @@ public class Cloner {
 
         MyStructureIfc clone = null;
         try {
-            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains, myStructure.getPdbFileHash());
         } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
             exceptionInMyStructurePackage.printStackTrace();
         }
@@ -355,7 +355,7 @@ public class Cloner {
         ExpTechniquesEnum expTechnique = ExpTechniquesEnum.UNDEFINED;
         MyStructureIfc clone = null;
         try {
-            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains, "");
         } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
             exceptionInMyStructurePackage.printStackTrace();
         }
@@ -415,7 +415,7 @@ public class Cloner {
         ExpTechniquesEnum expTechnique = ExpTechniquesEnum.UNDEFINED;
         MyStructureIfc clone = null;
         try {
-            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains);
+            clone = new MyStructure(expTechnique, algoParameters, myAminoChains, myHetatmChains, myNucleotideChains, "");
         } catch (ExceptionInMyStructurePackage exceptionInMyStructurePackage) {
             exceptionInMyStructurePackage.printStackTrace();
         }

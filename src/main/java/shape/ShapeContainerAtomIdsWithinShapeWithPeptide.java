@@ -45,9 +45,9 @@ public class ShapeContainerAtomIdsWithinShapeWithPeptide extends ShapeContainerA
                                                        CollectionOfPointsWithPropertiesIfc shape,
                                                        List<PointIfc> listPointDefininingLigandUsedToComputeShape,
                                                        MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude,
-                                                       AlgoParameters algoParameters) {
+                                                       String pdbFileHash) {
 
-        super(listAtomDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
+        super(listAtomDefinedByIds, shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, pdbFileHash);
     }
 
 

@@ -68,7 +68,7 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
         ShapeContainerIfc shapecontainer = null;
 
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
-        shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
+        shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId, myStructure.getPdbFileHash());
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
 
         return shapecontainer;
@@ -81,7 +81,7 @@ public class ShapecontainerDefinedByWholeChain implements ShapeContainerDefined 
         long t = System.nanoTime();
 
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Start shape container " + String.valueOf(fourLetterCode) + " " + t);
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId, myStructure.getPdbFileHash());
         ControllerLoger.logger.log(Level.INFO, "&&&&&& Made shape container " + String.valueOf(fourLetterCode) + " " + t);
 
         return shapecontainer;

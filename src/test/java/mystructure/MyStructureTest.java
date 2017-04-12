@@ -23,6 +23,7 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,14 +67,14 @@ public class MyStructureTest {
 
         AlgoParameters algoParameters = new AlgoParameters();
         try {
-            MyStructureIfc myStructure1 = new MyStructure(anyChainArray, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(anyChainArray, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters, "");
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(false);
         }
 
         // one null MyChain[] throws an exception
         try {
-            MyStructureIfc myStructure1 = new MyStructure(null, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(null, anyChainArray, anyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters, "");
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
         }
@@ -81,7 +82,7 @@ public class MyStructureTest {
         // All empty chains throw exception
         MyChainIfc[] emptyChainArray = new MyChainIfc[0];
         try {
-            MyStructureIfc myStructure1 = new MyStructure(emptyChainArray, emptyChainArray, emptyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters);
+            MyStructureIfc myStructure1 = new MyStructure(emptyChainArray, emptyChainArray, emptyChainArray, ExpTechniquesEnum.UNDEFINED, algoParameters, "");
         } catch (ExceptionInMyStructurePackage e) {
             assertTrue(true);
         }
@@ -128,18 +129,9 @@ public class MyStructureTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-
-        String myStructureV3000 = myStructure.toV3000();
+        String myStructureV3000 = pathAndMyStructure.getValue().toV3000();
 
         // write to a temp text file
         String pathToTempFolder = folder.getRoot().getAbsolutePath();
@@ -149,8 +141,8 @@ public class MyStructureTest {
         // read it with cdk and check atom and bond count
 
         IAtomContainer mol = CdkTools.readV3000molFile(pathTOWriteV3000Molfile);
-        int atomCount = MyStructureTools.getAtomCount(myStructure);
-        int bondCount = TestTools.getBondCount(myStructure);
+        int atomCount = MyStructureTools.getAtomCount(pathAndMyStructure.getValue());
+        int bondCount = TestTools.getBondCount(pathAndMyStructure.getValue());
         assertTrue(mol.getAtomCount() == atomCount);
         assertTrue(mol.getBondCount() * 2 == bondCount);
     }
@@ -160,27 +152,11 @@ public class MyStructureTest {
     public void testToV3000Neighors() throws ParsingConfigFileException, IOException, ReadingStructurefileException, ExceptionInMyStructurePackage {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
-
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
         String fourLetterCode = "1a9u";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-       int initialCount = algoParameters.ultiJMolBuffer.getSize();
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
+        MyMonomerIfc msqLigand = pathAndMyStructure.getValue().getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(800);
 
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
         Cloner cloner = new Cloner(neighbors, algoParameters);

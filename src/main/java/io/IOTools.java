@@ -21,6 +21,7 @@ package io;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import database.HashTablesTools;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
@@ -30,6 +31,7 @@ import parameters.AlgoParameters;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +51,15 @@ public class IOTools {
         }
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
+        String pdbFileHash = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue());
+            pdbFileHash = HashTablesTools.getMD5hash(pathToFile);
+        } catch (NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue(), pdbFileHash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             return null;
         }
@@ -73,11 +82,16 @@ public class IOTools {
         } catch (IOException | ExceptionInIOPackage e) {
             return null;
         }
-
+        String pdbFileHash = null;
+        try {
+            pdbFileHash = HashTablesTools.getMD5hash(pairPathStructure.getKey());
+        } catch (NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue());
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pairPathStructure.getValue(), pdbFileHash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             return null;
         }

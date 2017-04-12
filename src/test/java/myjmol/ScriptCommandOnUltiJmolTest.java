@@ -24,8 +24,10 @@ import convertformat.ExceptionInConvertFormat;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -55,21 +57,9 @@ public class ScriptCommandOnUltiJmolTest {
 
         // Prepare input as environment of MSQ in 1di9
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure1di9 = null;
-        try {
-            mmcifStructure1di9 = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure1di9 = null;
-        try {
-            mystructure1di9 = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure1di9);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-        MyMonomerIfc msqLigand = mystructure1di9.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+
+        MyMonomerIfc msqLigand = pathAndMyStructure.getValue().getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
         MyChainIfc[] neighbors = msqLigand.getNeighboringAminoMyMonomerByRepresentativeAtomDistance();
 
         Cloner cloner2 = new Cloner(neighbors, algoParameters);

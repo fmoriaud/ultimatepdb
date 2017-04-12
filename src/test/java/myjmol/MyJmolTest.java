@@ -23,11 +23,13 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import jmolgui.UltiJmol1462;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Before;
 import org.junit.Rule;
@@ -73,19 +75,10 @@ public class MyJmolTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         UltiJmol1462 ultiJmol = new UltiJmol1462();
-        String myStructureV3000 = myStructure.toV3000();
+        String myStructureV3000 = pathAndMyStructure.getValue().toV3000();
         try {
             Thread.sleep(4 * 1000);
         } catch (InterruptedException e) {

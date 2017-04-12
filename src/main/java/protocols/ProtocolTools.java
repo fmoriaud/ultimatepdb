@@ -29,12 +29,14 @@ import hits.HitPeptideWithQueryPeptide;
 import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
@@ -64,20 +66,7 @@ public class ProtocolTools {
             chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
             List<Integer> listRankIds = hitInSequenceDb.getListRankIds();
 
-            BiojavaReader reader = new BiojavaReader(algoParameters);
-            Structure mmcifStructure = null;
-            try {
-                mmcifStructure = reader.readFromPDBFolder(fourLetterCodeTarget.toLowerCase(), algoParameters.getPATH_TO_REMEDIATED_PDB_MMCIF_FOLDER(), algoParameters.getPATH_TO_CHEMCOMP_FOLDER()).getValue();
-            } catch (IOException | ExceptionInIOPackage e) {
-                continue A;
-            }
-            AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-            MyStructureIfc mystructure = null;
-            try {
-                mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-            } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-                continue A;
-            }
+            Pair<String, MyStructureIfc> pairPathMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCodeTarget.toCharArray());
 
             char[] chainId = chainIdFromDB.toCharArray();
             B:
@@ -89,7 +78,7 @@ public class ProtocolTools {
 
                 ShapeContainerIfc targetShape = null;
                 try {
-                    targetShape = shapeContainerDefined.getShapecontainer(mystructure);
+                    targetShape = shapeContainerDefined.getShapecontainer(pairPathMyStructure.getValue());
 
                 } catch (ShapeBuildingException e) {
                     continue B;

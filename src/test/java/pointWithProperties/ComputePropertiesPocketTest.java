@@ -21,11 +21,14 @@ package pointWithProperties;
 
 import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
+import database.HashTablesTools;
 import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -34,6 +37,7 @@ import shapeBuilder.ShapeBuildingException;
 import ultiJmol1462.Protonate;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,23 +57,9 @@ public class ComputePropertiesPocketTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "2kh4";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        Protonate protonate = new Protonate(mystructure, algoParameters);
+        Protonate protonate = new Protonate(pathAndMyStructure.getValue(), algoParameters);
         try {
             protonate.compute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {
@@ -115,23 +105,9 @@ public class ComputePropertiesPocketTest {
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
         String fourLetterCode = "394d";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        Protonate protonate = new Protonate(mystructure, algoParameters);
+        Protonate protonate = new Protonate(pathAndMyStructure.getValue(), algoParameters);
         try {
             protonate.compute();
         } catch (ExceptionInScoringUsingBioJavaJMolGUI | ShapeBuildingException exceptionInScoringUsingBioJavaJMolGUI) {

@@ -19,10 +19,12 @@ Author:
   */
 package convertformat;
 
+import database.HashTablesTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
@@ -31,6 +33,7 @@ import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
@@ -48,22 +51,28 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
         String fourLetterCode = "2mrk";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
-        Group mmcifPTR = mmcifStructure.getChain(1).getAtomGroup(3);
+        Group mmcifPTR = pathAndmmcifStructure.getValue().getChain(1).getAtomGroup(3);
         assertTrue(mmcifPTR.getPDBName().equals("PTR"));
         GroupType type = mmcifPTR.getType();
         assertTrue(type == GroupType.AMINOACID);
@@ -81,17 +90,23 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
         String fourLetterCode = "3kw9";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -102,7 +117,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         // But is is maybe better to skip those ones as anyway they are not binding only with soft interaction and
         // potential covalent binding is out of the scope of ultimatepdb.
         // So that is nice that it is integrated to I put 2.0 A
-        Group mmcifORG = mmcifStructure.getChain(0).getAtomGroup(215);
+        Group mmcifORG = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(215);
         assertTrue(mmcifORG.getPDBName().equals("ORG"));
         GroupType type = mmcifORG.getType();
         assertTrue(type == GroupType.HETATM);
@@ -121,17 +136,23 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
         String fourLetterCode = "203d";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -139,7 +160,7 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         // PSO is integrated with cutoff bond distance 1.4but not at 1.6.
         // It looks really tightly bound in the structure
 
-        Group mmcifPSO = mmcifStructure.getChain(0).getAtomGroup(8);
+        Group mmcifPSO = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(8);
         assertTrue(mmcifPSO.getPDBName().equals("PSO"));
         GroupType type = mmcifPSO.getType();
         assertTrue(type == GroupType.HETATM);
@@ -158,17 +179,23 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
 
         String fourLetterCode = "229d";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
@@ -176,17 +203,17 @@ public class AdapterBiojavaStructureVariousCheckCovalentHetatmInsertion {
         // PSO is integrated with cutoff bond distance 1.4but not at 1.6.
         // It looks really tightly bound in the structure
 
-        Group mmcifUMP1 = mmcifStructure.getChain(0).getAtomGroup(6);
+        Group mmcifUMP1 = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(6);
         assertTrue(mmcifUMP1.getPDBName().equals("UMP"));
         GroupType type = mmcifUMP1.getType();
         assertTrue(type == GroupType.HETATM);
 
-        Group mmcifUMP2 = mmcifStructure.getChain(0).getAtomGroup(12);
+        Group mmcifUMP2 = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(12);
         assertTrue(mmcifUMP2.getPDBName().equals("UMP"));
         type = mmcifUMP2.getType();
         assertTrue(type == GroupType.HETATM);
 
-        Group mmcifUMP3 = mmcifStructure.getChain(0).getAtomGroup(14);
+        Group mmcifUMP3 = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(14);
         assertTrue(mmcifUMP3.getPDBName().equals("UMP"));
         type = mmcifUMP3.getType();
         assertTrue(type == GroupType.HETATM);

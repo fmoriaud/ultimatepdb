@@ -42,9 +42,8 @@ public class CreateAndSearchSequenceDatabaseTest {
     public void testCreateDatabaseHashTest() throws IOException, ParsingConfigFileException {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
-
         CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceTestName, HashTablesTools.tableSequenceFailureTestName);
-        createAndSearchSequenceDatabase.updateDatabase();
+        createAndSearchSequenceDatabase.createDatabase();
         createAndSearchSequenceDatabase.shutdownDb();
 
         System.out.println();

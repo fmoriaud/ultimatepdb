@@ -19,10 +19,13 @@ Author:
   */
 package convertformat;
 
+import database.HashTablesTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
@@ -33,6 +36,7 @@ import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,32 +64,18 @@ public class AdapterBioJavaStructureTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         // check content
-        MyChainIfc[] myChains = mystructure.getAllChains();
+        MyChainIfc[] myChains = pathAndMyStructure.getValue().getAllChains();
         int count = myChains.length;
         assertTrue(count == 2);
 
-        MyChainIfc[] aminoMyChains = mystructure.getAllAminochains();
+        MyChainIfc[] aminoMyChains = pathAndMyStructure.getValue().getAllAminochains();
         assertTrue(aminoMyChains.length == 1);
-        MyChainIfc[] nucleosidesMyChains = mystructure.getAllNucleosidechains();
+        MyChainIfc[] nucleosidesMyChains = pathAndMyStructure.getValue().getAllNucleosidechains();
         assertTrue(nucleosidesMyChains.length == 0);
-        MyChainIfc[] heteroMyChains = mystructure.getAllHetatmchains();
+        MyChainIfc[] heteroMyChains = pathAndMyStructure.getValue().getAllHetatmchains();
         assertTrue(heteroMyChains.length == 1);
 
         assertTrue(aminoMyChains[0].getMyMonomers().length == 348);
@@ -101,7 +91,7 @@ public class AdapterBioJavaStructureTest {
 
         // check bonds
 
-        for (MyChainIfc chain : mystructure.getAllChains()) {
+        for (MyChainIfc chain : pathAndMyStructure.getValue().getAllChains()) {
             MyMonomerIfc[] monomers = chain.getMyMonomers();
             for (MyMonomerIfc monomer : monomers) {
                 for (MyAtomIfc atom : monomer.getMyAtoms()) {
@@ -126,17 +116,23 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "394d";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(e instanceof ReadingStructurefileException);
             assertTrue(e.getMessage().startsWith("Only empty amino chain were parsed for"));
@@ -151,23 +147,29 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "2hhf";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
-        Chain chainA = mmcifStructure.getChain(0);
-        Chain chainB = mmcifStructure.getChain(1);
+        Chain chainA = pathAndmmcifStructure.getValue().getChain(0);
+        Chain chainB = pathAndmmcifStructure.getValue().getChain(1);
         List<Group> aminoChainA = chainA.getAtomGroups(GroupType.AMINOACID);
         assertTrue(aminoChainA.size() == 348);
         List<Group> heteroatomChainA = chainA.getAtomGroups(GroupType.HETATM);
@@ -235,22 +237,8 @@ public class AdapterBioJavaStructureTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc mystructure = pathAndMyStructure.getValue();
         // check content
         MyChainIfc[] myChains = mystructure.getAllChains();
         int count = myChains.length;
@@ -294,21 +282,8 @@ public class AdapterBioJavaStructureTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc mystructure = pathAndMyStructure.getValue();
 
         MyChainIfc aminoMyChain = mystructure.getAllAminochains()[0];
         for (MyMonomerIfc monomer : aminoMyChain.getMyMonomers()) {
@@ -334,21 +309,8 @@ public class AdapterBioJavaStructureTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc mystructure = pathAndMyStructure.getValue();
 
         List<String> expectedSequence = new ArrayList<>(Arrays.asList("ACE", "HIS", "MK8", "ILE", "LEU", "HIS", "MK8", "LEU", "LEU", "GLN", "ASP", "SER", "NH2"));
 
@@ -375,17 +337,23 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "1a1d";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
 
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
@@ -401,10 +369,16 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "2agg";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
@@ -412,12 +386,12 @@ public class AdapterBioJavaStructureTest {
         // Weird Atom line with a chain with only one atom which is CA
         // Biojava makes two chains with id X and A
 
-        assertTrue(mmcifStructure.getChains().size() == 2);
+        assertTrue(pathAndmmcifStructure.getValue().getChains().size() == 2);
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Amino residue with only Calpha so giveup"));
@@ -432,17 +406,23 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "109m";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -458,10 +438,16 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "3a0m";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
@@ -469,7 +455,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Corresponding alt loc residue not found so adapter fails"));
@@ -484,10 +470,16 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "212d";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
+            assertTrue(false);
+        }
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
             assertTrue(false);
         }
 
@@ -496,7 +488,7 @@ public class AdapterBioJavaStructureTest {
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
             assertTrue(false); // because an exception should be thrown
         } catch (Exception e) {
             assertTrue(e.getMessage().equals("Not supported atom type found"));
@@ -511,18 +503,14 @@ public class AdapterBioJavaStructureTest {
 
         String fourLetterCode = "5dn6";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-
+        Pair<String, Structure> pathAndmmcifStructure = null;
         boolean thrown = false;
-        Structure mmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-
-        } catch (ExceptionInIOPackage e) {
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
+        } catch (IOException | ExceptionInIOPackage e) {
             thrown = true;
             assertTrue(e.getMessage().equals("NumberFormatException in mMCIFileReader.getStructure()"));
-
         }
         assertTrue(thrown == true);
-
     }
 }

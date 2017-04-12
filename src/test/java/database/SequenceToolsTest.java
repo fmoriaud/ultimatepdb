@@ -23,11 +23,13 @@ import convertformat.AdapterBioJavaStructure;
 import convertformat.ExceptionInConvertFormat;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyChainIfc;
 import mystructure.MyStructureIfc;
 import mystructure.ReadingStructurefileException;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -54,24 +56,9 @@ public class SequenceToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "229d";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-
-        String sequence = SequenceTools.generateSequence(mystructure.getAllNucleosidechains()[0]);
+        String sequence = SequenceTools.generateSequence(pathAndMyStructure.getValue().getAllNucleosidechains()[0]);
         assertTrue(sequence.equals(" DC DC DA DG DA DCUMP DG DA DAMG1 DAUMP5CMUMP DG DG"));
     }
 
@@ -83,23 +70,9 @@ public class SequenceToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2hhf";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        String sequence = SequenceTools.generateSequence(mystructure.getAminoChain(0));
+        String sequence = SequenceTools.generateSequence(pathAndMyStructure.getValue().getAminoChain(0));
 
         assertTrue(sequence.equals("ALASERSERSERPHELYSALAALAASPLEUGLNLEUGLUMETTHRTHRPHETHRASPHISMETLEUMETVALGLUTRPASNASPLYSGLYTRPGLYGLNPROARGILEGLNPROPHEGLNASNLEUTHRLEUHISPROALASERSERSERLEUHISTYRSERLEUGLNLEUPHEGLUGLYMETLYSALAPHELYSGLYLYSASPGLNGLNVALARGLEUPHEARGPROTRPLEUASNMETASPARGMETLEUARGSERALAMETARGLEUOCSLEUPROSERPHEASPLYSLEUGLULEULEUGLUCYSILEARGARGLEUILEGLUVALASPLYSASPTRPVALPROASPALAALAGLYTHRSERLEUTYOVALARGPROVALLEUILEGLYASNGLUPROSERLEUGLYVALSERGLNPROARGARGALALEULEUPHEVALILELEUCYSPROVALGLYALATYRPHEPROGLYGLYSERVALTHRPROVALSERLEULEUALAASPPROALAPHEILEARGALATRPVALGLYGLYVALGLYASNTYRLYSLEUGLYGLYASNTYRGLYPROTHRVALLEUVALGLNGLNGLUALALEULYSARGGLYCYSGLUGLNVALLEUTRPLEUTYRGLYPROASPHISGLNLEUTHRGLUVALGLYTHRMETASNILEPHEVALTYRTRPTHRHISGLUASPGLYVALLEUGLULEUVALTHRPROPROLEUASNGLYVALILELEUPROGLYVALVALARGGLNSERLEULEUASPMETALAGLNTHRTRPGLYGLUPHEARGVALVALGLUARGTHRILETHRMETLYSGLNLEULEUARGALALEUGLUGLUGLYARGVALARGGLUVALPHEGLYSERGLYTHRALACYSGLNVALCYSPROVALHISARGILELEUTYRLYSASPARGASNLEUHISILEPROTHRMETGLUASNGLYPROGLULEUILELEUARGPHEGLNLYSGLULEULYSGLUILEGLNTYRGLYILEARGALAHISGLUTRPMETPHEPROVALPLP"));
     }
@@ -111,27 +84,13 @@ public class SequenceToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "5a07";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         // TODO GDP to be inserted in amino chain as only one and I guess covalently bound
         // Then I will have only two aminochains and two hetatm chains
         // And then no problem in inserting
 
-        MyChainIfc[] myChains = mystructure.getAllChainsRelevantForShapeBuilding();
+        MyChainIfc[] myChains = pathAndMyStructure.getValue().getAllChainsRelevantForShapeBuilding();
         assertTrue(myChains.length == 2);
         assertFalse(Arrays.equals(myChains[0].getChainId(), myChains[1].getChainId()));
 
@@ -150,25 +109,10 @@ public class SequenceToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "5a9z";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
         // This file is now in resources so will be used in Database building test where it should be handled
-        MyChainIfc[] myChains = mystructure.getAllChainsRelevantForShapeBuilding();
+        MyChainIfc[] myChains = pathAndMyStructure.getValue().getAllChainsRelevantForShapeBuilding();
         assertTrue(myChains.length == 54);
         assertFalse(Arrays.equals(myChains[0].getChainId(), myChains[1].getChainId()));
 

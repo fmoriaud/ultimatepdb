@@ -19,6 +19,7 @@ Author:
   */
 package shape;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import shapeCompare.ResultsFromEvaluateCost;
 import mystructure.MyChainIfc;
 import mystructure.MyStructureIfc;
 
-public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeContainerIfc, HasPeptideIfc {
+public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeContainerIfc, HasPeptideIfc, Serializable {
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
@@ -44,8 +45,8 @@ public class ShapeContainerWithPeptide extends ShapeContainer implements ShapeCo
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters, MyStructureIfc peptide, int startingRankId) {
-        super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
+    public ShapeContainerWithPeptide(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc peptide, int startingRankId, String pdbFileHash) {
+        super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, pdbFileHash);
 
         this.startingRankId = startingRankId;
         this.peptide = peptide;

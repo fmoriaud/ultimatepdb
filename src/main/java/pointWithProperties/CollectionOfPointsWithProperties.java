@@ -19,9 +19,10 @@ Author:
   */
 package pointWithProperties;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CollectionOfPointsWithProperties implements CollectionOfPointsWithPropertiesIfc {
+public class CollectionOfPointsWithProperties implements CollectionOfPointsWithPropertiesIfc, Serializable {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------

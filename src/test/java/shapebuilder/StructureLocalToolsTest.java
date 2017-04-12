@@ -26,6 +26,7 @@ import io.ExceptionInIOPackage;
 import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -56,21 +57,9 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2ce8";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] chainId = "X".toCharArray();
         int rankIdinChain = 2;
@@ -166,21 +155,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1be9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] chainId = "B".toCharArray();
         int rankIdinChain = 1;
@@ -272,21 +248,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1be9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] chainId = "B".toCharArray();
         int rankIdinChain = 0;
@@ -375,21 +338,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1be9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] chainId = "B".toCharArray();
         int rankIdinChain = 2;
@@ -479,26 +429,12 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1be9";
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
+
         char[] chainId = "B".toCharArray();
         int rankIdinChain = 0;
         int peptideLength = 5;
-
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
 
         StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = null;
         try {
@@ -555,21 +491,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "2yjd";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] chainId = "C".toCharArray();
 
@@ -608,21 +531,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         char[] hetAtomsLigandId = "MSQ".toCharArray();
         int occurrenceId = 1;
@@ -654,21 +564,8 @@ public class StructureLocalToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFolders();
 
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
-
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc myStructureGlobalBrut = null;
-        try {
-            myStructureGlobalBrut = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+        MyStructureIfc myStructureGlobalBrut = pathAndMyStructure.getValue();
 
         List<QueryAtomDefinedByIds> listAtomDefinedByIds = new ArrayList<>();
         String chainQuery = "A";
@@ -730,8 +627,8 @@ public class StructureLocalToolsTest {
         assertTrue(structureLocalOriginalQuery.getAminoMyChain("X".toCharArray()) == null);
 
         // need to have foreignLigand in the reference frame of the query
-        ShapeContainerIfc shapeTarget = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainIdTarget);
-        ShapeContainerIfc shapeQuery = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureQuery, algoParameters, chainIdQuery);
+        ShapeContainerIfc shapeTarget = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainIdTarget, myStructureTarget.getPdbFileHash());
+        ShapeContainerIfc shapeQuery = ShapeContainerFactory.getShapeAroundAChain(EnumShapeReductor.CLUSTERING, myStructureQuery, algoParameters, chainIdQuery, myStructureQuery.getPdbFileHash());
         // So I compare shapeTarget to shapeLigand so the hit ligand can be put in reference frame of the target
         List<ResultsFromEvaluateCost> resultsPairingTriangleSeed = CompareTools.compareShapesBasedOnTriangles(shapeQuery, shapeTarget, algoParameters);
         MyStructureIfc rotatedLigandOrPeptide = CompareTools.getLigandOrPeptideInReferenceOfQuery(shapeTarget, resultsPairingTriangleSeed.get(0), algoParameters);

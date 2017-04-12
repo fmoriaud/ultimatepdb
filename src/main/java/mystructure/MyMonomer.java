@@ -19,10 +19,11 @@ Author:
   */
 package mystructure;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 
-public class MyMonomer implements MyMonomerIfc {
+public class MyMonomer implements MyMonomerIfc, Serializable {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------

@@ -60,7 +60,7 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
             ShapeBuildingException exception = new ShapeBuildingException("Failed to ShapecontainerDefinedBySegmentOfChain because of null MyStructure");
             throw exception;
         }
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId, startingRankId, peptideLength);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, chainId, startingRankId, peptideLength, myStructure.getPdbFileHash());
 
         return shapecontainer;
     }
@@ -70,7 +70,7 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
 
         this.myStructure = myStructureTarget;
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainId, startingRankId, peptideLength);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, chainId, startingRankId, peptideLength, myStructure.getPdbFileHash());
 
         return shapecontainer;
     }

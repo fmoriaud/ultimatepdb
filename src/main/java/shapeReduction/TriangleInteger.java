@@ -19,9 +19,10 @@ Author:
   */
 package shapeReduction;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class TriangleInteger {
+public class TriangleInteger implements Serializable {
     // -------------------------------------------------------------------
     // Class variables
     // -------------------------------------------------------------------

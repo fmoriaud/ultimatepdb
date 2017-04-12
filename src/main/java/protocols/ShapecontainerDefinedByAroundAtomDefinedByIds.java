@@ -64,14 +64,14 @@ public class ShapecontainerDefinedByAroundAtomDefinedByIds implements ShapeConta
             throw exception;
         }
 
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, listAtomDefinedByIds, chainToIgnore);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, listAtomDefinedByIds, chainToIgnore, myStructure.getPdbFileHash());
         return shapecontainer;
     }
 
     @Override
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
         this.myStructure = myStructureTarget;
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, listAtomDefinedByIds, chainToIgnore);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAtomDefinedByIds(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, listAtomDefinedByIds, chainToIgnore, myStructure.getPdbFileHash());
         return shapecontainer;
     }
 

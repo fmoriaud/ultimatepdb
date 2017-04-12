@@ -61,7 +61,7 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
             throw exception;
         }
 
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, hetAtomsLigandId, occurrenceId);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructure, algoParameters, hetAtomsLigandId, occurrenceId, myStructure.getPdbFileHash());
         return shapecontainer;
     }
 
@@ -69,7 +69,7 @@ public class ShapecontainerDefinedByHetatm implements ShapeContainerDefined {
     public ShapeContainerIfc getShapecontainer(MyStructureIfc myStructureTarget) throws ShapeBuildingException {
 
         this.myStructure = myStructureTarget;
-        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, hetAtomsLigandId, occurrenceId);
+        ShapeContainerIfc shapecontainer = ShapeContainerFactory.getShapeAroundAHetAtomLigand(EnumShapeReductor.CLUSTERING, myStructureTarget, algoParameters, hetAtomsLigandId, occurrenceId, myStructure.getPdbFileHash());
         return shapecontainer;
     }
 

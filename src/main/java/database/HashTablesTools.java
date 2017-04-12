@@ -75,22 +75,41 @@ public class HashTablesTools {
     }
 
 
-    public static void createTablesIfTheyDontExists(Connection connection, String tableName, String tableFailureName) {
+    public static void createTablesIfTheyDontExists(Connection connection, String tableSequenceName, String tableFailureName) {
 
         ResultSet resultTables = null;
         try {
-            Statement stmt = connection.createStatement();
-            String findEntry = "SELECT TABLENAME FROM SYS.SYSTABLES WHERE TABLETYPE='T'";
-            resultTables = stmt.executeQuery(findEntry);
-            if (resultTables.next()) {
-                System.out.println("tables exists");
-            } else {
-                System.out.println("tables dont exists");
-                createTables(connection, tableName, tableFailureName);
+
+            /**
+             DatabaseMetaData dmd = connection.getMetaData();
+             ResultSet rs = dmd.getSchemas();
+             List<String> schemas = new ArrayList<String>();
+             while (rs.next()) {
+             schemas.add(rs.getString("TABLE_SCHEM"));
+             }
+             rs.close();
+             System.out.println("Schemas : ");
+             for (String schema : schemas) {
+             System.out.println(schema);
+             }
+             */
+            // get database metadata
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet rsSchema = metaData.getTables(null, "ME", "%", null);
+            List<String> tables = new ArrayList<String>();
+            while (rsSchema.next()) {
+                tables.add(rsSchema.getString(3)); // 3: table name
+            }
+            rsSchema.close();
+
+            if (!tables.contains(tableSequenceName.toUpperCase())) {
+                System.out.println(tableSequenceName + " dont exist");
+                createTables(connection, tableSequenceName, tableFailureName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void shutdown() {

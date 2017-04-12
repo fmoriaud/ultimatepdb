@@ -19,6 +19,7 @@ Author:
   */
 package mystructure;
 
+import java.io.Serializable;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ import math.AddToMap;
 import parameters.AlgoParameters;
 
 
-public class MyStructure implements MyStructureIfc {
+public class MyStructure implements MyStructureIfc, Serializable {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------
@@ -49,6 +50,7 @@ public class MyStructure implements MyStructureIfc {
     private List<MyMonomerIfc> tempMonomerList = new ArrayList<>();
 
     private FileTime lastModificationTime;
+    private String pdbFileHash;
 
 
     //-------------------------------------------------------------
@@ -65,7 +67,7 @@ public class MyStructure implements MyStructureIfc {
      * @param algoParameters
      * @throws ExceptionInMyStructurePackage
      */
-    public MyStructure(ExpTechniquesEnum expTechnique, AlgoParameters algoParameters, MyChainIfc[] myAminoChains, MyChainIfc[] myHetatmChains, MyChainIfc[] myNucleotideChains) throws ExceptionInMyStructurePackage {
+    public MyStructure(ExpTechniquesEnum expTechnique, AlgoParameters algoParameters, MyChainIfc[] myAminoChains, MyChainIfc[] myHetatmChains, MyChainIfc[] myNucleotideChains, String pdbFileHash) throws ExceptionInMyStructurePackage {
 
         if (algoParameters == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
@@ -74,6 +76,7 @@ public class MyStructure implements MyStructureIfc {
         this.myAminoChains = myAminoChains;
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
+        this.pdbFileHash = pdbFileHash;
     }
 
 
@@ -89,7 +92,7 @@ public class MyStructure implements MyStructureIfc {
      * @param myNucleotideChains
      * @throws ExceptionInMyStructurePackage
      */
-    public MyStructure(MyChainIfc[] myAminoChains, MyChainIfc[] myHetatmChains, MyChainIfc[] myNucleotideChains, ExpTechniquesEnum expTechnique, AlgoParameters algoParameters) throws ExceptionInMyStructurePackage {
+    public MyStructure(MyChainIfc[] myAminoChains, MyChainIfc[] myHetatmChains, MyChainIfc[] myNucleotideChains, ExpTechniquesEnum expTechnique, AlgoParameters algoParameters, String pdbFileHash) throws ExceptionInMyStructurePackage {
 
         if (algoParameters == null) {
             throw new ExceptionInMyStructurePackage("MyStructure cannot be built with a null AlgoParameters");
@@ -107,6 +110,7 @@ public class MyStructure implements MyStructureIfc {
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
         this.expTechnique = expTechnique;
+        this.pdbFileHash = pdbFileHash;
     }
 
 
@@ -519,5 +523,9 @@ public class MyStructure implements MyStructureIfc {
     public ExpTechniquesEnum getExpTechnique() {
         return expTechnique;
     }
+    public String getPdbFileHash() {
+        return pdbFileHash;
+    }
+
 
 }

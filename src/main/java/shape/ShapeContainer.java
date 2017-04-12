@@ -19,11 +19,7 @@ Author:
   */
 package shape;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +30,8 @@ import java.util.zip.GZIPOutputStream;
 import hits.HitTools;
 import hits.StrikingPropertyToElement;
 import math.AddToMap;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.biojava.nbio.structure.Element;
 import parameters.AlgoParameters;
 import pointWithProperties.CollectionOfPointsWithPropertiesIfc;
@@ -50,12 +48,14 @@ import mystructure.MyMonomerIfc;
 import mystructure.MyStructureIfc;
 
 
-public class ShapeContainer implements ShapeContainerIfc {
+public class ShapeContainer implements ShapeContainerIfc, Serializable {
     //-------------------------------------------------------------
     // Class members
     //-------------------------------------------------------------
     protected char[] fourLetterCode;
 
+
+    protected String pdbFileHash;
 
     protected CollectionOfPointsWithPropertiesIfc shape;
     private List<PointIfc> listPointDefininingLigandUsedToComputeShape;
@@ -74,8 +74,9 @@ public class ShapeContainer implements ShapeContainerIfc {
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public ShapeContainer(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters) {
+    public ShapeContainer(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, String pdbFileHash) {
         this.shape = shape;
+        this.pdbFileHash = pdbFileHash;
         this.listPointDefininingLigandUsedToComputeShape = listPointDefininingLigandUsedToComputeShape;
         this.myStructureUsedToComputeShape = myStructureUsedToComputeShape;
         this.foreignMonomerToExclude = foreignMonomerToExclude;
@@ -89,6 +90,32 @@ public class ShapeContainer implements ShapeContainerIfc {
         }
     }
 
+    //-------------------------------------------------------------
+    // Override methods
+    //-------------------------------------------------------------
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+                // if deriving: appendSuper(super.hashCode()).
+                        append(fourLetterCode).
+                        append(pdbFileHash).
+                        toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ShapeContainer))
+            return false;
+        if (obj == this)
+            return true;
+
+        ShapeContainer rhs = (ShapeContainer) obj;
+        return new EqualsBuilder().
+                // if deriving: appendSuper(super.equals(obj)).
+                        append(fourLetterCode, rhs.fourLetterCode).
+                        append(pdbFileHash, rhs.pdbFileHash).
+                        isEquals();
+    }
 
     //-------------------------------------------------------------
     // Interface & Public methods
@@ -426,5 +453,9 @@ public class ShapeContainer implements ShapeContainerIfc {
 
     public void setHistogramD2(List<Integer> histogramD2) {
         this.histogramD2 = histogramD2;
+    }
+
+    public String getPdbFileHash() {
+        return pdbFileHash;
     }
 }

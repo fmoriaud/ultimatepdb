@@ -25,8 +25,10 @@ import hits.ExceptionInScoringUsingBioJavaJMolGUI;
 import hits.HitTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
+import io.IOTools;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Structure;
 import org.junit.Test;
 import parameters.AlgoParameters;
@@ -52,25 +54,13 @@ public class MyJmolToolsMinimizeTest {
 
         // Get a structure with a ligand
         String fourLetterCode = "1di9";
-        BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
-        try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
-        } catch (IOException | ExceptionInIOPackage e) {
-            assertTrue(false);
-        }
+
+        Pair<String, MyStructureIfc> pathAndMyStructure = IOTools.getMyStructureIfc(algoParameters, fourLetterCode.toCharArray());
+
 
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
-        MyStructureIfc mystructure = null;
-        try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
-        } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
-            assertTrue(false);
-        }
-
-        MyMonomerIfc msqLigand = mystructure.getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
+        MyMonomerIfc msqLigand = pathAndMyStructure.getValue().getHeteroChain("A".toCharArray()).getMyMonomerFromResidueId(500);
         Cloner cloner = new Cloner(msqLigand, algoParameters);
         MyStructureIfc myStructureMadeWithLigand = cloner.getClone();
 

@@ -43,9 +43,9 @@ public class ShapeContainerFactory {
      * @return
      */
     public static ShapeContainerIfc getShapeAroundAChain(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureGlobal, AlgoParameters algoParameters,
-                                                         char[] chainId) throws ShapeBuildingException {
+                                                         char[] chainId, String pdbFileHash) throws ShapeBuildingException {
 
-        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor, pdbFileHash);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundAChain(chainId);
 
         return shapeContainer;
@@ -53,35 +53,35 @@ public class ShapeContainerFactory {
 
 
     public static ShapeContainerIfc getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureGlobal, AlgoParameters algoParameters,
-                                                                                                       char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException {
+                                                                                                       char[] chainId, int startingRankId, int peptideLength, String pdbFileHash) throws ShapeBuildingException {
 
-        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor, pdbFileHash);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(chainId, startingRankId, peptideLength);
         return shapeContainer;
     }
 
 
     public static ShapeContainerIfc getShapeAroundAHetAtomLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureGlobal, AlgoParameters algoParameters,
-                                                                 char[] hetAtomsLigandId, int occurrenceId) throws ShapeBuildingException {
+                                                                 char[] hetAtomsLigandId, int occurrenceId, String pdbFileHash) throws ShapeBuildingException {
 
-        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor, pdbFileHash);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundAHetAtomLigand(hetAtomsLigandId, occurrenceId);
         return shapeContainer;
     }
 
 
     public static ShapeContainerIfc getShapeAroundAtomDefinedByIds(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureGlobal, AlgoParameters algoParameters,
-                                                                   List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<String> chainToIgnore) throws ShapeBuildingException {
+                                                                   List<QueryAtomDefinedByIds> listAtomDefinedByIds, List<String> chainToIgnore, String pdbFileHash) throws ShapeBuildingException {
 
-        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor);
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureGlobal, algoParameters, enumShapeReductor, pdbFileHash);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundAtomDefinedByIds(listAtomDefinedByIds, chainToIgnore);
         return shapeContainer;
     }
 
 
-    public static ShapeContainerIfc getShapeAroundForeignLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureLocalQuery, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide, AlgoParameters algoParameters) {
+    public static ShapeContainerIfc getShapeAroundForeignLigand(EnumShapeReductor enumShapeReductor, MyStructureIfc myStructureLocalQuery, List<MyMonomerIfc> foreignMonomerToExclude, MyStructureIfc rotatedLigandOrPeptide, AlgoParameters algoParameters, String pdbFileHash) {
 
-        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureLocalQuery, algoParameters, enumShapeReductor);
+        ShapeBuilder ShapeBuilder = new ShapeBuilder(myStructureLocalQuery, algoParameters, enumShapeReductor, pdbFileHash);
         ShapeContainerIfc shapeContainer = ShapeBuilder.getShapeAroundForeignLigand(foreignMonomerToExclude, rotatedLigandOrPeptide);
         return shapeContainer;
     }

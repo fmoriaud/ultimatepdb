@@ -64,14 +64,18 @@ public class AdapterBioJavaStructure {
     //-------------------------------------------------------------
     // Interface & Public methods
     //-------------------------------------------------------------
-    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure) throws ExceptionInMyStructurePackage, ReadingStructurefileException, ExceptionInConvertFormat {
+    public MyStructureIfc getMyStructureAndSkipHydrogens(Structure structure, String pdbFileHash) throws ExceptionInMyStructurePackage, ReadingStructurefileException, ExceptionInConvertFormat {
 
-        MyStructureIfc myStructure = convertStructureToMyStructure(structure, algoParameters);
+        MyStructureIfc myStructure = convertStructureToMyStructure(structure, algoParameters, pdbFileHash);
         return myStructure;
     }
 
 
-    public MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters) throws ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
+
+    //-------------------------------------------------------------
+    // Implementation
+    //-------------------------------------------------------------
+    private MyStructureIfc convertStructureToMyStructure(Structure structure, AlgoParameters algoParameters, String pdbFileHash) throws ReadingStructurefileException, ExceptionInMyStructurePackage, ExceptionInConvertFormat {
 
         aminoChains.clear();
         hetatmChains.clear();
@@ -173,7 +177,7 @@ public class AdapterBioJavaStructure {
         MyChainIfc[] cleanhetatmArray = removeEmptychains(hetatmArray);
         MyChainIfc[] cleannucleotidesArray = removeEmptychains(nucleotidesArray);
 
-        MyStructureIfc myStructure = new MyStructure(cleanaminoArray, cleanhetatmArray, cleannucleotidesArray, expTechniqueUltimate, algoParameters);
+        MyStructureIfc myStructure = new MyStructure(cleanaminoArray, cleanhetatmArray, cleannucleotidesArray, expTechniqueUltimate, algoParameters, pdbFileHash);
         myStructure.setFourLetterCode(fourLetterCode);
 
         // Must redo neighbors by distance. They are the same but some MyMonomer Hetatm moved to Amino or Nucleosides chains.
@@ -184,9 +188,6 @@ public class AdapterBioJavaStructure {
     }
 
 
-    //-------------------------------------------------------------
-    // Implementation
-    //-------------------------------------------------------------
     private MyChainIfc[] removeEmptychains(MyChainIfc[] myChains) {
 
         List<MyChainIfc> keptMyChain = new ArrayList<>();

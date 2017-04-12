@@ -19,11 +19,12 @@ Author:
   */
 package mystructure;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import mystructure.AtomProperties.AtomGaussianDescriptors;
 
-public class MyAtom implements MyAtomIfc {
+public class MyAtom implements MyAtomIfc, Serializable {
 
     //-------------------------------------------------------------
     // Class variables

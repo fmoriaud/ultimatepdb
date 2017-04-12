@@ -80,4 +80,5 @@ public interface MyStructureIfc {
     void removeChain(char[] chainId);
 
     ExpTechniquesEnum getExpTechnique();
+    String getPdbFileHash();
 }

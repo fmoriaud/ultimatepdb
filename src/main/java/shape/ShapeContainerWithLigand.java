@@ -43,8 +43,8 @@ public class ShapeContainerWithLigand extends ShapeContainer implements ShapeCon
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters, MyStructureIfc hetatmLigand, int occurenceId) {
-        super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
+    public ShapeContainerWithLigand(CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters, MyStructureIfc hetatmLigand, int occurenceId, String pdbFileHash) {
+        super(shape, listPointDefininingLigandUsedToComputeShape, myStructureUsedToComputeShape, foreignMonomerToExclude, pdbFileHash);
 
         this.hetatmLigand = hetatmLigand;
         this.occurenceId = occurenceId;

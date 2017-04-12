@@ -38,9 +38,9 @@ public class ShapeContainerAtomIdsWithinShape extends ShapeContainer implements 
     // -------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------
-    public ShapeContainerAtomIdsWithinShape(List<QueryAtomDefinedByIds> listAtomDefinedByIds, CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, AlgoParameters algoParameters) {
+    public ShapeContainerAtomIdsWithinShape(List<QueryAtomDefinedByIds> listAtomDefinedByIds, CollectionOfPointsWithPropertiesIfc shape, List<PointIfc> listPointDefininingLigandUsedToComputeShape, MyStructureIfc myStructureUsedToComputeShape, List<MyMonomerIfc> foreignMonomerToExclude, String pdbFileHash) {
         super(shape, listPointDefininingLigandUsedToComputeShape,
-                myStructureUsedToComputeShape, foreignMonomerToExclude, algoParameters);
+                myStructureUsedToComputeShape, foreignMonomerToExclude, pdbFileHash);
         this.listAtomDefinedByIds = listAtomDefinedByIds;
     }
 

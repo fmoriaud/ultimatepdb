@@ -19,7 +19,9 @@ Author:
   */
 package mystructure;
 
-public class MyBond implements MyBondIfc {
+import java.io.Serializable;
+
+public class MyBond implements MyBondIfc, Serializable {
     //-------------------------------------------------------------
     // Class variables
     //-------------------------------------------------------------

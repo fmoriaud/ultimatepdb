@@ -19,10 +19,12 @@ Author:
   */
 package convertformat;
 
+import database.HashTablesTools;
 import io.BiojavaReader;
 import io.ExceptionInIOPackage;
 import io.Tools;
 import mystructure.*;
+import org.apache.commons.math3.util.Pair;
 import org.biojava.nbio.structure.Group;
 import org.biojava.nbio.structure.GroupType;
 import org.biojava.nbio.structure.Structure;
@@ -31,6 +33,7 @@ import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
@@ -44,24 +47,28 @@ public class AdapterBiojavaStructureNucleosideCovalentlyBoundTest {
 
         String fourLetterCode = "5a07";
         BiojavaReader reader = new BiojavaReader(algoParameters);
-        Structure mmcifStructure = null;
+        Pair<String, Structure> pathAndmmcifStructure = null;
         try {
-            mmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder).getValue();
+            pathAndmmcifStructure = reader.readFromPDBFolder(fourLetterCode, Tools.testPDBFolder, Tools.testChemcompFolder);
         } catch (IOException | ExceptionInIOPackage e) {
             assertTrue(false);
         }
-
-
+        String hash = null;
+        try {
+            hash = HashTablesTools.getMD5hash(pathAndmmcifStructure.getKey());
+        } catch (NoSuchAlgorithmException e) {
+            assertTrue(false);
+        }
 
         AdapterBioJavaStructure adapterBioJavaStructure = new AdapterBioJavaStructure(algoParameters);
         MyStructureIfc mystructure = null;
         try {
-            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(mmcifStructure);
+            mystructure = adapterBioJavaStructure.getMyStructureAndSkipHydrogens(pathAndmmcifStructure.getValue(), hash);
         } catch (ExceptionInMyStructurePackage | ReadingStructurefileException | ExceptionInConvertFormat e) {
             assertTrue(false);
         }
 
-        Group mmcifGDP = mmcifStructure.getChain(0).getAtomGroup(395);
+        Group mmcifGDP = pathAndmmcifStructure.getValue().getChain(0).getAtomGroup(395);
         assertTrue(mmcifGDP.getPDBName().equals("GDP"));
         GroupType type = mmcifGDP.getType();
         assertTrue(type == GroupType.NUCLEOTIDE);

@@ -19,7 +19,9 @@ Author:
   */
 package pointWithProperties;
 
-public class Point implements PointIfc {
+import java.io.Serializable;
+
+public class Point implements PointIfc, Serializable {
 
     float[] coords;
 

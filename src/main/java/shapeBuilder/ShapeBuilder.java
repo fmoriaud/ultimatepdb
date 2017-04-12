@@ -49,17 +49,18 @@ public class ShapeBuilder {
     private boolean debug = true;
     private List<PointWithPropertiesIfc> listShrinkedShapePoints = new ArrayList<>();
     private AlgoParameters algoParameters;
-
+    private String pdbFileHash;
 
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
-    public ShapeBuilder(MyStructureIfc myStructureGlobal, AlgoParameters algoParameters, EnumShapeReductor enumShapeReductor) {
+    public ShapeBuilder(MyStructureIfc myStructureGlobal, AlgoParameters algoParameters, EnumShapeReductor enumShapeReductor, String pdbFileHash) {
 
         this.myStructureGlobalBrut = myStructureGlobal;
         this.algoParameters = algoParameters;
         this.enumShapeReductor = enumShapeReductor;
         this.algoParameters = algoParameters;
+        this.pdbFileHash = pdbFileHash;
     }
 
 
@@ -360,7 +361,6 @@ public class ShapeBuilder {
     }
 
 
-
     //-------------------------------------------------------------
     // Implementation
     //-------------------------------------------------------------
@@ -432,7 +432,7 @@ public class ShapeBuilder {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerAtomIdsWithinShapeWithPeptide shape = new ShapeContainerAtomIdsWithinShapeWithPeptide(listAtomDefinedByIds, shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters);
+        ShapeContainerAtomIdsWithinShapeWithPeptide shape = new ShapeContainerAtomIdsWithinShapeWithPeptide(listAtomDefinedByIds, shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, myStructureShape.getPdbFileHash());
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;
@@ -443,7 +443,7 @@ public class ShapeBuilder {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerWithPeptide shape = new ShapeContainerWithPeptide(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters, peptide, startingIndex);
+        ShapeContainerWithPeptide shape = new ShapeContainerWithPeptide(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, peptide, startingIndex, pdbFileHash);
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;
@@ -454,7 +454,7 @@ public class ShapeBuilder {
 
         CollectionOfPointsWithPropertiesIfc shrinkedShapeBasedOnDistanceToLigand = simplifyShape(algoParameters, shapeCollectionPoints);
 
-        ShapeContainerWithLigand shape = new ShapeContainerWithLigand(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters, myMonomer, occurenceId);
+        ShapeContainerWithLigand shape = new ShapeContainerWithLigand(shrinkedShapeBasedOnDistanceToLigand, listOfPointsFromChainLigand, myStructureShape, monomerToDiscard, algoParameters, myMonomer, occurenceId, pdbFileHash);
 
         prepareShapeContainer(listOfPointsFromChainLigand, algoParameters, shrinkedShapeBasedOnDistanceToLigand, shape);
         return shape;

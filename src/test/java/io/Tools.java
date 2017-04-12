@@ -58,8 +58,10 @@ public class Tools {
     /**
      * A test folder is defined for all test. That is because I couldn't make it work with TemporaryFolders
      */
+    public static final String testFolderName = "testultimatepdb";
     public static String testChemcompFolder = createPermanentTestFolder();
     public static String testPDBFolder;
+
 
     /**
      * Create test PDB and Chemcomp folder. Also all PDB files in resources are copied there so all test can use this
@@ -70,7 +72,7 @@ public class Tools {
     public static String createPermanentTestFolder() {
 
         String d = System.getProperty("user.home");
-        String builtTestFolder = d + File.separator + "Documents" + File.separator + "testultimatepdb" + File.separator;
+        String builtTestFolder = d + File.separator + "Documents" + File.separator + testFolderName + File.separator;
         final File baseDir = new File(builtTestFolder);
 
         String builttestPDBFolder = builtTestFolder + File.separator + "pdb";
