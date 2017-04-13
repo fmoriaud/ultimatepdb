@@ -19,7 +19,10 @@ Author:
   */
 package shapebuilder;
 
+import io.IOTools;
 import io.Tools;
+import mystructure.MyStructureIfc;
+import org.apache.commons.math3.util.Pair;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import parameters.QueryAtomDefinedByIds;

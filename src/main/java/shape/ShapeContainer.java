@@ -53,8 +53,6 @@ public class ShapeContainer implements ShapeContainerIfc, Serializable {
     // Class members
     //-------------------------------------------------------------
     protected char[] fourLetterCode;
-
-
     protected String pdbFileHash;
 
     protected CollectionOfPointsWithPropertiesIfc shape;
