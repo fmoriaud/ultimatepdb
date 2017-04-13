@@ -2,6 +2,8 @@ package shape;
 
 import io.MMcifFileInfos;
 import io.Tools;
+import org.apache.commons.lang.SerializationUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import parameters.AlgoParameters;
 import protocols.ParsingConfigFileException;
@@ -13,6 +15,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SerializeShapeTest {
@@ -35,7 +38,10 @@ public class SerializeShapeTest {
         } catch (ShapeBuildingException e) {
             assertTrue(false);
         }
-        System.out.println("From shape " + shape.getMiniShape().size());
+        int miniShapeSizeBefore = shape.getMiniShape().size();
+        int shapeSizeBefore = shape.getShape().getSize();
+        char[] fourLetterCodeBefore = shape.getFourLetterCode();
+
         String pathToSerFile = "//Users/Fabrice//Documents//shape.ser";
         ObjectOutputStream oos = null;
         try {
@@ -55,7 +61,7 @@ public class SerializeShapeTest {
             FileInputStream fin = new FileInputStream(file.getAbsolutePath());
             ObjectInputStream ois = new ObjectInputStream(fin);
             shapeDeSer = (ShapeContainerWithPeptide) ois.readObject();
-            System.out.println("From ser file " + shapeDeSer.getMiniShape().size());
+            //System.out.println("From ser file " + shapeDeSer.getMiniShape().size());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -63,6 +69,13 @@ public class SerializeShapeTest {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
 
+        int miniShapeSizeAfter = shapeDeSer.getMiniShape().size();
+        int shapeSizeAfter = shapeDeSer.getShape().getSize();
+        char[] fourLetterCodeAfter = shapeDeSer.getFourLetterCode();
+
+        assertTrue(miniShapeSizeBefore == miniShapeSizeAfter);
+        assertTrue(shapeSizeBefore == shapeSizeAfter);
+        assertArrayEquals(fourLetterCodeBefore, fourLetterCodeAfter);
+    }
 }

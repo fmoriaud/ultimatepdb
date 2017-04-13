@@ -61,7 +61,7 @@ public class ShapeContainer implements ShapeContainerIfc, Serializable {
     private List<PointIfc> listPointDefininingLigandUsedToComputeShape;
     private transient MyStructureIfc myStructureUsedToComputeShape;
     protected Map<Integer, PointWithPropertiesIfc> miniShape;
-    private transient List<TriangleInteger> listTriangleOfPointsFromMinishape;
+    private List<TriangleInteger> listTriangleOfPointsFromMinishape;
 
     private List<Integer> histogramStrikingProperties;
     private List<Integer> histogramD2;
