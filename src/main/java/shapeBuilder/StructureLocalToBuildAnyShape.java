@@ -160,8 +160,12 @@ public class StructureLocalToBuildAnyShape {
 
         this.myStructureGlobalBrut = myStructureGlobalBrut;
         this.algoParameters = algoParameters;
-
-        MyMonomerIfc[] myMonomomers = myStructureGlobalBrut.getAminoMyChain(chainId).getMyMonomers();
+        MyChainIfc aminochain = myStructureGlobalBrut.getAminoMyChain(chainId);
+        if (aminochain == null){
+            ShapeBuildingException exception = new ShapeBuildingException("Chain " + String.valueOf(chainId) + " is not found in " + String.valueOf(myStructureGlobalBrut.getFourLetterCode()));
+            throw exception;
+        }
+        MyMonomerIfc[] myMonomomers = aminochain.getMyMonomers();
         MyChainIfc wholeChain = myStructureGlobalBrut.getAminoMyChain(chainId);
 
         if (startingRankId >= myMonomomers.length) {

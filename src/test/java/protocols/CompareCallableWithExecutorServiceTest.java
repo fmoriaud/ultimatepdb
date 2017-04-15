@@ -42,6 +42,7 @@ public class CompareCallableWithExecutorServiceTest {
 
     /**
      * Add that if ill defined it never finish
+     *
      * @throws IOException
      * @throws ParsingConfigFileException
      */
@@ -191,4 +192,130 @@ public class CompareCallableWithExecutorServiceTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
     }
+
+
+    @Test
+    public void runThreeComparisonsWithOneThreadsOneIsIllDefined() throws IOException, ParsingConfigFileException {
+
+        int threadCount = 1;
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(threadCount);
+
+        FileHandler fh = null;
+        try {
+            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        fh.setFormatter(new OptimizerFormater());
+        ControllerLoger.logger.addHandler(fh);
+
+        int initialCount = algoParameters.ultiJMolBuffer.getSize();
+
+        String fourLetterCodeQuery = "1be9";
+        char[] chainIdQuery = "B".toCharArray();
+        ShapeContainerDefined shapeContainerbuilder = new ShapecontainerDefinedByWholeChain(fourLetterCodeQuery.toCharArray(), chainIdQuery, algoParameters);
+        ShapeContainerIfc queryShape = null;
+        try {
+            queryShape = shapeContainerbuilder.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+            assertTrue(false);
+        }
+
+        List<ShapeContainerDefined> targets = new ArrayList<>();
+
+        int startingRankId = 0;
+        int peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined0 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "B".toCharArray(), startingRankId, peptideLength, algoParameters);
+        targets.add(shapecontainerDefined0);
+
+        // ill defined chain X is not existing
+        startingRankId = 0;
+        peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined1 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "X".toCharArray(), startingRankId, peptideLength, algoParameters);
+        targets.add(shapecontainerDefined1);
+
+        startingRankId = 0;
+        peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined2 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "B".toCharArray(), startingRankId, peptideLength, algoParameters);
+        targets.add(shapecontainerDefined2);
+
+        int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+        final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
+        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 20;
+
+
+        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
+        for (ShapeContainerDefined target : targets) {
+            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
+            callablesToLauch.add(compare);
+        }
+
+        int countCallabeSubmited = 0;
+        List<Future<Boolean>> allFuture = new ArrayList<>();
+        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
+            try {
+                Future<Boolean> future = executorService.submit(callableToLauch);
+                allFuture.add(future);
+                countCallabeSubmited += 1;
+
+            } catch (RejectedExecutionException e) {
+                try {
+                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                    continue;
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        System.out.println("Submited " + countCallabeSubmited);
+        assertTrue(countCallabeSubmited == targets.size());
+
+        int countOfFutureTrue = 0;
+        boolean notFinished = true;
+        while (true && notFinished) {
+            countOfFutureTrue = 0;
+            try {
+                Thread.sleep(20000);
+                for (Future<Boolean> future : allFuture) {
+                    Boolean result = future.get();
+                    //System.out.println("Future result = " + result);
+                    if (result == true) {
+                        countOfFutureTrue += 1;
+                    }
+                }
+                notFinished = false;
+
+            } catch (InterruptedException | ExecutionException e) {
+                //e.printStackTrace();
+            }
+        }
+        executorService.shutdown();
+        System.out.println("Program finished.");
+        assertTrue(countOfFutureTrue == targets.size() - 1);
+
+        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + "log_project.txt");
+        String[] lines = resultFileContent.split("\\n");
+        int startlines = 4;
+        int expectedHits = 2;
+        int linesPerHit = 3;
+        assertTrue(lines.length == startlines + expectedHits * linesPerHit);
+
+        int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        assertTrue(finalCount == initialCount);
+
+        try {
+            for (int i = 0; i < initialCount; i++) {
+                algoParameters.ultiJMolBuffer.get().frame.dispose();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+    }
+
 }

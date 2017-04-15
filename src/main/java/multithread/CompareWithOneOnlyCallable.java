@@ -24,6 +24,7 @@ import parameters.AlgoParameters;
 import protocols.ProtocolTools;
 import protocols.ShapeContainerDefined;
 import shape.ShapeContainerIfc;
+import shapeBuilder.ShapeBuildingException;
 
 import java.util.concurrent.Callable;
 
@@ -73,13 +74,19 @@ public class CompareWithOneOnlyCallable implements Callable<Boolean> {
     // Public & Override methods
     //-------------------------------------------------------------
     @Override
-    public Boolean call() throws Exception {
+    public Boolean call(){
 
         //ShapeContainerIfc targetShape = null;
         // if (myStructureTarget != null) {
         //     targetShape = shapeContainerDefinedTarget.getShapecontainer(myStructureTarget);
         // } else {
-        ShapeContainerIfc targetShape = shapeContainerDefinedTarget.getShapecontainer();
+        ShapeContainerIfc targetShape = null;
+        try {
+            targetShape = shapeContainerDefinedTarget.getShapecontainer();
+        } catch (ShapeBuildingException e) {
+           // e.printStackTrace();
+            return false;
+        }
         //}
 
         //System.out.println("Finish Built a shape container");
