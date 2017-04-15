@@ -143,9 +143,20 @@ public class Tools {
     public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol() throws ParsingConfigFileException, IOException {
 
         AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
+        int threadcount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+
+        return generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(threadcount);
+    }
+
+
+
+    public static AlgoParameters generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(int threadCount) throws ParsingConfigFileException, IOException {
+
+        AlgoParameters algoParameters = generateModifiedAlgoParametersForTestWithTestFolders();
+        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(threadCount);
         // add a ultiJmol which is needed in the ShapeBuilder
 
-        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT()*2);
+        algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
 
         for (int i = 0; i < (algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2); i++) {
 
@@ -241,6 +252,7 @@ public class Tools {
     // -------------------------------------------------------------------
     // Implementation
     // -------------------------------------------------------------------
+
     /**
      * Tested method to get a PDB file from path
      * The chemcomp are automatically downloaded

@@ -107,7 +107,14 @@ public class ShapeBuilder {
         return shapeContainerWithPeptide;
     }
 
-
+    /**
+     *
+     * @param chainId
+     * @param startingRankId which can be from 0 to last id of MyMonmer = size-1
+     * @param peptideLength
+     * @return
+     * @throws ShapeBuildingException
+     */
     public ShapeContainerWithPeptide getShapeAroundASegmentOfChainUsingStartingMyMonomerPositionInChain(char[] chainId, int startingRankId, int peptideLength) throws ShapeBuildingException { // part chain query
 
         StructureLocalToBuildAnyShape structureLocalToBuildAnyShape = new StructureLocalToBuildAnyShape(myStructureGlobalBrut, chainId, startingRankId, peptideLength, algoParameters);

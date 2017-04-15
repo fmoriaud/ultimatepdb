@@ -40,6 +40,15 @@ public class ShapecontainerDefinedBySegmentOfChain implements ShapeContainerDefi
     //-------------------------------------------------------------
     // Constructor
     //-------------------------------------------------------------
+
+    /**
+     *
+     * @param fourLetterCode
+     * @param chainId
+     * @param startingRankId which can be from 0 to last id of MyMonmer = size-1
+     * @param peptideLength
+     * @param algoParameters
+     */
     public ShapecontainerDefinedBySegmentOfChain(char[] fourLetterCode, char[] chainId, int startingRankId, int peptideLength, AlgoParameters algoParameters) {
         this.fourLetterCode = fourLetterCode;
         this.chainId = chainId;

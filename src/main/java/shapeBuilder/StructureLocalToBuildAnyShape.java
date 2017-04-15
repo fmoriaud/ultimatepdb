@@ -151,7 +151,7 @@ public class StructureLocalToBuildAnyShape {
      *
      * @param myStructureGlobalBrut
      * @param chainId
-     * @param startingRankId
+     * @param startingRankId which can be from 0 to last id of MyMonmer = size-1
      * @param peptideLength
      * @param algoParameters
      */

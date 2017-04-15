@@ -19,6 +19,7 @@ Author:
   */
 package protocols;
 
+import io.ReadTextFile;
 import io.Tools;
 import multithread.CompareWithOneOnlyCallable;
 import org.junit.Test;
@@ -37,12 +38,18 @@ import java.util.logging.FileHandler;
 
 import static org.junit.Assert.assertTrue;
 
-public class SpecificCaseTest {
+public class CompareCallableWithExecutorServiceTest {
 
+    /**
+     * Add that if ill defined it never finish
+     * @throws IOException
+     * @throws ParsingConfigFileException
+     */
     @Test
-    public void generateModifiedAlgoParametersTest() throws IOException, ParsingConfigFileException {
+    public void runEightComparisonsWithFourThreads() throws IOException, ParsingConfigFileException {
 
-        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
+        int threadCount = 4;
+        AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(threadCount);
 
         FileHandler fh = null;
         try {
@@ -101,14 +108,18 @@ public class SpecificCaseTest {
         ShapeContainerDefined shapecontainerDefined5 = new ShapecontainerDefinedBySegmentOfChain("3cfy".toCharArray(), "A".toCharArray(), startingRankId, peptideLength, algoParameters);
         targets.add(shapecontainerDefined5);
 
-
         startingRankId = 109;
         ShapeContainerDefined shapecontainerDefined6 = new ShapecontainerDefinedBySegmentOfChain("3cfy".toCharArray(), "A".toCharArray(), startingRankId, peptideLength, algoParameters);
         targets.add(shapecontainerDefined6);
 
+        startingRankId = 0;
+        peptideLength = 5;
+        ShapeContainerDefined shapecontainerDefined7 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "B".toCharArray(), startingRankId, peptideLength, algoParameters);
+        targets.add(shapecontainerDefined7);
+
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
-        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
+        int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 20;
 
 
         List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
@@ -118,11 +129,13 @@ public class SpecificCaseTest {
             callablesToLauch.add(compare);
         }
 
+        int countCallabeSubmited = 0;
         List<Future<Boolean>> allFuture = new ArrayList<>();
         for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
             try {
                 Future<Boolean> future = executorService.submit(callableToLauch);
                 allFuture.add(future);
+                countCallabeSubmited += 1;
 
             } catch (RejectedExecutionException e) {
                 try {
@@ -133,14 +146,21 @@ public class SpecificCaseTest {
                 }
             }
         }
+        System.out.println("Submited " + countCallabeSubmited);
+        assertTrue(countCallabeSubmited == targets.size());
 
+        int countOfFutureTrue = 0;
         boolean notFinished = true;
         while (true && notFinished) {
-
+            countOfFutureTrue = 0;
             try {
-                Thread.sleep(100000);
+                Thread.sleep(20000);
                 for (Future<Boolean> future : allFuture) {
-                    future.get();
+                    Boolean result = future.get();
+                    //System.out.println("Future result = " + result);
+                    if (result == true) {
+                        countOfFutureTrue += 1;
+                    }
                 }
                 notFinished = false;
 
@@ -150,9 +170,18 @@ public class SpecificCaseTest {
         }
         executorService.shutdown();
         System.out.println("Program finished.");
+        assertTrue(countOfFutureTrue == targets.size());
+
+        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + "log_project.txt");
+        String[] lines = resultFileContent.split("\\n");
+        int startlines = 4;
+        int expectedHits = 3;
+        int linesPerHit = 3;
+        assertTrue(lines.length == startlines + expectedHits * linesPerHit);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
         assertTrue(finalCount == initialCount);
+
         try {
             for (int i = 0; i < initialCount; i++) {
                 algoParameters.ultiJMolBuffer.get().frame.dispose();

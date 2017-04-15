@@ -93,6 +93,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
         System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
 
+        /*
         if (queryShape instanceof ShapeContainerWithPeptide) {
 
             ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
@@ -103,6 +104,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
 
             hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
+        */
 
         String fourLetterCodeTarget;
         String chainIdFromDB;

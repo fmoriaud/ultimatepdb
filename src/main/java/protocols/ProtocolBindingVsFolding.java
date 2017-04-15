@@ -122,7 +122,7 @@ public class ProtocolBindingVsFolding {
 
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
 
-
+/*
         if (queryShape instanceof ShapeContainerWithPeptide) {
 
             ShapeContainerWithPeptide query = (ShapeContainerWithPeptide) queryShape;
@@ -133,7 +133,7 @@ public class ProtocolBindingVsFolding {
 
             hitsInDatabase = hitsInDatabaseUsingInteractions;
         }
-
+*/
         String fourLetterCodeTarget;
         String chainIdFromDB;
 
