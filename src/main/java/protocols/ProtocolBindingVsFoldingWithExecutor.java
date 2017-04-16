@@ -56,51 +56,12 @@ public class ProtocolBindingVsFoldingWithExecutor {
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 60;
 
+        boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+        List<CompareWithOneOnlyCallable> callablesToLauch = ProtocolTools.getCallablesFromTargets(algoParameters, queryShape, targets, minimizeAllIfTrueOrOnlyOneIfFalse);
+        List<Future<Boolean>> allFuture = ProtocolTools.submitToExecutorAndGetFutures(executorService, timeSecondsToWaitIfQueueIsFullBeforeAddingMore, callablesToLauch);
 
-        final List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
-        for (ShapeContainerDefined target : targets) {
-            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
-            final CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
-            callablesToLauch.add(compare);
-        }
-
-        final List<Future<Boolean>> allFuture = new ArrayList<>();
-        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
-            try {
-                final Future<Boolean> future = executorService.submit(callableToLauch);
-                allFuture.add(future);
-
-            } catch (RejectedExecutionException e) {
-                try {
-                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-                    continue;
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        int countOfFutureTrue = ProtocolTools.checkIfFutureAreDone(allFuture);
         executorService.shutdown();
-        try {
-            executorService.awaitTermination(10000, TimeUnit.DAYS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        /*
-        boolean notFinished = true;
-        while (true && notFinished) {
-
-            try {
-                Thread.sleep(100000);
-                for (Future<Boolean> future : allFuture) {
-                    future.get();
-                }
-                notFinished = false;
-
-            } catch (InterruptedException | ExecutionException e) {
-                //e.printStackTrace();
-            }
-        }
-*/
         System.out.println("Program finished.");
         System.exit(0);
     }

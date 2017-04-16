@@ -125,61 +125,23 @@ public class CompareCallableWithExecutorServiceTest {
         peptideLength = 5;
         ShapeContainerDefined shapecontainerDefined7 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "B".toCharArray(), startingRankId, peptideLength, algoParameters);
         targets.add(shapecontainerDefined7);
-
+        int targetSize = targets.size();
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 20;
 
+        boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+        List<CompareWithOneOnlyCallable> callablesToLauch = ProtocolTools.getCallablesFromTargets(algoParameters, queryShape, targets, minimizeAllIfTrueOrOnlyOneIfFalse);
+        List<Future<Boolean>> allFuture = ProtocolTools.submitToExecutorAndGetFutures(executorService, timeSecondsToWaitIfQueueIsFullBeforeAddingMore, callablesToLauch);
 
-        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
-        for (ShapeContainerDefined target : targets) {
-            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
-            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
-            callablesToLauch.add(compare);
-        }
-
-        int countCallabeSubmited = 0;
-        List<Future<Boolean>> allFuture = new ArrayList<>();
-        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
-            try {
-                Future<Boolean> future = executorService.submit(callableToLauch);
-                allFuture.add(future);
-                countCallabeSubmited += 1;
-
-            } catch (RejectedExecutionException e) {
-                try {
-                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-                    continue;
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        int countCallabeSubmited = allFuture.size();
         System.out.println("Submited " + countCallabeSubmited);
-        assertTrue(countCallabeSubmited == targets.size());
+        assertTrue(countCallabeSubmited == targetSize);
 
-        int countOfFutureTrue = 0;
-        boolean notFinished = true;
-        while (true && notFinished) {
-            countOfFutureTrue = 0;
-            try {
-                Thread.sleep(20000);
-                for (Future<Boolean> future : allFuture) {
-                    Boolean result = future.get();
-                    //System.out.println("Future result = " + result);
-                    if (result == true) {
-                        countOfFutureTrue += 1;
-                    }
-                }
-                notFinished = false;
-
-            } catch (InterruptedException | ExecutionException e) {
-                //e.printStackTrace();
-            }
-        }
+        int countOfFutureTrue = ProtocolTools.checkIfFutureAreDone(allFuture);
         executorService.shutdown();
         System.out.println("Program finished.");
-        assertTrue(countOfFutureTrue == targets.size());
+        assertTrue(countOfFutureTrue == targetSize);
 
         String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         String[] lines = resultFileContent.split("\\n");
@@ -253,61 +215,25 @@ public class CompareCallableWithExecutorServiceTest {
         peptideLength = 5;
         ShapeContainerDefined shapecontainerDefined2 = new ShapecontainerDefinedBySegmentOfChain("1be9".toCharArray(), "B".toCharArray(), startingRankId, peptideLength, algoParameters);
         targets.add(shapecontainerDefined2);
+        int targetSize = targets.size();
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);
         int timeSecondsToWaitIfQueueIsFullBeforeAddingMore = 20;
 
+        boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
+        List<CompareWithOneOnlyCallable> callablesToLauch = ProtocolTools.getCallablesFromTargets(algoParameters, queryShape, targets, minimizeAllIfTrueOrOnlyOneIfFalse);
+        List<Future<Boolean>> allFuture = ProtocolTools.submitToExecutorAndGetFutures(executorService, timeSecondsToWaitIfQueueIsFullBeforeAddingMore, callablesToLauch);
 
-        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
-        for (ShapeContainerDefined target : targets) {
-            boolean minimizeAllIfTrueOrOnlyOneIfFalse = false;
-            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
-            callablesToLauch.add(compare);
-        }
-
-        int countCallabeSubmited = 0;
-        List<Future<Boolean>> allFuture = new ArrayList<>();
-        for (CompareWithOneOnlyCallable callableToLauch : callablesToLauch) {
-            try {
-                Future<Boolean> future = executorService.submit(callableToLauch);
-                allFuture.add(future);
-                countCallabeSubmited += 1;
-
-            } catch (RejectedExecutionException e) {
-                try {
-                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
-                    continue;
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        int countCallabeSubmited = allFuture.size();
         System.out.println("Submited " + countCallabeSubmited);
-        assertTrue(countCallabeSubmited == targets.size());
+        assertTrue(countCallabeSubmited == targetSize);
 
-        int countOfFutureTrue = 0;
-        boolean notFinished = true;
-        while (true && notFinished) {
-            countOfFutureTrue = 0;
-            try {
-                Thread.sleep(20000);
-                for (Future<Boolean> future : allFuture) {
-                    Boolean result = future.get();
-                    //System.out.println("Future result = " + result);
-                    if (result == true) {
-                        countOfFutureTrue += 1;
-                    }
-                }
-                notFinished = false;
-
-            } catch (InterruptedException | ExecutionException e) {
-                //e.printStackTrace();
-            }
-        }
+        int countOfFutureTrue = ProtocolTools.checkIfFutureAreDone(allFuture);
         executorService.shutdown();
         System.out.println("Program finished.");
-        assertTrue(countOfFutureTrue == targets.size() - 1);
+
+        assertTrue(countOfFutureTrue == targetSize - 1); // one is ill defined
 
         String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         String[] lines = resultFileContent.split("\\n");
@@ -330,5 +256,4 @@ public class CompareCallableWithExecutorServiceTest {
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
         fh.close();
     }
-
 }

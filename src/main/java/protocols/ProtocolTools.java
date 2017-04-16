@@ -32,6 +32,7 @@ import io.ExceptionInIOPackage;
 import io.IOTools;
 import jmolgui.UltiJmol1462;
 import math.ProcrustesAnalysisIfc;
+import multithread.CompareWithOneOnlyCallable;
 import mystructure.EnumMyReaderBiojava;
 import mystructure.ExceptionInMyStructurePackage;
 import mystructure.MyStructureIfc;
@@ -47,6 +48,8 @@ import shapeCompare.ProcrustesAnalysis;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -55,12 +58,71 @@ public class ProtocolTools {
     // -------------------------------------------------------------------
     // Static Methods
     // -------------------------------------------------------------------
+    public static List<CompareWithOneOnlyCallable> getCallablesFromTargets(AlgoParameters algoParameters, ShapeContainerIfc queryShape, List<ShapeContainerDefined> targets, boolean minimizeAllIfTrueOrOnlyOneIfFalse) {
+        List<CompareWithOneOnlyCallable> callablesToLauch = new ArrayList<>();
+        for (ShapeContainerDefined target : targets) {
+            CompareWithOneOnlyCallable compare = new CompareWithOneOnlyCallable(minimizeAllIfTrueOrOnlyOneIfFalse, queryShape, target, algoParameters);
+            callablesToLauch.add(compare);
+        }
+        return callablesToLauch;
+    }
+
+
+    public static List<Future<Boolean>> submitToExecutorAndGetFutures(ExecutorService executorService, int timeSecondsToWaitIfQueueIsFullBeforeAddingMore, List<CompareWithOneOnlyCallable> callablesToLauch) {
+
+        List<Future<Boolean>> allFuture = new ArrayList<>();
+        Iterator<CompareWithOneOnlyCallable> it = callablesToLauch.iterator();
+        while (it.hasNext()) {
+            CompareWithOneOnlyCallable callableToLauch = it.next();
+            try {
+                Future<Boolean> future = executorService.submit(callableToLauch);
+                allFuture.add(future);
+                it.remove(); // to release memory as I dont need them anymore
+            } catch (RejectedExecutionException e) {
+                try {
+                    Thread.sleep(timeSecondsToWaitIfQueueIsFullBeforeAddingMore * 1000);
+                    continue;
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return allFuture;
+    }
+
+
+    public static int checkIfFutureAreDone(List<Future<Boolean>> allFuture) {
+
+        int countOfFutureTrue = 0;
+        boolean notFinished = true;
+        while (true && notFinished) {
+            countOfFutureTrue = 0;
+            try {
+                Thread.sleep(20000);
+                for (Future<Boolean> future : allFuture) {
+                    Boolean result = future.get();
+                    //System.out.println("Future result = " + result);
+                    if (result == true) {
+                        countOfFutureTrue += 1;
+                    }
+                }
+                notFinished = false;
+
+            } catch (InterruptedException | ExecutionException e) {
+                //e.printStackTrace();
+            }
+        }
+        return countOfFutureTrue;
+    }
+
+
     public static int executeComparisons(ShapeContainerIfc queryShape, int peptideLength, List<HitInSequenceDb> hitsInDatabase, AlgoParameters algoParameters) {
         String fourLetterCodeTarget;
         String chainIdFromDB;
 
         int comparisonsDoneCount = 0;
-        A: for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
+        A:
+        for (HitInSequenceDb hitInSequenceDb : hitsInDatabase) {
 
             fourLetterCodeTarget = hitInSequenceDb.getFourLetterCode();
             chainIdFromDB = hitInSequenceDb.getChainIdFromDB();
