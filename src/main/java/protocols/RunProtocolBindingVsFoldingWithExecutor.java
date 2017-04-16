@@ -67,6 +67,8 @@ public class RunProtocolBindingVsFoldingWithExecutor {
 
         ProtocolBindingVsFoldingWithExecutor protocol = new ProtocolBindingVsFoldingWithExecutor(queryShape, targets, algoParameters);
         protocol.run();
+
+        fh.close();
     }
 
 

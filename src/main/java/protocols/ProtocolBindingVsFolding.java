@@ -148,6 +148,7 @@ public class ProtocolBindingVsFolding {
         */
         ProtocolTools.executeComparisons(queryShape, peptideLength, hitsInDatabase, algoParameters);
 
+        fh.close();
         System.out.println("Program finished.");
         System.exit(0);
     }

@@ -27,7 +27,9 @@ import parameters.AlgoParameters;
 import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuildingException;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +54,12 @@ public class CompareCallableWithExecutorServiceTest {
         int threadCount = 4;
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(threadCount);
 
+        /*
+        File resultFile = new File(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
+        if (resultFile.exists()) {
+            Files.delete(resultFile.toPath());
+        }
+*/
         FileHandler fh = null;
         try {
             fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
@@ -173,7 +181,7 @@ public class CompareCallableWithExecutorServiceTest {
         System.out.println("Program finished.");
         assertTrue(countOfFutureTrue == targets.size());
 
-        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + "log_project.txt");
+        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         String[] lines = resultFileContent.split("\\n");
         int startlines = 4;
         int expectedHits = 3;
@@ -181,6 +189,8 @@ public class CompareCallableWithExecutorServiceTest {
         assertTrue(lines.length == startlines + expectedHits * linesPerHit);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
+
+        System.out.println("normal defined   " + finalCount + "  " + initialCount);
         assertTrue(finalCount == initialCount);
 
         try {
@@ -191,6 +201,7 @@ public class CompareCallableWithExecutorServiceTest {
             e.printStackTrace();
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+        fh.close();
     }
 
 
@@ -298,7 +309,7 @@ public class CompareCallableWithExecutorServiceTest {
         System.out.println("Program finished.");
         assertTrue(countOfFutureTrue == targets.size() - 1);
 
-        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + "log_project.txt");
+        String resultFileContent = ReadTextFile.readTextFile(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
         String[] lines = resultFileContent.split("\\n");
         int startlines = 4;
         int expectedHits = 2;
@@ -306,6 +317,7 @@ public class CompareCallableWithExecutorServiceTest {
         assertTrue(lines.length == startlines + expectedHits * linesPerHit);
 
         int finalCount = algoParameters.ultiJMolBuffer.getSize();
+        System.out.println("ill defined   " + finalCount + "  " + initialCount);
         assertTrue(finalCount == initialCount);
 
         try {
@@ -316,6 +328,7 @@ public class CompareCallableWithExecutorServiceTest {
             e.printStackTrace();
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
+        fh.close();
     }
 
 }
