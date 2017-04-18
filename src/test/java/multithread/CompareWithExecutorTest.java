@@ -30,6 +30,9 @@ import shape.ShapeContainerIfc;
 import shapeBuilder.ShapeBuildingException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -52,19 +55,6 @@ public class CompareWithExecutorTest {
 
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
-
-        FileHandler fh = null;
-        try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        fh.setFormatter(new OptimizerFormater());
-        ControllerLoger.logger.addHandler(fh);
 
         int consumersCount = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
         final ExecutorService executorService = ProtocolTools.getExecutorService(consumersCount);

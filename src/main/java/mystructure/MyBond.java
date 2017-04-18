@@ -69,6 +69,8 @@ public class MyBond implements MyBondIfc, Serializable {
      */
     @Override
     public MyAtomIfc getBondedAtom() {
+
+
         return bondedAtom;
     }
 

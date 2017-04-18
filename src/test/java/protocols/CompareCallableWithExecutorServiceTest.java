@@ -30,6 +30,8 @@ import shapeBuilder.ShapeBuildingException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -60,6 +62,8 @@ public class CompareCallableWithExecutorServiceTest {
             Files.delete(resultFile.toPath());
         }
 */
+        Path resultFileToDelete = Paths.get(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
+        Files.deleteIfExists(resultFileToDelete);
         FileHandler fh = null;
         try {
             fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
@@ -164,6 +168,7 @@ public class CompareCallableWithExecutorServiceTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
         fh.close();
+        Files.deleteIfExists(resultFileToDelete);
     }
 
 
@@ -173,6 +178,8 @@ public class CompareCallableWithExecutorServiceTest {
         int threadCount = 1;
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol(threadCount);
 
+        Path resultFileToDelete = Paths.get(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
+        Files.deleteIfExists(resultFileToDelete);
         FileHandler fh = null;
         try {
             fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
@@ -255,5 +262,6 @@ public class CompareCallableWithExecutorServiceTest {
         }
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 0);
         fh.close();
+        Files.deleteIfExists(resultFileToDelete);
     }
 }

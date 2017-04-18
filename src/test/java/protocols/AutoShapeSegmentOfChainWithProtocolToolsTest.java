@@ -47,20 +47,6 @@ public class AutoShapeSegmentOfChainWithProtocolToolsTest {
         AlgoParameters algoParameters = Tools.generateModifiedAlgoParametersForTestWithTestFoldersWithUltiJmol();
         int initialCount = algoParameters.ultiJMolBuffer.getSize();
 
-        FileHandler fh = null;
-        try {
-            fh = new FileHandler(algoParameters.getPATH_TO_RESULT_FILES() + ControllerLoger.LOGGER_FILE_NAME);
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        fh.setFormatter(new OptimizerFormater());
-        ControllerLoger.logger.addHandler(fh);
-
-
         assertTrue(algoParameters.ultiJMolBuffer.getSize() == 1);
 
         String fourLetterCode = "2yjd";

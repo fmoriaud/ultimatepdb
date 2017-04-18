@@ -36,6 +36,7 @@ public class MyAtom implements MyAtomIfc, Serializable {
     private MyBondIfc[] bonds;
     private int originalAtomId;
 
+    private char[] atomAsString;
 
     //-------------------------------------------------------------
     // Constructor
@@ -62,7 +63,9 @@ public class MyAtom implements MyAtomIfc, Serializable {
         this.atomName = atomName;
         this.originalAtomId = originalAtomId;
         this.bonds = new MyBond[0];
+        this.atomAsString = buildAtomAsString();
     }
+
 
 
     //-------------------------------------------------------------
@@ -208,5 +211,11 @@ public class MyAtom implements MyAtomIfc, Serializable {
             }
         }
         return false;
+    }
+
+
+    private char[] buildAtomAsString() {
+
+        return null;
     }
 }
