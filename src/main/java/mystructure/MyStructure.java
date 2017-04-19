@@ -52,6 +52,7 @@ public class MyStructure implements MyStructureIfc, Serializable {
     private FileTime lastModificationTime;
     private String pdbFileHash;
 
+    private String identifier;
 
     //-------------------------------------------------------------
     // Constructors
@@ -77,6 +78,7 @@ public class MyStructure implements MyStructureIfc, Serializable {
         this.myHetatmChains = myHetatmChains;
         this.myNucleotideChains = myNucleotideChains;
         this.pdbFileHash = pdbFileHash;
+        //this.identifier = pdbFileHash + "-" + String.valueOf(fourLetterCode);
     }
 
 
@@ -523,9 +525,12 @@ public class MyStructure implements MyStructureIfc, Serializable {
     public ExpTechniquesEnum getExpTechnique() {
         return expTechnique;
     }
+
     public String getPdbFileHash() {
         return pdbFileHash;
     }
 
-
+    public String getIdentifier() {
+        return identifier;
+    }
 }

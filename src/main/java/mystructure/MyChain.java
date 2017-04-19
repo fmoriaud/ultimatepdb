@@ -33,6 +33,7 @@ public class MyChain implements MyChainIfc, Serializable {
     private char[] chainId;
     private List<MyMonomerIfc> tempMyMonomerList = new ArrayList<>();
 
+    private String identifier;
 
     // TODO Make this class more solid by including the computation of neighbors when they are asked
     // probably put the context in the request and if the same then don't redo.
@@ -323,5 +324,9 @@ public class MyChain implements MyChainIfc, Serializable {
     @Override
     public void setChainId(char[] chainId) {
         this.chainId = chainId;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 }
