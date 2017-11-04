@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ULTIMATE>
     <OPTIMIZE_HIT_GEOMETRY>TRUE</OPTIMIZE_HIT_GEOMETRY>
-    <PATH_TO_REMEDIATED_PDB_MMCIF_FOLDER>//Users//Fabrice//Documents//pdb//divided310317//mmCIF//</PATH_TO_REMEDIATED_PDB_MMCIF_FOLDER>
+    <PATH_TO_REMEDIATED_PDB_MMCIF_FOLDER>//Users//Fabrice//Documents//pdb//divided041117//mmCIF//</PATH_TO_REMEDIATED_PDB_MMCIF_FOLDER>
     <PATH_TO_CHEMCOMP_FOLDER>//Users//Fabrice//Documents//chemcomp//</PATH_TO_CHEMCOMP_FOLDER>
     <PATH_TO_RESULT_FILES>//Users//Fabrice//Documents//ultimate//results//</PATH_TO_RESULT_FILES>
     <SHAPE_COMPARISON_THREAD_COUNT>4</SHAPE_COMPARISON_THREAD_COUNT>
