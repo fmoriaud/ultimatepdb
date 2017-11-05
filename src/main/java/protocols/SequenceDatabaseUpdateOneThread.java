@@ -31,7 +31,7 @@ public class SequenceDatabaseUpdateOneThread {
     // -------------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
+        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParametersForSequenceBuilder();
 
         CreateAndSearchSequenceDatabase createAndSearchSequenceDatabase = new CreateAndSearchSequenceDatabase(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         createAndSearchSequenceDatabase.updateDatabase();

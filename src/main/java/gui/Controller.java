@@ -56,7 +56,7 @@ public class Controller {
     public Controller() {
 
         try {
-            algoParameters = ProtocolTools.prepareAlgoParameters();
+            algoParameters = ProtocolTools.prepareAlgoParametersForComparisons();
         } catch (ParsingConfigFileException e) {
             e.printStackTrace();
         }

@@ -39,7 +39,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
     //-------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
+        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParametersForComparisons();
 
         FileHandler fh = null;
         try {

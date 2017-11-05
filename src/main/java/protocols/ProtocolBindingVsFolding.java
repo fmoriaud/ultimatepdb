@@ -68,7 +68,7 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     private void run() throws ParsingConfigFileException {
 
-        algoParameters = ProtocolTools.prepareAlgoParameters();
+        algoParameters = ProtocolTools.prepareAlgoParametersForComparisons();
 
         FileHandler fh = null;
         try {

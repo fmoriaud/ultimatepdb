@@ -209,14 +209,18 @@ public class ProtocolTools {
     }
 
 
-    public static AlgoParameters prepareAlgoParameters() throws ParsingConfigFileException {
+    public static AlgoParameters prepareAlgoParametersForComparisons() throws ParsingConfigFileException {
 
         URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
         AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
         algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
         algoParameters.procrustesAnalysisBuffer = new GenericBuffer<ProcrustesAnalysisIfc>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT());
 
-        for (int i = 0; i < algoParameters.getSHAPE_COMPARISON_THREAD_COUNT(); i++) {
+        int numberProcrustes = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+
+        int numberJmol = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2;
+
+        for (int i = 0; i < numberProcrustes; i++) {
             ProcrustesAnalysisIfc procrustesAnalysis = new ProcrustesAnalysis(algoParameters);
             try {
                 algoParameters.procrustesAnalysisBuffer.put(procrustesAnalysis);
@@ -225,17 +229,27 @@ public class ProtocolTools {
                 e.printStackTrace();
             }
         }
-        for (int i = 0; i < (algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2); i++) {
-            UltiJmol1462 ultiJMol = new UltiJmol1462();
-            try {
-                algoParameters.ultiJMolBuffer.put(ultiJMol);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        addJmol(algoParameters, numberJmol);
+
+        return algoParameters;
+
+    }
+
+
+    public static AlgoParameters prepareAlgoParametersForSequenceBuilder() throws ParsingConfigFileException {
+
+        URL url = ProtocolBindingVsFolding.class.getClassLoader().getResource("ultimate.xml");
+        AlgoParameters algoParameters = CommandLineTools.generateModifiedAlgoParameters(url.getPath(), EnumMyReaderBiojava.BioJava_MMCIFF);
+       // algoParameters.ultiJMolBuffer = new GenericBuffer<UltiJmol1462>(algoParameters.getSHAPE_COMPARISON_THREAD_COUNT() * 2);
+
+
+       // int numberJmol = algoParameters.getSHAPE_COMPARISON_THREAD_COUNT();
+
+       // addJmol(algoParameters, numberJmol);
+
         return algoParameters;
     }
+
 
 
     /*
@@ -272,5 +286,21 @@ public class ProtocolTools {
         return threadPoolExecutor;
 
 
+    }
+
+
+    // -------------------------------------------------------------------
+    // Static Methods Private
+    // -------------------------------------------------------------------
+    private static void addJmol(AlgoParameters algoParameters, int numberJmol) {
+        for (int i = 0; i < numberJmol; i++) {
+            UltiJmol1462 ultiJMol = new UltiJmol1462();
+            try {
+                algoParameters.ultiJMolBuffer.put(ultiJMol);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -38,8 +38,8 @@ public class SequenceDatabaseBuildMultiThread {
      */
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParameters();
-        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(1);
+        AlgoParameters algoParameters = ProtocolTools.prepareAlgoParametersForSequenceBuilder();
+        algoParameters.setSHAPE_COMPARISON_THREAD_COUNT(8);
         CreateAndSearchSequenceDatabaseWithExecutor createAndSearchSequenceDatabaseWithExecutor = new CreateAndSearchSequenceDatabaseWithExecutor(algoParameters, HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName);
         createAndSearchSequenceDatabaseWithExecutor.createDatabase();
 
