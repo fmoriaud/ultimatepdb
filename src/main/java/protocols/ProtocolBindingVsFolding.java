@@ -58,7 +58,7 @@ public class ProtocolBindingVsFolding {
     // -------------------------------------------------------------------
     public static void main(String[] args) throws ParsingConfigFileException {
 
-        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("1be9", "B");
+        ProtocolBindingVsFolding protocol = new ProtocolBindingVsFolding("5b62", "B");
         protocol.run();
     }
 
@@ -118,9 +118,15 @@ public class ProtocolBindingVsFolding {
 
         //int minLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMinLength();
         //int maxLength = targetDefinedBySegmentOfChainBasedOnSequenceMotif.getMaxLength();
-        boolean useSimilarSequences = false;
 
-        List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
+        List<Integer> ranks = new ArrayList<>();
+        ranks.add(0);
+        HitInSequenceDb queryAsHit = new HitInSequenceDb(ranks, "5b62" , "B", 3);
+        boolean useSimilarSequences = false;
+        List<HitInSequenceDb> hitsInDatabase = new ArrayList<>();
+        hitsInDatabase.add(queryAsHit);
+        hitsInDatabase.addAll(SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences));
+        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database using " + sequenceToFindAsString);
 
 /*
         if (queryShape instanceof ShapeContainerWithPeptide) {

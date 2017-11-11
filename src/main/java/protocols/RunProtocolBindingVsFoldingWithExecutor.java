@@ -54,7 +54,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
         fh.setFormatter(new OptimizerFormater());
         ControllerLoger.logger.addHandler(fh);
 
-        ShapeContainerDefined query = new ShapecontainerDefinedByWholeChain("1be9".toCharArray(), "B".toCharArray(), algoParameters);
+        ShapeContainerDefined query = new ShapecontainerDefinedByWholeChain("5b62".toCharArray(), "B".toCharArray(), algoParameters);
         ShapeContainerIfc queryShape = null;
         try {
             queryShape = query.getShapecontainer();
@@ -93,7 +93,7 @@ public class RunProtocolBindingVsFoldingWithExecutor {
 
         boolean useSimilarSequences = false;
         List<HitInSequenceDb> hitsInDatabase = SequenceTools.find(HashTablesTools.tableSequenceName, HashTablesTools.tableSequenceFailureName, peptideLength, 1000, sequenceToFindAsString, useSimilarSequences);
-        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database");
+        System.out.println("Found " + hitsInDatabase.size() + "  sequence hits in the Sequence Database for " + sequenceToFindAsString);
 
         /*
         if (queryShape instanceof ShapeContainerWithPeptide) {
